@@ -416,6 +416,65 @@
     nav ul{display:none;}
     .g-card:nth-child(even){margin-top:0;}
   }
+
+  /* ---------- Athlete profile (tab-switching hero, replaces old carousel) ---------- */
+  .ap-shell{max-width:1100px;margin:0 auto;padding:0 6vw;}
+  .ap-tabbar{display:flex;gap:4px;overflow-x:auto;padding-bottom:14px;margin-bottom:36px;border-bottom:1px solid rgba(255,255,255,.14);scrollbar-width:none;}
+  .ap-tabbar::-webkit-scrollbar{display:none;}
+  .ap-tabbar button{appearance:none;border:none;background:none;color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.01em;padding:9px 16px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit;transition:color .2s;}
+  .ap-tabbar button:hover{color:var(--fg);}
+  .ap-tabbar button.active{color:var(--fg);border-bottom-color:var(--accent);}
+
+  .ap-hero{position:relative;border-radius:24px;overflow:hidden;min-height:60vh;display:flex;align-items:flex-end;background:#1b1b1e;}
+  .ap-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%;}
+  .ap-hero-bg.placeholder{background:linear-gradient(135deg,#2a2a2e,#0e0e10);display:flex;align-items:center;justify-content:center;}
+  .ap-hero-bg.placeholder .ap-initial{font-size:min(28vw,200px);font-weight:800;color:rgba(255,255,255,.08);letter-spacing:-.04em;}
+  .ap-hero-shade{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.5) 34%, rgba(0,0,0,0) 100%);}
+  .ap-hero-content{position:relative;z-index:2;width:100%;padding:0 36px 40px;}
+  .ap-hero-eyebrow{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase;}
+  .ap-name{font-size:clamp(28px,5.2vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0 0 8px;}
+  .ap-tag{font-size:clamp(13px,1.6vw,16px);color:var(--muted);font-weight:500;max-width:640px;line-height:1.5;margin:0;}
+
+  .ap-block{max-width:640px;padding:56px 0 0;border-top:1px solid rgba(255,255,255,.14);margin-top:56px;}
+  .ap-block.no-border{border-top:none;margin-top:0;padding-top:0;}
+  .ap-block.wide{max-width:none;}
+  .ap-kicker{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin:0 0 16px;}
+  .ap-quote{font-size:clamp(20px,3.2vw,30px);font-weight:600;letter-spacing:-.015em;line-height:1.4;margin:0;}
+  .ap-quote::before{content:"\201c";}
+  .ap-quote::after{content:"\201d";}
+
+  .ap-goal-card{background:#1b1b1e;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:28px 26px;}
+  .ap-goal-card .label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;margin-bottom:10px;}
+  .ap-goal-card p{font-size:clamp(16px,2vw,19px);font-weight:500;line-height:1.6;margin:0;}
+
+  .ap-empty-note{color:var(--muted);font-size:14px;line-height:1.7;background:#1b1b1e;border:1px dashed rgba(255,255,255,.14);border-radius:16px;padding:22px 20px;}
+
+  .ap-results-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+  .ap-results-count{font-size:13px;color:var(--muted);font-weight:600;}
+  .ap-best-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#ff5a3c,#ff9142);color:#fff;border-radius:14px;padding:14px 18px;margin-bottom:22px;}
+  .ap-best-badge .num{font-size:24px;font-weight:800;line-height:1;}
+  .ap-best-badge .txt{font-size:12px;line-height:1.4;font-weight:600;}
+  .ap-result-row{display:grid;grid-template-columns:78px 48px 1fr 80px;gap:12px;align-items:center;padding:14px 4px;border-top:1px solid rgba(255,255,255,.14);font-size:13px;}
+  .ap-result-row:last-child{border-bottom:1px solid rgba(255,255,255,.14);}
+  .ap-result-row .date{color:var(--muted);font-variant-numeric:tabular-nums;font-size:12px;}
+  .ap-result-row .rank{font-weight:800;font-size:15px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);}
+  .ap-result-row .rank.top3{background:linear-gradient(135deg,#ff5a3c,#ff9142);color:#fff;}
+  .ap-result-row .event{line-height:1.4;}
+  .ap-result-row .cat{color:var(--muted);font-size:11px;text-align:right;}
+  .ap-results-more{margin-top:18px;background:none;border:1px solid rgba(255,255,255,.14);color:var(--fg);font-size:13px;font-weight:600;padding:11px 20px;border-radius:999px;cursor:pointer;font-family:inherit;}
+  .ap-results-more:hover{background:rgba(255,255,255,.08);}
+  .ap-result-row.hidden-row{display:none;}
+  .ap-not-tracked{color:var(--muted);font-size:14px;line-height:1.7;}
+
+  .ap-fadein{animation:apFadeIn .45s ease both;}
+  @keyframes apFadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  @media (max-width:700px){
+    .ap-result-row{grid-template-columns:64px 36px 1fr;}
+    .ap-result-row .cat{display:none;}
+    .ap-hero{min-height:70vh;}
+    .ap-hero-content{padding:0 20px 32px;}
+  }
 </style>
 </head>
 <body>
@@ -490,55 +549,222 @@
   <div class="athletes-head">
     <div>
       <div class="eyebrow reveal">Athletes</div>
-      <h2 class="reveal">選手たちの<br>躍動感を、そのまま。</h2>
+      <h2 class="reveal">選手たちの<br>今シーズンを、もっと近くに。</h2>
     </div>
-    <p class="reveal delay-1">MICに所属する選手たちの、今シーズンのひとコマ。トップページではこうした「動き」のある写真・動画を主役に据えたいと考えています。</p>
+    <p class="reveal delay-1">名前をタップすると、その選手の今シーズンの目標や戦歴が見られます。</p>
   </div>
-  <div class="gallery-shell">
-  <button class="g-nav g-nav-prev" type="button" aria-label="前の選手">‹</button>
-  <div class="g-fade g-fade-left"></div>
-  <div class="gallery reveal-scale" id="athleteGallery">
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg" alt="見瀬クレア">
-      <div class="g-caption"><div class="name">見瀬クレア</div><div class="tag">世界ジュニア3位・アジアカップ優勝</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg" alt="鈴木伶菜">
-      <div class="g-caption"><div class="name">鈴木伶菜</div><div class="tag">ジュニアオリンピックMO11位・DM7位</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg" alt="有賀睦人">
-      <div class="g-caption"><div class="name">有賀睦人</div><div class="tag">大阪府ジュニアスキー技術選手権 優勝</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg" alt="馬路晴世">
-      <div class="g-caption"><div class="name">馬路晴世</div><div class="tag">B級公認大会5位</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg" alt="七海快成">
-      <div class="g-caption"><div class="name">七海快成</div><div class="tag">全日本選手権初出場</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg" alt="濱田匠真">
-      <div class="g-caption"><div class="name">濱田匠真</div><div class="tag">楽しくスキーを頑張る</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg" alt="濱田誠真">
-      <div class="g-caption"><div class="name">濱田誠真</div><div class="tag">B級公認大会出場</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg" alt="松村聡美">
-      <div class="g-caption"><div class="name">松村聡美</div><div class="tag">GARAカップ 小学生の部 3位</div></div>
-    </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg" alt="林遼真">
-      <div class="g-caption"><div class="name">林遼真</div><div class="tag">A級公認大会7位</div></div>
-    </div>
-  </div>
-  <div class="g-fade g-fade-right"></div>
-  <button class="g-nav g-nav-next" type="button" aria-label="次の選手">›</button>
+
+  <div class="ap-shell reveal-scale">
+    <nav class="ap-tabbar" id="apTabbar"></nav>
+    <div id="apProfile"></div>
   </div>
 </section>
+
+<script>
+(function(){
+  const AP_ATHLETES = [
+    {
+      name:'見瀬クレア',
+      tag:'世界ジュニア3位・アジアカップ優勝',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'鈴木伶菜',
+      tag:'ジュニアオリンピックMO11位・DM7位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:true,
+      results:[
+        {d:'2024-03-09',rank:2,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2025-02-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-08',rank:6,disc:'DM',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-03-01',rank:6,disc:'DM',cat:'SAJ B級',ev:'令和6年度新潟県スキー選手権大会兼第23回国体記念松之山温泉モーグル競技会'},
+        {d:'2025-03-15',rank:7,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    },
+    {
+      name:'有賀睦人',
+      tag:'大阪府ジュニアスキー技術選手権 優勝',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg',
+      hasKarte:true,
+      vision:'ワールドカップなどで活躍したいです。',
+      goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
+      tracked:true,
+      results:[
+        {d:'2024-03-08',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2026-03-06',rank:3,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'},
+        {d:'2026-03-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
+      ]
+    },
+    {
+      name:'馬路晴世',
+      tag:'B級公認大会5位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:true,
+      results:[
+        {d:'2021-02-21',rank:2,disc:'MO',cat:'SAJ B級',ev:'2021白馬さのさかモーグル大会 第1戦・第2戦'},
+        {d:'2022-02-25',rank:8,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-02-26',rank:3,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-03-11',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2025-01-31',rank:6,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'},
+        {d:'2025-02-01',rank:5,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'}
+      ]
+    },
+    {
+      name:'七海快成',
+      tag:'全日本選手権初出場',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:true,
+      results:[
+        {d:'2022-02-26',rank:6,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2023-01-27',rank:7,disc:'MO',cat:'SAJ B級',ev:'第23回埼玉県松之山温泉モーグル競技会'},
+        {d:'2023-01-28',rank:6,disc:'MO',cat:'SAJ B級',ev:'令和4年度新潟県スキー選手権大会兼第21回国体記念松之山温泉モーグル競技会'},
+        {d:'2023-02-24',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2023-02-25',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2025-02-07',rank:5,disc:'MO',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-08',rank:7,disc:'DM',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-14',rank:3,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-02-15',rank:8,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-03-14',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-02-06',rank:5,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-13',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    },
+    {
+      name:'濱田匠真',
+      tag:'楽しくスキーを頑張る',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg',
+      hasKarte:true,
+      vision:'スキーモーグルを広めれる人になりたいです。',
+      goal:'B級大会優勝です。',
+      tracked:true,
+      results:[]
+    },
+    {
+      name:'濱田誠真',
+      tag:'B級公認大会出場',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'松村聡美',
+      tag:'GARAカップ 小学生の部 3位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'林遼真',
+      tag:'A級公認大会7位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg',
+      hasKarte:false, vision:null, goal:null,
+      tracked:true,
+      results:[
+        {d:'2019-03-01',rank:3,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第1戦'},
+        {d:'2019-03-02',rank:2,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第2戦'},
+        {d:'2022-03-11',rank:7,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2024-02-23',rank:7,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-02-24',rank:5,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-03-15',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2024全日本ジュニアスキー選手権大会フリースタイル競技・種目モーグル'},
+        {d:'2025-02-03',rank:7,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第43回長野県フリースタイルスキー選手権大会 モーグル競技'},
+        {d:'2026-02-07',rank:3,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-13',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-03-14',rank:6,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    }
+  ];
+
+  const AP_RESULTS_PREVIEW = 4;
+
+  function apFmtDate(iso){
+    const parts = iso.split('-');
+    return parts[0] + '/' + parseInt(parts[1],10) + '/' + parseInt(parts[2],10);
+  }
+
+  function apRenderResults(a){
+    if(!a.tracked){
+      return '<div class="ap-results-head"><div class="ap-kicker" style="margin:0;">戦歴</div></div>'
+        + '<p class="ap-not-tracked">戦歴データは準備中です。SAJ競技データバンクとの連携が完了次第、順次掲載します。</p>';
+    }
+    if(!a.results.length){
+      return '<div class="ap-results-head"><div class="ap-kicker" style="margin:0;">戦歴</div></div>'
+        + '<p class="ap-not-tracked">まだSAJ公認大会での8位以内の成績はありません。これからの大会での活躍にご期待ください。</p>';
+    }
+    const sorted = a.results.slice().sort(function(x,y){ return new Date(y.d) - new Date(x.d); });
+    const best = a.results.slice().sort(function(x,y){ return x.rank - y.rank; })[0];
+    const rows = sorted.map(function(r,i){
+      return '<div class="ap-result-row' + (i>=AP_RESULTS_PREVIEW ? ' hidden-row':'') + '">'
+        + '<div class="date">' + apFmtDate(r.d) + '</div>'
+        + '<div class="rank' + (r.rank<=3?' top3':'') + '">' + r.rank + '</div>'
+        + '<div class="event">' + r.ev + '<br><span style="color:var(--muted);font-size:11px;">' + r.disc + ' ／ ' + r.cat + '</span></div>'
+        + '<div class="cat">' + r.cat + '</div>'
+        + '</div>';
+    }).join('');
+    const moreBtn = sorted.length > AP_RESULTS_PREVIEW
+      ? '<button class="ap-results-more" onclick="apToggleResults(this)">すべての戦歴を見る（' + sorted.length + '件）</button>'
+      : '';
+    return '<div class="ap-results-head"><div class="ap-kicker" style="margin:0;">戦歴</div>'
+      + '<div class="ap-results-count">SAJ公認大会 8位以内 ' + sorted.length + '件</div></div>'
+      + '<div class="ap-best-badge"><div class="num">' + best.rank + '位</div><div class="txt">自己ベスト<br>' + best.ev + '</div></div>'
+      + '<div class="ap-result-list">' + rows + '</div>'
+      + moreBtn;
+  }
+
+  function apRenderKarte(a){
+    if(!a.hasKarte){
+      return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点 ／ 今年のシーズン目標</div>'
+        + '<div class="ap-empty-note">選手カルテはまだ今シーズンの回答が登録されていません。回答が届き次第、ここに表示されます。</div></div>';
+    }
+    return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点</div><p class="ap-quote">' + a.vision + '</p></div>'
+      + '<div class="ap-block no-border"><div class="ap-goal-card"><div class="label">今年のシーズン目標</div><p>' + a.goal + '</p></div></div>';
+  }
+
+  function apRenderProfile(a){
+    const heroBg = a.photo
+      ? '<div class="ap-hero-bg" style="background-image:url(\'' + a.photo + '\')"></div>'
+      : '<div class="ap-hero-bg placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
+    return '<div class="ap-fadein">'
+      + '<div class="ap-hero">' + heroBg + '<div class="ap-hero-shade"></div>'
+      + '<div class="ap-hero-content"><div class="ap-hero-eyebrow">MIC Athlete</div>'
+      + '<h3 class="ap-name">' + a.name + '</h3><p class="ap-tag">' + a.tag + '</p></div></div>'
+      + apRenderKarte(a)
+      + '<div class="ap-block wide">' + apRenderResults(a) + '</div>'
+      + '</div>';
+  }
+
+  function apShow(i){
+    document.getElementById('apProfile').innerHTML = apRenderProfile(AP_ATHLETES[i]);
+    document.querySelectorAll('.ap-tabbar button').forEach(function(b,idx){
+      b.classList.toggle('active', idx===i);
+    });
+  }
+  window.apToggleResults = function(btn){
+    const list = btn.previousElementSibling;
+    list.querySelectorAll('.hidden-row').forEach(function(r){ r.classList.remove('hidden-row'); });
+    btn.remove();
+  };
+
+  function apInit(){
+    const bar = document.getElementById('apTabbar');
+    if(!bar) return;
+    bar.innerHTML = AP_ATHLETES.map(function(a){ return '<button type="button">' + a.name + '</button>'; }).join('');
+    Array.from(bar.children).forEach(function(btn,i){ btn.addEventListener('click', function(){ apShow(i); }); });
+    apShow(0);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', apInit);
+  } else {
+    apInit();
+  }
+})();
+</script>
 
 <section class="news" id="news">
   <div class="eyebrow reveal">News</div>
