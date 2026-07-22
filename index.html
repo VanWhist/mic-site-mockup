@@ -417,25 +417,41 @@
     .g-card:nth-child(even){margin-top:0;}
   }
 
-  /* ---------- Athlete profile (tab-switching hero, replaces old carousel) ---------- */
-  .ap-shell{max-width:1100px;margin:0 auto;padding:0 6vw;}
-  .ap-tabbar{display:flex;gap:4px;overflow-x:auto;padding-bottom:14px;margin-bottom:36px;border-bottom:1px solid rgba(255,255,255,.14);scrollbar-width:none;}
-  .ap-tabbar::-webkit-scrollbar{display:none;}
-  .ap-tabbar button{appearance:none;border:none;background:none;color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.01em;padding:9px 16px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit;transition:color .2s;}
-  .ap-tabbar button:hover{color:var(--fg);}
-  .ap-tabbar button.active{color:var(--fg);border-bottom-color:var(--accent);}
+  /* ---------- Athlete profile (carousel cards + expand-in-place panel) ---------- */
+  .g-card.ap-card{height:auto;background:transparent;cursor:pointer;}
+  .ap-card-media{width:100%;height:460px;border-radius:18px;overflow:hidden;background:#1b1b1e;}
+  .ap-card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1);}
+  .g-card.ap-card:hover .ap-card-media img{transform:scale(1.06);}
+  .ap-name-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 2px 0;}
+  .ap-name-row-name{font-weight:600;font-size:21px;letter-spacing:-.02em;line-height:1.25;transition:color .25s;background-image:linear-gradient(var(--accent),var(--accent));background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;padding-bottom:2px;transition:background-size .35s cubic-bezier(.16,1,.3,1),color .25s;}
+  .g-card.ap-card:hover .ap-name-row-name{background-size:100% 1px;}
+  .ap-name-row-tag{font-size:12.5px;color:var(--muted);margin-top:5px;letter-spacing:-.01em;}
+  .ap-chev{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.18);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),color .2s,border-color .2s,background .2s;}
+  .g-card.ap-card:hover .ap-chev{border-color:rgba(255,255,255,.4);color:var(--fg);}
+  .g-card.ap-card.active .ap-chev{transform:rotate(180deg);color:#fff;background:var(--accent);border-color:var(--accent);}
+  .g-card.ap-card.active .ap-name-row-name{color:var(--accent);background-size:100% 1px;}
 
-  .ap-hero{position:relative;border-radius:24px;overflow:hidden;min-height:60vh;display:flex;align-items:flex-end;background:#1b1b1e;}
-  .ap-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%;}
-  .ap-hero-bg.placeholder{background:linear-gradient(135deg,#2a2a2e,#0e0e10);display:flex;align-items:center;justify-content:center;}
-  .ap-hero-bg.placeholder .ap-initial{font-size:min(28vw,200px);font-weight:800;color:rgba(255,255,255,.08);letter-spacing:-.04em;}
-  .ap-hero-shade{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.5) 34%, rgba(0,0,0,0) 100%);}
-  .ap-hero-content{position:relative;z-index:2;width:100%;padding:0 36px 40px;}
-  .ap-hero-eyebrow{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase;}
-  .ap-name{font-size:clamp(28px,5.2vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0 0 8px;}
-  .ap-tag{font-size:clamp(13px,1.6vw,16px);color:var(--muted);font-weight:500;max-width:640px;line-height:1.5;margin:0;}
+  .ap-panel-wrap{max-width:1100px;margin:0 auto;padding:0 6vw;display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.34,1.56,.64,1);}
+  .ap-panel-wrap.open{grid-template-rows:1fr;}
+  .ap-panel-inner{overflow:hidden;min-height:0;}
+  .ap-panel{margin-top:40px;background:#1b1b1e;border:1px solid rgba(255,255,255,.14);border-radius:24px;overflow:hidden;}
+  .ap-panel-hero{position:relative;width:100%;height:min(58vh,500px);background:#0e0e10;overflow:hidden;}
+  .ap-panel-hero-img{width:100%;height:100%;object-fit:cover;display:block;}
+  .ap-panel-hero-img.placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a2a2e,#0e0e10);}
+  .ap-panel-hero-img.placeholder .ap-initial{font-size:min(20vw,140px);font-weight:800;color:rgba(255,255,255,.08);letter-spacing:-.04em;}
+  .ap-panel-hero-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
+  .ap-play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s,transform .2s;}
+  .ap-play-btn:hover{background:var(--accent);border-color:var(--accent);transform:translate(-50%,-50%) scale(1.06);}
+  .ap-play-btn svg{width:26px;height:26px;margin-left:3px;}
+  .ap-panel-body{padding:28px 8% 44px;}
+  .ap-panel-head{display:flex;align-items:center;gap:16px;}
+  .ap-panel-name{font-size:clamp(20px,3vw,28px);font-weight:800;letter-spacing:-.02em;}
+  .ap-panel-tag{font-size:13px;color:var(--muted);margin-top:2px;}
+  .ap-panel-close{margin-left:auto;flex:0 0 auto;background:none;border:1px solid rgba(255,255,255,.18);color:var(--fg);font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;font-family:inherit;transition:background .2s,border-color .2s;}
+  .ap-panel-close:hover{background:rgba(255,255,255,.08);}
+  .ap-vt-photo{view-transition-name:ap-hero-photo;}
 
-  .ap-block{max-width:640px;padding:56px 0 0;border-top:1px solid rgba(255,255,255,.14);margin-top:56px;}
+  .ap-block{max-width:640px;padding:32px 0 0;border-top:1px solid rgba(255,255,255,.14);margin-top:32px;}
   .ap-block.no-border{border-top:none;margin-top:0;padding-top:0;}
   .ap-block.wide{max-width:none;}
   .ap-kicker{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin:0 0 16px;}
@@ -466,14 +482,12 @@
   .ap-result-row.hidden-row{display:none;}
   .ap-not-tracked{color:var(--muted);font-size:14px;line-height:1.7;}
 
-  .ap-fadein{animation:apFadeIn .45s ease both;}
-  @keyframes apFadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-
   @media (max-width:700px){
     .ap-result-row{grid-template-columns:64px 36px 1fr;}
     .ap-result-row .cat{display:none;}
-    .ap-hero{min-height:70vh;}
-    .ap-hero-content{padding:0 20px 32px;}
+    .ap-panel-body{padding:24px 6% 32px;}
+    .ap-play-btn{width:60px;height:60px;}
+    .ap-play-btn svg{width:20px;height:20px;}
   }
 </style>
 </head>
@@ -554,9 +568,82 @@
     <p class="reveal delay-1">名前をタップすると、その選手の今シーズンの目標や戦歴が見られます。</p>
   </div>
 
-  <div class="ap-shell reveal-scale">
-    <nav class="ap-tabbar" id="apTabbar"></nav>
-    <div id="apProfile"></div>
+  <div class="gallery-shell">
+  <button class="g-nav g-nav-prev" type="button" aria-label="前の選手">‹</button>
+  <div class="g-fade g-fade-left"></div>
+  <div class="gallery reveal-scale" id="athleteGallery" data-wheel-nav="off">
+    <div class="g-card ap-card" data-ap-index="0">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg" alt="見瀬クレア"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">見瀬クレア</div><div class="ap-name-row-tag">世界ジュニア3位・アジアカップ優勝</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="1">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg" alt="鈴木伶菜"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">鈴木伶菜</div><div class="ap-name-row-tag">ジュニアオリンピックMO11位・DM7位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="2">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg" alt="有賀睦人"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">有賀睦人</div><div class="ap-name-row-tag">大阪府ジュニアスキー技術選手権 優勝</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="3">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg" alt="馬路晴世"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">馬路晴世</div><div class="ap-name-row-tag">B級公認大会5位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="4">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg" alt="七海快成"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">七海快成</div><div class="ap-name-row-tag">全日本選手権初出場</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="5">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg" alt="濱田匠真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">濱田匠真</div><div class="ap-name-row-tag">楽しくスキーを頑張る</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="6">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg" alt="濱田誠真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">濱田誠真</div><div class="ap-name-row-tag">B級公認大会出場</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="7">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg" alt="松村聡美"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">松村聡美</div><div class="ap-name-row-tag">GARAカップ 小学生の部 3位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="8">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg" alt="林遼真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">林遼真</div><div class="ap-name-row-tag">A級公認大会7位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+  </div>
+  <div class="g-fade g-fade-right"></div>
+  <button class="g-nav g-nav-next" type="button" aria-label="次の選手">›</button>
+  </div>
+
+  <div class="ap-panel-wrap" id="apPanelWrap">
+    <div class="ap-panel-inner">
+      <div class="ap-panel" id="apPanel"></div>
+    </div>
   </div>
 </section>
 
@@ -567,14 +654,14 @@
       name:'見瀬クレア',
       tag:'世界ジュニア3位・アジアカップ優勝',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
     {
       name:'鈴木伶菜',
       tag:'ジュニアオリンピックMO11位・DM7位',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
         {d:'2024-03-09',rank:2,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
@@ -591,6 +678,7 @@
       hasKarte:true,
       vision:'ワールドカップなどで活躍したいです。',
       goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
+      video:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
       tracked:true,
       results:[
         {d:'2024-03-08',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
@@ -603,7 +691,7 @@
       name:'馬路晴世',
       tag:'B級公認大会5位',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
         {d:'2021-02-21',rank:2,disc:'MO',cat:'SAJ B級',ev:'2021白馬さのさかモーグル大会 第1戦・第2戦'},
@@ -618,7 +706,7 @@
       name:'七海快成',
       tag:'全日本選手権初出場',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
         {d:'2022-02-26',rank:6,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
@@ -642,6 +730,7 @@
       hasKarte:true,
       vision:'スキーモーグルを広めれる人になりたいです。',
       goal:'B級大会優勝です。',
+      video:null,
       tracked:true,
       results:[]
     },
@@ -649,21 +738,21 @@
       name:'濱田誠真',
       tag:'B級公認大会出場',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
     {
       name:'松村聡美',
       tag:'GARAカップ 小学生の部 3位',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
     {
       name:'林遼真',
       tag:'A級公認大会7位',
       photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg',
-      hasKarte:false, vision:null, goal:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
         {d:'2019-03-01',rank:3,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第1戦'},
@@ -725,25 +814,86 @@
       + '<div class="ap-block no-border"><div class="ap-goal-card"><div class="label">今年のシーズン目標</div><p>' + a.goal + '</p></div></div>';
   }
 
-  function apRenderProfile(a){
-    const heroBg = a.photo
-      ? '<div class="ap-hero-bg" style="background-image:url(\'' + a.photo + '\')"></div>'
-      : '<div class="ap-hero-bg placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
-    return '<div class="ap-fadein">'
-      + '<div class="ap-hero">' + heroBg + '<div class="ap-hero-shade"></div>'
-      + '<div class="ap-hero-content"><div class="ap-hero-eyebrow">MIC Athlete</div>'
-      + '<h3 class="ap-name">' + a.name + '</h3><p class="ap-tag">' + a.tag + '</p></div></div>'
+  function apRenderPanel(a){
+    const media = a.photo
+      ? '<img class="ap-panel-hero-img" src="' + a.photo + '" alt="">'
+      : '<div class="ap-panel-hero-img placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
+    const playBtn = a.video
+      ? '<button type="button" class="ap-play-btn" onclick="apPlayVideo(this)" aria-label="' + a.name + 'さんの動画を再生"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>'
+      : '';
+    return '<div class="ap-panel-hero" data-video="' + (a.video || '') + '">' + media + playBtn + '</div>'
+      + '<div class="ap-panel-body">'
+      + '<div class="ap-panel-head">'
+      + '<div><div class="ap-panel-name">' + a.name + '</div><div class="ap-panel-tag">' + a.tag + '</div></div>'
+      + '<button type="button" class="ap-panel-close" onclick="apClose()">閉じる ×</button>'
+      + '</div>'
       + apRenderKarte(a)
       + '<div class="ap-block wide">' + apRenderResults(a) + '</div>'
       + '</div>';
   }
 
-  function apShow(i){
-    document.getElementById('apProfile').innerHTML = apRenderProfile(AP_ATHLETES[i]);
-    document.querySelectorAll('.ap-tabbar button').forEach(function(b,idx){
-      b.classList.toggle('active', idx===i);
+  window.apPlayVideo = function(btn){
+    const hero = btn.closest('.ap-panel-hero');
+    if (!hero) return;
+    const url = hero.getAttribute('data-video');
+    if (!url) return;
+    hero.innerHTML = '<video class="ap-panel-hero-video" src="' + url + '" controls autoplay playsinline></video>';
+  };
+
+  let apActiveIndex = -1;
+
+  function apSetActiveCardClass(index){
+    document.querySelectorAll('#athleteGallery .ap-card').forEach(function(card){
+      const isActive = index >= 0 && card.getAttribute('data-ap-index') === String(index);
+      card.classList.toggle('active', isActive);
     });
   }
+
+  function apScrollToPanel(){
+    const wrap = document.getElementById('apPanelWrap');
+    if (!wrap) return;
+    const headerOffset = 90; // clears the fixed site header
+    const y = wrap.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  // The actual DOM update for opening a panel. Kept separate from apOpen so it can be
+  // run either directly or inside document.startViewTransition() for the photo zoom morph.
+  function apApplyOpen(index){
+    apActiveIndex = index;
+    document.getElementById('apPanel').innerHTML = apRenderPanel(AP_ATHLETES[index]);
+    document.getElementById('apPanelWrap').classList.add('open');
+    apSetActiveCardClass(index);
+    const heroImg = document.querySelector('#apPanel .ap-panel-hero-img');
+    if (heroImg) heroImg.classList.add('ap-vt-photo');
+  }
+
+  function apOpen(index, clickedImgEl){
+    const supportsVT = typeof document.startViewTransition === 'function';
+    if (supportsVT && clickedImgEl) {
+      clickedImgEl.classList.add('ap-vt-photo');
+      const transition = document.startViewTransition(function(){
+        apApplyOpen(index);
+        clickedImgEl.classList.remove('ap-vt-photo');
+      });
+      transition.finished.finally(function(){ setTimeout(apScrollToPanel, 20); });
+    } else {
+      apApplyOpen(index);
+      setTimeout(apScrollToPanel, 30);
+    }
+  }
+
+  window.apClose = function(){
+    apActiveIndex = -1;
+    document.getElementById('apPanelWrap').classList.remove('open');
+    apSetActiveCardClass(-1);
+  };
+
+  function apToggle(index, clickedImgEl){
+    if (apActiveIndex === index) { window.apClose(); }
+    else { apOpen(index, clickedImgEl); }
+  }
+
   window.apToggleResults = function(btn){
     const list = btn.previousElementSibling;
     list.querySelectorAll('.hidden-row').forEach(function(r){ r.classList.remove('hidden-row'); });
@@ -751,14 +901,25 @@
   };
 
   function apInit(){
-    const bar = document.getElementById('apTabbar');
-    if(!bar) return;
-    bar.innerHTML = AP_ATHLETES.map(function(a){ return '<button type="button">' + a.name + '</button>'; }).join('');
-    Array.from(bar.children).forEach(function(btn,i){ btn.addEventListener('click', function(){ apShow(i); }); });
-    apShow(0);
+    const gallery = document.getElementById('athleteGallery');
+    if (!gallery) return;
+    let downX = 0, downY = 0, moved = 0;
+    gallery.addEventListener('pointerdown', function(e){ downX = e.clientX; downY = e.clientY; moved = 0; });
+    gallery.addEventListener('pointermove', function(e){
+      if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
+    });
+    gallery.addEventListener('click', function(e){
+      if (moved > 6) return; // this was a drag, not a tap
+      const card = e.target.closest('.ap-card'); // whole card (photo or name row) is clickable
+      if (!card) return;
+      const idx = parseInt(card.getAttribute('data-ap-index'), 10);
+      if (isNaN(idx)) return;
+      const imgEl = card.querySelector('.ap-card-media img');
+      apToggle(idx, imgEl);
+    });
   }
 
-  if(document.readyState === 'loading'){
+  if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', apInit);
   } else {
     apInit();
@@ -1016,17 +1177,21 @@
 
     gallery.addEventListener('scroll', wrapIfNeeded, {passive: true});
 
-    // Vertical mouse-wheel moves this horizontal gallery (common on a PC without a trackpad)
+    // Vertical mouse-wheel moves this horizontal gallery (common on a PC without a trackpad).
+    // Opt out per-gallery via data-wheel-nav="off" so the page scrolls normally instead
+    // (used for the athlete carousel, where hijacking the wheel felt surprising).
     let wheelLocked = false, wheelTimer = null;
-    gallery.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // already horizontal input, let it pass
-      e.preventDefault();
-      if (!wheelLocked) { wheelLocked = true; lockSnap(); }
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => { wheelLocked = false; unlockSnap(); }, 150);
-      gallery.scrollLeft += e.deltaY;
-      wrapIfNeeded();
-    }, {passive: false});
+    if (gallery.dataset.wheelNav !== 'off') {
+      gallery.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // already horizontal input, let it pass
+        e.preventDefault();
+        if (!wheelLocked) { wheelLocked = true; lockSnap(); }
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => { wheelLocked = false; unlockSnap(); }, 150);
+        gallery.scrollLeft += e.deltaY;
+        wrapIfNeeded();
+      }, {passive: false});
+    }
 
     // Click-and-drag to scroll with a mouse
     let isDown = false, startX = 0, startScroll = 0;
