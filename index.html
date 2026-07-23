@@ -548,10 +548,22 @@
   .df-tile{background:linear-gradient(155deg, rgba(255,255,255,.06), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);
     border-radius:22px;padding:28px 26px;}
   .df-tile-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;
-    background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.25);margin-bottom:18px;}
+    background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.25);margin-bottom:18px;flex-shrink:0;}
   .df-tile-icon svg{width:22px;height:22px;}
   .df-tile h3{font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-.01em;}
   .df-tile p{font-size:13.5px;color:var(--muted);line-height:1.8;}
+  .df-tile-wide{grid-column:span 3;display:flex;align-items:center;gap:24px;
+    background:linear-gradient(100deg, rgba(255,90,60,.1), rgba(255,255,255,.03));border-color:rgba(255,90,60,.22);}
+  .df-tile-wide .df-tile-icon{width:56px;height:56px;margin-bottom:0;}
+  .df-tile-wide .df-tile-icon svg{width:26px;height:26px;}
+  .df-tile-wide h3{font-size:19px;margin-bottom:6px;}
+  .df-tile-wide p{font-size:14px;}
+  @media (max-width:900px){
+    .df-tile-wide{grid-column:span 2;}
+  }
+  @media (max-width:640px){
+    .df-tile-wide{grid-column:1/-1;flex-direction:column;align-items:flex-start;text-align:left;gap:14px;}
+  }
   .df-showcase{margin-top:12vh;display:flex;flex-direction:column;align-items:center;}
   .df-showcase-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.08em;margin-bottom:26px;display:flex;align-items:center;gap:10px;}
   .df-showcase-label .badge{font-size:10px;font-weight:700;color:var(--accent);background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.3);border-radius:999px;padding:4px 10px;}
@@ -638,6 +650,21 @@
   .lc-cta{position:relative;display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;
     border-radius:999px;padding:13px 26px;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
   .lc-cta svg{width:15px;height:15px;}
+  .lc-scroller-wrap{position:relative;margin:22px 0 26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);}
+  .lc-scroller-label{font-size:11.5px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:12px;}
+  .lc-scroller{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;-ms-overflow-style:none;scrollbar-width:none;}
+  .lc-scroller::-webkit-scrollbar{display:none;}
+  .lc-date-card{flex:0 0 auto;scroll-snap-align:start;width:54px;height:68px;border-radius:16px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    cursor:pointer;transition:background .2s,border-color .2s,transform .2s;}
+  .lc-date-card:hover{border-color:rgba(255,255,255,.24);transform:translateY(-2px);}
+  .lc-date-card.active{background:var(--accent);border-color:var(--accent);}
+  .lc-date-card .dow{font-size:11px;color:var(--muted);font-weight:600;}
+  .lc-date-card.active .dow{color:rgba(255,255,255,.85);}
+  .lc-date-card .num{font-size:17px;font-weight:800;}
+  .lc-date-card .has-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:0;}
+  .lc-date-card.has-events .has-dot{opacity:1;}
+  .lc-date-card.active .has-dot{background:#fff;opacity:1;}
 
   /* ---------- Community ---------- */
   .community{background:var(--bg);padding:18vh 6vw 20vh;border-top:1px solid rgba(255,255,255,.08);}
@@ -1270,6 +1297,13 @@
   </div>
 
   <div class="df-grid">
+    <div class="df-tile df-tile-wide reveal">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="11" r="2"></circle><line x1="13" y1="9.5" x2="18" y2="9.5"></line><line x1="13" y1="13.5" x2="18" y2="13.5"></line></svg></div>
+      <div>
+        <h3>選手カルテとは？</h3>
+        <p>MICが選手一人ひとりに用意する、成長の記録をすべて一本化したデジタルカルテです。</p>
+      </div>
+    </div>
     <div class="df-tile reveal">
       <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1"></circle></svg></div>
       <h3>目標設定</h3>
@@ -1479,16 +1513,20 @@
     <div class="calendar-head reveal">
       <div class="eyebrow">Calendar</div>
       <h2>レッスンカレンダー</h2>
-      <p>次のレッスン予定はこちら。全日程はフルカレンダーでご確認いただけます。</p>
+      <p>次のレッスン予定はこちら。日付を選ぶと内容が切り替わります。</p>
     </div>
     <div class="lc-card reveal-scale">
       <div class="lc-glow"></div>
       <div class="lc-tag"><span class="lc-dot"></span>NEXT EVENT</div>
-      <div class="lc-date">8月1日<span>土</span></div>
-      <div class="lc-title">一般レッスン（初級）</div>
+      <div class="lc-date" id="lcDate">8月1日<span>土</span></div>
+      <div class="lc-title" id="lcTitle">一般レッスン（初級）</div>
       <div class="lc-meta">
-        <span class="lc-chip">📍 テイネスキー場</span>
-        <span class="lc-chip">👤 城 勇太</span>
+        <span class="lc-chip" id="lcLoc">📍 テイネスキー場</span>
+        <span class="lc-chip" id="lcCoach">👤 城 勇太</span>
+      </div>
+      <div class="lc-scroller-wrap">
+        <div class="lc-scroller-label">日付を選ぶ</div>
+        <div class="lc-scroller" id="lcScroller"></div>
       </div>
       <a class="lc-cta" href="lesson-calendar-concept.html">
         フルカレンダーを見る
@@ -1498,6 +1536,79 @@
     <div class="calendar-note reveal delay-1">※表示内容はサンプルです。実データはGoogleカレンダー連携後に自動反映されます。</div>
   </div>
 </section>
+
+<script>
+(function(){
+  // ---- サンプルデータ（実データではありません。lesson-calendar-concept.html と同一データを使用） ----
+  var EVENTS = {
+    '2026-08-01': [{title:'一般レッスン（初級）', location:'テイネスキー場', coach:'城 勇太'}, {title:'一般レッスン（中級）', location:'テイネスキー場', coach:'舘田 瞬哉'}],
+    '2026-08-02': [],
+    '2026-08-03': [{title:'育成コース練習', location:'さのさかスキー場', coach:'建部 順平'}],
+    '2026-08-04': [],
+    '2026-08-05': [{title:'一般レッスン（初級）', location:'宮城蔵王スキー場', coach:'笠巻 昇太'}, {title:'一般レッスン（上級）', location:'宮城蔵王スキー場', coach:'山本 帆夏'}, {title:'選手強化練習', location:'宮城蔵王スキー場', coach:'和田 野々花'}],
+    '2026-08-06': [],
+    '2026-08-07': [{title:'育成コース練習', location:'テイネスキー場', coach:'伊藤 あづさ'}],
+    '2026-08-08': [],
+    '2026-08-09': [{title:'合同強化合宿（1日目）', location:'さのさかスキー場', coach:'新保 龍登'}],
+    '2026-08-10': [{title:'合同強化合宿（2日目）', location:'さのさかスキー場', coach:'新保 龍登'}]
+  };
+  var DOWS = ['日','月','火','水','木','金','土'];
+  var DATES = Object.keys(EVENTS).sort();
+  var TODAY_STR = '2026-07-30'; // デモ上の「今日」
+  var nextDate = DATES.find(function(d){ return d >= TODAY_STR && EVENTS[d].length > 0; }) || DATES[0];
+
+  function renderScroller(){
+    var el = document.getElementById('lcScroller');
+    if (!el) return;
+    el.innerHTML = '';
+    DATES.forEach(function(iso){
+      var d = new Date(iso + 'T00:00:00');
+      var hasEvents = EVENTS[iso].length > 0;
+      var card = document.createElement('div');
+      card.className = 'lc-date-card' + (hasEvents ? ' has-events' : '');
+      card.setAttribute('data-iso', iso);
+      card.innerHTML = '<div class="dow">' + DOWS[d.getDay()] + '</div><div class="num">' + d.getDate() + '</div><div class="has-dot"></div>';
+      card.addEventListener('click', function(){ selectDate(iso); });
+      el.appendChild(card);
+    });
+  }
+
+  function selectDate(iso){
+    var d = new Date(iso + 'T00:00:00');
+    var events = EVENTS[iso] || [];
+    document.querySelectorAll('.lc-date-card').forEach(function(c){
+      c.classList.toggle('active', c.getAttribute('data-iso') === iso);
+    });
+    var dateEl = document.getElementById('lcDate');
+    if (dateEl) dateEl.innerHTML = (d.getMonth()+1) + '月' + d.getDate() + '日<span>' + DOWS[d.getDay()] + '</span>';
+    var titleEl = document.getElementById('lcTitle');
+    var locEl = document.getElementById('lcLoc');
+    var coachEl = document.getElementById('lcCoach');
+    if (events.length > 0){
+      if (titleEl) titleEl.textContent = events[0].title + (events.length > 1 ? '　他' + (events.length-1) + '件' : '');
+      if (locEl) locEl.textContent = '📍 ' + events[0].location;
+      if (coachEl) coachEl.textContent = '👤 ' + events[0].coach;
+    } else {
+      if (titleEl) titleEl.textContent = 'この日の予定はありません';
+      if (locEl) locEl.textContent = '📍 -';
+      if (coachEl) coachEl.textContent = '👤 -';
+    }
+    var activeCard = document.querySelector('.lc-date-card[data-iso="' + iso + '"]');
+    if (activeCard) activeCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  }
+
+  function lcInit(){
+    renderScroller();
+    selectDate(nextDate);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', lcInit);
+  } else {
+    lcInit();
+  }
+})();
+</script>
 
 <section class="community" id="community">
   <div class="cm-head">
