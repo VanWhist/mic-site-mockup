@@ -265,7 +265,7 @@
 
   /* ---------- Coaches (reuses .gallery / .g-card system) ---------- */
   .coaches{
-    background:var(--bg);
+    background:#101012;
     padding:18vh 0 20vh;
     border-top:1px solid rgba(255,255,255,.08);
   }
@@ -335,7 +335,7 @@
 
   /* ---------- News ticker ---------- */
   .news{
-    background:var(--bg);
+    background:#101012;
     padding:17vh 6vw;
     border-top:1px solid rgba(255,255,255,.08);
     border-bottom:1px solid rgba(255,255,255,.08);
@@ -489,6 +489,176 @@
     .ap-play-btn{width:60px;height:60px;}
     .ap-play-btn svg{width:20px;height:20px;}
   }
+
+  /* ---------- Coach profile (smaller carousel cards + expand-in-place panel) ---------- */
+  .g-card.cp-card{width:min(46vw,230px);height:300px;cursor:pointer;}
+  .g-card.cp-card:nth-child(even){margin-top:32px;}
+  .cp-chev{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s,border-color .2s;backdrop-filter:blur(4px);z-index:2;}
+  .g-card.cp-card:hover .cp-chev{border-color:rgba(255,255,255,.55);}
+  .g-card.cp-card.active .cp-chev{transform:rotate(180deg);background:var(--accent);border-color:var(--accent);}
+  .g-card.cp-card.active .g-caption .name{color:var(--accent);}
+
+  .cp-photos{position:absolute;inset:0;}
+  .cp-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
+  .cp-photo.active{opacity:1;}
+  .cp-story-bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:3;pointer-events:none;}
+  .cp-story-bars .bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;}
+  .cp-story-bars .bar.active{background:rgba(255,255,255,.95);}
+  .cp-photo-nav{position:absolute;top:0;bottom:0;width:38%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
+  .cp-photo-nav-prev{left:0;}
+  .cp-photo-nav-next{right:0;}
+
+  .cp-panel-wrap{max-width:900px;margin:0 auto;padding:0 6vw;display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.34,1.56,.64,1);}
+  .cp-panel-wrap.open{grid-template-rows:1fr;}
+  .cp-panel-inner{overflow:hidden;min-height:0;}
+  .cp-panel{margin-top:40px;background:#1b1b1e;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:36px 7% 44px;}
+  .cp-panel-head{display:flex;align-items:center;gap:18px;}
+  .cp-panel-avatar{width:76px;height:76px;border-radius:50%;overflow:hidden;flex:0 0 auto;background:#0e0e10;}
+  .cp-panel-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+  .cp-panel-namewrap{flex:1 1 auto;min-width:0;}
+  .cp-panel-name{font-size:clamp(19px,2.6vw,25px);font-weight:800;letter-spacing:-.02em;}
+  .cp-panel-romaji{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.03em;}
+  .cp-panel-tag{font-size:12.5px;color:var(--accent);margin-top:5px;font-weight:600;}
+  .cp-panel-close{margin-left:auto;flex:0 0 auto;background:none;border:1px solid rgba(255,255,255,.18);color:var(--fg);font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;font-family:inherit;transition:background .2s,border-color .2s;}
+  .cp-panel-close:hover{background:rgba(255,255,255,.08);}
+  .cp-panel-body{margin-top:28px;max-width:680px;}
+  .cp-panel-body p{font-size:14.5px;line-height:1.9;color:#dcdce0;margin:0 0 14px;}
+  .cp-panel-sub{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin:26px 0 12px;}
+  .cp-panel-list{list-style:none;padding:0;margin:0;}
+  .cp-panel-list li{font-size:13.5px;line-height:1.8;color:#dcdce0;padding:7px 2px;border-top:1px solid rgba(255,255,255,.1);}
+  .cp-panel-list li:first-child{border-top:none;}
+
+  @media (max-width:700px){
+    .g-card.cp-card{width:min(58vw,230px);height:280px;}
+    .cp-panel{padding:28px 6% 34px;}
+    .cp-panel-avatar{width:60px;height:60px;}
+  }
+
+  /* ---------- Data feature (選手カルテ) ---------- */
+  .data-feature{background:var(--bg);padding:18vh 6vw 20vh;}
+  .df-head{max-width:760px;margin:0 auto;text-align:center;}
+  .df-head .eyebrow{display:flex;justify-content:center;}
+  .df-head h2{font-size:clamp(30px,4.4vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.3;margin:14px 0 18px;}
+  .df-head p{color:var(--muted);font-size:15px;line-height:1.9;}
+  .df-statement{text-align:center;margin:8vh 0;}
+  .df-statement .en{font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+  .df-statement .jp{font-size:clamp(22px,3vw,34px);font-weight:800;letter-spacing:-.01em;margin-top:10px;line-height:1.4;
+    background:linear-gradient(100deg, var(--fg), var(--accent) 60%, var(--fg));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .df-grid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .df-tile{background:linear-gradient(155deg, rgba(255,255,255,.06), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;padding:28px 26px;}
+  .df-tile-icon{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;
+    background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.25);margin-bottom:18px;}
+  .df-tile-icon svg{width:22px;height:22px;}
+  .df-tile h3{font-size:17px;font-weight:800;margin-bottom:8px;letter-spacing:-.01em;}
+  .df-tile p{font-size:13.5px;color:var(--muted);line-height:1.8;}
+  .df-showcase{margin-top:12vh;display:flex;flex-direction:column;align-items:center;}
+  .df-showcase-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.08em;margin-bottom:26px;display:flex;align-items:center;gap:10px;}
+  .df-showcase-label .badge{font-size:10px;font-weight:700;color:var(--accent);background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.3);border-radius:999px;padding:4px 10px;}
+  .df-phone{position:relative;width:260px;height:530px;border-radius:46px;background:linear-gradient(155deg,#232326,#0d0d0f);
+    border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 70px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08);padding:13px;}
+  .df-phone::before{content:'';position:absolute;top:24px;left:50%;transform:translateX(-50%);width:86px;height:23px;border-radius:14px;background:#000;z-index:3;}
+  .df-phone .screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:#111114;border:1px solid rgba(255,255,255,.06);padding:40px 18px 18px;}
+  .df-ph-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .df-ph-avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);filter:blur(2px);}
+  .df-ph-line{height:7px;border-radius:4px;background:rgba(255,255,255,.1);}
+  .df-ph-line.w60{width:60%;}
+  .df-ph-line.w40{width:40%;}
+  .df-ph-chip{display:inline-block;font-size:9px;color:var(--accent);background:rgba(255,90,60,.14);border-radius:999px;padding:3px 8px;margin-bottom:10px;}
+  .df-ph-bars{display:flex;align-items:flex-end;gap:5px;height:74px;margin-top:16px;}
+  .df-ph-bars .df-bar{flex:1;background:linear-gradient(to top, rgba(255,90,60,.6), rgba(255,90,60,.15));border-radius:4px 4px 0 0;}
+  .df-ph-ring{width:68px;height:68px;border-radius:50%;margin:16px auto 0;background:conic-gradient(var(--accent) 0% 72%, rgba(255,255,255,.08) 72% 100%);display:flex;align-items:center;justify-content:center;}
+  .df-ph-ring-inner{width:50px;height:50px;border-radius:50%;background:#111114;}
+  .df-phone-caption{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;max-width:340px;line-height:1.7;}
+
+  /* ---------- Programs (プログラム紹介) ---------- */
+  .programs{background:var(--bg);padding:18vh 6vw 20vh;position:relative;overflow:hidden;}
+  .programs::before{content:'';position:absolute;top:-10%;right:-10%;width:50%;height:60%;background:radial-gradient(circle, rgba(255,90,60,.12), transparent 70%);filter:blur(60px);pointer-events:none;}
+  .pt-head{max-width:760px;margin:0 auto;text-align:center;position:relative;}
+  .pt-head .eyebrow{display:flex;justify-content:center;}
+  .pt-head h2{font-size:clamp(30px,4.4vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.3;margin:14px 0 12px;}
+  .pt-head p{color:var(--muted);font-size:15px;}
+  .pt-flagship{position:relative;max-width:1160px;margin:8vh auto 0;border-radius:28px;overflow:hidden;
+    background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.03));border:1px solid rgba(255,90,60,.3);
+    box-shadow:0 30px 70px -30px rgba(0,0,0,.65);display:grid;grid-template-columns:1fr 1fr;}
+  .pt-flagship-photo{position:relative;min-height:380px;background:
+    linear-gradient(180deg, rgba(10,10,12,0) 30%, rgba(10,10,12,.5) 100%),
+    radial-gradient(circle at 30% 20%, rgba(255,140,100,.35), transparent 55%),
+    linear-gradient(135deg,#3a2420,#15100e 60%);display:flex;align-items:flex-end;padding:24px;}
+  .pt-flagship-photo .ph-tag{font-size:11px;color:rgba(255,255,255,.55);border:1px dashed rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;}
+  .pt-flagship-badge{position:absolute;top:24px;left:24px;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    color:#fff;background:var(--accent);border-radius:999px;padding:6px 14px 6px 11px;box-shadow:0 8px 20px -6px rgba(255,90,60,.6);}
+  .pt-flagship-badge svg{width:13px;height:13px;}
+  .pt-flagship-body{padding:40px 42px;display:flex;flex-direction:column;justify-content:center;}
+  .pt-flagship-meta{font-size:12.5px;color:var(--muted);margin-bottom:12px;}
+  .pt-flagship-title{font-size:clamp(22px,2.6vw,30px);font-weight:800;margin-bottom:14px;letter-spacing:-.01em;}
+  .pt-flagship-desc{font-size:14px;line-height:1.85;color:#d8d8dc;margin-bottom:20px;}
+  .pt-value-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px;}
+  .pt-value-chip{font-size:12.5px;font-weight:600;color:#e8e8ec;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 13px;}
+  .pt-flagship-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.1);padding-top:20px;}
+  .pt-price-label{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .pt-price{font-size:22px;font-weight:800;margin-top:3px;color:var(--fg);}
+  .pt-cta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--accent);}
+  .pt-cta svg{width:16px;height:16px;}
+  .pt-others-label{max-width:1160px;margin:8vh auto 3vh;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.05em;}
+  .pt-others{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .pt-row{display:block;border-radius:20px;padding:22px 24px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+    transition:border-color .2s,transform .3s cubic-bezier(.34,1.3,.64,1);}
+  .pt-row:hover{border-color:rgba(255,255,255,.24);transform:translateY(-4px);}
+  .pt-row-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .pt-row-icon svg{width:20px;height:20px;}
+  .pt-row-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .pt-row-audience{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:14px;}
+  .pt-row-price{font-size:13px;font-weight:700;color:var(--fg);}
+  @media (max-width:900px){
+    .pt-flagship{grid-template-columns:1fr;}
+    .pt-others{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .pt-flagship-body{padding:28px 24px;}
+    .pt-flagship-foot{flex-direction:column;align-items:flex-start;gap:16px;}
+    .pt-flagship-photo{min-height:220px;}
+  }
+
+  /* ---------- Lesson calendar teaser ---------- */
+  .lc-card{max-width:640px;margin:0 auto;position:relative;border-radius:28px;padding:34px 36px;overflow:hidden;
+    background:linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 24px 60px -24px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);}
+  .lc-glow{position:absolute;top:-40%;right:-20%;width:60%;height:80%;background:radial-gradient(circle, rgba(255,90,60,.3), transparent 70%);filter:blur(40px);pointer-events:none;}
+  .lc-tag{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;}
+  .lc-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(255,90,60,.6);animation:lcPulse 2s ease-out infinite;}
+  @keyframes lcPulse{0%{box-shadow:0 0 0 0 rgba(255,90,60,.55);}70%{box-shadow:0 0 0 8px rgba(255,90,60,0);}100%{box-shadow:0 0 0 0 rgba(255,90,60,0);}}
+  .lc-date{position:relative;font-size:40px;font-weight:800;letter-spacing:-.02em;margin:16px 0 4px;}
+  .lc-date span{color:var(--muted);font-size:19px;font-weight:600;margin-left:8px;}
+  .lc-title{position:relative;font-size:20px;font-weight:700;margin:2px 0 18px;}
+  .lc-meta{position:relative;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
+  .lc-chip{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:#e4e4e8;background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 15px;}
+  .lc-cta{position:relative;display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;
+    border-radius:999px;padding:13px 26px;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .lc-cta svg{width:15px;height:15px;}
+
+  /* ---------- Community ---------- */
+  .community{background:var(--bg);padding:18vh 6vw 20vh;border-top:1px solid rgba(255,255,255,.08);}
+  .cm-head{max-width:760px;margin:0 auto;text-align:center;}
+  .cm-head .eyebrow{display:flex;justify-content:center;}
+  .cm-head h2{font-size:clamp(30px,4.4vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.3;margin:14px 0 12px;}
+  .cm-head p{color:var(--muted);font-size:15px;}
+  .cm-stats{max-width:760px;margin:7vh auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .cm-stat{border-radius:20px;padding:26px 10px;text-align:center;background:linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);}
+  .cm-stat .num{font-family:var(--serif-num);font-size:38px;font-weight:600;color:var(--accent);letter-spacing:-.02em;line-height:1;}
+  .cm-stat .lbl{font-size:12px;color:var(--muted);margin-top:10px;}
+  .cm-logos-label{text-align:center;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:9vh 0 20px;}
+  .cm-logo-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  .cm-logo-cell{aspect-ratio:16/10;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);
+    border:1px dashed rgba(255,255,255,.16);font-size:10px;color:rgba(255,255,255,.4);text-align:center;padding:8px;line-height:1.4;}
+  .cm-cta-wrap{margin-top:9vh;text-align:center;}
+  @media (max-width:900px){ .cm-logo-grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:820px){
+    .df-grid{grid-template-columns:1fr;}
+    .cm-stats{grid-template-columns:1fr;}
+  }
 </style>
 </head>
 <body>
@@ -501,9 +671,12 @@
     <ul>
       <li><a href="#mvv">MVV</a></li>
       <li><a href="#athletes">選手紹介</a></li>
-      <li><a href="#news">お知らせ</a></li>
-      <li><a href="#calendar">カレンダー</a></li>
+      <li><a href="#data-feature">選手カルテ</a></li>
       <li><a href="#coaches">コーチ紹介</a></li>
+      <li><a href="#programs">プログラム</a></li>
+      <li><a href="#calendar">カレンダー</a></li>
+      <li><a href="#community">コミュニティ</a></li>
+      <li><a href="#news">お知らせ</a></li>
       <li><a href="inquiry.html">お問い合わせ</a></li>
     </ul>
   </nav>
@@ -678,7 +851,7 @@
       hasKarte:true,
       vision:'ワールドカップなどで活躍したいです。',
       goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
-      video:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+      video:'https://vanwhist.github.io/mic-site-mockup/assets/videos/%E7%9D%A6%E4%BA%BA.mp4',
       tracked:true,
       results:[
         {d:'2024-03-08',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
@@ -919,37 +1092,237 @@
     });
   }
 
+  // ---------- Coach profile panel (content quoted as-is from mogul-mic.com/coaches/) ----------
+  const CP_COACHES = [
+    {
+      name:'城 勇太', romaji:'Yuta Jo', tag:'代表コーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta.jpg','https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta-2.jpg'],
+      intro:[],
+      profile:['1992年 カナダ・ウィスラーに移住','1994年 モーグル競技を始める','2000年 カナダ・B.C州チーム所属、全カナダJr.選手権優勝','2002年 日本に帰国し、国内にて競技を続ける','2007年 現役引退','2009年 SAJモーグル強化委員として活動','2011年 SAJモーグルナショナルチームコーチ、JOC専任コーチとして活動','2014年 第22回冬季オリンピック（ソチ）日本代表選手団として帯同','2017年 第8回アジア冬季競技大会（2017/札幌）日本代表選手団として帯同','2018年 第23回冬季オリンピック（平昌）日本代表選手団として帯同','2019年 SAJモーグルナショナルチームヘッドコーチとして活動、2019年冬季ユニバーシアード（クラスノヤルスク）日本代表選手団として帯同','2022年 第24回冬季オリンピック（北京）日本代表選手団として帯同','2023年 MIC代表'],
+      quals:[]
+    },
+    {
+      name:'舘田 瞬哉', romaji:'Syunya Tateda', tag:'フルタイムコーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya.jpg','https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-2.jpg','https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-3.jpg'],
+      intro:[],
+      profile:['4歳からスキーを始める','小学6年生でスキー場にあったコブを滑る楽しさをしり、モーグルを始める','中学2年生で初めて公認大会出場','高校で長野県立白馬高等学校に進学。スキー留学をする','高校3年生で初めて全日本選手権出場','21歳 全日本選手権6位入賞をする','22歳 公認大会初優勝を果たす','23歳 企業選手として会社に所属する（Gas One所属）','24歳（2016）全日本選手権2位表彰台を果たす','25歳（2017）全米選手権全試合決勝進出。最高順位13位','26歳（2018）公認大会優勝〜現役引退','28歳（2020）ROSSIGNOL テクニカルアドバイザー就任','31歳（2023） MICフルタイムコーチ'],
+      quals:['JSPO公認スポーツ指導者制度スキー・スノーボードコーチ1']
+    },
+    {
+      name:'伊藤 あづさ', romaji:'Azusa Ito', tag:'スポットコーチ',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E4%BC%8A%E8%97%A4.png'],
+      intro:['1985年滋賀生まれ。幼少期よりスキーに親しみ、小学生の時にモーグルの草大会に参戦。高校一年生より世界ジュニア、全日本選手権、ノースアメリカンカップ、ヨーロッパカップなど様々な大会に出場。競技人生は長く、20年ほど取り組んだ。全日本選手権優勝、ワールドカップ2007年ボス大会の8位などがベストリザルト。競技人生では、怪我や成績不振など苦しいこともあったが、色々な人に支えてもらい今でもスキー大好きモーグル大好き。引退後はスポット的ではあるが、コーチとしての活動をしてきた。'],
+      profile:['4歳 スキーを始める','9歳 モーグルを始める','10歳 草大会に出場','2000年〜 ジュニア世界選手権、全日本選手権、ノースアメリカンカップ、ヨーロッパカップ参戦','2002年〜 ワールドカップ参戦','2005年 ヨーロッパカップ優勝','2006年 全日本選手権優勝','2007年 ワールドカップ入賞','2015年 世界選手権出場','2018年 現役引退','2019年〜 コーチとして活動','2023年 MICスポットコーチ','元モーグルナショナルチームメンバー'],
+      quals:['JSPO公認スポーツ指導制度スキー・スノーボードコーチ1']
+    },
+    {
+      name:'笠巻 昇太', romaji:'Shota Kasamaki', tag:'スポットコーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota.jpg','https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota-2.jpg'],
+      intro:['MICの前身であるJr.プロジェクトの卒業生で、初期メンバーの1人として活動していました。当時は小柄な体つきからは想像できないアグレッシブなターン、キレのあるエアで周りを魅了していました。今後はコーチとしてMICの一員として携わりますので、どうぞよろしくお願い申し上げます。'],
+      profile:['3歳 スキーを始める','6歳 モーグル競技を始める','12歳 公認大会へ本格的に出場し始める','16歳(2011) A級公認大会初優勝(ハチ北)','17歳(2012) A級公認大会優勝(斑尾)','17歳(2012) A級公認大会入賞3回','17歳(2012) 全日本選手権出場','17歳(2012) JOCジュニアオリンピックカップ3位','18歳(2012) 海外戦出場','18歳(2013) 現役引退','28歳(2023) MICスポットコーチ'],
+      quals:[]
+    },
+    {
+      name:'山本 帆夏', romaji:'Honoka Yamamoto', tag:'スポットコーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka.jpg','https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka-2.jpg'],
+      intro:['2022年に競技を引退した、MICの前身であるJr.プロジェクトの卒業生です。いつも笑顔で周りを明るくしてくれる彼女からは想像ができない、攻めの滑りをしてました。今後はコーチとしてMICの一員として携わりますので、どうぞよろしくお願い申し上げます。'],
+      profile:['3歳 スキーを始める','6歳 モーグル競技を始める','12歳 公認大会に本格的に出場し始める','13歳(2013) A級公認大会2位(ハチ北)','15歳(2015) 全日本選手権出場','17歳(2017) 海外戦出場','17歳(2017) ながの銀嶺国体2位（少年の部）','18歳(2018) A級公認大会入賞5回','22歳(2022) A級公認大会優勝2回','22歳(2022) 競技引退','23歳(2023) MICスポットコーチ'],
+      quals:[]
+    },
+    {
+      name:'和田 野々花', romaji:'Nonoka Wada', tag:'ビハインド・ザ・チームコーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/wada-nonoka.jpg'],
+      intro:['2014年に競技を引退した、MICの前身であるJr.プロジェクトの卒業生です。当時Dスピン（7o）等、女子では高難度エアに率先してチャレンジし、モーグル女子のエア限界を押し上げました。今後はビハインド・ザ・チームコーチとしてMICの一員として携わりますので、どうぞよろしくお願い申し上げます。','（ビハインド・ザ・チームとは、チームを後ろから支えてくれるチームの事です。チームにとって無くてはならない存在で、とても重要な役割です）'],
+      profile:['1歳 スキーを始める','7歳 アルペンスキーを始める','11歳 モーグル競技へ転向する','12歳 SAJ公認大会出場','14歳(2006/2007) SAJモーグルナショナルチームJr-B強化指定選手','15歳(2007) 全日本選手権初出場で9位、JOCジュニアオリンピックカップ中学生の部優勝','17歳(2009) トキめき新潟国体 少年の部女子 優勝','18歳(2010) SAJ公認大会優勝','19歳(2011) アメリカ・USセレクション出場','20歳〜全日本選手権8位','22歳(2014) 全日本選手権出場し現役引退','2023年 ビハインド・ザ・MICコーチ'],
+      quals:['中高保健体育教諭','チャイルドカウンセラー','家族療法カウンセラー','ファイナンシャルプランナー','生命保険募集人資格','損害保険募集人資格']
+    },
+    {
+      name:'建部 順平', romaji:'Junpei Tatebe', tag:'ビハインド・ザ・チームコーチ',
+      photos:['https://vanwhist.github.io/mic-site-mockup/assets/coaches/tatebe-junpei.jpg'],
+      intro:['基礎スキー・アルペンから中学1年よりモーグルに転向し約10年間競技を続け2014年の全日本選手権にて引退。現役中はSAJ A級公認大会優勝、全日本選手権6位入賞、北米選手権16位などの結果を残しました。','2023年3月にはスキージャム勝山にて自身が主催となり草大会を開催。今後はモーグル業界の裏方として盛り上げていきたいという想いから、ビハインド・ザ・チームコーチとしてMICの一員として携わります。どうぞよろしくお願い申し上げます。'],
+      profile:['6歳 スキーを始める','12歳 モーグル競技へ転向する','13歳 SAJ公認大会出場','17歳(2009) トキめき新潟国体 少年の部男子 6位','19歳(2011) SAJ公認大会優勝','20歳(2011/2012) SAJフリースタイルナショナルチームW強化指定選手','20歳(2011) アメリカ・USセレクション出場','20歳(2012) 北米選手権 Val st. com 16位','21歳 (2012) アメリカ・USセレクション出場','22歳(2013) 全日本選手権6位入賞','23歳(2014) 全日本選手権8位入賞し、引退','2023年 ビハインド・ザ・MICコーチ'],
+      quals:[]
+    },
+    {
+      name:'新保 龍登', romaji:'Ryuto Shinpo', tag:'スポットコーチ',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__60710915-1.jpg'],
+      intro:['大阪府＆MIC出身。小学4年生からフリースタイルスキーのモーグル競技を始める。同競技で、2020〜2022シーズンSAJ強化指定選手。2024年にモーグル競技を引退し、フリーライド競技に転向。白馬エリアを拠点に、フリーライドのコンテストに出場、各サポートメーカーのプロライダーとして活動。その傍ら、オリンピック出場を目指す若手モーグル選手の育成に尽力。二足の草鞋で活動中。'],
+      profile:['3歳からスキーを始める','小学2年生の頃に兄の影響を受け、モーグルを始める','小学4年生でJr.プロジェクトに加入','中学1年生で初めての公認大会に出場','中学2年生で初めての全日本選手権出場','14歳(2015) JOCジュニアオリンピックカップ 中学生部門 3位','15歳(2016) 国民体育大会冬季大会スキー競技会モーグル少年部門 5位','18歳(2019)全日本選手権６位入賞。','19歳(2019)同志社大学からスポーツユニオン新人賞、優秀選手賞を受賞','19歳(2020)US SELECTION ５位入賞','19歳(2020)全日本選手権10位。','19歳(2020)同志社大学から同志社総長賞を受賞','19歳(2020) SNOW JAPAN 2020/2021 国内強化指定選手','20歳(2021) SNOW JAPAN 2021/2022 SAJ強化指定選手（国内ランク）','21歳(2022) Australian New Zealand Cup 9位','22歳(2023) Asian Cup 10位','23歳(2024)全日本選手権を最後にモーグル競技を引退','24歳(2025)フリーライド競技に転向','24歳(2025) FREERIDE WORLD TOUR JAPAN 7位。','KASTLE SKI、GIRO SNOW、Tripoint sunglasses、LEVEL Grove、KIZAKI、ZAMST、SEVスポーツのプロライダー','MICスポットコーチ'],
+      quals:['JSPO公認スポーツ指導制度スキー・スノーボードコーチ1']
+    }
+  ];
+
+  function cpRenderPanel(c, photoIndex){
+    const photo = (c.photos && c.photos[photoIndex]) || (c.photos && c.photos[0]) || '';
+    const introHtml = c.intro.map(function(p){ return '<p>' + p + '</p>'; }).join('');
+    const profileHtml = '<div class="cp-panel-sub">プロフィール</div><ul class="cp-panel-list">'
+      + c.profile.map(function(b){ return '<li>' + b + '</li>'; }).join('') + '</ul>';
+    const qualsHtml = c.quals && c.quals.length
+      ? '<div class="cp-panel-sub">資格</div><ul class="cp-panel-list">' + c.quals.map(function(q){ return '<li>' + q + '</li>'; }).join('') + '</ul>'
+      : '';
+    return '<div class="cp-panel-head">'
+      + '<div class="cp-panel-avatar"><img src="' + photo + '" alt=""></div>'
+      + '<div class="cp-panel-namewrap"><div class="cp-panel-name">' + c.name + '</div>'
+      + '<div class="cp-panel-romaji">' + c.romaji + '</div>'
+      + '<div class="cp-panel-tag">' + c.tag + '</div></div>'
+      + '<button type="button" class="cp-panel-close" onclick="cpClose()">閉じる ×</button>'
+      + '</div>'
+      + '<div class="cp-panel-body">' + introHtml + profileHtml + qualsHtml + '</div>';
+  }
+
+  let cpActiveIndex = -1;
+
+  function cpSetActiveCardClass(index){
+    document.querySelectorAll('#coachGallery .cp-card').forEach(function(card){
+      const isActive = index >= 0 && card.getAttribute('data-cp-index') === String(index);
+      card.classList.toggle('active', isActive);
+    });
+  }
+
+  function cpScrollToPanel(){
+    const wrap = document.getElementById('cpPanelWrap');
+    if (!wrap) return;
+    const headerOffset = 90;
+    const y = wrap.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  function cpSwitchPhoto(card, dir){
+    const idx = card.getAttribute('data-cp-index');
+    const photos = card.querySelectorAll('.cp-photo');
+    if (photos.length < 2) return;
+    let cur = 0;
+    photos.forEach(function(p, i){ if (p.classList.contains('active')) cur = i; });
+    const next = (cur + dir + photos.length) % photos.length;
+    document.querySelectorAll('#coachGallery .cp-card[data-cp-index="' + idx + '"]').forEach(function(c){
+      c.setAttribute('data-photo-index', String(next));
+      c.querySelectorAll('.cp-photo').forEach(function(p, i){ p.classList.toggle('active', i === next); });
+      c.querySelectorAll('.cp-story-bars .bar').forEach(function(b, i){ b.classList.toggle('active', i === next); });
+    });
+  }
+
+  function cpOpen(index){
+    cpActiveIndex = index;
+    const card = document.querySelector('#coachGallery .cp-card[data-cp-index="' + index + '"]');
+    const photoIndex = card ? parseInt(card.getAttribute('data-photo-index') || '0', 10) : 0;
+    document.getElementById('cpPanel').innerHTML = cpRenderPanel(CP_COACHES[index], photoIndex);
+    document.getElementById('cpPanelWrap').classList.add('open');
+    cpSetActiveCardClass(index);
+    setTimeout(cpScrollToPanel, 30);
+  }
+
+  window.cpClose = function(){
+    cpActiveIndex = -1;
+    document.getElementById('cpPanelWrap').classList.remove('open');
+    cpSetActiveCardClass(-1);
+  };
+
+  function cpToggle(index){
+    if (cpActiveIndex === index) { window.cpClose(); }
+    else { cpOpen(index); }
+  }
+
+  function cpInit(){
+    const gallery = document.getElementById('coachGallery');
+    if (!gallery) return;
+    let downX = 0, downY = 0, moved = 0;
+    gallery.addEventListener('pointerdown', function(e){ downX = e.clientX; downY = e.clientY; moved = 0; });
+    gallery.addEventListener('pointermove', function(e){
+      if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
+    });
+    gallery.addEventListener('click', function(e){
+      if (moved > 6) return; // this was a drag, not a tap
+      const navBtn = e.target.closest('.cp-photo-nav');
+      if (navBtn) {
+        const navCard = navBtn.closest('.cp-card');
+        if (!navCard) return;
+        const dir = navBtn.classList.contains('cp-photo-nav-next') ? 1 : -1;
+        cpSwitchPhoto(navCard, dir);
+        return;
+      }
+      const card = e.target.closest('.cp-card'); // whole card (photo or name) is clickable
+      if (!card) return;
+      const idx = parseInt(card.getAttribute('data-cp-index'), 10);
+      if (isNaN(idx)) return;
+      cpToggle(idx);
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', apInit);
+    document.addEventListener('DOMContentLoaded', function(){ apInit(); cpInit(); });
   } else {
     apInit();
+    cpInit();
   }
 })();
 </script>
 
-<section class="news" id="news">
-  <div class="eyebrow reveal">News</div>
-  <div class="news-inner">
-    <h2 class="reveal">お知らせ</h2>
-    <div class="news-list reveal delay-1">
-      <div class="news-item"><time>2026.6.30</time><span>7月〜8月のレッスンカレンダーを更新しました！</span></div>
-      <div class="news-item"><time>2026.5.15</time><span>6月のレッスンカレンダーを更新しました！</span></div>
-      <div class="news-item"><time>2026.4.15</time><span>ゴールデンウィーク合宿の案内をアップしました！</span></div>
-      <div class="news-note">※本番では「お知らせ」はスプレッドシート連動にし、行を追加するだけでここに反映される想定です。</div>
+<section class="data-feature" id="data-feature">
+  <div class="df-head">
+    <div class="eyebrow reveal">MIC Data Platform</div>
+    <h2 class="reveal delay-1">選手カルテ、すべてを、<br>一つに。</h2>
+    <p class="reveal delay-2">ノートも、Excelも、LINEも、もう要らない。<br>練習・体調・目標のすべてを、これ一つに。</p>
+  </div>
+
+  <div class="df-statement reveal">
+    <div class="en">Everything. All in one.</div>
+    <div class="jp">6つの機能を、<br>ひとつのカルテへ。</div>
+  </div>
+
+  <div class="df-grid">
+    <div class="df-tile reveal">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1"></circle></svg></div>
+      <h3>目標設定</h3>
+      <p>選手ごとに短期・長期の目標を設定し、進捗を可視化</p>
+    </div>
+    <div class="df-tile reveal delay-1">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 13 7 13 9 6 13 18 15 10 17 13 21 13"></polyline></svg></div>
+      <h3>コンディション管理</h3>
+      <p>体調・怪我・体重の推移を日々記録し、コーチと共有</p>
+    </div>
+    <div class="df-tile reveal delay-2">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 Q12 3 20 18"></path><circle cx="20" cy="18" r="1.3" fill="var(--accent)"></circle></svg></div>
+      <h3>エアログ</h3>
+      <p>練習でのジャンプ内容・成功率を記録・蓄積</p>
+    </div>
+    <div class="df-tile reveal">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"></rect><line x1="9" y1="8.5" x2="15" y2="8.5"></line><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="15.5" x2="13" y2="15.5"></line></svg></div>
+      <h3>トレーニングログ</h3>
+      <p>日々の練習内容をログ化し、成長を後から振り返れる</p>
+    </div>
+    <div class="df-tile reveal delay-1">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"></circle><line x1="15.8" y1="15.8" x2="21" y2="21"></line></svg></div>
+      <h3>ジャッジ分析</h3>
+      <p>大会のジャッジスコアを分析し、採点傾向を把握</p>
+    </div>
+    <div class="df-tile reveal delay-2">
+      <div class="df-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="6"></circle><circle cx="15" cy="12" r="6"></circle></svg></div>
+      <h3>ライバル分析</h3>
+      <p>国内外のライバル選手のデータを分析し対策に活用</p>
     </div>
   </div>
-</section>
 
-<section class="calendar" id="calendar">
-  <div class="calendar-inner">
-    <div class="calendar-head reveal">
-      <div class="eyebrow">Calendar</div>
-      <h2>レッスンカレンダー</h2>
-      <p>空き状況・詳細は「MIC選手育成コース・一般レッスン紹介」をご確認ください。</p>
+  <div class="df-showcase">
+    <div class="df-showcase-label reveal">実際の画面（イメージ） <span class="badge">個人情報は伏せて掲載予定</span></div>
+    <div class="df-phone reveal-scale">
+      <div class="screen">
+        <div class="df-ph-chip">TRAINING LOG</div>
+        <div class="df-ph-row"><div class="df-ph-avatar"></div><div class="df-ph-line w40"></div></div>
+        <div class="df-ph-line w60" style="margin-bottom:8px;"></div>
+        <div class="df-ph-line w40"></div>
+        <div class="df-ph-bars">
+          <div class="df-bar" style="height:35%;"></div>
+          <div class="df-bar" style="height:60%;"></div>
+          <div class="df-bar" style="height:45%;"></div>
+          <div class="df-bar" style="height:78%;"></div>
+          <div class="df-bar" style="height:55%;"></div>
+          <div class="df-bar" style="height:92%;"></div>
+          <div class="df-bar" style="height:70%;"></div>
+        </div>
+        <div class="df-ph-ring"><div class="df-ph-ring-inner"></div></div>
+      </div>
     </div>
-    <div class="calendar-embed reveal delay-1">
-      <iframe src="https://calendar.google.com/calendar/embed?src=0e140c50330d8072dd0f1d7c2838a181f9ce83fc3a0c36b7620ce3827ae45d67%40group.calendar.google.com&ctz=Asia%2FTokyo" style="border:0" frameborder="0" scrolling="no" title="MICレッスンカレンダー"></iframe>
-    </div>
+    <div class="df-phone-caption">実際の選手カルテのスクリーンショットに差し替え予定です。氏名・写真などが特定できない形に加工して掲載します。</div>
   </div>
 </section>
 
@@ -964,44 +1337,207 @@
   <div class="gallery-shell">
   <button class="g-nav g-nav-prev" type="button" aria-label="前のコーチ">‹</button>
   <div class="g-fade g-fade-left"></div>
-  <div class="gallery reveal-scale" id="coachGallery">
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E5%9F%8E.png" alt="城勇太">
+  <div class="gallery reveal-scale" id="coachGallery" data-wheel-nav="off">
+    <div class="g-card cp-card" data-cp-index="0" data-photo-index="0">
+      <div class="cp-photos">
+        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta.jpg" alt="城勇太">
+        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta-2.jpg" alt="城勇太">
+      </div>
+      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       <div class="g-caption"><div class="name">城勇太</div><div class="tag">代表コーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E8%88%98%E7%94%B0.png" alt="舘田瞬哉">
+    <div class="g-card cp-card" data-cp-index="1" data-photo-index="0">
+      <div class="cp-photos">
+        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya.jpg" alt="舘田瞬哉" style="object-position:42% center;">
+        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-2.jpg" alt="舘田瞬哉">
+        <img class="cp-photo" data-photo-index="2" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-3.jpg" alt="舘田瞬哉">
+      </div>
+      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span><span class="bar"></span></div>
+      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       <div class="g-caption"><div class="name">舘田瞬哉</div><div class="tag">フルタイムコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
+    <div class="g-card cp-card" data-cp-index="2">
       <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E4%BC%8A%E8%97%A4.png" alt="伊藤あづさ">
       <div class="g-caption"><div class="name">伊藤あづさ</div><div class="tag">スポットコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E7%AC%A0%E5%B7%BB.png" alt="笠巻昇太">
+    <div class="g-card cp-card" data-cp-index="3" data-photo-index="0">
+      <div class="cp-photos">
+        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota.jpg" alt="笠巻昇太">
+        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota-2.jpg" alt="笠巻昇太">
+      </div>
+      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       <div class="g-caption"><div class="name">笠巻昇太</div><div class="tag">スポットコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E5%B1%B1%E6%9C%AC.png" alt="山本帆夏">
+    <div class="g-card cp-card" data-cp-index="4" data-photo-index="0">
+      <div class="cp-photos">
+        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka.jpg" alt="山本帆夏">
+        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka-2.jpg" alt="山本帆夏">
+      </div>
+      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       <div class="g-caption"><div class="name">山本帆夏</div><div class="tag">スポットコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E5%92%8C%E7%94%B0.png" alt="和田野々花">
+    <div class="g-card cp-card" data-cp-index="5">
+      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/wada-nonoka.jpg" alt="和田野々花" style="object-position:center 20%;">
       <div class="g-caption"><div class="name">和田野々花</div><div class="tag">ビハインド・ザ・チームコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
-      <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/05/%E3%82%B3%E3%83%BC%E3%83%81-%E5%BB%BA%E9%83%A8.png" alt="建部順平">
+    <div class="g-card cp-card" data-cp-index="6">
+      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tatebe-junpei.jpg" alt="建部順平">
       <div class="g-caption"><div class="name">建部順平</div><div class="tag">ビハインド・ザ・チームコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
-    <div class="g-card">
+    <div class="g-card cp-card" data-cp-index="7">
       <img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__60710915-1.jpg" alt="新保龍登">
       <div class="g-caption"><div class="name">新保龍登</div><div class="tag">スポットコーチ</div></div>
+      <span class="cp-chev" aria-hidden="true">▾</span>
     </div>
   </div>
   <div class="g-fade g-fade-right"></div>
   <button class="g-nav g-nav-next" type="button" aria-label="次のコーチ">›</button>
   </div>
+  <div class="cp-panel-wrap" id="cpPanelWrap">
+    <div class="cp-panel-inner">
+      <div class="cp-panel" id="cpPanel"></div>
+    </div>
+  </div>
   <div class="news-note" style="padding:0 6vw;margin-top:4vh;">※本番ではプロフィール・実績はスプレッドシート連動にし、更新はシート編集だけで反映される想定です。</div>
+</section>
+
+<section class="programs" id="programs">
+  <div class="pt-head">
+    <div class="eyebrow reveal">MIC Programs</div>
+    <h2 class="reveal delay-1">世界を目指す選手も。<br>初めて滑る人も。</h2>
+    <p class="reveal delay-2">目的に合わせて選べる、4つのプログラム。</p>
+  </div>
+
+  <a class="pt-flagship reveal-scale" href="program-detail-concept.html">
+    <div class="pt-flagship-photo">
+      <div class="pt-flagship-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.6-1.4z"></path></svg>
+        MIC MAIN PROGRAM
+      </div>
+      <span class="ph-tag">写真プレースホルダー（選手のジャンプ／指導風景を想定）</span>
+    </div>
+    <div class="pt-flagship-body">
+      <div class="pt-flagship-meta">対象：SAJ登録選手</div>
+      <div class="pt-flagship-title">①選手育成コース</div>
+      <div class="pt-flagship-desc">世界を目指す選手のための本格プログラム。年間を通じたデータ分析と専属コーチングで、競技力を伸ばす。</div>
+      <div class="pt-value-chips">
+        <span class="pt-value-chip">年間100日以上の練習</span>
+        <span class="pt-value-chip">海外遠征</span>
+        <span class="pt-value-chip">データ分析</span>
+      </div>
+      <div class="pt-flagship-foot">
+        <div>
+          <div class="pt-price-label">Annual Program</div>
+          <div class="pt-price">¥360,000〜</div>
+        </div>
+        <div class="pt-cta">年間プログラムを見る
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <div class="pt-others-label reveal">その他のプログラム</div>
+  <div class="pt-others">
+    <a class="pt-row reveal" href="program-detail-concept.html#p2">
+      <div class="pt-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg></div>
+      <div class="pt-row-title">②一般レッスン</div>
+      <div class="pt-row-audience">競技志向でなく、上達したい方へ。全レベル対象</div>
+      <div class="pt-row-price">体験¥1,000〜</div>
+    </a>
+    <a class="pt-row reveal delay-1" href="program-detail-concept.html#p3">
+      <div class="pt-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"></rect><polygon points="10 9 10 13 14 11"></polygon></svg></div>
+      <div class="pt-row-title">③オンラインサポート</div>
+      <div class="pt-row-audience">動画を送るだけで、コーチが添削・分析</div>
+      <div class="pt-row-price">¥5,500〜/30分</div>
+    </a>
+    <a class="pt-row reveal delay-2" href="program-detail-concept.html#p4">
+      <div class="pt-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.5 7-12a7 7 0 0 0-14 0c0 4.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.5"></circle></svg></div>
+      <div class="pt-row-title">④コーチ派遣</div>
+      <div class="pt-row-audience">団体・個人へ、MICコーチが出張指導に伺います</div>
+      <div class="pt-row-price">¥11,000〜/時間</div>
+    </a>
+  </div>
+</section>
+
+<section class="calendar" id="calendar">
+  <div class="calendar-inner">
+    <div class="calendar-head reveal">
+      <div class="eyebrow">Calendar</div>
+      <h2>レッスンカレンダー</h2>
+      <p>次のレッスン予定はこちら。全日程はフルカレンダーでご確認いただけます。</p>
+    </div>
+    <div class="lc-card reveal-scale">
+      <div class="lc-glow"></div>
+      <div class="lc-tag"><span class="lc-dot"></span>NEXT EVENT</div>
+      <div class="lc-date">8月1日<span>土</span></div>
+      <div class="lc-title">一般レッスン（初級）</div>
+      <div class="lc-meta">
+        <span class="lc-chip">📍 テイネスキー場</span>
+        <span class="lc-chip">👤 城 勇太</span>
+      </div>
+      <a class="lc-cta" href="lesson-calendar-concept.html">
+        フルカレンダーを見る
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+    <div class="calendar-note reveal delay-1">※表示内容はサンプルです。実データはGoogleカレンダー連携後に自動反映されます。</div>
+  </div>
+</section>
+
+<section class="community" id="community">
+  <div class="cm-head">
+    <div class="eyebrow reveal">MIC Community</div>
+    <h2 class="reveal delay-1">ひとりで、<br>戦っているわけじゃない。</h2>
+    <p class="reveal delay-2">MICは、多くの企業・団体・練習拠点に支えられて活動しています。</p>
+  </div>
+
+  <div class="cm-stats">
+    <div class="cm-stat reveal"><div class="num">2</div><div class="lbl">サポート企業</div></div>
+    <div class="cm-stat reveal delay-1"><div class="num">3</div><div class="lbl">連携団体</div></div>
+    <div class="cm-stat reveal delay-2"><div class="num">5</div><div class="lbl">活動拠点</div></div>
+  </div>
+
+  <div class="cm-logos-label reveal">サポート・パートナーの皆さま</div>
+  <div class="cm-logo-grid">
+    <div class="cm-logo-cell reveal">SPORTS 3110</div>
+    <div class="cm-logo-cell reveal delay-1">IKKライフパートナーズ</div>
+    <div class="cm-logo-cell reveal delay-2">広島県スキー連盟</div>
+    <div class="cm-logo-cell reveal">Tr-J</div>
+    <div class="cm-logo-cell reveal delay-1">EQUIPE F.S.C</div>
+    <div class="cm-logo-cell reveal delay-2">O-AIR / S-AIR ほか</div>
+  </div>
+
+  <div class="cm-cta-wrap reveal">
+    <a class="btn btn-ghost" href="community-detail-concept.html">コミュニティ・活動拠点を見る</a>
+  </div>
+</section>
+
+<section class="news" id="news">
+  <div class="eyebrow reveal">News</div>
+  <div class="news-inner">
+    <h2 class="reveal">お知らせ</h2>
+    <div class="news-list reveal delay-1">
+      <div class="news-item"><time>2026.6.30</time><span>7月〜8月のレッスンカレンダーを更新しました！</span></div>
+      <div class="news-item"><time>2026.5.15</time><span>6月のレッスンカレンダーを更新しました！</span></div>
+      <div class="news-item"><time>2026.4.15</time><span>ゴールデンウィーク合宿の案内をアップしました！</span></div>
+      <div class="news-note">※本番では「お知らせ」はスプレッドシート連動にし、行を追加するだけでここに反映される想定です。</div>
+    </div>
+  </div>
 </section>
 
 <section class="stats">
