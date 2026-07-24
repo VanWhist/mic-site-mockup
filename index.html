@@ -36,7 +36,13 @@
 
   /* ---------- Nav ---------- */
   header{
-    position:fixed;top:0;left:0;right:0;z-index:100;
+    /* z-index must beat .draft-badge (999): header creates its own stacking
+       context, so a child's z-index (e.g. .nav-toggle) can never out-rank a
+       sibling of header no matter how high it's set — only raising header
+       itself works. Without this the badge's text, which wraps to nearly
+       full viewport width on mobile, sits on top of and blocks taps on the
+       hamburger button entirely. */
+    position:fixed;top:0;left:0;right:0;z-index:1000;
     display:flex;align-items:center;justify-content:space-between;
     padding:18px 5vw;
     mix-blend-mode:difference;
