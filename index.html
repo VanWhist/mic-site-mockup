@@ -55,6 +55,43 @@
   nav a{opacity:.85;transition:opacity .2s;}
   nav a:hover{opacity:1;}
 
+  /* ---------- Mobile nav (hamburger) ---------- */
+  .nav-toggle{
+    display:none;
+    flex-direction:column;justify-content:center;gap:5px;
+    width:34px;height:34px;background:none;border:none;cursor:pointer;padding:0;
+    position:relative;z-index:210;
+  }
+  .nav-toggle span{
+    display:block;width:100%;height:2px;background:currentColor;border-radius:2px;
+    transition:transform .25s ease, opacity .25s ease;
+  }
+  .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  @media (max-width:820px){
+    .nav-toggle{display:flex;}
+    /* backdrop-filter on header.scrolled creates a containing block for
+       position:fixed descendants, which would confine the full-screen nav
+       overlay to header's own short box instead of the viewport — disable it
+       while the overlay is open (see setNavOpen in the script below). */
+    header.nav-lock{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+    header nav{
+      position:fixed;inset:0;
+      background:rgba(10,10,12,.97);
+      backdrop-filter:blur(16px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .3s ease;
+      z-index:200;
+    }
+    header nav.open{opacity:1;visibility:visible;pointer-events:auto;}
+    header nav ul{
+      flex-direction:column;align-items:center;gap:32px;font-size:20px;
+    }
+  }
+
   /* ---------- Reusable eyebrow label (Apple-style section intro) ---------- */
   .eyebrow{
     font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);
@@ -167,6 +204,34 @@
   .scroll-cue span{font-size:10px;letter-spacing:.2em;color:var(--muted);}
   .scroll-cue .line{width:1px;height:34px;background:linear-gradient(var(--muted),transparent);animation:pulse 1.8s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+  /* ---------- Quick access (Hero直下: 常連さん向けショートカット) ---------- */
+  .quick-access{
+    display:flex;gap:14px;flex-wrap:wrap;
+    padding:3.5vh 6vw;
+    background:#0d0d0f;
+    border-top:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .qa-item{
+    flex:1;min-width:220px;
+    display:flex;align-items:center;gap:14px;
+    padding:16px 20px;border-radius:16px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    color:#fff;text-decoration:none;
+    transition:background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .qa-item:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);transform:translateY(-2px);}
+  .qa-icon{font-size:22px;line-height:1;flex:0 0 auto;}
+  .qa-text{flex:1;min-width:0;}
+  .qa-label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.03em;}
+  .qa-value{font-size:15px;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .qa-arrow{width:16px;height:16px;flex:0 0 auto;color:var(--accent);}
+  @media (max-width:600px){
+    .quick-access{padding:3vh 5vw;gap:10px;}
+    .qa-item{min-width:100%;padding:14px 16px;}
+  }
 
   /* ---------- Generic section reveal ---------- */
   section{position:relative;}
@@ -413,6 +478,15 @@
     margin-top:16px;text-align:center;
     font-size:12px;color:var(--muted);
   }
+  .hub-news{
+    max-width:640px;margin:9vh auto 0;padding-top:6vh;
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  .hub-news-label{
+    text-align:center;font-size:12px;font-weight:700;color:var(--muted);
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+  }
+  .hub-news .news-list{max-width:none;}
 
   /* ---------- CTA ---------- */
   .cta{
@@ -447,7 +521,6 @@
 
   @media (max-width:820px){
     .mvv-grid{grid-template-columns:1fr;gap:48px;}
-    nav ul{display:none;}
     .g-card:nth-child(even){margin-top:0;}
   }
 
@@ -728,7 +801,7 @@
 
 <header id="siteHeader">
   <div class="logo">MIC</div>
-  <nav>
+  <nav id="siteNav">
     <ul>
       <li><a href="#mvv">MVV</a></li>
       <li><a href="#athletes">選手紹介</a></li>
@@ -736,11 +809,14 @@
       <li><a href="#coaches">コーチ紹介</a></li>
       <li><a href="#programs">プログラム</a></li>
       <li><a href="#calendar">カレンダー</a></li>
-      <li><a href="#community">コミュニティ</a></li>
       <li><a href="#news">お知らせ</a></li>
+      <li><a href="#community">コミュニティ</a></li>
       <li><a href="inquiry.html">お問い合わせ</a></li>
     </ul>
   </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <section class="hero">
@@ -765,6 +841,25 @@
     <span>SCROLL</span>
     <div class="line"></div>
   </div>
+</section>
+
+<section class="quick-access" id="quick-access">
+  <a class="qa-item" href="#calendar">
+    <div class="qa-icon">📅</div>
+    <div class="qa-text">
+      <div class="qa-label">次回のレッスン</div>
+      <div class="qa-value" id="qaNextLesson">読み込み中…</div>
+    </div>
+    <svg class="qa-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+  </a>
+  <a class="qa-item" href="#news">
+    <div class="qa-icon">📣</div>
+    <div class="qa-text">
+      <div class="qa-label">お知らせ</div>
+      <div class="qa-value">最新情報をチェック</div>
+    </div>
+    <svg class="qa-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+  </a>
 </section>
 
 <section class="mvv" id="mvv">
@@ -1561,9 +1656,9 @@
 <section class="calendar" id="calendar">
   <div class="calendar-inner">
     <div class="calendar-head reveal">
-      <div class="eyebrow">Calendar</div>
+      <div class="eyebrow">Schedule &amp; News</div>
       <h2>レッスンカレンダー</h2>
-      <p>次のレッスン予定はこちら。日付を選ぶと内容が切り替わります。</p>
+      <p>次のレッスン予定とお知らせはこちら。日付を選ぶと内容が切り替わります。</p>
     </div>
     <div class="lc-card reveal-scale">
       <div class="lc-glow"></div>
@@ -1584,6 +1679,16 @@
       </a>
     </div>
     <div class="calendar-note reveal delay-1">※表示内容はサンプルです。実データはGoogleカレンダー連携後に自動反映されます。</div>
+
+    <div class="hub-news reveal delay-2" id="news">
+      <div class="hub-news-label">お知らせ</div>
+      <div class="news-list">
+        <div class="news-item"><time>2026.6.30</time><span>7月〜8月のレッスンカレンダーを更新しました！</span></div>
+        <div class="news-item"><time>2026.5.15</time><span>6月のレッスンカレンダーを更新しました！</span></div>
+        <div class="news-item"><time>2026.4.15</time><span>ゴールデンウィーク合宿の案内をアップしました！</span></div>
+        <div class="news-note">※本番では「お知らせ」はスプレッドシート連動にし、行を追加するだけでここに反映される想定です。</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1647,9 +1752,20 @@
     if (activeCard) activeCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
   }
 
+  function updateQuickAccess(){
+    var qaEl = document.getElementById('qaNextLesson');
+    if (!qaEl) return;
+    var d = new Date(nextDate + 'T00:00:00');
+    var events = EVENTS[nextDate] || [];
+    var label = (d.getMonth()+1) + '月' + d.getDate() + '日（' + DOWS[d.getDay()] + '）';
+    if (events.length > 0) label += ' ' + events[0].title;
+    qaEl.textContent = label;
+  }
+
   function lcInit(){
     renderScroller();
     selectDate(nextDate);
+    updateQuickAccess();
   }
 
   if (document.readyState === 'loading') {
@@ -1685,19 +1801,6 @@
 
   <div class="cm-cta-wrap reveal">
     <a class="btn btn-ghost" href="community-detail-concept.html">コミュニティ・活動拠点を見る</a>
-  </div>
-</section>
-
-<section class="news" id="news">
-  <div class="eyebrow reveal">News</div>
-  <div class="news-inner">
-    <h2 class="reveal">お知らせ</h2>
-    <div class="news-list reveal delay-1">
-      <div class="news-item"><time>2026.6.30</time><span>7月〜8月のレッスンカレンダーを更新しました！</span></div>
-      <div class="news-item"><time>2026.5.15</time><span>6月のレッスンカレンダーを更新しました！</span></div>
-      <div class="news-item"><time>2026.4.15</time><span>ゴールデンウィーク合宿の案内をアップしました！</span></div>
-      <div class="news-note">※本番では「お知らせ」はスプレッドシート連動にし、行を追加するだけでここに反映される想定です。</div>
-    </div>
   </div>
 </section>
 
@@ -1748,6 +1851,23 @@
   window.addEventListener('scroll', () => {
     siteHeader.classList.toggle('scrolled', window.scrollY > 80);
   }, {passive:true});
+
+  // Mobile nav (hamburger): toggle the full-screen menu, and auto-close on link tap
+  const navToggle = document.getElementById('navToggle');
+  const siteNav = document.getElementById('siteNav');
+  function setNavOpen(open){
+    siteNav.classList.toggle('open', open);
+    navToggle.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+    // header's .scrolled state applies backdrop-filter, which creates a CSS
+    // containing block for position:fixed descendants — that would trap the
+    // full-screen nav overlay inside header's own (short) box instead of the
+    // viewport. Neutralize it while the overlay is open.
+    siteHeader.classList.toggle('nav-lock', open);
+  }
+  navToggle.addEventListener('click', () => setNavOpen(!siteNav.classList.contains('open')));
+  siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
 
   // Scroll reveal via IntersectionObserver
   const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
