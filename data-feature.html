@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>選手カルテ｜MIC Mogul Improvement Community</title>
+<meta name="description" content="MICが選手一人ひとりに用意する、成長の記録を一本化したデジタルカルテ。目標設定・コンディション管理・エアログ・トレーニングログ・ジャッジ分析・ライバル分析の6つの機能をひとつに。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  a{color:inherit;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.18), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+  body::after{
+    content:'';position:fixed;bottom:-10%;right:-20%;width:65%;height:40%;
+    background:radial-gradient(circle, rgba(90,140,255,.14), transparent 70%);
+    filter:blur(50px);pointer-events:none;z-index:0;
+  }
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-crumb{font-size:11.5px;color:var(--muted);text-align:right;line-height:1.5;}
+  .lp-crumb b{color:var(--fg);font-weight:700;}
+  .lp-crumb a{color:inherit;text-decoration:none;}
+
+  .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:34px 6vw 70px;}
+
+  svg.icon{width:24px;height:24px;stroke:var(--fg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ---------- hero ---------- */
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;text-align:center;}
+  .headline{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.35;text-align:center;
+    margin:12px 0 14px;}
+  .subcopy{font-size:14.5px;line-height:1.85;color:#d3d3d8;text-align:center;margin:0 0 30px;}
+
+  /* ---------- big statement moment ---------- */
+  .statement{text-align:center;margin:8px 0 40px;}
+  .statement .en{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+  .statement .jp{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-top:8px;line-height:1.4;
+    background:linear-gradient(100deg, var(--fg), var(--accent) 60%, var(--fg));
+    -webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  /* ---------- before / after ---------- */
+  .compare-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 0 14px;text-align:center;}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:44px;}
+  .compare-col{border-radius:18px;padding:18px 16px;border:1px solid rgba(255,255,255,.1);}
+  .compare-col.before{background:rgba(255,255,255,.03);}
+  .compare-col.after{background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.02));border-color:rgba(255,90,60,.28);}
+  .compare-col .ctag{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:block;}
+  .compare-col.before .ctag{color:var(--muted);}
+  .compare-col.after .ctag{color:var(--accent);}
+  .compare-item{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.7;color:#d3d3d8;margin-bottom:9px;}
+  .compare-item:last-child{margin-bottom:0;}
+  .compare-item svg{width:14px;height:14px;flex:0 0 auto;margin-top:2px;}
+  .compare-col.before svg{stroke:var(--muted);}
+  .compare-col.after svg{stroke:var(--accent);}
+
+  /* ---------- bento grid ---------- */
+  .grid-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 0 14px;text-align:center;}
+  .bento{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  .bento .tile{grid-column:span 1;}
+  .bento .tile.wide{grid-column:span 2;}
+
+  .tile{
+    position:relative;border-radius:22px;padding:20px 18px;overflow:hidden;
+    background:linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 16px 40px -22px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  .tile-icon{display:inline-flex;align-items:center;justify-content:center;
+    width:46px;height:46px;border-radius:14px;background:rgba(255,90,60,.14);
+    border:1px solid rgba(255,90,60,.25);margin-bottom:14px;}
+  .tile-icon svg{stroke:var(--accent);}
+  .tile-title{font-size:15.5px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px;}
+  .tile-desc{font-size:12.5px;line-height:1.7;color:var(--muted);}
+  .tile-use{font-size:11.5px;line-height:1.7;color:#c8c8ce;margin-top:9px;padding-top:9px;border-top:1px dashed rgba(255,255,255,.14);}
+  .tile-use b{color:var(--accent);font-weight:700;}
+
+  /* intro wide tile */
+  .tile.intro{display:flex;align-items:center;gap:16px;padding:22px 20px;}
+  .tile.intro .tile-icon{margin-bottom:0;flex:0 0 auto;width:52px;height:52px;}
+  .tile.intro .intro-text .tile-title{font-size:16.5px;}
+  .tile.intro .intro-text .tile-desc{font-size:12.5px;}
+
+  /* ---------- screen showcase ---------- */
+  .showcase-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:44px 2px 18px;
+    display:flex;align-items:center;gap:8px;justify-content:center;}
+  .showcase-label .badge{font-size:10px;font-weight:700;color:var(--accent);background:rgba(255,90,60,.14);
+    border:1px solid rgba(255,90,60,.3);border-radius:999px;padding:3px 9px;letter-spacing:.02em;}
+
+  .phone-stage{display:flex;justify-content:center;}
+  .phone{
+    position:relative;width:220px;height:450px;border-radius:44px;
+    background:linear-gradient(155deg,#232326,#0d0d0f);
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08);
+    padding:12px;
+  }
+  .phone::before{
+    content:'';position:absolute;top:22px;left:50%;transform:translateX(-50%);
+    width:80px;height:22px;border-radius:14px;background:#000;z-index:3;
+  }
+  .phone .screen{
+    position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;
+    background:#111114;border:1px solid rgba(255,255,255,.06);padding:38px 16px 16px;
+  }
+  .ph-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .ph-avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);filter:blur(2px);}
+  .ph-line{height:7px;border-radius:4px;background:rgba(255,255,255,.1);}
+  .ph-line.w60{width:60%;}
+  .ph-line.w40{width:40%;}
+  .ph-chip{display:inline-block;font-size:9px;color:var(--accent);background:rgba(255,90,60,.14);
+    border-radius:999px;padding:3px 8px;margin-bottom:10px;}
+  .ph-bars{display:flex;align-items:flex-end;gap:5px;height:70px;margin-top:16px;}
+  .ph-bars .bar{flex:1;background:linear-gradient(to top, rgba(255,90,60,.6), rgba(255,90,60,.15));border-radius:4px 4px 0 0;}
+  .ph-ring{width:64px;height:64px;border-radius:50%;margin:14px auto 0;
+    background:conic-gradient(var(--accent) 0% 72%, rgba(255,255,255,.08) 72% 100%);
+    display:flex;align-items:center;justify-content:center;}
+  .ph-ring-inner{width:46px;height:46px;border-radius:50%;background:#111114;}
+
+  .phone-caption{text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.6;padding:0 12px;}
+
+  /* ---------- who benefits ---------- */
+  .who{margin-top:52px;}
+  .who-card{border-radius:18px;padding:20px 20px;margin-bottom:12px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+  .who-card:last-child{margin-bottom:0;}
+  .who-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .who-icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;
+    background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.25);flex:0 0 auto;}
+  .who-icon svg{width:18px;height:18px;stroke:var(--accent);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .who-title{font-size:14.5px;font-weight:800;}
+  .who-desc{font-size:12.5px;line-height:1.8;color:var(--muted);}
+
+  /* ---------- CTA ---------- */
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+    margin:44px 0 36px;}
+
+  .cta-block{text-align:center;}
+  .cta-lead{font-size:14.5px;line-height:1.8;color:#e2e2e6;margin-bottom:20px;}
+  .cta-btns{display:flex;flex-direction:column;gap:10px;}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    font-size:14.5px;font-weight:800;border-radius:999px;padding:15px;text-decoration:none;}
+  .btn svg{width:16px;height:16px;stroke-width:2.2;}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .btn-primary svg{stroke:#fff;}
+  .btn-ghost{border:1px solid rgba(255,255,255,.35);color:var(--fg);}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);}
+  .btn-ghost svg{stroke:var(--fg);}
+
+  .foot-note{margin-top:36px;text-align:center;font-size:11.5px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  @media (max-width:420px){
+    .compare{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — トップページ「選手カルテ」セクションからのリンク先です。画面キャプチャはプレースホルダーです。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <div class="lp-crumb"><a href="index.html#data-feature">選手カルテ</a> &gt; <b>機能紹介</b></div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">MIC Data Platform</div>
+  <div class="headline">選手カルテ、<br>すべてを、一つに。</div>
+  <div class="subcopy">ノートも、Excelも、LINEも、もう要らない。<br>練習・体調・目標のすべてを、これ一つに。</div>
+
+  <div class="statement">
+    <div class="en">Everything. All in one.</div>
+    <div class="jp">6つの機能を、<br>ひとつのカルテへ。</div>
+  </div>
+
+  <div class="compare-label">選手カルテがあると、何が変わる？</div>
+  <div class="compare">
+    <div class="compare-col before">
+      <span class="ctag">これまで</span>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>練習ノートに手書きでバラバラに記録</div>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>体調・目標はExcelで自己管理</div>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>コーチへの共有はLINEで都度送信</div>
+    </div>
+    <div class="compare-col after">
+      <span class="ctag">選手カルテなら</span>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>すべての記録を1つのカルテに一元化</div>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>成長の推移を自動でグラフ化</div>
+      <div class="compare-item"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>コーチ・保護者とリアルタイムで共有</div>
+    </div>
+  </div>
+
+  <div class="grid-label">6つの機能</div>
+  <div class="bento">
+    <div class="tile wide intro">
+      <div class="tile-icon" style="width:52px;height:52px;">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="8.5" cy="11" r="2"></circle><line x1="13" y1="9.5" x2="18" y2="9.5"></line><line x1="13" y1="13.5" x2="18" y2="13.5"></line></svg>
+      </div>
+      <div class="intro-text">
+        <div class="tile-title">選手カルテとは？</div>
+        <div class="tile-desc">MICが選手一人ひとりに用意する、成長の記録をすべて一本化したデジタルカルテです。選手育成コースの選手を対象に、コーチと二人三脚で運用します。</div>
+      </div>
+    </div>
+
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1"></circle></svg></div>
+      <div class="tile-title">目標設定</div>
+      <div class="tile-desc">選手ごとに短期・長期の目標を設定し、進捗を可視化</div>
+      <div class="tile-use"><b>例：</b>「今シーズンはA級昇格」を目標に登録し、大会結果と連動して達成度を確認</div>
+    </div>
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 13 7 13 9 6 13 18 15 10 17 13 21 13"></polyline></svg></div>
+      <div class="tile-title">コンディション管理</div>
+      <div class="tile-desc">体調・怪我・体重の推移を日々記録し、コーチと共有</div>
+      <div class="tile-use"><b>例：</b>怪我明けの練習強度をコーチが記録を見ながら調整</div>
+    </div>
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path><circle cx="20" cy="18" r="1.3" fill="var(--accent)"></circle></svg></div>
+      <div class="tile-title">エアログ</div>
+      <div class="tile-desc">練習でのジャンプ内容・成功率を記録・蓄積</div>
+      <div class="tile-use"><b>例：</b>新しい技の成功率をシーズンを通して記録し、習得の推移を確認</div>
+    </div>
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"></rect><line x1="9" y1="8.5" x2="15" y2="8.5"></line><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="15.5" x2="13" y2="15.5"></line></svg></div>
+      <div class="tile-title">トレーニングログ</div>
+      <div class="tile-desc">日々の練習内容をログ化し、成長を後から振り返れる</div>
+      <div class="tile-use"><b>例：</b>過去の練習メニューを振り返り、次シーズンの計画に活用</div>
+    </div>
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><line x1="15.8" y1="15.8" x2="21" y2="21"></line></svg></div>
+      <div class="tile-title">ジャッジ分析</div>
+      <div class="tile-desc">大会のジャッジスコアを分析し、採点傾向を把握</div>
+      <div class="tile-use"><b>例：</b>ターン・エア・スピードの内訳を大会ごとに比較し、弱点を特定</div>
+    </div>
+    <div class="tile">
+      <div class="tile-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="12" r="6"></circle><circle cx="15" cy="12" r="6"></circle></svg></div>
+      <div class="tile-title">ライバル分析</div>
+      <div class="tile-desc">国内外のライバル選手のデータを分析し対策に活用</div>
+      <div class="tile-use"><b>例：</b>同カテゴリの上位選手のスコア傾向を見て、次戦の戦略を検討</div>
+    </div>
+  </div>
+
+  <div class="showcase-label">実際の画面（イメージ） <span class="badge">個人情報は伏せて掲載予定</span></div>
+
+  <div class="phone-stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="ph-chip">TRAINING LOG</div>
+        <div class="ph-row"><div class="ph-avatar"></div><div class="ph-line w40"></div></div>
+        <div class="ph-line w60" style="margin-bottom:8px;"></div>
+        <div class="ph-line w40"></div>
+        <div class="ph-bars">
+          <div class="bar" style="height:35%;"></div>
+          <div class="bar" style="height:60%;"></div>
+          <div class="bar" style="height:45%;"></div>
+          <div class="bar" style="height:78%;"></div>
+          <div class="bar" style="height:55%;"></div>
+          <div class="bar" style="height:92%;"></div>
+          <div class="bar" style="height:70%;"></div>
+        </div>
+        <div class="ph-ring"><div class="ph-ring-inner"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="phone-caption">実際の選手カルテのスクリーンショットに差し替え予定です。氏名・写真などが特定できない形に加工して掲載します。</div>
+
+  <div class="who">
+    <div class="grid-label">こんな方に役立ちます</div>
+    <div class="who-card">
+      <div class="who-head">
+        <div class="who-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.6-1.4z"></path></svg></div>
+        <div class="who-title">選手</div>
+      </div>
+      <div class="who-desc">自分の練習・体調・目標を1か所で振り返れるので、次に何をすべきかが明確になります。</div>
+    </div>
+    <div class="who-card">
+      <div class="who-head">
+        <div class="who-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+        <div class="who-title">保護者</div>
+      </div>
+      <div class="who-desc">お子さんの成長やコンディションの記録を、コーチと同じ情報でいつでも確認できます。</div>
+    </div>
+    <div class="who-card">
+      <div class="who-head">
+        <div class="who-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="9" x2="17" y2="9"></line><line x1="7" y1="13" x2="14" y2="13"></line></svg></div>
+        <div class="who-title">コーチ</div>
+      </div>
+      <div class="who-desc">選手ごとの記録を横断的に把握し、練習メニューやアドバイスの根拠として活用できます。</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="cta-block">
+    <div class="cta-lead">選手カルテは、選手育成コースの選手を対象にご案内しています。<br>詳しく知りたい方はお気軽にお問い合わせください。</div>
+    <div class="cta-btns">
+      <a class="btn btn-primary" href="program-athlete.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.6-1.4z"></path></svg>
+        選手育成コースを見る
+      </a>
+      <a class="btn btn-ghost" href="inquiry.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        LINEで問い合わせる
+      </a>
+    </div>
+  </div>
+
+  <div class="foot-note">ここに掲載する画面キャプチャは、氏名・写真などが特定できない形に加工した上で掲載する想定です。どの画面を使うか、伏せ方（ぼかし・仮名化など）を含めて今後ご相談させてください。<br><a href="index.html">← MICトップページへ戻る</a></div>
+</div>
+
+</body>
+</html>
