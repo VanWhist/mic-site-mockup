@@ -156,7 +156,7 @@
 </head>
 <body>
 
-<div class="demo-badge">🚧 RAFU / DRAFT — サンプルデータです。実データはGoogleカレンダー連携後に自動反映されます。</div>
+<div class="demo-badge">🚧 RAFU / DRAFT — Googleカレンダー「MICレッスン」と連携した実際のレッスン予定です。</div>
 
 <div class="lp-topbar">
   <a class="lp-logo" href="index.html">MIC</a>
@@ -172,7 +172,7 @@
 <div class="wrap">
   <div class="eyebrow">MIC Schedule</div>
   <div class="headline">フルカレンダー</div>
-  <div class="subcopy">レッスン・強化練習・合宿の予定を月単位で確認できます。拠点（スキー場）で絞り込むこともできます。</div>
+  <div class="subcopy">レッスンの予定を月単位で確認できます。会場で絞り込むこともできます。</div>
 
   <div class="hero" id="hero">
     <div class="hero-glow"></div>
@@ -180,13 +180,15 @@
     <div class="hero-date" id="heroDate">8月1日<span>土</span></div>
     <div class="hero-title" id="heroTitle">一般レッスン（初級）</div>
     <div class="hero-meta">
-      <span class="hero-chip" id="heroLoc">📍 テイネスキー場</span>
-      <span class="hero-chip" id="heroCoach">👤 城 勇太</span>
+      <span class="hero-chip" id="heroLoc">📍 -</span>
+      <span class="hero-chip" id="heroPrice">💴 -</span>
+      <span class="hero-chip" id="heroCapacity">👥 -</span>
+      <span class="hero-chip" id="heroMeeting">🕒 集合 -</span>
     </div>
     <div class="hero-sub" id="heroSub">この日は他に <b>1件</b> のレッスンがあります</div>
   </div>
 
-  <div class="filter-label">拠点で絞り込む</div>
+  <div class="filter-label">会場で絞り込む</div>
   <div class="filter-row" id="filterRow"></div>
 
   <div class="cal-card">
@@ -200,7 +202,7 @@
       </div>
     </div>
     <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-empty-note" id="calEmptyNote" style="display:none;">この月のサンプルデータはまだありません。実データ連携後に表示されます。</div>
+    <div class="cal-empty-note" id="calEmptyNote" style="display:none;">この月のレッスン予定はまだありません。</div>
   </div>
 
   <div class="timeline-head">
@@ -209,53 +211,34 @@
   </div>
   <div class="timeline" id="timelineBody"></div>
 
-  <div class="foot-note">📍場所・👤担当コーチは各予定カードに表示。実データ連携方法は別途ご相談させてください。<br><a href="index.html">← MICトップページへ戻る</a></div>
+  <div class="foot-note">📍会場・💴料金・👥受付状況は各予定カードに表示しています。最新の空き状況・お申し込みは公式LINEでご確認ください。<br><a href="index.html">← MICトップページへ戻る</a></div>
 </div>
 
 <script>
 (function(){
-  // ---- サンプルデータ（実データではありません。トップページのSchedule &amp; Newsハブと同一データ） ----
-  var EVENTS = {
-    '2026-08-01': [
-      {time:'9:00',  title:'一般レッスン（初級）', location:'テイネスキー場', coach:'城 勇太'},
-      {time:'13:00', title:'一般レッスン（中級）', location:'テイネスキー場', coach:'舘田 瞬哉'}
-    ],
-    '2026-08-02': [],
-    '2026-08-03': [
-      {time:'8:30',  title:'育成コース練習', location:'さのさかスキー場', coach:'建部 順平'}
-    ],
-    '2026-08-04': [],
-    '2026-08-05': [
-      {time:'9:00',  title:'一般レッスン（初級）', location:'宮城蔵王スキー場', coach:'笠巻 昇太'},
-      {time:'11:00', title:'一般レッスン（上級）', location:'宮城蔵王スキー場', coach:'山本 帆夏'},
-      {time:'14:00', title:'選手強化練習', location:'宮城蔵王スキー場', coach:'和田 野々花'}
-    ],
-    '2026-08-06': [],
-    '2026-08-07': [
-      {time:'10:00', title:'育成コース練習', location:'テイネスキー場', coach:'伊藤 あづさ'}
-    ],
-    '2026-08-08': [],
-    '2026-08-09': [
-      {time:'9:00',  title:'合同強化合宿（1日目）', location:'さのさかスキー場', coach:'新保 龍登'}
-    ],
-    '2026-08-10': [
-      {time:'9:00',  title:'合同強化合宿（2日目）', location:'さのさかスキー場', coach:'新保 龍登'}
-    ]
-  };
+  // ---- Googleカレンダー「MICレッスン」と同期した実データ（calendar-data.json）を読み込みます ----
+  // ---- トップページのSchedule &amp; Newsハブと同一のJSONを参照しているため、表示内容は常に一致します ----
+  var EVENTS = {};       // { 'YYYY-MM-DD': [ {time, title, venue, priceLabel, capacityLabel, meetingTime}, ... ] }
+  var ALL_DATES = [];
+  var VENUES = [];       // 実データから動的に抽出した会場一覧
 
   var DOWS = ['日','月','火','水','木','金','土'];
-  var TODAY_STR = '2026-07-30'; // デモ上の「今日」
-  var ALL_DATES = Object.keys(EVENTS).sort();
-  var LOCATIONS = ['テイネスキー場', 'さのさかスキー場', '宮城蔵王スキー場'];
+  var TODAY_STR = todayStr();
 
   var activeLocation = 'all';
   var selectedIso = null;
   var viewYear, viewMonth; // 0-indexed month
+  var dataLoaded = false;
+
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
 
   function eventsFor(iso){
     var all = EVENTS[iso] || [];
     if (activeLocation === 'all') return all;
-    return all.filter(function(ev){ return ev.location === activeLocation; });
+    return all.filter(function(ev){ return ev.venue === activeLocation; });
   }
 
   function datesWithEvents(){
@@ -265,7 +248,7 @@
   function renderFilters(){
     var row = document.getElementById('filterRow');
     row.innerHTML = '';
-    var chips = [{key:'all', label:'すべて'}].concat(LOCATIONS.map(function(l){ return {key:l, label:l}; }));
+    var chips = [{key:'all', label:'すべて'}].concat(VENUES.map(function(v){ return {key:v, label:v}; }));
     chips.forEach(function(c){
       var el = document.createElement('div');
       el.className = 'filter-chip' + (activeLocation === c.key ? ' active' : '');
@@ -323,9 +306,16 @@
     document.getElementById('calMonthLabel').textContent = viewYear + '年' + (viewMonth+1) + '月';
     document.getElementById('calEmptyNote').style.display = monthHasEvents ? 'none' : 'block';
 
-    // prev/next disabled outside the range where we have any sample data (Jul-Sep 2026)
-    document.getElementById('calPrev').classList.toggle('is-disabled', viewYear === 2026 && viewMonth <= 6);
-    document.getElementById('calNext').classList.toggle('is-disabled', viewYear === 2026 && viewMonth >= 8);
+    // prev/next は実データに存在する予定の範囲（前後1ヶ月の余裕込み）でのみ有効
+    if (dataLoaded && ALL_DATES.length > 0){
+      var minD = new Date(ALL_DATES[0] + 'T00:00:00');
+      var maxD = new Date(ALL_DATES[ALL_DATES.length - 1] + 'T00:00:00');
+      var viewKey = viewYear * 12 + viewMonth;
+      var minKey = minD.getFullYear() * 12 + minD.getMonth();
+      var maxKey = maxD.getFullYear() * 12 + maxD.getMonth();
+      document.getElementById('calPrev').classList.toggle('is-disabled', viewKey <= minKey);
+      document.getElementById('calNext').classList.toggle('is-disabled', viewKey >= maxKey);
+    }
   }
 
   function renderHero(iso){
@@ -335,8 +325,10 @@
     if (events.length > 0){
       var f = events[0];
       document.getElementById('heroTitle').textContent = f.title;
-      document.getElementById('heroLoc').textContent = '📍 ' + f.location;
-      document.getElementById('heroCoach').textContent = '👤 ' + f.coach;
+      document.getElementById('heroLoc').textContent = '📍 ' + f.venue;
+      document.getElementById('heroPrice').textContent = '💴 ' + (f.priceLabel || '-');
+      document.getElementById('heroCapacity').textContent = '👥 ' + (f.capacityLabel || '-');
+      document.getElementById('heroMeeting').textContent = '🕒 集合 ' + (f.meetingTime || '-');
       var rest = events.length - 1;
       document.getElementById('heroSub').innerHTML = rest > 0
         ? 'この日は他に <b>' + rest + '件</b> のレッスンがあります'
@@ -344,7 +336,9 @@
     } else {
       document.getElementById('heroTitle').textContent = 'この日の予定はありません';
       document.getElementById('heroLoc').textContent = '📍 -';
-      document.getElementById('heroCoach').textContent = '👤 -';
+      document.getElementById('heroPrice').textContent = '💴 -';
+      document.getElementById('heroCapacity').textContent = '👥 -';
+      document.getElementById('heroMeeting').textContent = '🕒 集合 -';
       document.getElementById('heroSub').textContent = '別の日付を選んでみてください';
     }
   }
@@ -367,8 +361,10 @@
           '<div class="t-time">' + ev.time + '〜</div>' +
           '<div class="t-title">' + ev.title + '</div>' +
           '<div class="t-tags">' +
-            '<span class="t-tag">📍 ' + ev.location + '</span>' +
-            '<span class="t-tag">👤 ' + ev.coach + '</span>' +
+            '<span class="t-tag">📍 ' + ev.venue + '</span>' +
+            '<span class="t-tag">💴 ' + (ev.priceLabel || '-') + '</span>' +
+            '<span class="t-tag">👥 ' + (ev.capacityLabel || '-') + '</span>' +
+            '<span class="t-tag">🕒 集合 ' + (ev.meetingTime || '-') + '</span>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -388,6 +384,23 @@
     renderTimeline(iso);
   }
 
+  function showEmptyState(){
+    document.getElementById('heroTitle').textContent = '現在、予定されているレッスンはありません';
+    document.getElementById('heroLoc').textContent = '📍 -';
+    document.getElementById('heroPrice').textContent = '💴 -';
+    document.getElementById('heroCapacity').textContent = '👥 -';
+    document.getElementById('heroMeeting').textContent = '🕒 集合 -';
+    document.getElementById('heroSub').textContent = '最新情報は公式LINEでご確認ください';
+    document.getElementById('calEmptyNote').style.display = 'block';
+    document.getElementById('timelineBody').innerHTML = '<div class="empty-state"><span class="emoji">⛄️</span>現在、該当するレッスンの予定はありません</div>';
+    document.getElementById('calPrev').classList.add('is-disabled');
+    document.getElementById('calNext').classList.add('is-disabled');
+    var initD = new Date();
+    viewYear = initD.getFullYear();
+    viewMonth = initD.getMonth();
+    renderCalendarGrid();
+  }
+
   document.getElementById('calPrev').addEventListener('click', function(){
     if (this.classList.contains('is-disabled')) return;
     viewMonth -= 1;
@@ -401,13 +414,38 @@
     renderCalendarGrid();
   });
 
-  var nextDate = datesWithEvents().find(function(d){ return d >= TODAY_STR; }) || ALL_DATES[0];
-  var initD = new Date(nextDate + 'T00:00:00');
-  viewYear = initD.getFullYear();
-  viewMonth = initD.getMonth();
+  fetch('calendar-data.json', {cache:'no-cache'})
+    .then(function(res){ if (!res.ok) throw new Error('calendar-data.json load failed'); return res.json(); })
+    .then(function(data){
+      (data.events || []).forEach(function(ev){
+        if (!EVENTS[ev.date]) EVENTS[ev.date] = [];
+        EVENTS[ev.date].push({
+          time: ev.startTime,
+          title: ev.title,
+          venue: ev.venue,
+          priceLabel: ev.priceLabel,
+          capacityLabel: ev.capacityLabel,
+          meetingTime: ev.meetingTime
+        });
+      });
+      ALL_DATES = Object.keys(EVENTS).sort();
+      VENUES = (data.venues || []).slice();
+      dataLoaded = true;
 
-  renderFilters();
-  selectDate(nextDate, true);
+      if (ALL_DATES.length === 0){ showEmptyState(); return; }
+
+      var nextDate = datesWithEvents().find(function(d){ return d >= TODAY_STR; }) || ALL_DATES[0];
+      var initD = new Date(nextDate + 'T00:00:00');
+      viewYear = initD.getFullYear();
+      viewMonth = initD.getMonth();
+
+      renderFilters();
+      selectDate(nextDate, true);
+    })
+    .catch(function(err){
+      console.error('レッスンカレンダーの読み込みに失敗しました', err);
+      showEmptyState();
+    });
 })();
 </script>
 
