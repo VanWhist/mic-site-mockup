@@ -141,6 +141,25 @@
   .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
     border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
   .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  /* ---------- cross-page subnav ---------- */
+  .lp-subnav{position:relative;z-index:49;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;
+    padding:10px 6vw;background:rgba(10,10,12,.5);border-bottom:1px solid rgba(255,255,255,.06);}
+  .lp-subnav::-webkit-scrollbar{display:none;}
+  .lp-subnav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .lp-subnav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .lp-subnav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
+
+  /* ---------- next pages ---------- */
+  .next-pages{margin-top:44px;}
+  .next-pages-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:14px;text-align:center;}
+  .next-pages-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+  .next-page-card{display:block;border-radius:16px;padding:16px;text-decoration:none;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);transition:border-color .2s,background .2s;}
+  .next-page-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);}
+  .npc-title{font-size:13.5px;font-weight:800;color:var(--fg);margin-bottom:4px;}
+  .npc-desc{font-size:11.5px;line-height:1.6;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -151,6 +170,13 @@
   <a class="lp-logo" href="index.html">MIC</a>
   <div class="lp-crumb"><a href="index.html#programs" style="color:inherit;text-decoration:none;">プログラム紹介</a> &gt; <b>一般レッスン</b></div>
 </div>
+<nav class="lp-subnav">
+  <a href="index.html#programs" class="current">プログラム</a>
+  <a href="full-calendar.html">カレンダー</a>
+  <a href="community.html">コミュニティ</a>
+  <a href="data-feature.html">選手カルテ</a>
+  <a href="index.html#cta">お問い合わせ</a>
+</nav>
 
 <div class="lp-hero-photo">
   <div class="lp-hero-badge">
@@ -266,6 +292,24 @@
       選手育成コースを見る
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
     </a>
+  </div>
+
+  <div class="next-pages">
+    <div class="next-pages-label">他のページも見る</div>
+    <div class="next-pages-grid">
+      <a class="next-page-card" href="full-calendar.html">
+        <div class="npc-title">レッスンカレンダー</div>
+        <div class="npc-desc">拠点別のレッスン日程を確認</div>
+      </a>
+      <a class="next-page-card" href="community.html">
+        <div class="npc-title">コミュニティ</div>
+        <div class="npc-desc">サポート企業・連携団体・活動拠点</div>
+      </a>
+      <a class="next-page-card" href="data-feature.html">
+        <div class="npc-title">選手カルテ</div>
+        <div class="npc-desc">練習・体調・目標をひとつに</div>
+      </a>
+    </div>
   </div>
 
   <div class="foot-note">価格はすべて税込です。施設利用料・リフト券は別途となります。<br><a href="index.html">← MICトップページへ戻る</a></div>
