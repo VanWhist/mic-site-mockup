@@ -451,13 +451,6 @@
     transition:transform .8s cubic-bezier(.16,1,.3,1);
   }
   .g-card:hover img{transform:scale(1.06);}
-  .g-caption{
-    position:absolute;left:0;right:0;bottom:0;
-    padding:22px 20px;
-    background:linear-gradient(0deg, rgba(0,0,0,.75), transparent);
-  }
-  .g-caption .name{font-weight:700;font-size:17px;}
-  .g-caption .tag{font-size:12px;color:var(--muted);margin-top:4px;}
 
   /* ---------- News ticker ---------- */
   .news{
@@ -625,12 +618,18 @@
   }
 
   /* ---------- Coach profile (smaller carousel cards + expand-in-place panel) ---------- */
-  .g-card.cp-card{width:min(46vw,230px);height:300px;cursor:pointer;}
+  .g-card.cp-card{width:min(46vw,230px);height:auto;cursor:pointer;background:transparent;}
   .g-card.cp-card:nth-child(even){margin-top:32px;}
-  .cp-chev{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.28);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s,border-color .2s;backdrop-filter:blur(4px);z-index:2;}
-  .g-card.cp-card:hover .cp-chev{border-color:rgba(255,255,255,.55);}
-  .g-card.cp-card.active .cp-chev{transform:rotate(180deg);background:var(--accent);border-color:var(--accent);}
-  .g-card.cp-card.active .g-caption .name{color:var(--accent);}
+  .cp-card-media{position:relative;width:100%;height:300px;border-radius:18px;overflow:hidden;background:#1b1b1e;}
+  .cp-card-media img{width:100%;height:100%;object-fit:cover;display:block;}
+  .g-card.cp-card:hover .cp-card-media img{transform:scale(1.06);}
+  .cp-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 2px 0;}
+  .cp-name-row-name{font-weight:700;font-size:15px;letter-spacing:-.01em;transition:color .25s;}
+  .cp-name-row-tag{font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .cp-chev{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.18);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:11px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),color .2s,border-color .2s,background .2s;}
+  .g-card.cp-card:hover .cp-chev{border-color:rgba(255,255,255,.4);color:var(--fg);}
+  .g-card.cp-card.active .cp-chev{transform:rotate(180deg);color:#fff;background:var(--accent);border-color:var(--accent);}
+  .g-card.cp-card.active .cp-name-row-name{color:var(--accent);}
 
   .cp-photos{position:absolute;inset:0;}
   .cp-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;}
@@ -663,7 +662,8 @@
   .cp-panel-list li:first-child{border-top:none;}
 
   @media (max-width:700px){
-    .g-card.cp-card{width:min(58vw,230px);height:280px;}
+    .g-card.cp-card{width:min(58vw,230px);}
+    .cp-card-media{height:280px;}
     .cp-panel{padding:28px 6% 34px;}
     .cp-panel-avatar{width:60px;height:60px;}
   }
@@ -1620,69 +1620,93 @@
   <div class="g-fade g-fade-left"></div>
   <div class="gallery reveal-scale" id="coachGallery" data-wheel-nav="off">
     <div class="g-card cp-card" data-cp-index="0" data-photo-index="0">
-      <div class="cp-photos">
-        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta.jpg" alt="城勇太">
-        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta-2.jpg" alt="城勇太">
+      <div class="cp-card-media">
+        <div class="cp-photos">
+          <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta.jpg" alt="城勇太">
+          <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/jo-yuta-2.jpg" alt="城勇太">
+        </div>
+        <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+        <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+        <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       </div>
-      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
-      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
-      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
-      <div class="g-caption"><div class="name">城勇太</div><div class="tag">代表コーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">城勇太</div><div class="cp-name-row-tag">代表コーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="1" data-photo-index="0">
-      <div class="cp-photos">
-        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya.jpg" alt="舘田瞬哉" style="object-position:42% center;">
-        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-2.jpg" alt="舘田瞬哉">
-        <img class="cp-photo" data-photo-index="2" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-3.jpg" alt="舘田瞬哉">
+      <div class="cp-card-media">
+        <div class="cp-photos">
+          <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya.jpg" alt="舘田瞬哉" style="object-position:42% center;">
+          <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-2.jpg" alt="舘田瞬哉">
+          <img class="cp-photo" data-photo-index="2" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tateda-shunya-3.jpg" alt="舘田瞬哉">
+        </div>
+        <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span><span class="bar"></span></div>
+        <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+        <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       </div>
-      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span><span class="bar"></span></div>
-      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
-      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
-      <div class="g-caption"><div class="name">舘田瞬哉</div><div class="tag">フルタイムコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">舘田瞬哉</div><div class="cp-name-row-tag">フルタイムコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="2">
-      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/ito-azusa.jpg" alt="伊藤あづさ">
-      <div class="g-caption"><div class="name">伊藤あづさ</div><div class="tag">スポットコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-card-media"><img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/ito-azusa.jpg" alt="伊藤あづさ"></div>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">伊藤あづさ</div><div class="cp-name-row-tag">スポットコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="3" data-photo-index="0">
-      <div class="cp-photos">
-        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota.jpg" alt="笠巻昇太">
-        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota-2.jpg" alt="笠巻昇太">
+      <div class="cp-card-media">
+        <div class="cp-photos">
+          <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota.jpg" alt="笠巻昇太">
+          <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/kasamaki-shota-2.jpg" alt="笠巻昇太">
+        </div>
+        <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+        <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+        <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       </div>
-      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
-      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
-      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
-      <div class="g-caption"><div class="name">笠巻昇太</div><div class="tag">スポットコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">笠巻昇太</div><div class="cp-name-row-tag">スポットコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="4" data-photo-index="0">
-      <div class="cp-photos">
-        <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka.jpg" alt="山本帆夏">
-        <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka-2.jpg" alt="山本帆夏">
+      <div class="cp-card-media">
+        <div class="cp-photos">
+          <img class="cp-photo active" data-photo-index="0" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka.jpg" alt="山本帆夏">
+          <img class="cp-photo" data-photo-index="1" src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/yamamoto-honoka-2.jpg" alt="山本帆夏">
+        </div>
+        <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
+        <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
+        <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
       </div>
-      <div class="cp-story-bars"><span class="bar active"></span><span class="bar"></span></div>
-      <button type="button" class="cp-photo-nav cp-photo-nav-prev" aria-label="前の写真"></button>
-      <button type="button" class="cp-photo-nav cp-photo-nav-next" aria-label="次の写真"></button>
-      <div class="g-caption"><div class="name">山本帆夏</div><div class="tag">スポットコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">山本帆夏</div><div class="cp-name-row-tag">スポットコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="5">
-      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/wada-nonoka.jpg" alt="和田野々花" style="object-position:center 20%;">
-      <div class="g-caption"><div class="name">和田野々花</div><div class="tag">ビハインド・ザ・チームコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-card-media"><img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/wada-nonoka.jpg" alt="和田野々花" style="object-position:center 20%;"></div>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">和田野々花</div><div class="cp-name-row-tag">ビハインド・ザ・チームコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="6">
-      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tatebe-junpei.jpg" alt="建部順平">
-      <div class="g-caption"><div class="name">建部順平</div><div class="tag">ビハインド・ザ・チームコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-card-media"><img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/tatebe-junpei.jpg" alt="建部順平"></div>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">建部順平</div><div class="cp-name-row-tag">ビハインド・ザ・チームコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
     <div class="g-card cp-card" data-cp-index="7">
-      <img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/shimbo-ryuto.jpg" alt="新保龍登">
-      <div class="g-caption"><div class="name">新保龍登</div><div class="tag">スポットコーチ</div></div>
-      <span class="cp-chev" aria-hidden="true">▾</span>
+      <div class="cp-card-media"><img src="https://vanwhist.github.io/mic-site-mockup/assets/coaches/shimbo-ryuto.jpg" alt="新保龍登"></div>
+      <div class="cp-name-row">
+        <div><div class="cp-name-row-name">新保龍登</div><div class="cp-name-row-tag">スポットコーチ</div></div>
+        <span class="cp-chev" aria-hidden="true">▾</span>
+      </div>
     </div>
   </div>
   <div class="g-fade g-fade-right"></div>
