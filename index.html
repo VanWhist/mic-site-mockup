@@ -1462,6 +1462,26 @@
     else { cpOpen(index); }
   }
 
+  function cpAutoRotateInit(){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cards = document.querySelectorAll('#coachGallery .cp-card[data-photo-index]');
+    cards.forEach(function(card, i){
+      const photos = card.querySelectorAll('.cp-photo');
+      if (photos.length < 2) return;
+      let timer = null;
+      function tick(){
+        if (document.visibilityState === 'visible') cpSwitchPhoto(card, 1);
+      }
+      function start(){ stop(); timer = setInterval(tick, 3500); }
+      function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+      // stagger the start slightly per card so they don't all flip in lockstep
+      setTimeout(start, i * 450);
+      // pause while the user is looking at this card, resume on mouse-leave
+      card.addEventListener('mouseenter', stop);
+      card.addEventListener('mouseleave', start);
+    });
+  }
+
   function cpInit(){
     const gallery = document.getElementById('coachGallery');
     if (!gallery) return;
@@ -1489,10 +1509,11 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ apInit(); cpInit(); });
+    document.addEventListener('DOMContentLoaded', function(){ apInit(); cpInit(); cpAutoRotateInit(); });
   } else {
     apInit();
     cpInit();
+    cpAutoRotateInit();
   }
 })();
 </script>
