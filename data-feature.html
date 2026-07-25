@@ -114,34 +114,11 @@
     border:1px solid rgba(255,90,60,.3);border-radius:999px;padding:3px 9px;letter-spacing:.02em;}
 
   .phone-stage{display:flex;justify-content:center;}
-  .phone{
-    position:relative;width:220px;height:450px;border-radius:44px;
-    background:linear-gradient(155deg,#232326,#0d0d0f);
+  .browser-mock{width:100%;max-width:620px;border-radius:16px;overflow:hidden;
     border:1px solid rgba(255,255,255,.14);
     box-shadow:0 30px 60px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08);
-    padding:12px;
-  }
-  .phone::before{
-    content:'';position:absolute;top:22px;left:50%;transform:translateX(-50%);
-    width:80px;height:22px;border-radius:14px;background:#000;z-index:3;
-  }
-  .phone .screen{
-    position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;
-    background:#111114;border:1px solid rgba(255,255,255,.06);padding:38px 16px 16px;
-  }
-  .ph-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-  .ph-avatar{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.14);filter:blur(2px);}
-  .ph-line{height:7px;border-radius:4px;background:rgba(255,255,255,.1);}
-  .ph-line.w60{width:60%;}
-  .ph-line.w40{width:40%;}
-  .ph-chip{display:inline-block;font-size:9px;color:var(--accent);background:rgba(255,90,60,.14);
-    border-radius:999px;padding:3px 8px;margin-bottom:10px;}
-  .ph-bars{display:flex;align-items:flex-end;gap:5px;height:70px;margin-top:16px;}
-  .ph-bars .bar{flex:1;background:linear-gradient(to top, rgba(255,90,60,.6), rgba(255,90,60,.15));border-radius:4px 4px 0 0;}
-  .ph-ring{width:64px;height:64px;border-radius:50%;margin:14px auto 0;
-    background:conic-gradient(var(--accent) 0% 72%, rgba(255,255,255,.08) 72% 100%);
-    display:flex;align-items:center;justify-content:center;}
-  .ph-ring-inner{width:46px;height:46px;border-radius:50%;background:#111114;}
+    background:#0d0d0f;}
+  .browser-mock img{display:block;width:100%;height:auto;}
 
   .phone-caption{text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.6;padding:0 12px;}
 
@@ -206,7 +183,7 @@
 </head>
 <body>
 
-<div class="demo-badge">🚧 RAFU / DRAFT — トップページ「選手カルテ」セクションからのリンク先です。画面キャプチャはプレースホルダーです。</div>
+<div class="demo-badge">🚧 RAFU / DRAFT — トップページ「選手カルテ」セクションからのリンク先です。画面キャプチャは選手名等を加工した実際のMIC選手カルテです。</div>
 
 <div class="lp-topbar">
   <a class="lp-logo" href="index.html">MIC</a>
@@ -299,29 +276,14 @@
     </div>
   </div>
 
-  <div class="showcase-label">実際の画面（イメージ） <span class="badge">個人情報は伏せて掲載予定</span></div>
+  <div class="showcase-label">実際の画面（コーチ用ダッシュボード） <span class="badge">選手名など個人情報は加工済み</span></div>
 
   <div class="phone-stage">
-    <div class="phone">
-      <div class="screen">
-        <div class="ph-chip">TRAINING LOG</div>
-        <div class="ph-row"><div class="ph-avatar"></div><div class="ph-line w40"></div></div>
-        <div class="ph-line w60" style="margin-bottom:8px;"></div>
-        <div class="ph-line w40"></div>
-        <div class="ph-bars">
-          <div class="bar" style="height:35%;"></div>
-          <div class="bar" style="height:60%;"></div>
-          <div class="bar" style="height:45%;"></div>
-          <div class="bar" style="height:78%;"></div>
-          <div class="bar" style="height:55%;"></div>
-          <div class="bar" style="height:92%;"></div>
-          <div class="bar" style="height:70%;"></div>
-        </div>
-        <div class="ph-ring"><div class="ph-ring-inner"></div></div>
-      </div>
+    <div class="browser-mock">
+      <img src="assets/karte/karte-mockup.jpg" alt="MIC選手カルテ コーチ用ダッシュボードの画面イメージ（選手名は加工済み）">
     </div>
   </div>
-  <div class="phone-caption">実際の選手カルテのスクリーンショットに差し替え予定です。氏名・写真などが特定できない形に加工して掲載します。</div>
+  <div class="phone-caption">MIC選手カルテ（コーチ用ダッシュボード）の実際の画面です。選手名など個人が特定できる情報は掲載前に加工しています。</div>
 
   <div class="who">
     <div class="grid-label">こんな方に役立ちます</div>
