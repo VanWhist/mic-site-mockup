@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>一般レッスン｜MIC Mogul Improvement Community</title>
+<meta name="description" content="競技を目指さない方も、MIC選手と同じコーチ陣から指導が受けられる一般レッスン。雪上レッスン・ウォータージャンプ・エアマットジャンプに加え、オンラインサポート・コーチ派遣もご案内。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-crumb{font-size:11.5px;color:var(--muted);text-align:right;line-height:1.5;}
+  .lp-crumb b{color:var(--fg);font-weight:700;}
+
+  /* ---------- hero ---------- */
+  .lp-hero-photo{position:relative;width:100%;min-height:320px;display:flex;align-items:flex-end;padding:32px 6vw;
+    background:
+      linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%),
+      radial-gradient(circle at 30% 15%, rgba(255,140,100,.28), transparent 55%),
+      linear-gradient(135deg,#2a2f38,#12151a 60%);}
+  .lp-hero-badge{position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px 6px 11px;backdrop-filter:blur(6px);}
+  .lp-hero-badge svg{width:13px;height:13px;}
+  .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
+
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:36px 6vw 80px;}
+
+  svg.icon{width:22px;height:22px;stroke:var(--fg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+    margin:40px 0;}
+
+  /* 「同じコーチ陣」を伝えるブリッジ帯 */
+  .philosophy{position:relative;border-radius:20px;padding:22px 22px;margin-bottom:28px;
+    background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.28);}
+  .philosophy-quote{font-size:16px;font-weight:700;line-height:1.85;color:var(--fg);}
+  .philosophy-quote .accent{color:var(--accent);}
+
+  .spec-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;
+    padding:22px 22px 8px;margin-bottom:16px;}
+  .spec-row{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .spec-row:last-child{border-bottom:none;margin-bottom:0;}
+  .spec-label{font-size:10.5px;font-weight:800;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+  .spec-value{font-size:14.5px;line-height:1.9;color:#e2e2e6;}
+
+  .lesson-photo-grid{display:flex;flex-direction:column;gap:12px;margin-top:14px;}
+  .lesson-photo-card{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);}
+  .lesson-photo{height:110px;display:flex;align-items:flex-end;padding:11px 13px;
+    background:
+      linear-gradient(180deg, rgba(10,10,12,0) 30%, rgba(10,10,12,.9) 100%),
+      linear-gradient(135deg,#2a3a4a,#12181e 60%);
+    font-size:10.5px;color:rgba(255,255,255,.5);border-bottom:1px dashed rgba(255,255,255,.2);}
+  .lesson-photo-body{padding:12px 13px 14px;background:rgba(255,255,255,.03);}
+  .lesson-photo-body .lp-title{font-size:13.5px;font-weight:700;margin-bottom:4px;}
+  .lesson-photo-body .lp-desc{font-size:12px;color:var(--muted);line-height:1.7;}
+
+  .price-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .price-label{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .price-num{font-size:22px;font-weight:800;color:var(--fg);}
+  .price-num .unit{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px;}
+
+  .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cta-btn svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;}
+  .cta-btn.ghost{background:rgba(255,255,255,.07);color:var(--fg);box-shadow:none;border:1px solid rgba(255,255,255,.16);}
+  .cta-btn.ghost svg{stroke:var(--fg);}
+
+  /* ---------- その他のサービス（オンラインサポート／コーチ派遣） ---------- */
+  .others-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 0 16px;}
+  .others-list{display:flex;flex-direction:column;gap:14px;}
+  .other-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px 22px;}
+  .other-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .other-icon{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:rgba(255,90,60,.12);
+    border:1px solid rgba(255,90,60,.25);display:flex;align-items:center;justify-content:center;}
+  .other-icon svg{width:19px;height:19px;stroke:var(--accent);}
+  .other-num{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;}
+  .other-title{font-size:15.5px;font-weight:800;margin-top:2px;}
+  .other-desc{font-size:13px;line-height:1.8;color:#d3d3d8;margin-bottom:14px;}
+
+  .usecase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .usecase-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:10px 11px;font-size:12px;font-weight:600;}
+  .usecase-chip svg{width:15px;height:15px;stroke:var(--accent);stroke-width:2.4;flex:0 0 auto;}
+
+  .price-tiers{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px;}
+  .price-tier{display:flex;justify-content:space-between;font-size:12.5px;color:#d8d8dc;
+    padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.08);}
+  .price-tier:last-child{border-bottom:none;}
+  .price-tier b{color:var(--fg);}
+
+  .other-price-line{font-size:13px;font-weight:700;color:var(--fg);margin-bottom:14px;}
+  .other-price-line span{color:var(--muted);font-weight:600;font-size:11.5px;margin-left:4px;}
+
+  .other-cta{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;}
+  .other-cta svg{width:15px;height:15px;stroke:var(--accent);}
+
+  /* ---------- bridge to athlete LP ---------- */
+  .lp-bridge{margin-top:8px;border-radius:20px;padding:26px 24px;text-align:center;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);}
+  .lp-bridge-eyebrow{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:10px;}
+  .lp-bridge-text{font-size:14.5px;line-height:1.8;color:#e2e2e6;margin-bottom:18px;}
+  .lp-bridge-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
+    color:var(--fg);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:11px 22px;text-decoration:none;}
+  .lp-bridge-link svg{width:15px;height:15px;stroke:var(--fg);stroke-width:2.2;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — トップページ試作からのリンク先です。写真等は仮のプレースホルダーです。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <div class="lp-crumb"><a href="index.html#programs" style="color:inherit;text-decoration:none;">プログラム紹介</a> &gt; <b>一般レッスン</b></div>
+</div>
+
+<div class="lp-hero-photo">
+  <div class="lp-hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg>
+    ALL LEVELS WELCOME
+  </div>
+  <span class="lp-hero-phtag">写真プレースホルダー（一般レッスン風景を想定）</span>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">PROGRAM 02</div>
+  <div class="headline">一般レッスン</div>
+  <div class="subcopy">競技を目指さない方も、楽しみながら上達したい方も。全年齢・全レベルが対象です。</div>
+
+  <div class="philosophy">
+    <div class="philosophy-quote">選手育成コースを指導するのと<span class="accent">同じコーチ陣</span>から、<br>一般レッスンでも直接指導が受けられます。</div>
+  </div>
+
+  <div class="spec-block">
+    <div class="spec-row">
+      <div class="spec-label">対象者</div>
+      <div class="spec-value">競技を目指さない方も。全年齢・全レベル対象。MIC選手と同じコースで指導します。</div>
+    </div>
+    <div class="spec-row">
+      <div class="spec-label">内容</div>
+      <div class="spec-value">雪上レッスン、ウォータージャンプ、エアマットジャンプの3種類。雪上レッスン（初級・中級）は事前に動画でのレベルチェックが必要です。</div>
+      <div class="lesson-photo-grid">
+        <div class="lesson-photo-card">
+          <div class="lesson-photo">写真プレースホルダー（雪上レッスン風景）</div>
+          <div class="lesson-photo-body"><div class="lp-title">雪上レッスン</div><div class="lp-desc">初級・中級は動画提出でレベルチェック後にご案内。MIC選手と同じコースで練習できます。</div></div>
+        </div>
+        <div class="lesson-photo-card">
+          <div class="lesson-photo">写真プレースホルダー（ウォータージャンプ風景）</div>
+          <div class="lesson-photo-body"><div class="lp-title">ウォータージャンプ</div><div class="lp-desc">プールへのジャンプで、安全に技の練習ができます。施設体験¥1,000/日〜。</div></div>
+        </div>
+        <div class="lesson-photo-card">
+          <div class="lesson-photo">写真プレースホルダー（エアマットジャンプ風景）</div>
+          <div class="lesson-photo-body"><div class="lp-title">エアマットジャンプ</div><div class="lp-desc">クッション性の高いマットで、着地の感覚を安全に習得。施設体験¥1,000/日〜。</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="spec-row">
+      <div class="spec-label">料金</div>
+      <div class="price-row">
+        <div>
+          <div class="price-label">体験・トライアル</div>
+          <div class="price-num">¥1,000<span class="unit">/ 日〜（詳細は要問い合わせ）</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="cta-btn" href="inquiry.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    公式LINEで問い合わせる
+  </a>
+
+  <div class="divider"></div>
+
+  <div class="others-label">その他のサービス</div>
+  <div class="others-list">
+
+    <div class="other-card">
+      <div class="other-head">
+        <div class="other-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><rect x="3" y="5" width="18" height="12" rx="2"></rect><polygon points="10 9 10 13 14 11"></polygon></svg></div>
+        <div>
+          <div class="other-num">PROGRAM 03</div>
+          <div class="other-title">オンラインサポート</div>
+        </div>
+      </div>
+      <div class="other-desc">動画で客観的に改善したい方へ。遠方在住で直接指導が難しい方にもおすすめです。動画分析によるリモートコーチングを、リードコーチまたは専属コーチが担当します（2〜3名までは追加料金なし）。</div>
+      <div class="other-price-line">¥5,500<span>/ 30分</span></div>
+      <a class="other-cta" href="inquiry.html">
+        公式LINEで問い合わせる
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+    <div class="other-card">
+      <div class="other-head">
+        <div class="other-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"><path d="M12 21s7-7.5 7-12a7 7 0 0 0-14 0c0 4.5 7 12 7 12z"></path><circle cx="12" cy="9" r="2.5"></circle></svg></div>
+        <div>
+          <div class="other-num">PROGRAM 04</div>
+          <div class="other-title">コーチ派遣</div>
+        </div>
+      </div>
+      <div class="other-desc">団体・個人問わず、出張指導を依頼したい方へ。ご希望の場所へMICコーチが伺い、現地で指導します（交通費は別途、団体料金の割引はありません）。</div>
+      <div class="usecase-grid">
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l4-14 4 10 4-16 4 20"></path></svg>スキークラブ</div>
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg>ジュニアチーム</div>
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg>学校</div>
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2"></rect><path d="M8 7V4h8v3"></path></svg>イベント</div>
+      </div>
+      <div class="price-tiers">
+        <div class="price-tier">1時間 <b>¥11,000</b></div>
+        <div class="price-tier">2時間 <b>¥19,800</b></div>
+        <div class="price-tier">3時間 <b>¥29,700</b></div>
+        <div class="price-tier">4時間 <b>¥39,600</b></div>
+      </div>
+      <a class="other-cta" href="inquiry.html">
+        公式LINEで問い合わせる
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="lp-bridge">
+    <div class="lp-bridge-eyebrow">本気で競技を目指す方へ</div>
+    <div class="lp-bridge-text">全日本選手権やジュニアオリンピックを目指す方には、年間を通じた本格強化プログラム「選手育成コース」もご用意しています。</div>
+    <a class="lp-bridge-link" href="program-athlete.html">
+      選手育成コースを見る
+      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </div>
+
+  <div class="foot-note">価格はすべて税込です。施設利用料・リフト券は別途となります。<br><a href="index.html">← MICトップページへ戻る</a></div>
+</div>
+
+</body>
+</html>
