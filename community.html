@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>コミュニティ｜MIC Mogul Improvement Community</title>
+<meta name="description" content="MICを支えるサポート企業・連携団体・活動拠点のご紹介。協賛・提携のご案内もこちらから。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;right:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(90,140,255,.13), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+  body::after{
+    content:'';position:fixed;bottom:-10%;left:-20%;width:65%;height:40%;
+    background:radial-gradient(circle, rgba(255,90,60,.13), transparent 70%);
+    filter:blur(50px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-crumb{font-size:11.5px;color:var(--muted);text-align:right;line-height:1.5;}
+  .lp-crumb b{color:var(--fg);font-weight:700;}
+
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:36px 6vw 80px;}
+
+  svg.icon{width:22px;height:22px;stroke:var(--fg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;text-align:center;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;text-align:center;margin:12px 0 12px;}
+  .brand-list{font-size:15px;font-weight:700;line-height:2.1;letter-spacing:.03em;color:#e2e2e6;text-align:center;margin:2px 0 4px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;text-align:center;margin:0 0 28px;}
+
+  /* ---------- category stats ---------- */
+  .cat-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:30px;}
+  .cat-stat{border-radius:18px;padding:18px 8px;text-align:center;
+    background:linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);}
+  .cat-stat .num{font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.02em;line-height:1;}
+  .cat-stat .lbl{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4;}
+
+  /* ---------- quick nav ---------- */
+  .quicknav-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 2px 12px;}
+  .quicklist{display:flex;flex-direction:column;gap:9px;margin-bottom:10px;}
+  .qrow{display:flex;align-items:center;gap:12px;border-radius:16px;padding:13px 15px;
+    background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+    text-decoration:none;color:inherit;transition:border-color .2s;}
+  .qrow:hover{border-color:rgba(255,90,60,.4);}
+  .qrow .qicon{flex:0 0 auto;width:36px;height:36px;border-radius:10px;background:rgba(255,90,60,.12);
+    border:1px solid rgba(255,90,60,.25);display:flex;align-items:center;justify-content:center;}
+  .qrow .qicon svg{width:18px;height:18px;stroke:var(--accent);}
+  .qrow .qtext{flex:1 1 auto;min-width:0;}
+  .qrow .qtitle{font-size:13.5px;font-weight:700;}
+  .qrow .qmeta{font-size:11.5px;color:var(--muted);margin-top:1px;}
+  .qrow .qcount{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--fg);text-align:right;}
+
+  /* ---------- section structure ---------- */
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+    margin:40px 0;}
+
+  .sec{scroll-margin-top:76px;}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:8px;}
+  .sec-icon{flex:0 0 auto;width:52px;height:52px;border-radius:16px;background:rgba(255,90,60,.14);
+    border:1px solid rgba(255,90,60,.28);display:flex;align-items:center;justify-content:center;}
+  .sec-icon svg{stroke:var(--accent);width:26px;height:26px;}
+  .sec-num{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;}
+  .sec-title{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:2px;}
+  .sec-desc{font-size:13.5px;line-height:1.85;color:#d3d3d8;margin:14px 0 18px;}
+
+  /* ---------- partner card ---------- */
+  .partner-list{display:flex;flex-direction:column;gap:12px;}
+  .partner-card{border-radius:18px;padding:17px 18px;background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.1);}
+  .partner-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:10px;}
+  .partner-logo{flex:0 0 auto;width:52px;height:52px;border-radius:13px;
+    background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.22);
+    display:flex;align-items:center;justify-content:center;
+    font-size:9px;color:rgba(255,255,255,.4);text-align:center;line-height:1.3;padding:4px;}
+  .partner-info{flex:1 1 auto;min-width:0;}
+  .partner-name{font-size:14.5px;font-weight:800;letter-spacing:-.005em;line-height:1.4;}
+  .partner-tag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--accent);
+    background:rgba(255,90,60,.12);border-radius:999px;padding:2px 9px;margin-top:5px;letter-spacing:.02em;}
+  .partner-desc{font-size:12.5px;line-height:1.8;color:#c9c9ce;margin-bottom:12px;}
+  .partner-link{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;
+    color:var(--fg);text-decoration:none;border-top:1px solid rgba(255,255,255,.08);
+    padding-top:11px;width:100%;justify-content:space-between;}
+  .partner-link svg{width:13px;height:13px;stroke:var(--muted);stroke-width:2.2;flex:0 0 auto;}
+
+  /* ---------- location card ---------- */
+  .region-label{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;}
+  .region-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto;}
+  .region-name{font-size:12.5px;font-weight:800;letter-spacing:.02em;}
+  .region-season{font-size:10.5px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.07);
+    border-radius:999px;padding:2px 9px;margin-left:auto;}
+
+  .loc-card{display:flex;align-items:center;gap:13px;border-radius:16px;padding:13px 15px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);margin-bottom:9px;
+    text-decoration:none;color:inherit;transition:border-color .2s;}
+  .loc-card:last-child{margin-bottom:0;}
+  .loc-card:hover{border-color:rgba(255,90,60,.4);}
+  .loc-icon{flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;}
+  .loc-icon svg{width:19px;height:19px;stroke:var(--muted);}
+  .loc-text{flex:1 1 auto;min-width:0;}
+  .loc-title{font-size:13.5px;font-weight:700;letter-spacing:-.005em;}
+  .loc-addr{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.5;}
+  .loc-chevron{flex:0 0 auto;width:15px;height:15px;stroke:var(--muted);stroke-width:2.2;}
+
+  .season-callout{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.18);
+    border-radius:16px;padding:16px 18px;margin:16px 0 6px;}
+  .season-callout-title{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.03em;margin-bottom:8px;}
+  .season-callout-body{font-size:12.5px;line-height:1.85;color:#d3d3d8;}
+  .season-callout-body b{color:var(--fg);}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  /* ---------- become a partner ---------- */
+  .recruit-block{position:relative;border-radius:24px;padding:28px 24px;text-align:center;
+    background:linear-gradient(155deg, rgba(255,90,60,.16), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.3);
+    box-shadow:0 20px 50px -28px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);}
+  .recruit-eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;}
+  .recruit-title{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:10px 0 14px;}
+  .recruit-desc{font-size:13.5px;line-height:1.9;color:#d8d8dc;margin-bottom:22px;}
+  .recruit-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .recruit-cta svg{width:16px;height:16px;stroke:#fff;stroke-width:2.2;}
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — トップページ試作からのリンク先です。ロゴはプレースホルダー、外部リンク先はダミー表記です。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <div class="lp-crumb"><a href="index.html#community" style="color:inherit;text-decoration:none;">Community</a> &gt; <b>コミュニティ・活動拠点</b></div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">MIC Community</div>
+  <div class="headline">ひとりで、<br>戦っているわけじゃない。</div>
+  <div class="brand-list">企業。チーム。施設。地域。</div>
+  <div class="subcopy">すべての仲間とともに、未来の選手を育てています。</div>
+
+  <div class="cat-stats">
+    <div class="cat-stat"><div class="num">2</div><div class="lbl">サポート企業</div></div>
+    <div class="cat-stat"><div class="num">3</div><div class="lbl">連携団体</div></div>
+    <div class="cat-stat"><div class="num">5</div><div class="lbl">活動拠点</div></div>
+  </div>
+
+  <div class="quicknav-label">このページの内容</div>
+  <div class="quicklist">
+    <a class="qrow" href="#c1">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+      <div class="qtext"><div class="qtitle">サポート企業</div><div class="qmeta">用品・保険など、活動を支える企業様</div></div>
+      <div class="qcount">2社</div>
+    </a>
+    <a class="qrow" href="#c2">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div class="qtext"><div class="qtitle">連携団体</div><div class="qmeta">県連盟・チーム・クラブとのつながり</div></div>
+      <div class="qcount">3団体</div>
+    </a>
+    <a class="qrow" href="#c3">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
+      <div class="qtext"><div class="qtitle">活動拠点</div><div class="qmeta">ウォータージャンプ・トランポリン施設</div></div>
+      <div class="qcount">5拠点</div>
+    </a>
+    <a class="qrow" href="#c4">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+      <div class="qtext"><div class="qtitle">Become a Partner</div><div class="qmeta">協賛・提携のご案内</div></div>
+      <div class="qcount">→</div>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ① サポート企業 -->
+  <div class="sec" id="c1">
+    <div class="sec-head">
+      <div class="sec-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+      <div>
+        <div class="sec-num">COMMUNITY 01</div>
+        <div class="sec-title">サポート企業</div>
+      </div>
+    </div>
+    <div class="sec-desc">用品・保険など、さまざまな形でMICの活動を支えてくださっている企業の皆さまです。</div>
+
+    <div class="partner-list">
+      <div class="partner-card">
+        <div class="partner-top">
+          <div class="partner-logo">LOGO<br>プレースホルダー</div>
+          <div class="partner-info">
+            <div class="partner-name">SPORTS 3110</div>
+            <span class="partner-tag">用品・チューンナップ</span>
+          </div>
+        </div>
+        <div class="partner-desc">インソール及びスキー・スノーボード関連商品とチューンナップ、ブーツフィッティングの店舗様。</div>
+        <a class="partner-link" href="#">
+          公式サイトを見る
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-top">
+          <div class="partner-logo">LOGO<br>プレースホルダー</div>
+          <div class="partner-info">
+            <div class="partner-name">株式会社 IKKライフパートナーズ</div>
+            <span class="partner-tag">保険</span>
+          </div>
+        </div>
+        <div class="partner-desc">お客様本位で考える、生命保険ご提案会社様。</div>
+        <a class="partner-link" href="#">
+          Instagramを見る
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ② 連携団体 -->
+  <div class="sec" id="c2">
+    <div class="sec-head">
+      <div class="sec-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div>
+        <div class="sec-num">COMMUNITY 02</div>
+        <div class="sec-title">連携団体</div>
+      </div>
+    </div>
+    <div class="sec-desc">県連盟や他チーム・クラブとのつながりも、MICの選手育成を支える大切な基盤です。</div>
+
+    <div class="partner-list">
+      <div class="partner-card">
+        <div class="partner-top">
+          <div class="partner-logo">LOGO<br>プレースホルダー</div>
+          <div class="partner-info">
+            <div class="partner-name">広島県スキー連盟 フリースタイル部</div>
+            <span class="partner-tag">県連盟</span>
+          </div>
+        </div>
+        <a class="partner-link" href="#">
+          公式サイトを見る
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-top">
+          <div class="partner-logo">LOGO<br>プレースホルダー</div>
+          <div class="partner-info">
+            <div class="partner-name">Tr-J</div>
+            <span class="partner-tag">モーグルチーム・長野県</span>
+          </div>
+        </div>
+        <div class="partner-desc">長野県を拠点とするモーグルスキーチーム。</div>
+        <a class="partner-link" href="#">
+          公式サイトを見る
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-top">
+          <div class="partner-logo">LOGO<br>プレースホルダー</div>
+          <div class="partner-info">
+            <div class="partner-name">EQUIPE F.S.C</div>
+            <span class="partner-tag">SAJ公認スキークラブ・新潟県</span>
+          </div>
+        </div>
+        <div class="partner-desc">新潟県スキー連盟所属のSAJ公認スキークラブ。</div>
+        <a class="partner-link" href="#">
+          公式サイトを見る
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ③ 活動拠点 -->
+  <div class="sec" id="c3">
+    <div class="sec-head">
+      <div class="sec-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
+      <div>
+        <div class="sec-num">COMMUNITY 03</div>
+        <div class="sec-title">活動拠点</div>
+      </div>
+    </div>
+    <div class="sec-desc">インシーズンは白馬エリア、オフシーズンは関西・関東エリアの施設で練習しています。</div>
+
+    <div class="season-callout">
+      <div class="season-callout-title">シーズンによる拠点の使い分け</div>
+      <div class="season-callout-body"><b>インシーズン（雪上）</b>：白馬エリア（今後拡大予定）<br><b>オフシーズン（夏季）</b>：関西・関東エリアのウォータージャンプ／トランポリン施設</div>
+    </div>
+
+    <div class="region-label">
+      <span class="region-dot"></span>
+      <span class="region-name">信越エリア（白馬）</span>
+      <span class="region-season">インシーズン拠点</span>
+    </div>
+    <a class="loc-card" href="#">
+      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">白馬さのさかウォータージャンプ</div>
+        <div class="loc-addr">長野県白馬村</div>
+      </div>
+      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </a>
+
+    <div class="region-label">
+      <span class="region-dot"></span>
+      <span class="region-name">関西エリア（大阪）</span>
+      <span class="region-season">オフシーズン拠点</span>
+    </div>
+    <a class="loc-card" href="#">
+      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">WATER JUMP O-AIR</div>
+        <div class="loc-addr">大阪府大東市</div>
+      </div>
+      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </a>
+    <a class="loc-card" href="#">
+      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">アベノジュニアトランポリンクラブ</div>
+        <div class="loc-addr">大阪府八尾市</div>
+      </div>
+      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </a>
+
+    <div class="region-label">
+      <span class="region-dot"></span>
+      <span class="region-name">関東エリア（埼玉）</span>
+      <span class="region-season">オフシーズン拠点</span>
+    </div>
+    <a class="loc-card" href="#">
+      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">WATER JUMP S-AIR</div>
+        <div class="loc-addr">埼玉県所沢市</div>
+      </div>
+      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </a>
+    <a class="loc-card" href="#">
+      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">PROSHOP JOCKS</div>
+        <div class="loc-addr">埼玉県所沢市（トランポリン・ボルダリング・スラックライン）</div>
+      </div>
+      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ④ Become a Partner -->
+  <div class="sec" id="c4">
+    <div class="recruit-block">
+      <div class="recruit-eyebrow">Become a Partner</div>
+      <div class="recruit-title">未来の日本代表を、<br>一緒に育てませんか。</div>
+      <div class="recruit-desc">MICでは、企業・団体・施設パートナーを募集しています。選手育成を支援いただける皆さまは、お気軽にお問い合わせください。</div>
+      <a class="recruit-cta" href="inquiry.html">
+        協賛・提携についてお問い合わせ
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="foot-note">掲載情報は現行サイト（mogul-mic.com/community/）の内容に基づいています。ロゴ画像・最新の連絡先は差し替えが必要です。<br><a href="index.html">← MICトップページへ戻る</a></div>
+</div>
+
+</body>
+</html>
