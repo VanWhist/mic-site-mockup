@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>フルカレンダー｜MIC Mogul Improvement Community</title>
+<meta name="description" content="MICのレッスン・強化練習・合宿の予定を月単位で確認できるフルカレンダー。拠点（スキー場）ごとの絞り込みにも対応。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+  body::after{
+    content:'';position:fixed;bottom:-15%;right:-15%;width:60%;height:45%;
+    background:radial-gradient(circle, rgba(80,120,255,.10), transparent 70%);
+    filter:blur(50px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-crumb{font-size:11.5px;color:var(--muted);text-align:right;line-height:1.5;}
+  .lp-crumb b{color:var(--fg);font-weight:700;}
+
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:36px 6vw 80px;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  /* ---------- NEXT EVENT hero ---------- */
+  .hero{
+    position:relative;border-radius:28px;padding:26px 24px;overflow:hidden;
+    background:linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
+    margin-bottom:32px;
+  }
+  .hero-glow{position:absolute;top:-40%;right:-30%;width:70%;height:80%;
+    background:radial-gradient(circle, rgba(255,90,60,.32), transparent 70%);
+    filter:blur(30px);pointer-events:none;}
+  .hero-tag{position:relative;display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;}
+  .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 0 rgba(255,90,60,.6);animation:pulse 2s ease-out infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(255,90,60,.55);}
+    70%{box-shadow:0 0 0 8px rgba(255,90,60,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,90,60,0);}
+  }
+  .hero-date{position:relative;font-size:32px;font-weight:800;letter-spacing:-.02em;margin:12px 0 2px;}
+  .hero-date span{color:var(--muted);font-size:16px;font-weight:600;margin-left:6px;}
+  .hero-title{position:relative;font-size:18px;font-weight:700;margin:2px 0 14px;line-height:1.4;}
+  .hero-meta{position:relative;display:flex;flex-wrap:wrap;gap:10px;}
+  .hero-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#e4e4e8;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:7px 13px;}
+  .hero-sub{position:relative;margin-top:14px;font-size:12.5px;color:var(--muted);}
+  .hero-sub b{color:var(--fg);font-weight:700;}
+
+  /* ---------- filter chips (拠点) ---------- */
+  .filter-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 2px 10px;}
+  .filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px;}
+  .filter-chip{font-size:12.5px;font-weight:700;color:#d8d8dc;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 15px;cursor:pointer;
+    transition:background .2s,border-color .2s,color .2s;}
+  .filter-chip:hover{border-color:rgba(255,255,255,.28);}
+  .filter-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+  /* ---------- month calendar grid ---------- */
+  .cal-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;
+    padding:22px 20px;margin-bottom:24px;}
+  .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .cal-nav-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:background .2s,border-color .2s;}
+  .cal-nav-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);}
+  .cal-nav-btn svg{width:16px;height:16px;stroke:var(--fg);}
+  .cal-nav-btn.is-disabled{opacity:.3;pointer-events:none;}
+  .cal-month-label{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .cal-dow{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding-bottom:8px;}
+  .cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border-radius:12px;cursor:pointer;position:relative;font-size:13px;font-weight:600;color:#d8d8dc;
+    transition:background .2s;}
+  .cal-cell.is-empty{cursor:default;}
+  .cal-cell:not(.is-empty):hover{background:rgba(255,255,255,.06);}
+  .cal-cell.is-today{color:var(--accent);font-weight:800;}
+  .cal-cell .cal-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);margin-top:3px;opacity:0;}
+  .cal-cell.has-events .cal-dot{opacity:1;}
+  .cal-cell.active{background:var(--accent);color:#fff;}
+  .cal-cell.active .cal-dot{background:#fff;}
+  .cal-empty-note{text-align:center;font-size:12.5px;color:var(--muted);padding:18px 10px 4px;}
+
+  /* ---------- timeline ---------- */
+  .timeline-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 14px;}
+  .timeline-head h3{font-size:16px;font-weight:800;margin:0;letter-spacing:-.01em;}
+  .timeline-head span{font-size:12px;color:var(--muted);}
+
+  .timeline{position:relative;padding-left:20px;}
+  .timeline::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;
+    background:linear-gradient(to bottom, rgba(255,90,60,.5), rgba(255,255,255,.08));}
+  .timeline.is-empty::before{display:none;}
+
+  .t-item{position:relative;margin-bottom:14px;}
+  .t-item::before{content:'';position:absolute;left:-20px;top:18px;width:9px;height:9px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 0 3px rgba(10,10,12,1),0 0 0 4.5px rgba(255,90,60,.35);}
+
+  .t-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;
+    padding:14px 16px;}
+  .t-time{font-size:12.5px;font-weight:700;color:var(--accent);letter-spacing:.02em;margin-bottom:4px;}
+  .t-title{font-size:15px;font-weight:700;margin-bottom:9px;line-height:1.4;}
+  .t-tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .t-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#d8d8dc;
+    background:rgba(255,255,255,.06);border-radius:999px;padding:5px 11px;}
+
+  .empty-state{text-align:center;color:var(--muted);font-size:13.5px;padding:38px 10px 20px;
+    background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:18px;}
+  .empty-state .emoji{font-size:26px;display:block;margin-bottom:8px;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  @media (max-width:480px){
+    .cal-cell{font-size:12px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — サンプルデータです。実データはGoogleカレンダー連携後に自動反映されます。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <div class="lp-crumb"><a href="index.html#calendar" style="color:inherit;text-decoration:none;">Schedule &amp; News</a> &gt; <b>フルカレンダー</b></div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">MIC Schedule</div>
+  <div class="headline">フルカレンダー</div>
+  <div class="subcopy">レッスン・強化練習・合宿の予定を月単位で確認できます。拠点（スキー場）で絞り込むこともできます。</div>
+
+  <div class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-tag"><span class="dot"></span>NEXT EVENT</div>
+    <div class="hero-date" id="heroDate">8月1日<span>土</span></div>
+    <div class="hero-title" id="heroTitle">一般レッスン（初級）</div>
+    <div class="hero-meta">
+      <span class="hero-chip" id="heroLoc">📍 テイネスキー場</span>
+      <span class="hero-chip" id="heroCoach">👤 城 勇太</span>
+    </div>
+    <div class="hero-sub" id="heroSub">この日は他に <b>1件</b> のレッスンがあります</div>
+  </div>
+
+  <div class="filter-label">拠点で絞り込む</div>
+  <div class="filter-row" id="filterRow"></div>
+
+  <div class="cal-card">
+    <div class="cal-nav">
+      <div class="cal-nav-btn" id="calPrev" aria-label="前の月">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </div>
+      <div class="cal-month-label" id="calMonthLabel">2026年8月</div>
+      <div class="cal-nav-btn" id="calNext" aria-label="次の月">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-empty-note" id="calEmptyNote" style="display:none;">この月のサンプルデータはまだありません。実データ連携後に表示されます。</div>
+  </div>
+
+  <div class="timeline-head">
+    <h3 id="timelineDateLabel">8月1日（土）の予定</h3>
+    <span id="timelineCount">2件</span>
+  </div>
+  <div class="timeline" id="timelineBody"></div>
+
+  <div class="foot-note">📍場所・👤担当コーチは各予定カードに表示。実データ連携方法は別途ご相談させてください。<br><a href="index.html">← MICトップページへ戻る</a></div>
+</div>
+
+<script>
+(function(){
+  // ---- サンプルデータ（実データではありません。トップページのSchedule &amp; Newsハブと同一データ） ----
+  var EVENTS = {
+    '2026-08-01': [
+      {time:'9:00',  title:'一般レッスン（初級）', location:'テイネスキー場', coach:'城 勇太'},
+      {time:'13:00', title:'一般レッスン（中級）', location:'テイネスキー場', coach:'舘田 瞬哉'}
+    ],
+    '2026-08-02': [],
+    '2026-08-03': [
+      {time:'8:30',  title:'育成コース練習', location:'さのさかスキー場', coach:'建部 順平'}
+    ],
+    '2026-08-04': [],
+    '2026-08-05': [
+      {time:'9:00',  title:'一般レッスン（初級）', location:'宮城蔵王スキー場', coach:'笠巻 昇太'},
+      {time:'11:00', title:'一般レッスン（上級）', location:'宮城蔵王スキー場', coach:'山本 帆夏'},
+      {time:'14:00', title:'選手強化練習', location:'宮城蔵王スキー場', coach:'和田 野々花'}
+    ],
+    '2026-08-06': [],
+    '2026-08-07': [
+      {time:'10:00', title:'育成コース練習', location:'テイネスキー場', coach:'伊藤 あづさ'}
+    ],
+    '2026-08-08': [],
+    '2026-08-09': [
+      {time:'9:00',  title:'合同強化合宿（1日目）', location:'さのさかスキー場', coach:'新保 龍登'}
+    ],
+    '2026-08-10': [
+      {time:'9:00',  title:'合同強化合宿（2日目）', location:'さのさかスキー場', coach:'新保 龍登'}
+    ]
+  };
+
+  var DOWS = ['日','月','火','水','木','金','土'];
+  var TODAY_STR = '2026-07-30'; // デモ上の「今日」
+  var ALL_DATES = Object.keys(EVENTS).sort();
+  var LOCATIONS = ['テイネスキー場', 'さのさかスキー場', '宮城蔵王スキー場'];
+
+  var activeLocation = 'all';
+  var selectedIso = null;
+  var viewYear, viewMonth; // 0-indexed month
+
+  function eventsFor(iso){
+    var all = EVENTS[iso] || [];
+    if (activeLocation === 'all') return all;
+    return all.filter(function(ev){ return ev.location === activeLocation; });
+  }
+
+  function datesWithEvents(){
+    return ALL_DATES.filter(function(iso){ return eventsFor(iso).length > 0; });
+  }
+
+  function renderFilters(){
+    var row = document.getElementById('filterRow');
+    row.innerHTML = '';
+    var chips = [{key:'all', label:'すべて'}].concat(LOCATIONS.map(function(l){ return {key:l, label:l}; }));
+    chips.forEach(function(c){
+      var el = document.createElement('div');
+      el.className = 'filter-chip' + (activeLocation === c.key ? ' active' : '');
+      el.textContent = c.label;
+      el.addEventListener('click', function(){
+        activeLocation = c.key;
+        renderFilters();
+        renderCalendarGrid();
+        selectDate(selectedIso, true);
+      });
+      row.appendChild(el);
+    });
+  }
+
+  function fmtDate(iso, withDow){
+    var d = new Date(iso + 'T00:00:00');
+    var s = (d.getMonth()+1) + '月' + d.getDate() + '日';
+    if (withDow) s += '（' + DOWS[d.getDay()] + '）';
+    return s;
+  }
+
+  function renderCalendarGrid(){
+    var grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    DOWS.forEach(function(dow){
+      var el = document.createElement('div');
+      el.className = 'cal-dow';
+      el.textContent = dow;
+      grid.appendChild(el);
+    });
+
+    var first = new Date(viewYear, viewMonth, 1);
+    var startOffset = first.getDay();
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    for (var i = 0; i < startOffset; i++){
+      var pad = document.createElement('div');
+      pad.className = 'cal-cell is-empty';
+      grid.appendChild(pad);
+    }
+
+    var monthHasEvents = false;
+    for (var day = 1; day <= daysInMonth; day++){
+      var iso = viewYear + '-' + String(viewMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+      var hasEvents = eventsFor(iso).length > 0;
+      if (hasEvents) monthHasEvents = true;
+      var cell = document.createElement('div');
+      cell.className = 'cal-cell' + (hasEvents ? ' has-events' : '') + (iso === TODAY_STR ? ' is-today' : '') + (iso === selectedIso ? ' active' : '');
+      cell.setAttribute('data-iso', iso);
+      cell.innerHTML = day + '<div class="cal-dot"></div>';
+      cell.addEventListener('click', function(){ selectDate(this.getAttribute('data-iso')); });
+      grid.appendChild(cell);
+    }
+
+    document.getElementById('calMonthLabel').textContent = viewYear + '年' + (viewMonth+1) + '月';
+    document.getElementById('calEmptyNote').style.display = monthHasEvents ? 'none' : 'block';
+
+    // prev/next disabled outside the range where we have any sample data (Jul-Sep 2026)
+    document.getElementById('calPrev').classList.toggle('is-disabled', viewYear === 2026 && viewMonth <= 6);
+    document.getElementById('calNext').classList.toggle('is-disabled', viewYear === 2026 && viewMonth >= 8);
+  }
+
+  function renderHero(iso){
+    var events = eventsFor(iso);
+    var d = new Date(iso + 'T00:00:00');
+    document.getElementById('heroDate').innerHTML = (d.getMonth()+1) + '月' + d.getDate() + '日<span>' + DOWS[d.getDay()] + '</span>';
+    if (events.length > 0){
+      var f = events[0];
+      document.getElementById('heroTitle').textContent = f.title;
+      document.getElementById('heroLoc').textContent = '📍 ' + f.location;
+      document.getElementById('heroCoach').textContent = '👤 ' + f.coach;
+      var rest = events.length - 1;
+      document.getElementById('heroSub').innerHTML = rest > 0
+        ? 'この日は他に <b>' + rest + '件</b> のレッスンがあります'
+        : 'この日のレッスンは以上です';
+    } else {
+      document.getElementById('heroTitle').textContent = 'この日の予定はありません';
+      document.getElementById('heroLoc').textContent = '📍 -';
+      document.getElementById('heroCoach').textContent = '👤 -';
+      document.getElementById('heroSub').textContent = '別の日付を選んでみてください';
+    }
+  }
+
+  function renderTimeline(iso){
+    var events = eventsFor(iso);
+    document.getElementById('timelineDateLabel').textContent = fmtDate(iso, true) + 'の予定';
+    document.getElementById('timelineCount').textContent = events.length + '件';
+
+    var body = document.getElementById('timelineBody');
+    if (events.length === 0){
+      body.classList.add('is-empty');
+      body.innerHTML = '<div class="empty-state"><span class="emoji">⛄️</span>この日は該当するレッスンの予定はありません</div>';
+      return;
+    }
+    body.classList.remove('is-empty');
+    body.innerHTML = events.map(function(ev){
+      return '<div class="t-item">' +
+        '<div class="t-card">' +
+          '<div class="t-time">' + ev.time + '〜</div>' +
+          '<div class="t-title">' + ev.title + '</div>' +
+          '<div class="t-tags">' +
+            '<span class="t-tag">📍 ' + ev.location + '</span>' +
+            '<span class="t-tag">👤 ' + ev.coach + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function selectDate(iso, skipViewChange){
+    if (!iso) return;
+    selectedIso = iso;
+    if (!skipViewChange){
+      var d = new Date(iso + 'T00:00:00');
+      viewYear = d.getFullYear();
+      viewMonth = d.getMonth();
+    }
+    renderCalendarGrid();
+    renderHero(iso);
+    renderTimeline(iso);
+  }
+
+  document.getElementById('calPrev').addEventListener('click', function(){
+    if (this.classList.contains('is-disabled')) return;
+    viewMonth -= 1;
+    if (viewMonth < 0){ viewMonth = 11; viewYear -= 1; }
+    renderCalendarGrid();
+  });
+  document.getElementById('calNext').addEventListener('click', function(){
+    if (this.classList.contains('is-disabled')) return;
+    viewMonth += 1;
+    if (viewMonth > 11){ viewMonth = 0; viewYear += 1; }
+    renderCalendarGrid();
+  });
+
+  var nextDate = datesWithEvents().find(function(d){ return d >= TODAY_STR; }) || ALL_DATES[0];
+  var initD = new Date(nextDate + 'T00:00:00');
+  viewYear = initD.getFullYear();
+  viewMonth = initD.getMonth();
+
+  renderFilters();
+  selectDate(nextDate, true);
+})();
+</script>
+
+</body>
+</html>
