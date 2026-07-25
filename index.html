@@ -2,6 +2,15 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<script>
+  // Take over scroll position on entry instead of letting the browser restore
+  // whatever scroll offset was active last time this page was in history
+  // (its default behavior on back-navigation / bfcache restore). Must run as
+  // early as possible, before the browser has a chance to apply its own
+  // restoration. See the "load"/"pageshow" handler near the end of the body
+  // for where the actual scroll target (top, or a #section if linked) is set.
+  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MIC | Mogul Improvement Community — トップページ ラフ案</title>
 <style>
@@ -1909,6 +1918,32 @@
 </footer>
 
 <script>
+  // Land at the top of the page on every entry — a full navigation from
+  // elsewhere (nav.scrollRestoration='manual' above stops the browser from
+  // restoring an old scroll offset) or a bfcache "back" restore (caught via
+  // pageshow below) — unless the URL points at a specific section (#programs,
+  // #cta, etc. — used by the dedicated pages' cross-page nav), in which case
+  // scroll straight to that section instead of relying on the browser's own
+  // native anchor jump, which can under/overshoot before hero images finish
+  // loading and the page reaches its final height.
+  function goToEntryScrollTarget(){
+    const headerOffset = 90; // clears the fixed site header
+    const id = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
+    const target = id ? document.getElementById(id) : null;
+    if (target) {
+      const y = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top: Math.max(y, 0), left: 0, behavior: 'instant' });
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }
+  // "load" (not DOMContentLoaded): waits for images/fonts so the target
+  // section's final position is already correct before we jump to it.
+  window.addEventListener('load', goToEntryScrollTarget);
+  // Safari/iOS back-swipe and other bfcache restores don't re-fire "load" —
+  // pageshow with event.persisted is how those are caught.
+  window.addEventListener('pageshow', function(e){ if (e.persisted) goToEntryScrollTarget(); });
+
   // Hero parallax on scroll
   const heroImg = document.getElementById('heroImg');
   window.addEventListener('scroll', () => {
