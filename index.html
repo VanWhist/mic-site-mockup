@@ -1804,12 +1804,12 @@
       card.className = 'lc-date-card' + (hasEvents ? ' has-events' : '');
       card.setAttribute('data-iso', iso);
       card.innerHTML = '<div class="dow">' + DOWS[d.getDay()] + '</div><div class="num">' + d.getDate() + '</div><div class="has-dot"></div>';
-      card.addEventListener('click', function(){ selectDate(iso); });
+      card.addEventListener('click', function(){ selectDate(iso, true); });
       el.appendChild(card);
     });
   }
 
-  function selectDate(iso){
+  function selectDate(iso, scrollIntoView){
     var d = new Date(iso + 'T00:00:00');
     var events = EVENTS[iso] || [];
     document.querySelectorAll('.lc-date-card').forEach(function(c){
@@ -1830,7 +1830,12 @@
       if (coachEl) coachEl.textContent = '👤 -';
     }
     var activeCard = document.querySelector('.lc-date-card[data-iso="' + iso + '"]');
-    if (activeCard) activeCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    // Only scroll the horizontal date strip into view for a user-initiated click.
+    // The initial auto-select (lcInit -> selectDate(nextDate)) must NOT scroll —
+    // block:'nearest' on a card that starts off-screen (the calendar section
+    // sits well below the hero) was dragging the whole page down to it on
+    // every load, before the user had done anything.
+    if (activeCard && scrollIntoView) activeCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
   }
 
   function updateQuickAccess(){
@@ -1845,7 +1850,7 @@
 
   function lcInit(){
     renderScroller();
-    selectDate(nextDate);
+    selectDate(nextDate, false);
     updateQuickAccess();
   }
 
