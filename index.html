@@ -1995,6 +1995,7 @@
   }
 
   function applyCalendarData(data){
+    EVENTS = {}; DATES = [];   // 再読み込み時に前回分と重ならないよう毎回リセットする
     var today = todayStr();
     (data.events || []).forEach(function(ev){
       if (ev.date < today) return; // 過去の予定は表示しない
@@ -2009,22 +2010,40 @@
     updateQuickAccess(nextDate);
   }
 
-  function lcInit(){
-    fetch('calendar-data.json', {cache:'no-cache'})
-      .then(function(res){ if (!res.ok) throw new Error('calendar-data.json load failed'); return res.json(); })
-      .then(function(data){ applyCalendarData(data); })
+  // ---- レッスンデータの読み込み ----
+  // ① まずページ内の埋め込みデータで即座に描画する（待ち時間ゼロ）
+  // ② 続けて公開APIから最新を取りに行き、取れたら描き直す
+  // ③ APIが駄目なら calendar-data.json、それも駄目なら①の表示のまま
+  // これで「表示は速く、内容は常に最新」を両立させている。
+  var CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbw4Ld53wjYfI8qVkick48qNsQssm7HXQ8mE1RFwME0TYa2Fig2_AboL0HSkpG068umU/exec';
+
+  function loadCalendar(){
+    var painted = false;
+    var inline = getInlineFallbackData();
+    if (inline){ applyCalendarData(inline); painted = true; }
+
+    function tryFetch(url){
+      return fetch(url, {cache:'no-cache'})
+        .then(function(res){ if (!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
+        .then(function(data){
+          if (!data || data.error || !Array.isArray(data.events)) throw new Error('unexpected payload');
+          applyCalendarData(data);
+          painted = true;
+        });
+    }
+
+    tryFetch(CALENDAR_API_URL)
+      .catch(function(){ return tryFetch('calendar-data.json'); })
       .catch(function(err){
-        console.error('レッスンカレンダーの読み込みに失敗しました（fetchできない環境の可能性）。ページ内の同期済みデータを使用します。', err);
-        var fallback = getInlineFallbackData();
-        if (fallback){ applyCalendarData(fallback); }
-        else { showEmptyState(); }
+        console.warn('レッスンカレンダーの最新取得に失敗しました。表示中のデータを使用します。', err);
+        if (!painted) showEmptyState();
       });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', lcInit);
+    document.addEventListener('DOMContentLoaded', loadCalendar);
   } else {
-    lcInit();
+    loadCalendar();
   }
 })();
 </script>
