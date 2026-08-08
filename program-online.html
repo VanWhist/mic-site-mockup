@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>オンラインサポート｜MIC Mogul Improvement Community</title>
+<meta name="description" content="どこに住んでいても、MICのコーチが直接あなたの滑りを見ます。滑っている動画を公式LINEに送るだけ。いま一番優先して直すべきポイントと、その練習方法をお返しします。おためしチェック1,100円／オンラインコーチング3,300円。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
+  .lp-nav::-webkit-scrollbar{display:none;}
+  .lp-nav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .lp-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
+
+  /* ---------- hero ---------- */
+  .lp-hero-photo{position:relative;width:100%;min-height:300px;display:flex;align-items:flex-end;padding:32px 6vw;
+    background:
+      linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%),
+      radial-gradient(circle at 72% 20%, rgba(120,190,255,.22), transparent 55%),
+      radial-gradient(circle at 20% 30%, rgba(255,140,100,.20), transparent 55%),
+      linear-gradient(135deg,#243040,#12151a 62%);}
+  .lp-hero-badge{position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px 6px 11px;backdrop-filter:blur(6px);}
+  .lp-hero-badge svg{width:13px;height:13px;}
+  .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
+
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:36px 6vw 80px;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);margin:40px 0;}
+
+  .philosophy{position:relative;border-radius:20px;padding:22px;margin-bottom:28px;
+    background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.28);}
+  .philosophy-quote{font-size:16px;font-weight:700;line-height:1.85;color:var(--fg);}
+  .philosophy-quote .accent{color:var(--accent);}
+
+  .sec-label{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;}
+  .sec-title{font-size:19px;font-weight:800;line-height:1.5;margin:0 0 14px;}
+  .sec-body{font-size:13.5px;line-height:1.9;color:#d3d3d8;}
+
+  .spec-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;
+    padding:22px 22px 8px;margin-bottom:16px;}
+  .spec-row{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .spec-row:last-child{border-bottom:none;margin-bottom:0;}
+  .spec-label{font-size:10.5px;font-weight:800;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+  .spec-value{font-size:14px;line-height:1.9;color:#e2e2e6;}
+  .spec-value b{color:#fff;font-weight:800;}
+
+  /* ---------- LINE sample ---------- */
+  .sample-cap{font-size:12px;color:var(--muted);text-align:center;margin:0 0 12px;line-height:1.7;}
+  .phone{border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 20px 44px -18px rgba(0,0,0,.8);background:#8fa9c4;margin-bottom:12px;}
+  .ph-bar{background:#fff;border-bottom:1px solid #e6eaee;padding:11px 14px;display:flex;align-items:center;gap:9px;}
+  .ph-back{color:#8a939d;font-size:17px;line-height:1;}
+  .ph-ava{width:28px;height:28px;border-radius:50%;background:linear-gradient(140deg,#0b7a4b,#12a25f);
+    color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex:none;}
+  .ph-nm{font-size:13.5px;font-weight:700;color:#151a1f;}
+  .ph-badge{font-size:9.5px;font-weight:700;color:#0b7a4b;border:1px solid #9fd6bb;background:#eefaf3;
+    padding:1px 5px;border-radius:4px;}
+  .ph-talk{padding:14px 12px 18px;}
+  .ph-day{text-align:center;margin:0 0 13px;}
+  .ph-day span{background:rgba(0,0,0,.22);color:#fff;font-size:10px;padding:3px 10px;border-radius:10px;}
+  .ph-row{display:flex;margin-bottom:11px;align-items:flex-end;gap:6px;}
+  .ph-row.me{justify-content:flex-end;}
+  .ph-uava{width:28px;height:28px;border-radius:50%;flex:none;background:#cdd7e2;
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:#5f6b78;font-weight:700;align-self:flex-start;}
+  .ph-bub{max-width:76%;padding:9px 12px;font-size:12.5px;line-height:1.75;border-radius:14px;
+    color:#141a20;white-space:pre-wrap;word-break:break-word;}
+  .ph-row.you .ph-bub{background:#fff;border-top-left-radius:4px;}
+  .ph-row.me  .ph-bub{background:#8de055;border-top-right-radius:4px;}
+  .ph-meta{font-size:9.5px;color:#eef2f6;line-height:1.35;flex:none;}
+  .ph-meta .rd{display:block;font-size:9px;opacity:.9;}
+  .ph-vid{width:60%;max-width:190px;border-radius:12px;overflow:hidden;position:relative;
+    border-top-left-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.18);}
+  .ph-vid svg{display:block;width:100%;height:auto;}
+  .ph-play{position:absolute;left:14px;bottom:12px;}
+  .ph-play i{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.38);
+    border:2px solid rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;}
+  .ph-play i::after{content:"";width:0;height:0;margin-left:3px;
+    border-left:10px solid #fff;border-top:6px solid transparent;border-bottom:6px solid transparent;}
+  .ph-dur{position:absolute;right:7px;bottom:7px;background:rgba(0,0,0,.6);color:#fff;
+    font-size:9.5px;padding:1px 5px;border-radius:3px;}
+  .sample-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:4px;}
+
+  /* ---------- fee ---------- */
+  .fee-table{display:flex;flex-direction:column;margin:14px 0 12px;
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;}
+  .fee-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fee-row:last-child{border-bottom:none;}
+  .fee-row.is-main{background:rgba(255,90,60,.09);}
+  .fee-plan{font-size:14px;font-weight:800;}
+  .fee-tag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;
+    color:var(--accent);background:rgba(255,90,60,.14);border:1px solid rgba(255,90,60,.3);
+    border-radius:5px;padding:1px 6px;margin-left:7px;vertical-align:2px;}
+  .fee-time{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:4px;line-height:1.7;}
+  .fee-amount{font-size:20px;font-weight:800;white-space:nowrap;}
+  .fee-amount .tax{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .fee-note{font-size:12px;line-height:1.85;color:var(--muted);}
+  .fee-note b{color:#d8d8dc;font-weight:700;}
+
+  /* ---------- steps ---------- */
+  .steps{display:flex;flex-direction:column;gap:0;margin:6px 0 4px;}
+  .step{display:flex;gap:14px;padding-bottom:20px;position:relative;}
+  .step:last-child{padding-bottom:0;}
+  .step::before{content:'';position:absolute;left:15px;top:34px;bottom:2px;width:1px;background:rgba(255,255,255,.14);}
+  .step:last-child::before{display:none;}
+  .step-n{flex:none;width:31px;height:31px;border-radius:50%;background:rgba(255,90,60,.14);
+    border:1px solid rgba(255,90,60,.35);color:var(--accent);font-size:12.5px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+  .step-b{padding-top:4px;}
+  .step-t{font-size:14.5px;font-weight:800;margin-bottom:5px;}
+  .step-d{font-size:12.5px;line-height:1.85;color:var(--muted);}
+  .step-d b{color:#d8d8dc;}
+
+  /* ---------- list card ---------- */
+  .listcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;padding:18px 20px;margin:12px 0;}
+  .listcard ul{margin:0;padding:0;list-style:none;}
+  .listcard li{font-size:13px;line-height:1.8;color:#dcdce0;padding:7px 0 7px 20px;position:relative;
+    border-bottom:1px dashed rgba(255,255,255,.08);}
+  .listcard li:last-child{border-bottom:none;}
+  .listcard li::before{content:'';position:absolute;left:4px;top:15px;width:5px;height:5px;
+    border-radius:50%;background:var(--accent);}
+  .listcard li b{color:#fff;font-weight:800;}
+  .listcard.plain li{padding-left:0;}
+  .listcard.plain li::before{display:none;}
+
+  .qa{margin:12px 0;}
+  .qa-item{border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 16px;margin-bottom:9px;
+    background:rgba(255,255,255,.03);}
+  .qa-item.ok{border-color:rgba(110,220,150,.28);background:rgba(110,220,150,.06);}
+  .qa-item.ng{border-color:rgba(255,150,90,.26);background:rgba(255,150,90,.05);}
+  .qa-h{font-size:11.5px;font-weight:800;letter-spacing:.04em;margin-bottom:8px;}
+  .qa-item.ok .qa-h{color:#6edc96;}
+  .qa-item.ng .qa-h{color:#ffa96e;}
+  .qa-q{font-size:12.5px;line-height:1.8;color:#dcdce0;padding-left:14px;border-left:2px solid rgba(255,255,255,.16);margin-bottom:6px;}
+  .qa-q:last-child{margin-bottom:0;}
+
+  .callout{border-radius:16px;padding:18px 20px;margin:14px 0;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--accent);}
+  .callout .ct{font-size:13.5px;font-weight:800;margin-bottom:7px;}
+  .callout .cb{font-size:12.5px;line-height:1.9;color:var(--muted);}
+  .callout .cb b{color:#d8d8dc;}
+
+  .terms{border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;margin:12px 0;}
+  .terms-row{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .terms-row:last-child{border-bottom:none;}
+  .terms-k{flex:0 0 34%;padding:12px 13px;font-size:11.5px;font-weight:800;color:#c9c9cf;
+    background:rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.08);line-height:1.6;}
+  .terms-v{flex:1 1 auto;padding:12px 14px;font-size:12.5px;line-height:1.8;color:#dcdce0;}
+
+  .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cta-btn svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .cta-sub{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.8;margin-top:11px;}
+
+  .lp-bridge{margin-top:8px;border-radius:20px;padding:26px 24px;text-align:center;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);}
+  .lp-bridge-eyebrow{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:10px;}
+  .lp-bridge-text{font-size:14.5px;line-height:1.8;color:#e2e2e6;margin-bottom:18px;}
+  .lp-bridge-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
+    color:var(--fg);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:11px 22px;text-decoration:none;}
+  .lp-bridge-link svg{width:15px;height:15px;stroke:var(--fg);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — 試作ページです。写真等は仮のプレースホルダーです。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <nav class="lp-nav">
+    <a href="index.html#programs" class="current">プログラム</a>
+    <a href="full-calendar.html">カレンダー</a>
+    <a href="community.html">コミュニティ</a>
+    <a href="data-feature.html">選手カルテ</a>
+    <a href="index.html#cta">お問い合わせ</a>
+  </nav>
+</div>
+
+<div class="lp-hero-photo">
+  <div class="lp-hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
+    全国どこからでも
+  </div>
+  <span class="lp-hero-phtag">写真プレースホルダー（スマホで滑りを確認している様子を想定）</span>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">PROGRAM 03</div>
+  <div class="headline">オンラインサポート</div>
+  <div class="subcopy">滑っている動画を公式LINEに送るだけ。MICのコーチが動画を見て、いま一番優先して直すべきポイントと、その練習方法をお返しします。</div>
+
+  <div class="philosophy">
+    <div class="philosophy-quote">拠点が遠くても、レッスンに来られなくても。<br><span class="accent">どこに住んでいても</span>、MICのコーチが直接あなたの滑りを見ます。</div>
+  </div>
+
+  <!-- ===== 返信サンプル ===== -->
+  <div class="sec-label">WHAT YOU GET</div>
+  <div class="sec-title">動画を送ると、こんな返信が届きます。</div>
+  <div class="sample-cap">文字だけでは伝わりにくいので、実際のやりとりのイメージを載せています。</div>
+
+  <div class="phone">
+    <div class="ph-bar">
+      <div class="ph-back">‹</div>
+      <div class="ph-ava">M</div>
+      <div class="ph-nm">MIC オンラインサポート</div>
+      <div class="ph-badge">公式</div>
+    </div>
+    <div class="ph-talk">
+      <div class="ph-day"><span>2月14日（土）</span></div>
+
+      <div class="ph-row you">
+        <div class="ph-uava">A</div>
+        <div class="ph-vid">
+          <svg viewBox="0 0 230 150" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8fc4e8"/><stop offset="100%" stop-color="#dbeef9"/>
+              </linearGradient>
+              <linearGradient id="snow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#eef6fc"/><stop offset="100%" stop-color="#ffffff"/>
+              </linearGradient>
+            </defs>
+            <rect width="230" height="150" fill="url(#sky)"/>
+            <path d="M0 30 L40 12 L78 26 L115 6 L155 24 L192 10 L230 26 L230 42 L0 42 Z" fill="#b9cfe0"/>
+            <rect y="34" width="230" height="116" fill="url(#snow)"/>
+            <g fill="#b7cddc" opacity=".92">
+              <ellipse cx="60"  cy="146" rx="40" ry="12"/>
+              <ellipse cx="170" cy="146" rx="40" ry="12"/>
+              <ellipse cx="115" cy="132" rx="34" ry="10"/>
+              <ellipse cx="30"  cy="128" rx="30" ry="9"/>
+              <ellipse cx="200" cy="128" rx="30" ry="9"/>
+              <ellipse cx="72"  cy="116" rx="26" ry="7.5"/>
+              <ellipse cx="158" cy="116" rx="26" ry="7.5"/>
+              <ellipse cx="115" cy="106" rx="22" ry="6.5"/>
+              <ellipse cx="42"  cy="104" rx="21" ry="6"/>
+              <ellipse cx="188" cy="104" rx="21" ry="6"/>
+              <ellipse cx="80"  cy="95"  rx="18" ry="5.2"/>
+              <ellipse cx="150" cy="95"  rx="18" ry="5.2"/>
+              <ellipse cx="115" cy="87"  rx="15" ry="4.4"/>
+              <ellipse cx="55"  cy="86"  rx="14" ry="4.2"/>
+              <ellipse cx="175" cy="86"  rx="14" ry="4.2"/>
+              <ellipse cx="88"  cy="79"  rx="12" ry="3.6"/>
+              <ellipse cx="142" cy="79"  rx="12" ry="3.6"/>
+              <ellipse cx="115" cy="73"  rx="10" ry="3"/>
+            </g>
+            <g transform="translate(115,96) scale(1.55)" fill="none" stroke="#12202c" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M-4.6 18 L-4.6 27" stroke-width="3.4"/>
+              <path d="M4.6 18 L4.6 27" stroke-width="3.4"/>
+              <path d="M-2.6 6.5 L-4.2 18" stroke-width="4.6"/>
+              <path d="M2.6 6.5 L4.2 18" stroke-width="4.6"/>
+              <path d="M0 -6 L0 7" stroke-width="9"/>
+              <circle cx="0" cy="-12.4" r="4.4" fill="#12202c" stroke="none"/>
+              <path d="M-4 -5 L-10.5 -2.5" stroke-width="3.1"/>
+              <path d="M4 -5 L10.5 -2.5" stroke-width="3.1"/>
+              <path d="M-10.5 -2.5 L-16.5 11" stroke="#d93b39" stroke-width="1.9"/>
+              <path d="M10.5 -2.5 L16.5 11" stroke="#d93b39" stroke-width="1.9"/>
+            </g>
+          </svg>
+          <div class="ph-play"><i></i></div>
+          <div class="ph-dur">0:22</div>
+        </div>
+      </div>
+
+      <div class="ph-row you">
+        <div class="ph-uava" style="visibility:hidden">A</div>
+        <div class="ph-bub">お願いします！
+コブでスピードが出せません。
+モーグル3シーズン目です。
+受付番号：MIC-20260214-0031</div>
+        <div class="ph-meta">21:38</div>
+      </div>
+
+      <div class="ph-row me">
+        <div class="ph-meta"><span class="rd">既読</span>23:05</div>
+        <div class="ph-bub">動画ありがとうございます😊
+コブの溝をしっかり使えていますね👏 ラインが最後までブレていないのは、かなり大事なところです。ストックも毎回突けていますね👍</div>
+      </div>
+
+      <div class="ph-row me">
+        <div class="ph-meta"><span class="rd">既読</span>23:07</div>
+        <div class="ph-bub">気になったのは、コブの出口で上体が後ろに残っているところです。1つ目は問題ないのですが、3つ目あたりから遅れ始めていて、これがスピードの出ない原因になっていると思います。
+
+上体が遅れると次のコブに入る準備が間に合わないので、体が自然にブレーキをかけにいってしまうんです。
+
+緩斜面のコブで「出口でみぞおちを谷に送る」ことだけ意識して、3本滑ってみてください👌 スピードは気にしなくて大丈夫です。
+
+溝が使えているので、ここが直ればかなり変わると思いますよ😁</div>
+      </div>
+    </div>
+  </div>
+  <div class="sample-note">※ 画面はイメージです。返信内容は動画やご相談内容によって異なります。</div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 料金 ===== -->
+  <div class="sec-label">PRICE</div>
+  <div class="sec-title">料金</div>
+
+  <div class="fee-table">
+    <div class="fee-row">
+      <div class="fee-plan">おためしチェック<span class="fee-tag">初回限定</span>
+        <span class="fee-time">動画1本／いま一番大事な改善ポイントを1つだけ</span>
+      </div>
+      <div class="fee-amount">¥1,100<span class="tax">税込</span></div>
+    </div>
+    <div class="fee-row is-main">
+      <div class="fee-plan">オンラインコーチング
+        <span class="fee-time">動画1〜2本／課題・その理由・具体的な練習方法まで<br>確認のご質問1往復まで</span>
+      </div>
+      <div class="fee-amount">¥3,300<span class="tax">税込</span></div>
+    </div>
+  </div>
+  <div class="fee-note">
+    <b>1回のお申し込みにつき、ご相談は1つのテーマまで</b>とさせていただいています。<br>
+    （例：「コブでスピードが出せない」で1つ、「エアの踏切」で1つ）<br>
+    複数のテーマをご相談されたい場合は、その数だけお申し込みください。
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 流れ ===== -->
+  <div class="sec-label">HOW IT WORKS</div>
+  <div class="sec-title">お申し込みの流れ</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-b">
+        <div class="step-t">公式LINEからお申し込み</div>
+        <div class="step-d">メニューから「オンラインサポート」を選んでください。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-b">
+        <div class="step-t">お支払い（クレジットカード）</div>
+        <div class="step-d">お支払いページでお支払いいただくと、<b>受付番号</b>が表示されます。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-b">
+        <div class="step-t">動画と情報を送る</div>
+        <div class="step-d">公式LINEのトークに、滑っている動画と下記の情報を送ってください。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-b">
+        <div class="step-t">コーチから返信が届く</div>
+        <div class="step-d"><b>原則5日以内</b>にお返しします。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="listcard">
+    <div class="spec-label" style="margin-bottom:8px;">動画と一緒に送っていただく情報</div>
+    <ul>
+      <li>お名前</li>
+      <li>年齢または学年</li>
+      <li>モーグル歴（例：3シーズン目／今年から）</li>
+      <li><b>今回いちばん見てほしいこと（1つだけ）</b></li>
+      <li>普段滑っているところ</li>
+      <li>受付番号</li>
+    </ul>
+  </div>
+  <div class="fee-note">
+    「いちばん見てほしいこと」は<b>必ず1つに絞ってください</b>。ここが具体的なほど、お返しできる内容も具体的になります。<br>
+    未成年の方は、<b>保護者の方からお送りいただくか、保護者の方の同意を得たうえで</b>お申し込みください。
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 撮り方 ===== -->
+  <div class="sec-label">HOW TO SHOOT</div>
+  <div class="sec-title">動画の撮り方（お願い）</div>
+  <div class="sec-body">動画の撮り方で、お返しできる内容の精度がかなり変わります。</div>
+
+  <div class="listcard">
+    <div class="spec-label" style="margin-bottom:8px;">基本（コブ・整地）</div>
+    <ul>
+      <li><b>真正面から</b>撮ってください。滑り降りてくるところを、正面から捉えるのが基本です</li>
+      <li>コブなら<b>3〜5個分</b>が入るように</li>
+      <li>頭から足元まで、<b>全身が入るように</b></li>
+      <li>ズームしすぎない（引き気味で大丈夫です）</li>
+      <li>逆光を避けてください</li>
+      <li>スロー撮影は不要です。普通の撮影で大丈夫です</li>
+      <li>余裕があれば、<b>横からの映像</b>もあると精度が上がります</li>
+    </ul>
+  </div>
+
+  <div class="listcard">
+    <div class="spec-label" style="margin-bottom:8px;">エア（ジャンプ）を見てほしいとき</div>
+    <ul>
+      <li>踏切を確認したい場合は、<b>エア台の真横</b>から撮ってください</li>
+      <li>助走から着地まで、途中で切れないように</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <div class="ct">撮影される方へ</div>
+    <div class="cb">正面から撮る場合は、<b>滑走ラインから外れた安全な場所</b>に立って撮影してください。滑ってくる方の進路上に立たないようご注意ください。</div>
+  </div>
+  <div class="fee-note">長さは<b>15〜30秒</b>で十分です。長い動画より、狙いのはっきりした短い動画のほうが的確にお返しできます。</div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 返信について ===== -->
+  <div class="sec-label">ABOUT THE REPLY</div>
+  <div class="sec-title">お返しする内容について</div>
+
+  <div class="spec-block">
+    <div class="spec-row">
+      <div class="spec-label">返信までの期間</div>
+      <div class="spec-value"><b>原則5日以内</b>にお返しします。合宿・大会期間中など、これを超えそうな場合は事前にご連絡します。</div>
+    </div>
+    <div class="spec-row">
+      <div class="spec-label">お返しする範囲</div>
+      <div class="spec-value">限られた動画から、<b>現在の上達にもっとも重要とコーチが判断したポイントを中心に</b>フィードバックします。気づいた点をすべて列挙するものではありません。<br>撮影状態などにより判断が難しい場合は、無理に回答せず、撮り直しのお願いや対面指導のご案内をすることがあります。</div>
+    </div>
+    <div class="spec-row">
+      <div class="spec-label">受付枠について</div>
+      <div class="spec-value">コーチが1件ずつ丁寧にお返しするため、<b>同時にお受けする件数を制限しています</b>。枠が埋まっている場合はその旨を表示します。枠が空き次第、再開します。</div>
+    </div>
+  </div>
+
+  <div class="sec-body" style="margin-top:22px;">確認のご質問について（オンラインコーチングのみ・1往復まで）</div>
+  <div class="qa">
+    <div class="qa-item ok">
+      <div class="qa-h">✓ 含まれるもの（追加料金なし）</div>
+      <div class="qa-q">「言われている腰の位置って、この部分のことですか？」</div>
+      <div class="qa-q">「この練習は緩斜面じゃないとだめですか？」</div>
+    </div>
+    <div class="qa-item ng">
+      <div class="qa-h">→ 新しいお申し込みになるもの</div>
+      <div class="qa-q">「昨日もう一度滑ったので、この動画も見てください」</div>
+      <div class="qa-q">「別のテーマについても見てほしいです」</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 動画の取り扱い ===== -->
+  <div class="sec-label">YOUR VIDEO</div>
+  <div class="sec-title">動画の取り扱いについて</div>
+
+  <div class="terms">
+    <div class="terms-row"><div class="terms-k">利用目的</div><div class="terms-v">いただいた動画は、コーチングのためだけに使用します。</div></div>
+    <div class="terms-row"><div class="terms-k">保存期間</div><div class="terms-v">返信後6ヶ月で削除します。</div></div>
+    <div class="terms-row"><div class="terms-k">閲覧範囲</div><div class="terms-v">担当コーチのみが閲覧します。指導上必要な場合に限り、MICのコーチ間で共有することがあります。</div></div>
+    <div class="terms-row"><div class="terms-k">二次利用</div><div class="terms-v">SNSやウェブサイトへの掲載など、コーチング以外の目的には使用しません。使用させていただきたい場合は、その都度個別に同意をいただきます。</div></div>
+    <div class="terms-row"><div class="terms-k">削除のご依頼</div><div class="terms-v">保存期間内でも、公式LINEで「削除希望」とお伝えいただければ速やかに削除します。</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">ご注意</div>
+    <div class="cb">
+      本サービスは、<b>動画から確認できる技術的内容に基づくコーチング</b>であり、<b>医学的な診断や安全性の保証を行うものではありません</b>。<br>
+      痛みや違和感がある場合は、練習を優先せず、医療機関にご相談ください。<br>
+      雪質・斜度・コブの形・スピード・撮影角度などにより、動画から判断できる範囲には限りがあります。
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">キャンセル・返金について</div>
+    <div class="cb">
+      動画をお送りいただく<b>前</b>であれば、キャンセルを承ります（全額返金）。<br>
+      動画をお送りいただき、<b>コーチが確認を開始した後</b>のキャンセル・返金はお受けできません。<br>
+      動画の状態などによりコーチが分析できないと判断した場合は、撮り直しをご案内します。撮り直しが難しい場合は全額返金します。<br>
+      返信が5日を大きく超えた場合は、ご連絡のうえ全額返金またはお日にちの調整をさせていただきます。
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <a class="cta-btn" href="inquiry.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    公式LINEでお申し込み
+  </a>
+  <div class="cta-sub">公式LINEを友だち追加のうえ、メニューからお申し込みください。<br>ご不明な点も、そのままトークでお気軽にどうぞ。</div>
+
+  <div class="divider"></div>
+
+  <div class="lp-bridge">
+    <div class="lp-bridge-eyebrow">直接指導を受けたい方へ</div>
+    <div class="lp-bridge-text">雪上レッスン・ウォータージャンプ・エアマットジャンプの「一般レッスン」もご用意しています。全年齢・全レベルが対象です。</div>
+    <a class="lp-bridge-link" href="program-general.html">
+      一般レッスンを見る
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </div>
+
+  <div class="foot-note">
+    価格はすべて税込です。<br>
+    <a href="index.html">← MICトップページへ戻る</a>
+  </div>
+</div>
+
+</body>
+</html>

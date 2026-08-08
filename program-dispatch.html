@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>コーチ派遣｜MIC Mogul Improvement Community</title>
+<meta name="description" content="スキークラブ・ジュニアチーム向けの出張指導。MICのコーチがチームの練習会場へ伺い、チームの課題に合わせて指導します。1日（最大4時間）44,000円。見積書・請求書の発行に対応。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  .demo-badge{
+    position:relative;z-index:5;text-align:center;font-size:11px;letter-spacing:.06em;
+    color:var(--muted);background:rgba(255,90,60,.12);border-bottom:1px solid rgba(255,90,60,.25);
+    padding:8px 10px;
+  }
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+
+  /* ---------- hero ---------- */
+  .lp-hero-photo{position:relative;width:100%;min-height:320px;display:flex;align-items:flex-end;padding:32px 6vw;
+    background:
+      linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%),
+      radial-gradient(circle at 30% 15%, rgba(255,140,100,.26), transparent 55%),
+      linear-gradient(135deg,#26313a,#10151a 60%);}
+  .lp-hero-badge{position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px 6px 11px;backdrop-filter:blur(6px);}
+  .lp-hero-badge svg{width:13px;height:13px;}
+  .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
+
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:36px 6vw 80px;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+    margin:40px 0;}
+
+  .philosophy{position:relative;border-radius:20px;padding:22px 22px;margin-bottom:28px;
+    background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.28);}
+  .philosophy-quote{font-size:16px;font-weight:700;line-height:1.85;color:var(--fg);}
+  .philosophy-quote .accent{color:var(--accent);}
+
+  .spec-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;
+    padding:22px 22px 8px;margin-bottom:16px;}
+  .spec-row{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .spec-row:last-child{border-bottom:none;margin-bottom:0;}
+  .spec-label{font-size:10.5px;font-weight:800;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+  .spec-value{font-size:14.5px;line-height:1.9;color:#e2e2e6;}
+
+  .usecase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+  .usecase-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:10px 11px;font-size:12px;font-weight:600;}
+  .usecase-chip svg{width:15px;height:15px;stroke:var(--accent);stroke-width:2.4;fill:none;flex:0 0 auto;}
+
+  /* ---------- メイン料金 ---------- */
+  .headline-price{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;
+    border:1px solid rgba(255,90,60,.3);background:linear-gradient(155deg, rgba(255,90,60,.13), rgba(255,255,255,.02));
+    border-radius:16px;padding:18px 20px;margin-bottom:14px;}
+  .headline-price .hp-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;}
+  .headline-price .hp-sub{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.7;}
+  .headline-price .hp-num{font-size:30px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;}
+  .headline-price .hp-num .tax{font-size:12px;font-weight:600;color:var(--muted);margin-left:4px;}
+
+  /* ---------- 表 ---------- */
+  .fee-table{display:flex;flex-direction:column;gap:0;margin:12px 0 12px;
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;}
+  .fee-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fee-row:last-child{border-bottom:none;}
+  .fee-plan{font-size:14px;font-weight:800;}
+  .fee-time{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.01em;}
+  .fee-amount{font-size:18px;font-weight:800;white-space:nowrap;}
+  .fee-amount.sm{font-size:15px;}
+  .fee-amount .tax{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .fee-note{font-size:12px;line-height:1.85;color:var(--muted);}
+  .fee-note b{color:#d8d8dc;font-weight:700;}
+
+  /* ---------- 料金例 ---------- */
+  .example-label{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.05em;margin:18px 0 10px;}
+  .example-list{display:flex;flex-direction:column;gap:9px;}
+  .example-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;padding:13px 15px;}
+  .example-place{font-size:13px;font-weight:800;margin-bottom:6px;}
+  .example-calc{font-size:12px;color:var(--muted);line-height:1.7;}
+  .example-total{font-size:15px;font-weight:800;color:var(--accent);margin-top:5px;}
+
+  /* ---------- 注記リスト ---------- */
+  .note-list{list-style:none;margin:12px 0 0;padding:0;}
+  .note-list li{position:relative;padding-left:15px;font-size:12.5px;line-height:1.85;color:#c9c9ce;margin-bottom:7px;}
+  .note-list li:last-child{margin-bottom:0;}
+  .note-list li::before{content:'';position:absolute;left:2px;top:9px;width:4px;height:4px;border-radius:50%;background:var(--accent);}
+  .note-list b{color:var(--fg);font-weight:700;}
+
+  /* ---------- 中止規定 ---------- */
+  .cancel-table{display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;overflow:hidden;margin-top:12px;}
+  .cancel-head,.cancel-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
+    padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .cancel-head{background:rgba(255,255,255,.05);font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.06em;}
+  .cancel-row:last-child{border-bottom:none;}
+  .cancel-when{font-size:12.5px;font-weight:700;line-height:1.5;}
+  .cancel-val{font-size:12px;font-weight:700;text-align:right;min-width:52px;}
+  .cancel-val.free{color:#7fd6a6;}
+  .cancel-val.full{color:#ffb199;}
+
+  /* ---------- CTA ---------- */
+  .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cta-btn svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;fill:none;}
+  .cta-btn.ghost{background:rgba(255,255,255,.07);color:var(--fg);box-shadow:none;border:1px solid rgba(255,255,255,.16);margin-top:10px;}
+  .cta-btn.ghost svg{stroke:var(--fg);}
+  .cta-caption{font-size:12px;line-height:1.85;color:var(--muted);text-align:center;margin-top:14px;}
+  .cta-caption b{color:#d8d8dc;font-weight:700;}
+
+  /* ---------- 流れ ---------- */
+  .flow{display:flex;flex-direction:column;gap:0;margin-top:14px;}
+  .flow-step{display:flex;gap:12px;position:relative;padding-bottom:16px;}
+  .flow-step:last-child{padding-bottom:0;}
+  .flow-step::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:1px;background:rgba(255,255,255,.14);}
+  .flow-step:last-child::before{display:none;}
+  .flow-num{flex:0 0 auto;width:23px;height:23px;border-radius:50%;background:rgba(255,90,60,.16);
+    border:1px solid rgba(255,90,60,.4);color:var(--accent);font-size:11px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:1;}
+  .flow-body{font-size:13px;line-height:1.7;color:#e2e2e6;padding-top:2px;}
+  .flow-body b{font-weight:800;}
+  .flow-body span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;}
+
+  /* ---------- bridge ---------- */
+  .lp-bridge{margin-top:8px;border-radius:20px;padding:26px 24px;text-align:center;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);}
+  .lp-bridge-eyebrow{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:10px;}
+  .lp-bridge-text{font-size:14.5px;line-height:1.8;color:#e2e2e6;margin-bottom:18px;}
+  .lp-bridge-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
+    color:var(--fg);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:11px 22px;text-decoration:none;}
+  .lp-bridge-link svg{width:15px;height:15px;stroke:var(--fg);stroke-width:2.2;fill:none;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  /* ---------- topbar nav ---------- */
+  .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
+  .lp-nav::-webkit-scrollbar{display:none;}
+  .lp-nav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .lp-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 RAFU / DRAFT — 写真はプレースホルダーです。申込フォームは本番のURLに接続済みです。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <nav class="lp-nav">
+    <a href="index.html#programs" class="current">プログラム</a>
+    <a href="full-calendar.html">カレンダー</a>
+    <a href="community.html">コミュニティ</a>
+    <a href="data-feature.html">選手カルテ</a>
+    <a href="index.html#cta">お問い合わせ</a>
+  </nav>
+</div>
+
+<div class="lp-hero-photo">
+  <div class="lp-hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><circle cx="17" cy="9" r="2.4"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path><path d="M17 14c2.2 0 4 1.8 4 4"></path></svg>
+    FOR CLUBS &amp; TEAMS
+  </div>
+  <span class="lp-hero-phtag">写真プレースホルダー（クラブへの出張指導風景を想定）</span>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">PROGRAM 04</div>
+  <div class="headline">コーチ派遣</div>
+  <div class="subcopy">スキークラブ・ジュニアチーム向けの出張指導です。MICのコーチがチームの練習会場へ伺います。</div>
+
+  <div class="philosophy">
+    <div class="philosophy-quote">いつもの練習場所に、<span class="accent">モーグル専門のコーチ</span>を。<br>チームの課題に合わせて指導します。</div>
+  </div>
+
+  <div class="spec-block">
+
+    <div class="spec-row">
+      <div class="spec-label">対象</div>
+      <div class="spec-value">スキークラブ・ジュニアチームなどの団体。会場・日程はご指定いただけます。</div>
+      <div class="usecase-grid">
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l4-14 4 10 4-16 4 20"></path></svg>スキークラブ</div>
+        <div class="usecase-chip"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg>ジュニアチーム</div>
+      </div>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">内容</div>
+      <div class="spec-value">1日単位の出張指導です。事前にチームの課題やレベルを伺ったうえで、当日の指導内容を組み立てます。指導は雪上のほか、ウォータージャンプ・エアマット施設でも対応可能です。</div>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">料金</div>
+      <div class="headline-price">
+        <div>
+          <div class="hp-label">1日指導</div>
+          <div class="hp-sub">指導時間：最大4時間<br>定員：コーチ1名につき8名まで</div>
+        </div>
+        <div class="hp-num">¥44,000<span class="tax">税込</span></div>
+      </div>
+      <div class="fee-table">
+        <div class="fee-row">
+          <div class="fee-plan">〜8名<span class="fee-time">コーチ1名</span></div>
+          <div class="fee-amount sm">¥44,000<span class="tax">税込</span></div>
+        </div>
+        <div class="fee-row">
+          <div class="fee-plan">9〜16名<span class="fee-time">コーチ2名</span></div>
+          <div class="fee-amount sm">¥88,000<span class="tax">税込</span></div>
+        </div>
+        <div class="fee-row">
+          <div class="fee-plan">17〜24名<span class="fee-time">コーチ3名</span></div>
+          <div class="fee-amount sm">¥132,000<span class="tax">税込</span></div>
+        </div>
+      </div>
+      <div class="fee-note">
+        指導の質を保つため、<b>8名ごとに担当コーチを1名配置</b>します。25名以上の場合もご相談ください。
+      </div>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">出張費</div>
+      <div class="spec-value">会場までの移動にかかる費用です。担当コーチの活動拠点によって変わります。</div>
+      <div class="fee-table">
+        <div class="fee-row">
+          <div class="fee-plan">通常派遣エリア</div>
+          <div class="fee-amount sm">指導料に含む</div>
+        </div>
+        <div class="fee-row">
+          <div class="fee-plan">中距離派遣</div>
+          <div class="fee-amount sm">¥22,000<span class="tax">税込</span></div>
+        </div>
+        <div class="fee-row">
+          <div class="fee-plan">遠距離・宿泊を伴う派遣</div>
+          <div class="fee-amount sm">個別見積</div>
+        </div>
+      </div>
+      <ul class="note-list">
+        <li>会場・日程・担当コーチを確認のうえ、<b>お申し込み前に総額をご案内します。</b></li>
+        <li>出張費は<b>派遣するコーチ1名ごと</b>に発生します。</li>
+        <li>連続日程の場合、往復移動に対する出張費は<b>原則1回のみ</b>です。</li>
+      </ul>
+
+      <div class="example-label">料金の例</div>
+      <div class="example-list">
+        <div class="example-item">
+          <div class="example-place">白馬（長野）／1日・選手8名</div>
+          <div class="example-calc">指導料 ¥44,000 ＋ 出張費 ¥0</div>
+          <div class="example-total">合計 ¥44,000</div>
+        </div>
+        <div class="example-item">
+          <div class="example-place">大山（鳥取）／1日・選手8名</div>
+          <div class="example-calc">指導料 ¥44,000 ＋ 出張費 ¥22,000</div>
+          <div class="example-total">合計 ¥66,000</div>
+        </div>
+        <div class="example-item">
+          <div class="example-place">白馬（長野）／1日・選手14名</div>
+          <div class="example-calc">指導料 ¥88,000（コーチ2名）＋ 出張費 ¥0</div>
+          <div class="example-total">合計 ¥88,000</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">ご負担いただくもの</div>
+      <ul class="note-list">
+        <li>コーチの<b>リフト券・入場料・施設利用料</b>等が必要な場合は、依頼団体にご負担いただきます。</li>
+        <li>会場の手配・予約は依頼団体にてお願いします。</li>
+      </ul>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">担当コーチ</div>
+      <ul class="note-list">
+        <li>担当コーチは<b>MICが選定</b>します。コーチのご指名についてはご相談ください。</li>
+        <li>お見積り確定後、<b>MICの都合による増額はありません。</b></li>
+      </ul>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">中止・キャンセル</div>
+      <div class="spec-value">スキー場のリフト運休・営業中止・コース閉鎖の場合は中止とし、日程を振り替えます。営業していても安全に指導できないとMICコーチが判断した場合は、中止または内容を短縮することがあります。</div>
+      <div class="cancel-table">
+        <div class="cancel-head">
+          <div>中止のタイミング</div>
+          <div style="text-align:right;">指導料</div>
+          <div style="text-align:right;">出張費</div>
+        </div>
+        <div class="cancel-row">
+          <div class="cancel-when">前日18時までに決定</div>
+          <div class="cancel-val free">無料</div>
+          <div class="cancel-val">実費のみ</div>
+        </div>
+        <div class="cancel-row">
+          <div class="cancel-when">コーチの移動開始後</div>
+          <div class="cancel-val free">無料</div>
+          <div class="cancel-val full">全額</div>
+        </div>
+        <div class="cancel-row">
+          <div class="cancel-when">実施したが2時間未満で中断</div>
+          <div class="cancel-val">半額</div>
+          <div class="cancel-val full">全額</div>
+        </div>
+      </div>
+      <ul class="note-list">
+        <li>前日18時までの中止の場合、出張費は<b>手配済みの交通・宿泊のキャンセル料のみ</b>を実費でご請求します。</li>
+        <li>宿泊を伴う派遣は出発判断の期限が早まるため、お見積りの際に個別に取り決めます。</li>
+      </ul>
+    </div>
+
+    <div class="spec-row">
+      <div class="spec-label">サポートクラブの方へ</div>
+      <div class="spec-value">MICサポートクラブには特別料金をご用意しています。お問い合わせの際にお知らせください。</div>
+    </div>
+
+  </div>
+
+  <a class="cta-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSe9yJht-uGzOfJTVFB6b6XxkmLMhpY5xZz46SD5X8Uf8YLV-w/viewform" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>
+    フォームで見積を依頼する
+  </a>
+  <a class="cta-btn ghost" href="inquiry.html">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    まず公式LINEで相談する
+  </a>
+  <div class="cta-caption"><b>見積書・請求書の発行に対応しています。</b><br>ご予算のご相談も承ります。</div>
+
+  <div class="divider"></div>
+
+  <div class="others-label" style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 0 4px;">お申し込みまでの流れ</div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-body"><b>フォームで見積を依頼</b><span>会場・希望日・人数・選手の年代などをご記入ください</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-body"><b>MICからヒアリング</b><span>チームの課題や当日の進め方を確認します</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-body"><b>お見積りの送付</b><span>出張費を含めた総額をご提示します</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-body"><b>正式にお申し込み</b><span>日程と担当コーチを確定します</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-body"><b>実施・ご請求</b><span>実施後に請求書をお送りします</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="lp-bridge">
+    <div class="lp-bridge-eyebrow">個人でレッスンを受けたい方へ</div>
+    <div class="lp-bridge-text">コーチ派遣は団体向けのサービスです。お一人・ご家族で受けたい方は、同じコーチ陣が指導する「一般レッスン」をご利用ください。</div>
+    <a class="lp-bridge-link" href="program-general.html">
+      一般レッスンを見る
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </div>
+
+  <div class="foot-note">価格はすべて税込です。リフト券・施設利用料は別途となります。<br><a href="index.html">← MICトップページへ戻る</a></div>
+</div>
+
+</body>
+</html>
