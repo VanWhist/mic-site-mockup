@@ -89,6 +89,19 @@
   .price-num{font-size:22px;font-weight:800;color:var(--fg);}
   .price-num .unit{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px;}
 
+  /* レッスン料金表（3種類とも同額のため1つの表にまとめている） */
+  .fee-table{display:flex;flex-direction:column;gap:0;margin:14px 0 12px;
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;}
+  .fee-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fee-row:last-child{border-bottom:none;}
+  .fee-plan{font-size:14px;font-weight:800;}
+  .fee-time{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.01em;}
+  .fee-amount{font-size:20px;font-weight:800;white-space:nowrap;}
+  .fee-amount .tax{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .fee-note{font-size:12px;line-height:1.8;color:var(--muted);}
+  .fee-note b{color:#d8d8dc;font-weight:700;}
+
   .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
     background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
     padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
@@ -191,25 +204,34 @@
       <div class="lesson-photo-grid">
         <div class="lesson-photo-card">
           <div class="lesson-photo">写真プレースホルダー（雪上レッスン風景）</div>
-          <div class="lesson-photo-body"><div class="lp-title">雪上レッスン</div><div class="lp-desc">初級・中級は動画提出でレベルチェック後にご案内。MIC選手と同じコースでも練習できます。</div></div>
+          <div class="lesson-photo-body"><div class="lp-title">雪上レッスン</div><div class="lp-desc">初級・中級は動画提出でレベルチェック後にご案内。MIC選手と同じコースでも練習できます。リフト券代は別途かかります。</div></div>
         </div>
         <div class="lesson-photo-card">
           <div class="lesson-photo">写真プレースホルダー（ウォータージャンプ風景）</div>
-          <div class="lesson-photo-body"><div class="lp-title">ウォータージャンプ</div><div class="lp-desc">プールへのジャンプで、安全に技の練習ができます。施設体験¥1,000/日〜。</div></div>
+          <div class="lesson-photo-body"><div class="lp-title">ウォータージャンプ</div><div class="lp-desc">プールへのジャンプで、安全に技の練習ができます。施設利用料は別途かかります。</div></div>
         </div>
         <div class="lesson-photo-card">
           <div class="lesson-photo">写真プレースホルダー（エアマットジャンプ風景）</div>
-          <div class="lesson-photo-body"><div class="lp-title">エアマットジャンプ</div><div class="lp-desc">クッション性の高いマットで、着地の感覚を安全に習得。施設体験¥1,000/日〜。</div></div>
+          <div class="lesson-photo-body"><div class="lp-title">エアマットジャンプ</div><div class="lp-desc">クッション性の高いマットで、着地の感覚を安全に習得。施設利用料は別途かかります。</div></div>
         </div>
       </div>
     </div>
     <div class="spec-row">
       <div class="spec-label">料金</div>
-      <div class="price-row">
-        <div>
-          <div class="price-label">体験・トライアル</div>
-          <div class="price-num">¥1,000<span class="unit">/ 日〜（詳細は要問い合わせ）</span></div>
+      <div class="spec-value">雪上レッスン・ウォータージャンプ・エアマットジャンプ、いずれも同じ料金です。</div>
+      <div class="fee-table">
+        <div class="fee-row">
+          <div class="fee-plan">半日<span class="fee-time">レッスン2時間</span></div>
+          <div class="fee-amount">¥5,500<span class="tax">税込</span></div>
         </div>
+        <div class="fee-row">
+          <div class="fee-plan">1日<span class="fee-time">レッスン合計4時間</span></div>
+          <div class="fee-amount">¥11,000<span class="tax">税込</span></div>
+        </div>
+      </div>
+      <div class="fee-note">
+        雪上レッスンは、<b>別途 スキー場のリフト券代</b>がかかります。<br>
+        ウォータージャンプ・エアマットジャンプは、<b>別途 施設利用料</b>がかかります（施設で用具レンタルもご利用いただけます）。
       </div>
     </div>
   </div>
@@ -232,7 +254,7 @@
         </div>
       </div>
       <div class="other-desc">動画で客観的に改善したい方へ。遠方在住で直接指導が難しい方にもおすすめです。動画分析によるリモートコーチングを、リードコーチまたは専属コーチが担当します（2〜3名までは追加料金なし）。</div>
-      <div class="other-price-line">¥5,500<span>/ 30分</span></div>
+      <div class="other-price-line">¥5,500<span>/ 30分・税込</span></div>
       <a class="other-cta" href="inquiry.html">
         公式LINEで問い合わせる
         <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -254,6 +276,7 @@
         <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg>学校</div>
         <div class="usecase-chip"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="13" rx="2"></rect><path d="M8 7V4h8v3"></path></svg>イベント</div>
       </div>
+      <div class="price-label" style="margin-bottom:2px;">料金（税込）</div>
       <div class="price-tiers">
         <div class="price-tier">1時間 <b>¥11,000</b></div>
         <div class="price-tier">2時間 <b>¥19,800</b></div>
