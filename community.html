@@ -89,22 +89,27 @@
   /* ---------- partner tiles ---------- */
   .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   .tile-card{display:block;min-width:0;}
-  .tile{aspect-ratio:1/1;border-radius:18px;background:#fff;border:1px solid rgba(255,255,255,.14);
-    display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;
-    box-shadow:0 12px 30px -18px rgba(0,0,0,.9);}
+  /* タイルはトップページと同じ「暗い半透明」で統一する。
+     白タイルにすると、白背景用ロゴを持たないパートナー（Tr-J等）だけが浮いてしまうため。 */
+  .tile{aspect-ratio:1/1;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;}
   /* ロゴの「安全領域」— タイル内に共通の内枠を置き、ロゴ自体の大小ではなく領域を揃える */
-  .safe{width:72%;height:60%;display:flex;align-items:center;justify-content:center;}
+  .safe{width:76%;height:66%;display:flex;align-items:center;justify-content:center;}
   .safe img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
-  .tile.dark{background:#111114;border-color:rgba(255,255,255,.16);}
-  .tile.dark .safe{width:86%;height:68%;}
-  .tile.wide .safe{width:88%;height:60%;}
+  .tile.wide .safe{width:88%;height:58%;}
+  /* EQUIPE F.S.C のロゴはグレー文字のため暗い背景だと沈む。ロゴの外周だけ白いプレートを敷いて可読性を確保する。
+     先方から白背景用（反転版）ロゴを入手できたら、このプレートは外して他のタイルと揃えること。 */
+  .plate{width:88%;box-sizing:border-box;background:#fff;border-radius:10px;padding:10px 12px;
+    display:flex;align-items:center;justify-content:center;}
+  .plate img{width:100%;height:auto;display:block;}
 
   /* タイポグラフィタイル（ロゴ未提供の団体用） */
   .typo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;width:100%;}
-  .typo .mark{width:30px;height:30px;border-radius:9px;background:#0a0a0c;display:flex;align-items:center;justify-content:center;}
-  .typo .mark svg{width:16px;height:16px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-  .typo .t1{font-size:17px;font-weight:900;letter-spacing:-.01em;color:#0a0a0c;line-height:1.25;}
-  .typo .t2{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#7b7b82;line-height:1.4;}
+  .typo .mark{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;}
+  .typo .mark svg{width:16px;height:16px;stroke:#f5f5f7;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .typo .t1{font-size:17px;font-weight:900;letter-spacing:-.01em;color:#f5f5f7;line-height:1.25;}
+  .typo .t2{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--muted);line-height:1.4;}
   .typo .rule{width:26px;height:3px;border-radius:2px;background:var(--accent);}
 
   .tile-name{font-size:13.5px;font-weight:800;line-height:1.45;margin:11px 0 6px;}
@@ -322,7 +327,7 @@
       <!-- SNOW BASE 98 -->
       <div class="tile-card">
         <div class="tile">
-          <div class="safe"><img src="assets/community/snowbase98.jpg" alt="SNOW BASE 98"></div>
+          <div class="safe"><img src="assets/community/snowbase98.png" alt="SNOW BASE 98"></div>
         </div>
         <div class="tile-name">SNOW BASE 98</div>
         <span class="tile-tag">用品・チューンナップ</span>
@@ -359,8 +364,8 @@
 
       <!-- Tr-J -->
       <div class="tile-card">
-        <div class="tile dark">
-          <div class="safe"><img src="assets/community/trj-logo.jpg" alt="Tr-J"></div>
+        <div class="tile wide">
+          <div class="safe"><img src="assets/community/trj-logo.png" alt="Tr-J"></div>
         </div>
         <div class="tile-name">Tr-J</div>
         <span class="tile-tag">モーグルチーム・長野</span>
@@ -374,8 +379,8 @@
 
       <!-- EQUIPE F.S.C -->
       <div class="tile-card">
-        <div class="tile wide">
-          <div class="safe"><img src="assets/community/equipe-fsc-logo.jpg" alt="EQUIPE F.S.C"></div>
+        <div class="tile">
+          <div class="plate"><img src="assets/community/equipe-fsc-logo.png" alt="EQUIPE F.S.C"></div>
         </div>
         <div class="tile-name">EQUIPE F.S.C</div>
         <span class="tile-tag">SAJ公認クラブ・新潟</span>
