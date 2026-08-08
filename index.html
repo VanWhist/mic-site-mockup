@@ -1861,7 +1861,8 @@
       <div class="lc-title" id="lcTitle">一般レッスン（初級）</div>
       <div class="lc-meta">
         <span class="lc-chip" id="lcLoc">📍 テイネスキー場</span>
-        <span class="lc-chip" id="lcCoach">👤 城 勇太</span>
+        <span class="lc-chip" id="lcPrice">💴 -</span>
+        <span class="lc-chip" id="lcCapacity">👥 -</span>
       </div>
       <div class="lc-scroller-wrap">
         <div class="lc-scroller-label">日付を選ぶ</div>
@@ -1872,7 +1873,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </a>
     </div>
-    <div class="calendar-note reveal delay-1">※表示内容はサンプルです。実データはGoogleカレンダー連携後に自動反映されます。</div>
+    <div class="calendar-note reveal delay-1" id="calendarNote">Googleカレンダーと連携した実際のレッスン予定です。料金・受付状況の詳細や最新の空き状況は公式LINEでご確認ください。</div>
 
     <div class="hub-news reveal delay-2" id="news">
       <div class="hub-news-label">お知らせ</div>
@@ -1886,25 +1887,23 @@
   </div>
 </section>
 
+<!-- CALENDAR_DATA_INLINE_START -->
+<!-- calendar-data.json と同じ内容のオフライン用フォールバックです。sync_calendar.py / embed_calendar_inline.py で更新されます。 -->
+<script type="application/json" id="calendar-data-inline">{"lastUpdated": "2026-08-09T07:57:34.069555+09:00", "sourceCalendarId": "0e140c50330d8072dd0f1d7c2838a181f9ce83fc3a0c36b7620ce3827ae45d67@group.calendar.google.com", "events": [{"id": "1t0qcde9o4lqqfh260schu6v3n", "date": "2026-08-09", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "709riqsn21n0puqnus0po6mtj4", "date": "2026-08-10", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "2rver3sa655g01gl0df0roo0c6", "date": "2026-08-11", "startTime": "15:00", "endTime": "21:00", "meetingTime": "15:00", "title": "ウォータージャンプ+トランポリン練習会", "venue": "O-air+トランポリン施設", "rawSummary": "ウォータージャンプ+トランポリン練習会　O-air+トランポリン施設", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "ウォータージャンプ終了後移動してトランポリン練習を行います。 施設利用料は別途となります。 詳細はお問い合わせください。 ＊施設にて用具レンタル有。"}, {"id": "75u7afilv653ah8kkqp5ns6odk", "date": "2026-08-14", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "3p00ptm625mmb2vqs3ptbna8l2", "date": "2026-08-15", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "6up2ripg3qjm5mq8i76kcs0bik", "date": "2026-08-16", "startTime": "15:00", "endTime": "21:00", "meetingTime": "15:00", "title": "ウォータージャンプ+トランポリン練習会", "venue": "O-air+トランポリン施設", "rawSummary": "ウォータージャンプ+トランポリン練習会　O-air+トランポリン施設", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "ウォータージャンプ終了後移動してトランポリン練習を行います。 施設利用料は別途となります。 詳細はお問い合わせください。 ＊施設にて用具レンタル有。"}, {"id": "5thqimkko69t5go582lvbtv2p8", "date": "2026-08-19", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "2gka9kbgqtamj2pbkcqo4si7ot", "date": "2026-08-20", "startTime": "10:30", "endTime": "17:00", "meetingTime": "10:00", "title": "ウォータージャンプ練習会", "venue": "O-air", "rawSummary": "ウォータージャンプ練習会　O-air", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "休憩をはさみ、16時解散予定ですが、途中での終了していただいても結構です。 施設利用料は別途となります。 ＊施設にて用具レンタル有。"}, {"id": "6ruu76lj50gggn68vb16psjkj2", "date": "2026-08-21", "startTime": "15:00", "endTime": "21:00", "meetingTime": "15:00", "title": "ウォータージャンプ+トランポリン練習会", "venue": "O-air+トランポリン施設", "rawSummary": "ウォータージャンプ+トランポリン練習会　O-air+トランポリン施設", "price": 11000, "priceLabel": "11,000円", "capacity": 3, "capacityLabel": "３名受付中", "applyMethod": "公式LINEよりお申し込み", "note": "ウォータージャンプ終了後移動してトランポリン練習を行います。 施設利用料は別途となります。 詳細はお問い合わせください。 ＊施設にて用具レンタル有。"}], "venues": ["O-air", "O-air+トランポリン施設"]}</script>
+<!-- CALENDAR_DATA_INLINE_END -->
+
 <script>
 (function(){
-  // ---- サンプルデータ（実データではありません。full-calendar.html と同一データを使用） ----
-  var EVENTS = {
-    '2026-08-01': [{title:'一般レッスン（初級）', location:'テイネスキー場', coach:'城 勇太'}, {title:'一般レッスン（中級）', location:'テイネスキー場', coach:'舘田 瞬哉'}],
-    '2026-08-02': [],
-    '2026-08-03': [{title:'育成コース練習', location:'さのさかスキー場', coach:'建部 順平'}],
-    '2026-08-04': [],
-    '2026-08-05': [{title:'一般レッスン（初級）', location:'宮城蔵王スキー場', coach:'笠巻 昇太'}, {title:'一般レッスン（上級）', location:'宮城蔵王スキー場', coach:'山本 帆夏'}, {title:'選手強化練習', location:'宮城蔵王スキー場', coach:'和田 野々花'}],
-    '2026-08-06': [],
-    '2026-08-07': [{title:'育成コース練習', location:'テイネスキー場', coach:'伊藤 あづさ'}],
-    '2026-08-08': [],
-    '2026-08-09': [{title:'合同強化合宿（1日目）', location:'さのさかスキー場', coach:'新保 龍登'}],
-    '2026-08-10': [{title:'合同強化合宿（2日目）', location:'さのさかスキー場', coach:'新保 龍登'}]
-  };
+  // ---- Googleカレンダー「MICレッスン」と同期した実データ（calendar-data.json）を読み込みます ----
+  // ---- full-calendar.html と同一のJSONを参照しているため、表示内容は常に一致します ----
+  var EVENTS = {};   // { 'YYYY-MM-DD': [ {title, venue, priceLabel, capacityLabel, ...}, ... ] }
+  var DATES = [];
   var DOWS = ['日','月','火','水','木','金','土'];
-  var DATES = Object.keys(EVENTS).sort();
-  var TODAY_STR = '2026-07-30'; // デモ上の「今日」
-  var nextDate = DATES.find(function(d){ return d >= TODAY_STR && EVENTS[d].length > 0; }) || DATES[0];
+
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
 
   function renderScroller(){
     var el = document.getElementById('lcScroller');
@@ -1932,15 +1931,19 @@
     if (dateEl) dateEl.innerHTML = (d.getMonth()+1) + '月' + d.getDate() + '日<span>' + DOWS[d.getDay()] + '</span>';
     var titleEl = document.getElementById('lcTitle');
     var locEl = document.getElementById('lcLoc');
-    var coachEl = document.getElementById('lcCoach');
+    var priceEl = document.getElementById('lcPrice');
+    var capEl = document.getElementById('lcCapacity');
     if (events.length > 0){
-      if (titleEl) titleEl.textContent = events[0].title + (events.length > 1 ? '　他' + (events.length-1) + '件' : '');
-      if (locEl) locEl.textContent = '📍 ' + events[0].location;
-      if (coachEl) coachEl.textContent = '👤 ' + events[0].coach;
+      var f = events[0];
+      if (titleEl) titleEl.textContent = f.title + (events.length > 1 ? '　他' + (events.length-1) + '件' : '');
+      if (locEl) locEl.textContent = '📍 ' + f.venue;
+      if (priceEl) priceEl.textContent = '💴 ' + (f.priceLabel || '-');
+      if (capEl) capEl.textContent = '👥 ' + (f.capacityLabel || '-');
     } else {
       if (titleEl) titleEl.textContent = 'この日の予定はありません';
       if (locEl) locEl.textContent = '📍 -';
-      if (coachEl) coachEl.textContent = '👤 -';
+      if (priceEl) priceEl.textContent = '💴 -';
+      if (capEl) capEl.textContent = '👥 -';
     }
     var activeCard = document.querySelector('.lc-date-card[data-iso="' + iso + '"]');
     // Only scroll the horizontal date strip into view for a user-initiated click.
@@ -1951,9 +1954,10 @@
     if (activeCard && scrollIntoView) activeCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
   }
 
-  function updateQuickAccess(){
+  function updateQuickAccess(nextDate){
     var qaEl = document.getElementById('qaNextLesson');
     if (!qaEl) return;
+    if (!nextDate){ qaEl.textContent = '現在、予定はありません'; return; }
     var d = new Date(nextDate + 'T00:00:00');
     var events = EVENTS[nextDate] || [];
     var label = (d.getMonth()+1) + '月' + d.getDate() + '日（' + DOWS[d.getDay()] + '）';
@@ -1961,10 +1965,60 @@
     qaEl.textContent = label;
   }
 
-  function lcInit(){
+  function showEmptyState(){
+    var titleEl = document.getElementById('lcTitle');
+    var locEl = document.getElementById('lcLoc');
+    var priceEl = document.getElementById('lcPrice');
+    var capEl = document.getElementById('lcCapacity');
+    if (titleEl) titleEl.textContent = '現在、予定されているレッスンはありません';
+    if (locEl) locEl.textContent = '📍 -';
+    if (priceEl) priceEl.textContent = '💴 -';
+    if (capEl) capEl.textContent = '👥 -';
+    var qaEl = document.getElementById('qaNextLesson');
+    if (qaEl) qaEl.textContent = '現在、予定はありません';
+    var noteEl = document.getElementById('calendarNote');
+    if (noteEl) noteEl.textContent = '現在、予定されているレッスンはありません。最新情報は公式LINEでご確認ください。';
+  }
+
+  function getInlineFallbackData(){
+    // file:// で直接開いた場合など、fetch がブラウザのセキュリティ制限でブロックされるケース向けの
+    // オフラインフォールバック。ページ内に埋め込まれた最新同期時点のデータを使う。
+    try {
+      var el = document.getElementById('calendar-data-inline');
+      if (!el) return null;
+      var data = JSON.parse(el.textContent);
+      if (!data || !Array.isArray(data.events) || data.events.length === 0) return null;
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function applyCalendarData(data){
+    var today = todayStr();
+    (data.events || []).forEach(function(ev){
+      if (ev.date < today) return; // 過去の予定は表示しない
+      if (!EVENTS[ev.date]) EVENTS[ev.date] = [];
+      EVENTS[ev.date].push(ev);
+    });
+    DATES = Object.keys(EVENTS).sort();
+    if (DATES.length === 0){ showEmptyState(); return; }
+    var nextDate = DATES.find(function(d){ return EVENTS[d].length > 0; }) || DATES[0];
     renderScroller();
     selectDate(nextDate, false);
-    updateQuickAccess();
+    updateQuickAccess(nextDate);
+  }
+
+  function lcInit(){
+    fetch('calendar-data.json', {cache:'no-cache'})
+      .then(function(res){ if (!res.ok) throw new Error('calendar-data.json load failed'); return res.json(); })
+      .then(function(data){ applyCalendarData(data); })
+      .catch(function(err){
+        console.error('レッスンカレンダーの読み込みに失敗しました（fetchできない環境の可能性）。ページ内の同期済みデータを使用します。', err);
+        var fallback = getInlineFallbackData();
+        if (fallback){ applyCalendarData(fallback); }
+        else { showEmptyState(); }
+      });
   }
 
   if (document.readyState === 'loading') {
