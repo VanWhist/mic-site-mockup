@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>コミュニティ｜MIC Mogul Improvement Community</title>
-<meta name="description" content="MICを支えるサポート企業・連携団体・活動拠点のご紹介。協賛・提携のご案内もこちらから。">
+<meta name="description" content="MICを支えるパートナーと活動拠点のご紹介。協賛・提携のご案内もこちらから。">
 <style>
   :root{
     --bg:#0a0a0c;
@@ -52,7 +52,7 @@
   .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;text-align:center;margin:0 0 28px;}
 
   /* ---------- category stats ---------- */
-  .cat-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:30px;}
+  .cat-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:30px;}
   .cat-stat{border-radius:18px;padding:18px 8px;text-align:center;
     background:linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.12);}
@@ -85,55 +85,71 @@
   .sec-icon svg{stroke:var(--accent);width:26px;height:26px;}
   .sec-num{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.08em;}
   .sec-title{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:2px;}
-  .sec-desc{font-size:13.5px;line-height:1.85;color:#d3d3d8;margin:14px 0 18px;}
+  .sec-desc{font-size:13.5px;line-height:1.85;color:#d3d3d8;margin:14px 0 22px;}
 
-  /* ---------- partner card ---------- */
-  .partner-list{display:flex;flex-direction:column;gap:12px;}
-  .partner-card{border-radius:18px;padding:17px 18px;background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.1);}
-  .partner-top{display:flex;align-items:flex-start;gap:13px;margin-bottom:10px;}
-  .partner-logo{flex:0 0 auto;width:52px;height:52px;border-radius:13px;
-    background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.22);
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
-    font-size:9px;color:rgba(255,255,255,.4);text-align:center;line-height:1.3;padding:4px;}
-  .partner-logo img{width:100%;height:100%;object-fit:cover;border-radius:11px;}
-  .partner-logo.is-logo{background:#fff;border:1px solid rgba(255,255,255,.15);padding:6px;}
-  .partner-logo.is-logo img{object-fit:contain;border-radius:0;}
-  .partner-info{flex:1 1 auto;min-width:0;}
-  .partner-name{font-size:14.5px;font-weight:800;letter-spacing:-.005em;line-height:1.4;}
-  .partner-tag{display:inline-block;font-size:10.5px;font-weight:700;color:var(--accent);
-    background:rgba(255,90,60,.12);border-radius:999px;padding:2px 9px;margin-top:5px;letter-spacing:.02em;}
-  .partner-desc{font-size:12.5px;line-height:1.8;color:#c9c9ce;margin-bottom:12px;}
-  .partner-link{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;
-    color:var(--fg);text-decoration:none;border-top:1px solid rgba(255,255,255,.08);
-    padding-top:11px;width:100%;justify-content:space-between;}
-  .partner-link svg{width:13px;height:13px;stroke:var(--muted);stroke-width:2.2;flex:0 0 auto;}
+  /* ---------- partner tiles ---------- */
+  .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .tile-card{display:block;min-width:0;}
+  .tile{aspect-ratio:1/1;border-radius:18px;background:#fff;border:1px solid rgba(255,255,255,.14);
+    display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;
+    box-shadow:0 12px 30px -18px rgba(0,0,0,.9);}
+  /* ロゴの「安全領域」— タイル内に共通の内枠を置き、ロゴ自体の大小ではなく領域を揃える */
+  .safe{width:72%;height:60%;display:flex;align-items:center;justify-content:center;}
+  .safe img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
+  .tile.dark{background:#111114;border-color:rgba(255,255,255,.16);}
+  .tile.dark .safe{width:86%;height:68%;}
+  .tile.wide .safe{width:88%;height:60%;}
+
+  /* タイポグラフィタイル（ロゴ未提供の団体用） */
+  .typo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;width:100%;}
+  .typo .mark{width:30px;height:30px;border-radius:9px;background:#0a0a0c;display:flex;align-items:center;justify-content:center;}
+  .typo .mark svg{width:16px;height:16px;stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .typo .t1{font-size:17px;font-weight:900;letter-spacing:-.01em;color:#0a0a0c;line-height:1.25;}
+  .typo .t2{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#7b7b82;line-height:1.4;}
+  .typo .rule{width:26px;height:3px;border-radius:2px;background:var(--accent);}
+
+  .tile-name{font-size:13.5px;font-weight:800;line-height:1.45;margin:11px 0 6px;}
+  .tile-tag{display:inline-block;font-size:10.5px;font-weight:700;color:#d9d9de;
+    background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 9px;}
+  .tile-desc{font-size:11.5px;line-height:1.7;color:#a9a9b0;margin-top:7px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:39px;}
+  .tile-links{display:flex;align-items:center;gap:7px;margin-top:8px;}
+  .chip{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+    text-decoration:none;transition:border-color .2s,background .2s;}
+  .chip:hover{border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.12);}
+  .chip svg{width:14px;height:14px;stroke:var(--accent);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .chip svg.solid{fill:var(--accent);stroke:none;}
 
   /* ---------- location card ---------- */
-  .region-label{display:flex;align-items:center;gap:8px;margin:22px 2px 12px;}
-  .region-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto;}
-  .region-name{font-size:12.5px;font-weight:800;letter-spacing:.02em;}
-  .region-season{font-size:10.5px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.07);
-    border-radius:999px;padding:2px 9px;margin-left:auto;}
-
-  .loc-card{display:flex;align-items:center;gap:13px;border-radius:16px;padding:13px 15px;
-    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);margin-bottom:9px;
-    text-decoration:none;color:inherit;transition:border-color .2s;}
-  .loc-card:last-child{margin-bottom:0;}
-  .loc-card:hover{border-color:rgba(255,90,60,.4);}
-  .loc-icon{flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;}
-  .loc-icon svg{width:19px;height:19px;stroke:var(--muted);}
-  .loc-text{flex:1 1 auto;min-width:0;}
-  .loc-title{font-size:13.5px;font-weight:700;letter-spacing:-.005em;}
-  .loc-addr{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.5;}
-  .loc-chevron{flex:0 0 auto;width:15px;height:15px;stroke:var(--muted);stroke-width:2.2;}
-
-  .season-callout{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.18);
-    border-radius:16px;padding:16px 18px;margin:16px 0 6px;}
-  .season-callout-title{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.03em;margin-bottom:8px;}
-  .season-callout-body{font-size:12.5px;line-height:1.85;color:#d3d3d8;}
+  .season-callout{border-radius:16px;padding:14px 16px;margin-bottom:20px;
+    background:linear-gradient(155deg, rgba(90,140,255,.14), rgba(90,140,255,.04));
+    border:1px solid rgba(120,160,255,.26);}
+  .season-callout-title{font-size:12px;font-weight:800;letter-spacing:.04em;margin-bottom:6px;}
+  .season-callout-body{font-size:12px;line-height:1.85;color:#c9c9ce;}
   .season-callout-body b{color:var(--fg);}
+
+  .region-label{display:flex;align-items:center;gap:8px;margin:22px 0 10px;}
+  .region-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto;}
+  .region-name{font-size:12.5px;font-weight:800;}
+  .region-season{font-size:10px;font-weight:700;color:var(--muted);
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:999px;padding:3px 8px;margin-left:auto;}
+
+  .loc-card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;margin-bottom:9px;
+    background:linear-gradient(155deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);text-decoration:none;color:inherit;transition:border-color .2s;}
+  .loc-card:hover{border-color:rgba(255,90,60,.4);}
+  .loc-icon{width:38px;height:38px;border-radius:11px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);}
+  .loc-icon svg{width:19px;height:19px;stroke:var(--fg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .loc-text{flex:1 1 auto;min-width:0;}
+  .loc-title{font-size:13.5px;font-weight:800;line-height:1.4;}
+  .loc-addr{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+  .loc-badge{display:inline-block;font-size:9.5px;font-weight:700;color:#ffd9d0;margin-top:6px;
+    background:rgba(255,90,60,.16);border:1px solid rgba(255,90,60,.32);border-radius:999px;padding:3px 7px;}
+  .loc-out{width:26px;height:26px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);}
+  .loc-out svg{width:12px;height:12px;stroke:var(--accent);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 
   .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
     border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
@@ -163,7 +179,7 @@
 </head>
 <body>
 
-<div class="demo-badge">🚧 RAFU / DRAFT — トップページ試作からのリンク先です。ロゴはプレースホルダー、外部リンク先はダミー表記です。</div>
+<div class="demo-badge">🚧 RAFU / DRAFT — トップページ試作からのリンク先です。</div>
 
 <div class="lp-topbar">
   <a class="lp-logo" href="index.html">MIC</a>
@@ -183,29 +199,23 @@
   <div class="subcopy">すべての仲間とともに、未来の選手を育てています。</div>
 
   <div class="cat-stats">
-    <div class="cat-stat"><div class="num">2</div><div class="lbl">サポート企業</div></div>
-    <div class="cat-stat"><div class="num">3</div><div class="lbl">連携団体</div></div>
-    <div class="cat-stat"><div class="num">5</div><div class="lbl">活動拠点</div></div>
+    <div class="cat-stat"><div class="num">4</div><div class="lbl">パートナー</div></div>
+    <div class="cat-stat"><div class="num">6</div><div class="lbl">活動拠点</div></div>
   </div>
 
   <div class="quicknav-label">このページの内容</div>
   <div class="quicklist">
     <a class="qrow" href="#c1">
-      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
-      <div class="qtext"><div class="qtitle">サポート企業</div><div class="qmeta">用品・保険など、活動を支える企業様</div></div>
-      <div class="qcount">2社</div>
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div class="qtext"><div class="qtitle">MICを支えるパートナー</div><div class="qmeta">用品店・県連盟・チーム・クラブ</div></div>
+      <div class="qcount">4件</div>
     </a>
     <a class="qrow" href="#c2">
-      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
-      <div class="qtext"><div class="qtitle">連携団体</div><div class="qmeta">県連盟・チーム・クラブとのつながり</div></div>
-      <div class="qcount">3団体</div>
-    </a>
-    <a class="qrow" href="#c3">
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
       <div class="qtext"><div class="qtitle">活動拠点</div><div class="qmeta">ウォータージャンプ・トランポリン施設</div></div>
-      <div class="qcount">5拠点</div>
+      <div class="qcount">6拠点</div>
     </a>
-    <a class="qrow" href="#c4">
+    <a class="qrow" href="#c3">
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
       <div class="qtext"><div class="qtitle">Become a Partner</div><div class="qmeta">協賛・提携のご案内</div></div>
       <div class="qcount">→</div>
@@ -214,126 +224,106 @@
 
   <div class="divider"></div>
 
-  <!-- ① サポート企業 -->
+  <!-- ① MICを支えるパートナー -->
   <div class="sec" id="c1">
-    <div class="sec-head">
-      <div class="sec-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
-      <div>
-        <div class="sec-num">COMMUNITY 01</div>
-        <div class="sec-title">サポート企業</div>
-      </div>
-    </div>
-    <div class="sec-desc">用品・保険など、さまざまな形でMICの活動を支えてくださっている企業の皆さまです。</div>
-
-    <div class="partner-list">
-      <div class="partner-card">
-        <div class="partner-top">
-          <div class="partner-logo"><img src="assets/community/sports3110-owner.jpg" alt="SPORTS 3110"></div>
-          <div class="partner-info">
-            <div class="partner-name">SPORTS 3110</div>
-            <span class="partner-tag">用品・チューンナップ</span>
-          </div>
-        </div>
-        <div class="partner-desc">インソール及びスキー・スノーボード関連商品とチューンナップ、ブーツフィッティングの店舗様。</div>
-        <a class="partner-link" href="#">
-          公式サイトを見る
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
-      </div>
-
-      <div class="partner-card">
-        <div class="partner-top">
-          <div class="partner-logo">LOGO<br>プレースホルダー</div>
-          <div class="partner-info">
-            <div class="partner-name">株式会社 IKKライフパートナーズ</div>
-            <span class="partner-tag">保険</span>
-          </div>
-        </div>
-        <div class="partner-desc">お客様本位で考える、生命保険ご提案会社様。</div>
-        <a class="partner-link" href="#">
-          Instagramを見る
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- ② 連携団体 -->
-  <div class="sec" id="c2">
     <div class="sec-head">
       <div class="sec-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
       <div>
-        <div class="sec-num">COMMUNITY 02</div>
-        <div class="sec-title">連携団体</div>
+        <div class="sec-num">COMMUNITY 01</div>
+        <div class="sec-title">MICを支えるパートナー</div>
       </div>
     </div>
-    <div class="sec-desc">県連盟や他チーム・クラブとのつながりも、MICの選手育成を支える大切な基盤です。</div>
+    <div class="sec-desc">用品店から県連盟・チームまで、さまざまな形でMICの活動を支えてくださっている皆さまです。</div>
 
-    <div class="partner-list">
-      <div class="partner-card">
-        <div class="partner-top">
-          <div class="partner-logo"><img src="assets/community/hiroshima-freestyle.jpg" alt="広島県スキー連盟 フリースタイル部"></div>
-          <div class="partner-info">
-            <div class="partner-name">広島県スキー連盟 フリースタイル部</div>
-            <span class="partner-tag">県連盟</span>
-          </div>
+    <div class="tile-grid">
+
+      <!-- SNOW BASE 98 -->
+      <div class="tile-card">
+        <div class="tile">
+          <div class="safe"><img src="assets/community/snowbase98.jpg" alt="SNOW BASE 98"></div>
         </div>
-        <a class="partner-link" href="#">
-          公式サイトを見る
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
+        <div class="tile-name">SNOW BASE 98</div>
+        <span class="tile-tag">用品・チューンナップ</span>
+        <div class="tile-desc">MIC選手の用具選びとチューンナップ、ブーツフィッティングを支えていただいています。</div>
+        <div class="tile-links">
+          <a class="chip" href="https://www.instagram.com/snowbase98" target="_blank" rel="noopener" aria-label="SNOW BASE 98 のInstagram" title="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>
+          </a>
+          <a class="chip" href="https://www.facebook.com/people/SNOW-BASE-98/61562297623040/" target="_blank" rel="noopener" aria-label="SNOW BASE 98 のFacebook" title="Facebook">
+            <svg class="solid" viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z"></path></svg>
+          </a>
+        </div>
       </div>
 
-      <div class="partner-card">
-        <div class="partner-top">
-          <div class="partner-logo is-logo"><img src="assets/community/trj-logo.jpg" alt="Tr-J"></div>
-          <div class="partner-info">
-            <div class="partner-name">Tr-J</div>
-            <span class="partner-tag">モーグルチーム・長野県</span>
+      <!-- 広島県スキー連盟（ロゴ未提供のためタイポグラフィタイル） -->
+      <div class="tile-card">
+        <div class="tile">
+          <div class="typo">
+            <div class="mark"><svg viewBox="0 0 24 24"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg></div>
+            <div class="t1">広島県<br>スキー連盟</div>
+            <div class="rule"></div>
+            <div class="t2">FREESTYLE</div>
           </div>
         </div>
-        <div class="partner-desc">長野県を拠点とするモーグルスキーチーム。</div>
-        <a class="partner-link" href="#">
-          公式サイトを見る
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
+        <div class="tile-name">広島県スキー連盟</div>
+        <span class="tile-tag">フリースタイル委員会・広島</span>
+        <div class="tile-desc">広島県のフリースタイル競技の普及・強化で連携しています。</div>
+        <div class="tile-links">
+          <a class="chip" href="https://ski-hiroshima.org/competition/freestyle" target="_blank" rel="noopener" aria-label="広島県スキー連盟 フリースタイル委員会の公式サイト" title="公式サイト">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
+          </a>
+        </div>
       </div>
 
-      <div class="partner-card">
-        <div class="partner-top">
-          <div class="partner-logo is-logo"><img src="assets/community/equipe-fsc-logo.jpg" alt="EQUIPE F.S.C"></div>
-          <div class="partner-info">
-            <div class="partner-name">EQUIPE F.S.C</div>
-            <span class="partner-tag">SAJ公認スキークラブ・新潟県</span>
-          </div>
+      <!-- Tr-J -->
+      <div class="tile-card">
+        <div class="tile dark">
+          <div class="safe"><img src="assets/community/trj-logo.jpg" alt="Tr-J"></div>
         </div>
-        <div class="partner-desc">新潟県スキー連盟所属のSAJ公認スキークラブ。</div>
-        <a class="partner-link" href="#">
-          公式サイトを見る
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
+        <div class="tile-name">Tr-J</div>
+        <span class="tile-tag">モーグルチーム・長野</span>
+        <div class="tile-desc">長野県のモーグルチーム。合同練習や大会を通じて交流しています。</div>
+        <div class="tile-links">
+          <a class="chip" href="https://www.mogulteam-trj-nagano.com/" target="_blank" rel="noopener" aria-label="Tr-J の公式サイト" title="公式サイト">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
+          </a>
+        </div>
       </div>
+
+      <!-- EQUIPE F.S.C -->
+      <div class="tile-card">
+        <div class="tile wide">
+          <div class="safe"><img src="assets/community/equipe-fsc-logo.jpg" alt="EQUIPE F.S.C"></div>
+        </div>
+        <div class="tile-name">EQUIPE F.S.C</div>
+        <span class="tile-tag">SAJ公認クラブ・新潟</span>
+        <div class="tile-desc">新潟県のSAJ公認スキークラブ。育成の面で連携しています。</div>
+        <div class="tile-links">
+          <a class="chip" href="https://www.instagram.com/equipe_f.s.c._" target="_blank" rel="noopener" aria-label="EQUIPE F.S.C のInstagram" title="Instagram">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ③ 活動拠点 -->
-  <div class="sec" id="c3">
+  <!-- ② 活動拠点 -->
+  <div class="sec" id="c2">
     <div class="sec-head">
       <div class="sec-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
       <div>
-        <div class="sec-num">COMMUNITY 03</div>
+        <div class="sec-num">COMMUNITY 02</div>
         <div class="sec-title">活動拠点</div>
       </div>
     </div>
-    <div class="sec-desc">インシーズンは白馬エリア、オフシーズンは関西・関東エリアの施設で練習しています。</div>
+    <div class="sec-desc">インシーズンは白馬エリア、オフシーズンは関西・関東・東北エリアの施設で練習しています。</div>
 
     <div class="season-callout">
       <div class="season-callout-title">シーズンによる拠点の使い分け</div>
-      <div class="season-callout-body"><b>インシーズン（雪上）</b>：白馬エリア（今後拡大予定）<br><b>オフシーズン（夏季）</b>：関西・関東エリアのウォータージャンプ／トランポリン施設</div>
+      <div class="season-callout-body"><b>インシーズン（雪上）</b>：白馬エリア（今後拡大予定）<br><b>オフシーズン（夏季）</b>：関西・関東・東北エリアのウォータージャンプ／トランポリン施設</div>
     </div>
 
     <div class="region-label">
@@ -341,13 +331,14 @@
       <span class="region-name">信越エリア（白馬）</span>
       <span class="region-season">インシーズン拠点</span>
     </div>
-    <a class="loc-card" href="#">
-      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+    <a class="loc-card" href="https://hakuba-sanosaka-waterjump0.webnode.jp/" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
       <div class="loc-text">
         <div class="loc-title">白馬さのさかウォータージャンプ</div>
         <div class="loc-addr">長野県白馬村</div>
+        <span class="loc-badge">SAJ指定トレーニング施設</span>
       </div>
-      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
     </a>
 
     <div class="region-label">
@@ -355,21 +346,21 @@
       <span class="region-name">関西エリア（大阪）</span>
       <span class="region-season">オフシーズン拠点</span>
     </div>
-    <a class="loc-card" href="#">
-      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+    <a class="loc-card" href="https://o-air.square.site/" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
       <div class="loc-text">
         <div class="loc-title">WATER JUMP O-AIR</div>
         <div class="loc-addr">大阪府大東市</div>
       </div>
-      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
     </a>
-    <a class="loc-card" href="#">
-      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
+    <a class="loc-card" href="https://abenojr80.com/" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
       <div class="loc-text">
         <div class="loc-title">アベノジュニアトランポリンクラブ</div>
-        <div class="loc-addr">大阪府八尾市</div>
+        <div class="loc-addr">大阪府八尾市天王寺屋</div>
       </div>
-      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
     </a>
 
     <div class="region-label">
@@ -377,28 +368,43 @@
       <span class="region-name">関東エリア（埼玉）</span>
       <span class="region-season">オフシーズン拠点</span>
     </div>
-    <a class="loc-card" href="#">
-      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+    <a class="loc-card" href="http://waterjump.biz/s-air" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
       <div class="loc-text">
         <div class="loc-title">WATER JUMP S-AIR</div>
         <div class="loc-addr">埼玉県所沢市</div>
       </div>
-      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
     </a>
-    <a class="loc-card" href="#">
-      <div class="loc-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
+    <a class="loc-card" href="https://jocks.jp/" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></div>
       <div class="loc-text">
         <div class="loc-title">PROSHOP JOCKS</div>
         <div class="loc-addr">埼玉県所沢市（トランポリン・ボルダリング・スラックライン）</div>
       </div>
-      <svg class="loc-chevron" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
+    </a>
+
+    <div class="region-label">
+      <span class="region-dot"></span>
+      <span class="region-name">東北エリア（宮城）</span>
+      <span class="region-season">オフシーズン拠点</span>
+    </div>
+    <a class="loc-card" href="https://www.ksp-wjm-totalsupportsport.com/wjm" target="_blank" rel="noopener">
+      <div class="loc-icon"><svg viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg></div>
+      <div class="loc-text">
+        <div class="loc-title">ikuto ウォータージャンプ宮城</div>
+        <div class="loc-addr">宮城県柴田郡川崎町（旧川内小学校）</div>
+        <span class="loc-badge">NTC競技別強化拠点（モーグル）</span>
+      </div>
+      <div class="loc-out"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
     </a>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ④ Become a Partner -->
-  <div class="sec" id="c4">
+  <!-- ③ Become a Partner -->
+  <div class="sec" id="c3">
     <div class="recruit-block">
       <div class="recruit-eyebrow">Become a Partner</div>
       <div class="recruit-title">未来の日本代表を、<br>一緒に育てませんか。</div>
@@ -410,7 +416,7 @@
     </div>
   </div>
 
-  <div class="foot-note">掲載情報は現行サイト（mogul-mic.com/community/）の内容に基づいています。ロゴ画像・最新の連絡先は差し替えが必要です。<br><a href="index.html">← MICトップページへ戻る</a></div>
+  <div class="foot-note">掲載内容は2026年8月時点のものです。パートナー・活動拠点の追加や変更がありましたらご連絡ください。<br><a href="index.html">← MICトップページへ戻る</a></div>
 </div>
 
 </body>
