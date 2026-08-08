@@ -180,13 +180,23 @@
   .bases a{text-decoration:none;color:inherit;}
   .bases a:hover{color:var(--accent);}
 .stage{position:sticky;top:58px;z-index:2;display:flex;flex-direction:column;align-items:center;padding:24px 0 26px;
+  transition:padding .7s var(--ease);
   background:#0a0a0c}
 .stage::after{content:'';position:absolute;left:-6vw;right:-6vw;bottom:0;height:1px;
   background:rgba(255,255,255,.08);opacity:0;transition:opacity .5s var(--ease)}
 .stage.focused::after{opacity:1}
-.mapbox{width:min(340px,84vw);transform-origin:50% 44%;transition:transform .8s var(--ease)}
-.stage.focused .mapbox{transform:scale(.82)}
-.cap{margin:2px 0 0;font-size:12px;letter-spacing:.09em;color:var(--muted)}
+/* 幅で縮める。transform:scale だとレイアウト上の高さが変わらず、
+   スクロール中も地図が画面を占有し続けてしまうため。 */
+.mapbox{width:min(340px,84vw);transition:width .7s var(--ease)}
+.stage.focused{padding:12px 0 14px}
+.stage.focused .mapbox{width:min(168px,43vw)}
+.cap{margin:2px 0 0;font-size:12px;letter-spacing:.09em;color:var(--muted);
+  max-height:24px;overflow:hidden;transition:max-height .55s var(--ease),margin .55s var(--ease),opacity .4s ease}
+.stage.focused .cap{max-height:0!important;margin:0!important;opacity:0!important}
+/* 縮小時は地図が小さくなるぶん、ラベルの文字を大きくして可読性を保つ */
+.lb,.ln{transition:font-size .7s var(--ease)}
+.stage.focused .lb{font-size:8.2px}
+.stage.focused .ln{font-size:6.2px}
 .map{display:block;width:100%;height:auto;overflow:visible;
   transform:perspective(900px) rotateX(9deg) rotateZ(-1deg)}
 .fill{fill:var(--land)}
@@ -243,7 +253,7 @@
 .js .halo{opacity:.35}.js .ring{opacity:.35}
 .js .line,.js .net{stroke-dashoffset:0!important}
 .js .sweep{display:none}
-.mapbox,.area,.card,.focusring{transition:none!important}
+.mapbox,.area,.card,.focusring,.stage,.cap,.lb,.ln{transition:none!important}
 }
 </style>
 <script>document.documentElement.className='js';</script>
