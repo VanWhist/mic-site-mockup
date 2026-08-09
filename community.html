@@ -158,7 +158,12 @@
   }
   .mic-tag{font-size:10px;color:var(--mic-sub);margin-top:12px;padding-left:2px;letter-spacing:.02em;}
 
-  /* アクティブなロゴの下辺を滑るインジケーター */
+  /* アクティブなロゴの下辺を滑るインジケーター。
+     初回配置が終わるまでは transition を切る。
+     切らないと、レイアウト確定前の幅から目標値へ 0.42 秒かけて縮む間だけ
+     インジケーターが枠外へはみ出し、スマホで一瞬横スクロールが発生する。 */
+  .mic-wrap:not(.is-placed) .mic-ind,
+  .mic-wrap:not(.is-placed) .mic-cap{transition:none;}
   .mic-ind{
     position:absolute;z-index:2;height:2px;border-radius:2px;background:var(--mic-accent);
     opacity:0;transition:left .42s cubic-bezier(.22,.61,.24,1), top .42s cubic-bezier(.22,.61,.24,1),
@@ -754,11 +759,17 @@
     cap.style.width = capW + 'px';
     cap.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - capW)) + 'px';
     cap.style.top = (el.offsetTop + el.offsetHeight + 12) + 'px';
-    ind.style.left = el.offsetLeft + 'px';
-    ind.style.width = el.offsetWidth + 'px';
+    /* 念のため枠内にクランプする。レイアウト確定前は offsetWidth が
+       wrap より大きくなることがあり、そのまま入れると横にはみ出す。 */
+    var indW = Math.min(el.offsetWidth, wrap.clientWidth);
+    ind.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - indW)) + 'px';
+    ind.style.width = indW + 'px';
     ind.style.top = (el.offsetTop + plate.offsetHeight - 5) + 'px';
     cap.classList.add('is-on');
     ind.classList.add('is-on');
+    if (!wrap.classList.contains('is-placed')) {
+      requestAnimationFrame(function () { wrap.classList.add('is-placed'); });
+    }
   }
 
   /* スクロールに追従して、画面中央付近のロゴをアクティブにする */
