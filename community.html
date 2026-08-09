@@ -157,6 +157,13 @@
     font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#23232a;white-space:nowrap;padding:0 2px;
   }
   .mic-tag{font-size:10px;color:var(--mic-sub);margin-top:12px;padding-left:2px;letter-spacing:.02em;}
+  /* スマホでは必ず2枚ずつ横に並ぶよう、1枚の幅を行の半分で頭打ちにする。
+     これが無いと、タイル幅をロゴではなく「タグの文字列の長さ」が決めてしまい、
+     iOS の文字拡大などで少し文字が大きくなっただけで縦1列に割れる。 */
+  @media (max-width:767px){
+    .mic-item{max-width:calc(50% - 5px);}
+    .mic-plate{max-width:100%;}
+  }
 
   /* アクティブなロゴの下辺を滑るインジケーター。
      初回配置が終わるまでは transition を切る。
@@ -586,8 +593,8 @@
   <div class="quicklist">
     <a class="qrow" href="#c1">
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
-      <div class="qtext"><div class="qtitle">MICを支えるパートナー</div><div class="qmeta">用品店・県連盟・チーム・クラブ</div></div>
-      <div class="qcount">4件</div>
+      <div class="qtext"><div class="qtitle">MICを支えるパートナー</div><div class="qmeta">用品店・県連盟・チーム・クラブ・医療機関</div></div>
+      <div class="qcount">5件</div>
     </a>
     <a class="qrow" href="#c2">
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
@@ -710,7 +717,10 @@
 
   /* プレートは高さを揃え、幅はロゴの比率のまま可変にする */
   function box() {
-    return wrap.clientWidth > 700 ? {w: 190, h: 44} : {w: 132, h: 34};
+    var cw = wrap.clientWidth;
+    if (cw > 700) return {w: 190, h: 44};
+    /* プレートの左右余白と枠線ぶん（26px）を引いて、行の半分に収まる幅にする */
+    return {w: Math.max(80, Math.min(132, Math.floor(cw / 2) - 5 - 26)), h: 34};
   }
   function sizeOne(item) {
     var img = item.querySelector('img');
