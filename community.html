@@ -702,8 +702,8 @@
 
     item.appendChild(plate);
     item.appendChild(tag);
-    item.addEventListener('click', function () { setActive(i); });
-    item.addEventListener('mouseenter', function () { setActive(i); });
+    item.addEventListener('click', function () { hold(); setActive(i); });
+    item.addEventListener('mouseenter', function () { hold(); setActive(i); });
     wrap.appendChild(item);
     items.push(item);
   });
@@ -772,26 +772,40 @@
     }
   }
 
-  /* スクロールに追従して、画面中央付近のロゴをアクティブにする */
+  /* スクロールに追従して、順番に1社ずつアクティブにする。
+
+     「フォーカス線に縦方向で一番近いロゴ」を選ぶ方式にしないこと。
+     横に2枚並んだロゴは中心の高さが完全に同じになるため、どちらが近いかが
+     毎フレーム入れ替わり、スクロール中に左右をガタガタと往復する
+     （スマホ実機で確認済み。10px刻みのスクロールで8回往復した）。
+
+     代わりに、フォーカス線がロゴ群のどこを通っているかを 0〜1 の進捗に直し、
+     その進捗を社数で割って順番に割り当てる。同じスクロール位置なら必ず同じ
+     1社が選ばれるので、振動しない。 */
   var ticking = false;
+  var holdUntil = 0;   /* タップ・ホバー直後は、スクロールで奪わない */
   function onScroll() {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
       ticking = false;
+      if (Date.now() < holdUntil) return;
       var wr = wrap.getBoundingClientRect();
       var vh = window.innerHeight || document.documentElement.clientHeight;
       if (wr.bottom < 0 || wr.top > vh) return;
-      var focus = vh * 0.45, best = -1, bestD = Infinity;
-      items.forEach(function (el, i) {
-        var r = el.getBoundingClientRect();
-        var d = Math.abs((r.top + r.height / 2) - focus);
-        if (d < bestD) { bestD = d; best = i; }
-      });
-      if (best >= 0) setActive(best);
+      /* 末尾はキャプション用の余白なので、最後のロゴの下端までを対象にする */
+      var last = items[items.length - 1];
+      var span = Math.max(1, last.offsetTop + last.offsetHeight);
+      var t = (vh * 0.45 - wr.top) / span;
+      var idx = Math.floor(t * items.length);
+      setActive(Math.max(0, Math.min(items.length - 1, idx)));
       place();
     });
   }
+  /* タップ／ホバーで選んだものが、わずかなスクロールで奪われないようにする。
+     コミュニティページでは、リンクを押そうとした瞬間に別の会社へ
+     切り替わってしまうのを防ぐ意味もある。 */
+  function hold() { holdUntil = Date.now() + 2500; }
 
   window.addEventListener('scroll', onScroll, {passive: true});
   window.addEventListener('resize', function () { sizeAll(); place(); });
