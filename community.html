@@ -96,40 +96,102 @@
   .sec-title{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-top:2px;}
   .sec-desc{font-size:13.5px;line-height:1.85;color:#d3d3d8;margin:14px 0 22px;}
 
-  /* ---------- partner tiles ---------- */
-  .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  /* パートナーが奇数のとき、最後の1枚が左に寄って落ちるのを避けて中央に置く */
-  .tile-grid > .tile-card:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc(50% - 7px);}
-  .tile-card{display:block;min-width:0;}
-  /* タイルはトップページと同じ「暗い半透明」で統一する。
-     白タイルにすると、白背景用ロゴを持たないパートナー（Tr-J等）だけが浮いてしまうため。 */
-  .tile{aspect-ratio:1/1;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
-    display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden;}
-  /* ロゴの「安全領域」— タイル内に共通の内枠を置き、ロゴ自体の大小ではなく領域を揃える */
-  .safe{width:76%;height:66%;display:flex;align-items:center;justify-content:center;}
-  .safe img{max-width:100%;max-height:100%;object-fit:contain;display:block;}
-  .tile.wide .safe{width:88%;height:58%;}
-  /* EQUIPE F.S.C のロゴはグレー文字のため暗い背景だと沈む。ロゴの外周だけ白いプレートを敷いて可読性を確保する。
-     先方から白背景用（反転版）ロゴを入手できたら、このプレートは外して他のタイルと揃えること。 */
-  .plate{width:88%;box-sizing:border-box;background:#fff;border-radius:10px;padding:10px 12px;
-    display:flex;align-items:center;justify-content:center;}
-  .plate img{width:100%;height:auto;display:block;}
+  /* ---------- MICを支えるパートナー（Claude Design 由来） ----------
+     ロゴの縦横比がばらばらでも「プレートの高さ」を揃えることで列が整う。
+     幅はロゴの実寸比率から算出するので、比率の指定は不要。
+     パートナーの追加は下の PARTNERS 配列に1行足すだけ。ロゴが無い先は logo:null。
+     トップページ（index.html）と同じ実装。片方を直したらもう片方も直すこと。 */
+  .mic-partners{
+    --mic-fg:var(--fg);
+    --mic-sub:var(--muted);
+    --mic-accent:var(--accent);
+    color:var(--mic-fg);
+  }
 
-  /* タイポグラフィタイル（ロゴ未提供の団体用） */
-  .typo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;width:100%;}
-  .typo .mark{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;}
-  .typo .mark svg{width:16px;height:16px;stroke:#f5f5f7;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
-  .typo .t1{font-size:17px;font-weight:900;letter-spacing:-.01em;color:#f5f5f7;line-height:1.25;}
-  .typo .t2{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--muted);line-height:1.4;}
-  .typo .rule{width:26px;height:3px;border-radius:2px;background:var(--accent);}
+  .mic-head{display:flex;align-items:center;gap:8px;margin:0 0 16px;}
+  .mic-head .dot{width:5px;height:5px;border-radius:50%;background:var(--mic-accent);}
+  .mic-head .label{font-size:10px;letter-spacing:.18em;color:var(--mic-sub);font-weight:600;}
+  .mic-head .rule{flex:1;height:1px;background:rgba(255,255,255,.10);}
+  .mic-head .count{font-size:10px;letter-spacing:.08em;color:#6b6b70;}
 
-  .tile-name{font-size:13.5px;font-weight:800;line-height:1.45;margin:11px 0 6px;}
-  .tile-tag{display:inline-block;font-size:10.5px;font-weight:700;color:#d9d9de;
-    background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:4px 9px;}
-  .tile-desc{font-size:11.5px;line-height:1.7;color:#a9a9b0;margin-top:7px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:39px;}
-  .tile-links{display:flex;align-items:center;gap:7px;margin-top:8px;}
+  /* 折り返しレイアウト。row-gap がキャプション用の予約領域を兼ねる */
+  .mic-wrap{
+    position:relative;display:flex;flex-wrap:wrap;
+    column-gap:10px;row-gap:118px;padding-bottom:116px;
+  }
+
+  .mic-item{cursor:pointer;transform:none;
+    transition:transform .35s cubic-bezier(.22,.61,.24,1);}
+  .mic-item.is-active{transform:translateY(-3px);}
+  /* ロゴは常時はっきり見せ、落差はタグ文字側で付ける */
+  .mic-item .mic-plate{opacity:.88;}
+  .mic-item.is-active .mic-plate{opacity:1;}
+  .mic-item .mic-tag{color:#6b6b70;transition:color .35s;}
+  .mic-item.is-active .mic-tag{color:var(--mic-sub);}
+
+  /* スクロールで1枚ずつ立ち上がる */
+  .mic-item{--d:0ms;}
+  .mic-wrap:not(.is-in) .mic-item{opacity:0;transform:translateY(12px);}
+  .mic-wrap.is-in .mic-item{
+    transition:opacity .55s cubic-bezier(.22,.61,.24,1) var(--d),
+               transform .55s cubic-bezier(.22,.61,.24,1) var(--d);
+  }
+
+  .mic-plate{
+    display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
+    min-height:56px;
+    padding:11px 12px;border-radius:8px;background:#fff;border:1px solid transparent;
+    transition:box-shadow .35s, opacity .35s;
+  }
+  /* Tr-J のみ白抜きロゴのため暗プレート */
+  .mic-plate.is-dark{background:#17171b;border-color:rgba(255,255,255,.22);}
+  .mic-item.is-active .mic-plate{animation:micGlow 2.6s ease-in-out infinite;}
+  @keyframes micGlow{
+    0%,100%{box-shadow:0 0 0 1px rgba(255,90,60,.45), 0 0 18px rgba(255,90,60,.14);}
+    50%    {box-shadow:0 0 0 1px rgba(255,90,60,.85), 0 0 30px rgba(255,90,60,.32);}
+  }
+  .mic-plate img{display:block;object-fit:contain;}
+  /* ロゴが無い先（広島県スキー連盟）の文字組み代替 */
+  .mic-word{
+    display:flex;align-items:center;justify-content:center;height:34px;
+    font-size:11.5px;font-weight:700;letter-spacing:.04em;color:#23232a;white-space:nowrap;padding:0 2px;
+  }
+  .mic-tag{font-size:10px;color:var(--mic-sub);margin-top:12px;padding-left:2px;letter-spacing:.02em;}
+
+  /* アクティブなロゴの下辺を滑るインジケーター */
+  .mic-ind{
+    position:absolute;z-index:2;height:2px;border-radius:2px;background:var(--mic-accent);
+    opacity:0;transition:left .42s cubic-bezier(.22,.61,.24,1), top .42s cubic-bezier(.22,.61,.24,1),
+                         width .42s cubic-bezier(.22,.61,.24,1), opacity .3s;
+  }
+  /* アクティブなロゴのすぐ下に出る一言。
+     枠自体は pointer-events:none にして、下のロゴを隠さない。
+     クリックできるのはリンクのチップだけ（.mic-links に auto を戻している）。 */
+  .mic-cap{
+    position:absolute;z-index:2;pointer-events:none;opacity:0;
+    transition:top .35s cubic-bezier(.22,.61,.24,1), left .35s cubic-bezier(.22,.61,.24,1), opacity .3s;
+  }
+  .mic-ind.is-on,.mic-cap.is-on{opacity:1;}
+  .mic-cap-name{font-size:10.5px;color:var(--mic-accent);font-weight:600;letter-spacing:.04em;}
+  .mic-cap-note{font-size:11.5px;color:var(--mic-sub);line-height:1.7;margin-top:5px;text-wrap:pretty;}
+  .mic-links{display:flex;align-items:center;gap:7px;margin-top:9px;pointer-events:auto;}
+  .mic-links:empty{display:none;}
+
+  @media (min-width:768px){
+    .mic-wrap{column-gap:14px;row-gap:130px;padding-bottom:126px;}
+    .mic-plate{padding:14px 16px;border-radius:10px;min-height:74px;}
+    .mic-word{height:44px;font-size:14px;}
+    .mic-tag{font-size:11px;}
+    .mic-cap-note{font-size:12.5px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .mic-item,.mic-wrap .mic-item,.mic-tag,.mic-ind,.mic-cap,.mic-plate{transition:none !important;}
+    .mic-wrap:not(.is-in) .mic-item{opacity:1;transform:none;}
+    .mic-item.is-active{transform:none;}
+    .mic-item.is-active .mic-plate{animation:none !important;box-shadow:0 0 0 1px rgba(255,90,60,.6);}
+  }
+
   .chip{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
     text-decoration:none;transition:border-color .2s,background .2s;}
@@ -547,92 +609,200 @@
     </div>
     <div class="sec-desc">用品店から県連盟・チームまで、さまざまな形でMICの活動を支えてくださっている皆さまです。</div>
 
-    <div class="tile-grid">
-
-      <!-- SNOW BASE 98 -->
-      <div class="tile-card">
-        <div class="tile">
-          <div class="plate"><img src="assets/community/snowbase98.png" alt="SNOW BASE 98"></div>
-        </div>
-        <div class="tile-name">SNOW BASE 98</div>
-        <span class="tile-tag">用品・チューンナップ</span>
-        <div class="tile-desc">MIC選手の用具選びとチューンナップ、ブーツフィッティングを支えていただいています。</div>
-        <div class="tile-links">
-          <a class="chip" href="https://www.instagram.com/snowbase98" target="_blank" rel="noopener" aria-label="SNOW BASE 98 のInstagram" title="Instagram">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>
-          </a>
-          <a class="chip" href="https://www.facebook.com/people/SNOW-BASE-98/61562297623040/" target="_blank" rel="noopener" aria-label="SNOW BASE 98 のFacebook" title="Facebook">
-            <svg class="solid" viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z"></path></svg>
-          </a>
+    <div class="mic-partners">
+      <div class="mic-head">
+        <span class="dot"></span>
+        <span class="label">SUPPORTED BY</span>
+        <span class="rule"></span>
+        <span class="count" id="mic-count"></span>
+      </div>
+      <div class="mic-wrap" id="mic-wrap">
+        <div class="mic-ind" id="mic-ind"></div>
+        <div class="mic-cap" id="mic-cap">
+          <div class="mic-cap-name" id="mic-cap-name"></div>
+          <div class="mic-cap-note" id="mic-cap-note"></div>
+          <div class="mic-links" id="mic-cap-links"></div>
         </div>
       </div>
-
-      <!-- 広島県スキー連盟（ロゴ未提供のためタイポグラフィタイル） -->
-      <div class="tile-card">
-        <div class="tile">
-          <div class="typo">
-            <div class="mark"><svg viewBox="0 0 24 24"><path d="M5 21V4"></path><path d="M5 4h11l-2 4 2 4H5"></path></svg></div>
-            <div class="t1">広島県<br>スキー連盟</div>
-            <div class="rule"></div>
-            <div class="t2">FREESTYLE</div>
-          </div>
-        </div>
-        <div class="tile-name">広島県スキー連盟</div>
-        <span class="tile-tag">フリースタイル委員会・広島</span>
-        <div class="tile-desc">広島県のフリースタイル競技の普及・強化で連携しています。</div>
-        <div class="tile-links">
-          <a class="chip" href="https://ski-hiroshima.org/competition/freestyle" target="_blank" rel="noopener" aria-label="広島県スキー連盟 フリースタイル委員会の公式サイト" title="公式サイト">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Tr-J -->
-      <div class="tile-card">
-        <div class="tile wide">
-          <div class="safe"><img src="assets/community/trj-logo.png" alt="Tr-J"></div>
-        </div>
-        <div class="tile-name">Tr-J</div>
-        <span class="tile-tag">モーグルチーム・長野</span>
-        <div class="tile-desc">長野県のモーグルチーム。合同練習や大会を通じて交流しています。</div>
-        <div class="tile-links">
-          <a class="chip" href="https://www.mogulteam-trj-nagano.com/" target="_blank" rel="noopener" aria-label="Tr-J の公式サイト" title="公式サイト">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- EQUIPE F.S.C -->
-      <div class="tile-card">
-        <div class="tile">
-          <div class="plate"><img src="assets/community/equipe-fsc-logo.png" alt="EQUIPE F.S.C"></div>
-        </div>
-        <div class="tile-name">EQUIPE F.S.C</div>
-        <span class="tile-tag">SAJ公認クラブ・新潟</span>
-        <div class="tile-desc">新潟県のSAJ公認スキークラブ。育成の面で連携しています。</div>
-        <div class="tile-links">
-          <a class="chip" href="https://www.instagram.com/equipe_f.s.c._" target="_blank" rel="noopener" aria-label="EQUIPE F.S.C のInstagram" title="Instagram">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- 運動器ケア しまだ病院 -->
-      <div class="tile-card">
-        <div class="tile">
-          <div class="plate"><img src="assets/community/shimada-hospital.png" alt="運動器ケア しまだ病院"></div>
-        </div>
-        <div class="tile-name">運動器ケア しまだ病院</div>
-        <span class="tile-tag">メディカルサポート・大阪</span>
-        <div class="tile-desc">MIC選手のメディカル・コンディションを支えていただいております。</div>
-        <div class="tile-links">
-          <a class="chip" href="https://www.heartful-health.or.jp/shimadahp/" target="_blank" rel="noopener" aria-label="運動器ケア しまだ病院 の公式サイト" title="公式サイト">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
-          </a>
-        </div>
-      </div>
-
     </div>
+
+<script>
+(function () {
+  /* パートナーはここに追記するだけ。順番＝表示順。ロゴが無い先は logo:null で文字組みになります。
+     links は種類（site / instagram / facebook）とURLの組。無ければ省略可。
+     トップページ（index.html）と同じ実装。片方を直したらもう片方も直すこと。 */
+  var ICONS = {
+    site: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>',
+    instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>',
+    facebook: '<svg class="solid" viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z"></path></svg>'
+  };
+  var LABELS = { site:'公式サイト', instagram:'Instagram', facebook:'Facebook' };
+
+  var PARTNERS = [
+    {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", logo:"assets/community/snowbase98.png",
+     links:[{type:"instagram", url:"https://www.instagram.com/snowbase98"},
+            {type:"facebook",  url:"https://www.facebook.com/people/SNOW-BASE-98/61562297623040/"}]},
+    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       logo:null,
+     links:[{type:"site", url:"https://ski-hiroshima.org/competition/freestyle"}]},
+    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             logo:"assets/community/trj-logo.png", dark:true,
+     links:[{type:"site", url:"https://www.mogulteam-trj-nagano.com/"}]},
+    {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         logo:"assets/community/equipe-fsc-logo.png",
+     links:[{type:"instagram", url:"https://www.instagram.com/equipe_f.s.c._"}]},
+    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", logo:"assets/community/shimada-hospital.png",
+     links:[{type:"site", url:"https://www.heartful-health.or.jp/shimadahp/"}]}
+  ];
+
+  var wrap  = document.getElementById('mic-wrap');
+  var ind   = document.getElementById('mic-ind');
+  var cap   = document.getElementById('mic-cap');
+  var capNm = document.getElementById('mic-cap-name');
+  var capNt = document.getElementById('mic-cap-note');
+  var capLk = document.getElementById('mic-cap-links');
+  if (!wrap) return;
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = [], active = -1;
+
+  document.getElementById('mic-count').textContent = PARTNERS.length + ' PARTNERS';
+
+  PARTNERS.forEach(function (p, i) {
+    var item = document.createElement('div');
+    item.className = 'mic-item';
+    item.style.setProperty('--d', (i * 80) + 'ms');
+
+    var plate = document.createElement('div');
+    plate.className = 'mic-plate' + (p.dark ? ' is-dark' : '');
+
+    if (p.logo) {
+      var img = document.createElement('img');
+      img.alt = p.name;
+      img.decoding = 'async';
+      img.addEventListener('load', function () {
+        item.dataset.ratio = img.naturalWidth / img.naturalHeight; /* 実寸から比率を取得 */
+        sizeOne(item);
+        place();
+      });
+      img.src = p.logo;
+      plate.appendChild(img);
+    } else {
+      var w = document.createElement('span');
+      w.className = 'mic-word';
+      w.textContent = p.name;
+      plate.appendChild(w);
+    }
+
+    var tag = document.createElement('div');
+    tag.className = 'mic-tag';
+    tag.textContent = p.tag;
+
+    item.appendChild(plate);
+    item.appendChild(tag);
+    item.addEventListener('click', function () { setActive(i); });
+    item.addEventListener('mouseenter', function () { setActive(i); });
+    wrap.appendChild(item);
+    items.push(item);
+  });
+
+  /* プレートは高さを揃え、幅はロゴの比率のまま可変にする */
+  function box() {
+    return wrap.clientWidth > 700 ? {w: 190, h: 44} : {w: 132, h: 34};
+  }
+  function sizeOne(item) {
+    var img = item.querySelector('img');
+    var r = parseFloat(item.dataset.ratio);
+    if (!img || !r) return;
+    var b = box(), h = b.h, w = h * r;
+    if (w > b.w) { w = b.w; h = w / r; }
+    img.width = Math.round(w);
+    img.height = Math.round(h);
+  }
+  function sizeAll() { items.forEach(sizeOne); }
+
+  /* リンクのチップ。キャプション内なので、アクティブな1社ぶんだけ出る */
+  function renderLinks(p) {
+    capLk.textContent = '';
+    (p.links || []).forEach(function (l) {
+      var a = document.createElement('a');
+      a.className = 'chip';
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.title = LABELS[l.type] || '';
+      a.setAttribute('aria-label', p.name + ' の' + (LABELS[l.type] || 'リンク'));
+      a.innerHTML = ICONS[l.type] || ICONS.site;
+      capLk.appendChild(a);
+    });
+  }
+
+  function setActive(i) {
+    if (i === active || !items[i]) return;
+    if (items[active]) items[active].classList.remove('is-active');
+    active = i;
+    items[i].classList.add('is-active');
+    capNm.textContent = PARTNERS[i].name;
+    capNt.textContent = PARTNERS[i].note;
+    renderLinks(PARTNERS[i]);
+    place();
+  }
+
+  /* キャプションとインジケーターを、アクティブなロゴの直下へ */
+  function place() {
+    var el = items[active];
+    if (!el) return;
+    var capW = Math.min(238, wrap.clientWidth);
+    var plate = el.querySelector('.mic-plate');
+    cap.style.width = capW + 'px';
+    cap.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - capW)) + 'px';
+    cap.style.top = (el.offsetTop + el.offsetHeight + 12) + 'px';
+    ind.style.left = el.offsetLeft + 'px';
+    ind.style.width = el.offsetWidth + 'px';
+    ind.style.top = (el.offsetTop + plate.offsetHeight - 5) + 'px';
+    cap.classList.add('is-on');
+    ind.classList.add('is-on');
+  }
+
+  /* スクロールに追従して、画面中央付近のロゴをアクティブにする */
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      var wr = wrap.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (wr.bottom < 0 || wr.top > vh) return;
+      var focus = vh * 0.45, best = -1, bestD = Infinity;
+      items.forEach(function (el, i) {
+        var r = el.getBoundingClientRect();
+        var d = Math.abs((r.top + r.height / 2) - focus);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      if (best >= 0) setActive(best);
+      place();
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, {passive: true});
+  window.addEventListener('resize', function () { sizeAll(); place(); });
+  if (window.ResizeObserver) new ResizeObserver(function () { sizeAll(); place(); }).observe(wrap);
+
+  setActive(0);
+  sizeAll();
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    wrap.classList.add('is-in');
+  } else {
+    new IntersectionObserver(function (es, obs) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        wrap.classList.add('is-in');
+        obs.disconnect();
+        place();
+      });
+    }, {threshold: 0.15}).observe(wrap);
+  }
+})();
+</script>
   </div>
 
   <div class="divider"></div>
