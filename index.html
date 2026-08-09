@@ -72,8 +72,18 @@
   }
   .logo{font-weight:700;font-size:15px;letter-spacing:.14em;}
   nav ul{display:flex;gap:28px;list-style:none;font-size:13px;letter-spacing:.03em;}
-  nav a{opacity:.85;transition:opacity .2s;}
+  nav a{position:relative;opacity:.85;transition:opacity .2s;}
   nav a:hover{opacity:1;}
+  /* PC：ホバーで下線が左から伸びる */
+  nav a::after{
+    content:'';position:absolute;left:0;right:0;bottom:-6px;height:1px;
+    background:var(--accent);transform:scaleX(0);transform-origin:left;
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
+  }
+  nav a:hover::after{transform:scaleX(1);}
+  /* 番号・英字・メニュー内フッターはスマホの全画面メニュー専用。
+     PCでは横並びの簡素なナビのままにしておく。 */
+  .nav-eyebrow,.nav-num,.nav-en,.nav-foot{display:none;}
 
   /* ---------- Mobile nav (hamburger) ---------- */
   .nav-toggle{
@@ -86,15 +96,20 @@
     position:fixed;top:13px;right:5vw;z-index:1000;
     border-radius:12px;
     background:rgba(12,12,14,.55);
+    border:1px solid rgba(255,255,255,.14);
     backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
     box-shadow:0 1px 4px rgba(0,0,0,.25);
+    transition:background .3s ease, border-color .3s ease;
   }
   .nav-toggle span{
     display:block;width:18px;height:2px;background:#fff;border-radius:2px;
-    transition:transform .25s ease, opacity .25s ease;
+    transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .2s ease;
+  }
+  .nav-toggle.open{
+    background:rgba(255,90,60,.18);border-color:rgba(255,90,60,.55);
   }
   .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(2){opacity:0;transform:scaleX(.3);}
   .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   @media (max-width:820px){
@@ -103,19 +118,122 @@
        position:fixed descendants, which would confine the full-screen nav
        overlay to header's own short box instead of the viewport — disable it
        while the overlay is open (see setNavOpen in the script below). */
-    header.nav-lock{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+    /* header は mix-blend-mode:difference で背景写真と混ざる。そのままだと
+       全画面メニューまで混ざってしまい、背後のヒーロー写真が透けて色が反転する
+       （ページ最上部で開いたときに顕著）。開いている間だけ通常合成に戻す。 */
+    header.nav-lock{
+      backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+      mix-blend-mode:normal !important;
+    }
+    /* メニューを開いている間はDRAFTバッジを引っ込める */
+    .draft-badge{transition:opacity .25s ease, transform .25s ease;}
+    body.nav-open .draft-badge{opacity:0;transform:translateY(-8px);pointer-events:none;}
+
+    /* ---------- 全画面メニュー ----------
+       素の中央寄せテキストだと安っぽく見えたので、左揃えの一覧に組み直した。
+       開くと項目が下から順に立ち上がる（--i で1つずつ遅らせている）。 */
     header nav{
-      position:fixed;inset:0;
-      background:rgba(10,10,12,.97);
-      backdrop-filter:blur(16px);
-      display:flex;align-items:center;justify-content:center;
+      position:fixed;inset:0;z-index:200;
+      display:flex;align-items:stretch;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(255,90,60,.22), transparent 58%),
+        radial-gradient(circle at 92% 92%, rgba(255,90,60,.10), transparent 55%),
+        rgba(8,8,10,.97);
+      backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);
       opacity:0;visibility:hidden;pointer-events:none;
-      transition:opacity .3s ease;
-      z-index:200;
+      transition:opacity .4s cubic-bezier(.16,1,.3,1), visibility .4s;
     }
     header nav.open{opacity:1;visibility:visible;pointer-events:auto;}
-    header nav ul{
-      flex-direction:column;align-items:center;gap:32px;font-size:20px;
+
+    .nav-panel{
+      display:flex;flex-direction:column;justify-content:center;
+      width:100%;padding:84px 9vw 34px;
+      /* 端末が短いときや横向きのときはメニュー自体をスクロールさせる */
+      max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    }
+
+    .nav-eyebrow{
+      display:block;font-size:10px;font-weight:800;letter-spacing:.34em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+      opacity:0;transform:translateY(14px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    header nav.open .nav-eyebrow{opacity:1;transform:none;transition-delay:.06s;}
+
+    header nav ul{flex-direction:column;align-items:stretch;gap:0;width:100%;font-size:inherit;}
+    header nav li{
+      border-bottom:1px solid rgba(255,255,255,.07);
+      opacity:0;transform:translateY(24px);
+      transition:opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1);
+    }
+    /* 遅延は「開くとき」だけに付ける。閉じるときまで1つずつ遅れると、
+       閉じ動作がもたついて見えるため。 */
+    header nav.open li{opacity:1;transform:none;transition-delay:calc(var(--i) * 45ms + 50ms);}
+
+    header nav li a{
+      position:relative;display:flex;align-items:flex-start;gap:13px;
+      padding:13px 2px;opacity:1;
+    }
+    header nav li a::after{display:none;}
+    /* タップした項目の左からアクセント線が伸びる */
+    header nav li a::before{
+      content:'';position:absolute;left:-9vw;top:calc(50% - 1px);
+      width:0;height:2px;background:var(--accent);
+      transition:width .3s cubic-bezier(.16,1,.3,1);
+    }
+    header nav li a:active::before{width:7vw;}
+    header nav li a:active .nav-jp{color:var(--accent);}
+
+    .nav-num{
+      display:block;flex:0 0 auto;width:24px;padding-top:7px;
+      font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--accent);
+      font-variant-numeric:tabular-nums;
+    }
+    .nav-label{display:flex;flex-direction:column;min-width:0;}
+    .nav-jp{
+      display:block;font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.3;
+      transition:color .2s ease;
+    }
+    .nav-en{
+      display:block;font-size:9.5px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--muted);margin-top:4px;
+    }
+
+    .nav-foot{
+      display:block;margin-top:28px;
+      opacity:0;transform:translateY(18px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    header nav.open .nav-foot{opacity:1;transform:none;transition-delay:.44s;}
+    .nav-cta{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--accent);color:#fff;font-size:14.5px;font-weight:800;
+      border-radius:999px;padding:15px;opacity:1;
+      box-shadow:0 12px 30px -12px rgba(255,90,60,.75);
+    }
+    .nav-cta svg{width:16px;height:16px;stroke:#fff;stroke-width:2.2;fill:none;
+      stroke-linecap:round;stroke-linejoin:round;}
+    .nav-foot-note{margin-top:15px;text-align:center;font-size:10px;letter-spacing:.12em;color:var(--muted);}
+
+    /* 画面の短い端末（iPhone SEなど）では、CTAが画面外へ押し出されないように
+       間隔を詰め、装飾である英字表記は落とす。 */
+    @media (max-height:700px){
+      .nav-panel{padding:70px 9vw 24px;}
+      .nav-eyebrow{margin-bottom:12px;}
+      header nav li a{padding:10px 2px;}
+      .nav-num{padding-top:5px;}
+      .nav-jp{font-size:20px;}
+      .nav-en{display:none;}
+      .nav-foot{margin-top:22px;}
+      .nav-cta{padding:13px;font-size:14px;}
+      .nav-foot-note{margin-top:12px;}
+    }
+  }
+
+  /* 動きを控えたい設定の端末では、アニメーションを実質無効にする */
+  @media (prefers-reduced-motion: reduce){
+    header nav,header nav li,.nav-eyebrow,.nav-foot,.nav-toggle span,header nav li a::before{
+      transition-duration:.01ms !important;transition-delay:0ms !important;
     }
   }
 
@@ -891,16 +1009,26 @@
 <header id="siteHeader">
   <div class="logo">MIC</div>
   <nav id="siteNav">
-    <ul>
-      <li><a href="#mvv">MVV</a></li>
-      <li><a href="#programs">プログラム</a></li>
-      <li><a href="#athletes">選手紹介</a></li>
-      <li><a href="#coaches">コーチ紹介</a></li>
-      <li><a href="#calendar">カレンダー</a></li>
-      <li><a href="#news">お知らせ</a></li>
-      <li><a href="#community">コミュニティ</a></li>
-      <li><a href="#cta">お問い合わせ</a></li>
-    </ul>
+    <div class="nav-panel">
+      <div class="nav-eyebrow">Menu</div>
+      <ul>
+        <li style="--i:0"><a href="#mvv"><span class="nav-num">01</span><span class="nav-label"><span class="nav-jp">MVV</span><span class="nav-en">Mission Vision Value</span></span></a></li>
+        <li style="--i:1"><a href="#programs"><span class="nav-num">02</span><span class="nav-label"><span class="nav-jp">プログラム</span><span class="nav-en">Programs</span></span></a></li>
+        <li style="--i:2"><a href="#athletes"><span class="nav-num">03</span><span class="nav-label"><span class="nav-jp">選手紹介</span><span class="nav-en">Athletes</span></span></a></li>
+        <li style="--i:3"><a href="#coaches"><span class="nav-num">04</span><span class="nav-label"><span class="nav-jp">コーチ紹介</span><span class="nav-en">Coaches</span></span></a></li>
+        <li style="--i:4"><a href="#calendar"><span class="nav-num">05</span><span class="nav-label"><span class="nav-jp">カレンダー</span><span class="nav-en">Lesson Calendar</span></span></a></li>
+        <li style="--i:5"><a href="#news"><span class="nav-num">06</span><span class="nav-label"><span class="nav-jp">お知らせ</span><span class="nav-en">News</span></span></a></li>
+        <li style="--i:6"><a href="#community"><span class="nav-num">07</span><span class="nav-label"><span class="nav-jp">コミュニティ</span><span class="nav-en">Community</span></span></a></li>
+        <li style="--i:7"><a href="#cta"><span class="nav-num">08</span><span class="nav-label"><span class="nav-jp">お問い合わせ</span><span class="nav-en">Contact</span></span></a></li>
+      </ul>
+      <div class="nav-foot">
+        <a class="nav-cta" href="inquiry.html">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          公式LINEで問い合わせる
+        </a>
+        <div class="nav-foot-note">MIC — Mogul Improvement Community</div>
+      </div>
+    </div>
   </nav>
 </header>
 <!-- Deliberately a sibling of <header>, not a child: header uses
@@ -2128,6 +2256,7 @@
     navToggle.classList.toggle('open', open);
     navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.style.overflow = open ? 'hidden' : '';
+    document.body.classList.toggle('nav-open', open);
     // header's .scrolled state applies backdrop-filter, which creates a CSS
     // containing block for position:fixed descendants — that would trap the
     // full-screen nav overlay inside header's own (short) box instead of the
