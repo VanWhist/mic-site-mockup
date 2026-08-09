@@ -974,10 +974,11 @@
   .cm-stat .num{font-family:var(--serif-num);font-size:38px;font-weight:600;color:var(--accent);letter-spacing:-.02em;line-height:1;}
   .cm-stat .lbl{font-size:12px;color:var(--muted);margin-top:10px;}
   .cm-logos-label{text-align:center;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:9vh 0 20px;}
-  .cm-logo-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  /* パートナー数が列数の倍数でないとき、最後の行が左に寄らず中央に来るようflexにしている */
+  .cm-logo-grid{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
   /* パートナーのセルはリンクにしない。トップの役割は「MICを知ってもらうこと」なので、
      外部サイトへは飛ばさず、下のCTAでコミュニティページへ受け渡す。 */
-  .cm-logo-cell{aspect-ratio:16/10;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  .cm-logo-cell{flex:0 0 calc(25% - 11px);aspect-ratio:16/10;border-radius:14px;display:flex;align-items:center;justify-content:center;
     background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);padding:10px;overflow:hidden;}
   /* ロゴの「安全領域」— ロゴ自体の大小ではなく、ロゴが置かれる領域を揃える */
   .cm-logo-cell .safe{width:76%;height:66%;display:flex;align-items:center;justify-content:center;}
@@ -995,7 +996,7 @@
   .cm-typo .rule{width:24px;height:2px;border-radius:2px;background:var(--accent);}
   .cm-typo .t2{font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);}
   .cm-cta-wrap{margin-top:9vh;text-align:center;}
-  @media (max-width:900px){ .cm-logo-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:900px){ .cm-logo-cell{flex:0 0 calc(50% - 8px);} }
   @media (max-width:820px){
     .df-grid{grid-template-columns:1fr;}
     .cm-stats{grid-template-columns:1fr;}
@@ -2155,7 +2156,7 @@
   </div>
 
   <div class="cm-stats">
-    <div class="cm-stat reveal"><div class="num">4</div><div class="lbl">パートナー</div></div>
+    <div class="cm-stat reveal"><div class="num">5</div><div class="lbl">パートナー</div></div>
     <div class="cm-stat reveal delay-1"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
@@ -2172,6 +2173,9 @@
     </div>
     <div class="cm-logo-cell reveal">
       <div class="plate"><img src="assets/community/equipe-fsc-logo.png" alt="EQUIPE F.S.C" loading="lazy" decoding="async"></div>
+    </div>
+    <div class="cm-logo-cell reveal delay-1">
+      <div class="plate"><img src="assets/community/shimada-hospital.png" alt="運動器ケア しまだ病院" loading="lazy" decoding="async"></div>
     </div>
   </div>
 

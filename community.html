@@ -98,6 +98,8 @@
 
   /* ---------- partner tiles ---------- */
   .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  /* パートナーが奇数のとき、最後の1枚が左に寄って落ちるのを避けて中央に置く */
+  .tile-grid > .tile-card:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc(50% - 7px);}
   .tile-card{display:block;min-width:0;}
   /* タイルはトップページと同じ「暗い半透明」で統一する。
      白タイルにすると、白背景用ロゴを持たないパートナー（Tr-J等）だけが浮いてしまうため。 */
@@ -509,7 +511,7 @@
   <div class="subcopy">すべての仲間とともに、未来の選手を育てています。</div>
 
   <div class="cat-stats">
-    <div class="cat-stat"><div class="num">4</div><div class="lbl">パートナー</div></div>
+    <div class="cat-stat"><div class="num">5</div><div class="lbl">パートナー</div></div>
     <div class="cat-stat"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
@@ -611,6 +613,21 @@
         <div class="tile-links">
           <a class="chip" href="https://www.instagram.com/equipe_f.s.c._" target="_blank" rel="noopener" aria-label="EQUIPE F.S.C のInstagram" title="Instagram">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 運動器ケア しまだ病院 -->
+      <div class="tile-card">
+        <div class="tile">
+          <div class="plate"><img src="assets/community/shimada-hospital.png" alt="運動器ケア しまだ病院"></div>
+        </div>
+        <div class="tile-name">運動器ケア しまだ病院</div>
+        <span class="tile-tag">メディカルサポート・大阪</span>
+        <div class="tile-desc">MIC選手のメディカル・コンディションを支えていただいております。</div>
+        <div class="tile-links">
+          <a class="chip" href="https://www.heartful-health.or.jp/shimadahp/" target="_blank" rel="noopener" aria-label="運動器ケア しまだ病院 の公式サイト" title="公式サイト">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
           </a>
         </div>
       </div>
@@ -752,8 +769,8 @@
         <a class="card" href="https://abenojr80.com/" target="_blank" rel="noopener">
           <h3>アベノジュニアトランポリンクラブ</h3><p>大阪府八尾市天王寺屋</p><span class="badge">トランポリン練習施設</span>
         </a>
-        <a class="card" href="https://www.heartful-health.or.jp/shimadahp/" target="_blank" rel="noopener">
-          <h3>運動器ケア しまだ病院</h3><p>大阪府羽曳野市</p><span class="badge">スポーツ整形・メディカルサポート</span>
+        <a class="card" href="https://www.heartful-health.or.jp/e-vigorous/" target="_blank" rel="noopener">
+          <h3>Eudynamics ヴィゴラス</h3><p>大阪府羽曳野市</p><span class="badge">トレーニング・メディカルサポート</span>
         </a>
       </div>
     </section>
