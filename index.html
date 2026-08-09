@@ -60,15 +60,26 @@
     display:flex;align-items:center;justify-content:space-between;
     padding:18px 5vw;
     mix-blend-mode:difference;
-    transition:background .4s ease, backdrop-filter .4s ease, padding .4s ease;
+    transition:padding .4s ease;
   }
-  header.scrolled{
-    mix-blend-mode:normal;
+  /* スクロール後の半透明バーは、header 自身ではなく擬似要素で描く。
+     backdrop-filter を持つ要素は position:fixed の子孫の位置の基準になるため、
+     header に直接掛けると全画面メニューがヘッダーの高さに閉じ込められ、
+     画面上部の細い帯だけになってしまう（実際に発生した不具合）。
+     擬似要素はメニューの祖先ではないので、この問題が起きない。 */
+  header::before{
+    content:'';position:absolute;inset:0;z-index:-1;
     background:rgba(10,10,12,.72);
     backdrop-filter:blur(16px) saturate(1.4);
     -webkit-backdrop-filter:blur(16px) saturate(1.4);
-    padding:14px 5vw;
     border-bottom:1px solid rgba(255,255,255,.08);
+    opacity:0;transition:opacity .4s ease;
+    pointer-events:none;
+  }
+  header.scrolled::before{opacity:1;}
+  header.scrolled{
+    mix-blend-mode:normal;
+    padding:14px 5vw;
   }
   .logo{font-weight:700;font-size:15px;letter-spacing:.14em;}
   nav ul{display:flex;gap:28px;list-style:none;font-size:13px;letter-spacing:.03em;}
@@ -121,10 +132,9 @@
     /* header は mix-blend-mode:difference で背景写真と混ざる。そのままだと
        全画面メニューまで混ざってしまい、背後のヒーロー写真が透けて色が反転する
        （ページ最上部で開いたときに顕著）。開いている間だけ通常合成に戻す。 */
-    header.nav-lock{
-      backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
-      mix-blend-mode:normal !important;
-    }
+    header.nav-lock{mix-blend-mode:normal !important;}
+    /* メニューを開いている間はヘッダーのバーを消す（メニューの背景と二重になるため） */
+    header.nav-lock::before{opacity:0;}
     /* メニューを開いている間はDRAFTバッジを引っ込める */
     .draft-badge{transition:opacity .25s ease, transform .25s ease;}
     body.nav-open .draft-badge{opacity:0;transform:translateY(-8px);pointer-events:none;}
