@@ -156,6 +156,11 @@
     border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
   .foot-note a{color:var(--muted);text-decoration:underline;}
 
+  .cal-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:28px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cal-cta svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;flex:0 0 auto;}
+
   /* ---------- topbar nav (merged with logo row) ---------- */
   .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
   .lp-nav::-webkit-scrollbar{display:none;}
@@ -438,6 +443,11 @@
     <span id="timelineCount">2件</span>
   </div>
   <div class="timeline" id="timelineBody"></div>
+
+  <a class="cal-cta" href="inquiry.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    公式LINEで申し込む
+  </a>
 
   <div class="foot-note">📍会場・💴料金・👥受付状況は各予定カードに表示しています。最新の空き状況・お申し込みは公式LINEでご確認ください。</div>
 </div>
