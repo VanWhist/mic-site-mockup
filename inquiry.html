@@ -140,13 +140,19 @@
   .sf-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:40px;}
   .sf-logo{font-size:20px;font-weight:800;letter-spacing:.08em;color:#f5f5f7;}
   .sf-tagline{font-size:11.5px;line-height:1.7;margin-top:8px;}
-  .sf-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .sf-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
   .sf-col{display:flex;flex-direction:column;gap:11px;}
   .sf-col-head{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
     color:var(--accent);margin-bottom:2px;}
   .sf-col a{font-size:13px;color:#d3d3d8;text-decoration:none;line-height:1.5;transition:color .2s;}
   .sf-col a:hover{color:var(--accent);}
   .sf-col a.sf-current{color:var(--accent);}
+  .sf-social{display:flex;gap:10px;margin-top:2px;}
+  .sf-social a{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);text-decoration:none;
+    transition:border-color .2s,background .2s;}
+  .sf-social a:hover{border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.12);}
+  .sf-social svg{width:15px;height:15px;stroke:var(--accent);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round;}
   .sf-bottom{max-width:1080px;margin:44px auto 0;padding:18px 0 26px;
     border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;
     align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;}
@@ -408,6 +414,14 @@
         <a href="full-calendar.html">レッスンカレンダー</a>
         <a href="community.html">コミュニティ・活動拠点</a>
         <a href="inquiry.html" class="sf-current">申し込み・お問い合わせ</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">フォローする</div>
+        <div class="sf-social">
+          <a href="https://www.instagram.com/mogul.mic/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg></a>
+          <a href="https://www.facebook.com/share/1BgiYgcdXj/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z" fill="currentColor" stroke="none"></path></svg></a>
+          <a href="https://www.youtube.com/@mogul-mic" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"></rect><path d="M10.3 9.6v4.8l4.4-2.4z" fill="currentColor" stroke="none"></path></svg></a>
+        </div>
       </div>
     </div>
   </div>
