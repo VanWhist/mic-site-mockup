@@ -54,11 +54,13 @@
   .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
   /* ---------- hero ---------- */
   .lp-hero-photo{position:relative;width:100%;min-height:320px;display:flex;align-items:flex-end;padding:32px 6vw;
+    overflow:hidden;
     background:
-      linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%),
-      radial-gradient(circle at 30% 15%, rgba(255,140,100,.32), transparent 55%),
       linear-gradient(135deg,#3a2420,#15100e 60%);}
-  .lp-hero-badge{position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+  .lp-hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .lp-hero-photo::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%);}
+  .lp-hero-badge{z-index:2;position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
     color:#fff;background:var(--accent);border-radius:999px;padding:6px 14px 6px 11px;box-shadow:0 8px 20px -6px rgba(255,90,60,.6);}
   .lp-hero-badge svg{width:13px;height:13px;}
   .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
@@ -520,7 +522,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.6-1.4z"></path></svg>
     MIC MAIN PROGRAM
   </div>
-  <span class="lp-hero-phtag">写真プレースホルダー（選手のジャンプ／指導風景を想定）</span>
+  <picture>
+    <source media="(max-width:600px)" srcset="assets/programs/athlete_hero_sp.jpg">
+    <img src="assets/programs/athlete_hero_wide.jpg" alt="バックフリップを決めるMICの選手" loading="lazy" decoding="async">
+  </picture>
 </div>
 
 <div class="wrap">

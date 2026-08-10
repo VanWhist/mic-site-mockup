@@ -61,12 +61,13 @@
 
   /* ---------- hero ---------- */
   .lp-hero-photo{position:relative;width:100%;min-height:300px;display:flex;align-items:flex-end;padding:32px 6vw;
+    overflow:hidden;
     background:
-      linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%),
-      radial-gradient(circle at 72% 20%, rgba(120,190,255,.22), transparent 55%),
-      radial-gradient(circle at 20% 30%, rgba(255,140,100,.20), transparent 55%),
       linear-gradient(135deg,#243040,#12151a 62%);}
-  .lp-hero-badge{position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+  .lp-hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .lp-hero-photo::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%);}
+  .lp-hero-badge{z-index:2;position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
     color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px 6px 11px;backdrop-filter:blur(6px);}
   .lp-hero-badge svg{width:13px;height:13px;}
   .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
@@ -493,7 +494,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>
     全国どこからでも
   </div>
-  <span class="lp-hero-phtag">写真プレースホルダー（スマホで滑りを確認している様子を想定）</span>
+  <picture>
+    <source media="(max-width:600px)" srcset="assets/programs/online_hero_sp.jpg">
+    <img src="assets/programs/online_hero_wide.jpg" alt="タブレットで滑走動画を確認しながらフィードバックするコーチのイメージ" loading="lazy" decoding="async">
+  </picture>
 </div>
 
 <div class="wrap">
