@@ -621,6 +621,35 @@
   .news-item time{color:var(--muted);flex:0 0 100px;}
   .news-note{margin-top:18px;font-size:12px;color:var(--muted);}
 
+  /* お知らせ（トップ：最新3件）。一覧ページ news.html と同じ見た目・同じデータ源。 */
+  .hn-item{display:flex;align-items:flex-start;gap:13px;padding:15px 4px;
+    border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none;color:inherit;}
+  .hn-item.is-link{border-radius:12px;transition:background .2s,padding .2s;}
+  .hn-item.is-link:hover{background:rgba(255,255,255,.04);padding-left:10px;padding-right:10px;}
+  .hn-meta{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding-top:1px;}
+  .hn-date{font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .hn-cat{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:999px;
+    white-space:nowrap;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#cfcfd4;}
+  .hn-cat.is-boshu{background:rgba(255,90,60,.14);border-color:rgba(255,90,60,.4);color:var(--accent);}
+  .hn-body{flex:1;min-width:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .hn-title{min-width:0;font-size:14.5px;font-weight:600;line-height:1.6;}
+  .hn-arrow{flex:0 0 auto;width:15px;height:15px;stroke:var(--muted);color:var(--muted);
+    stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-top:4px;
+    transition:stroke .2s,color .2s,transform .2s;}
+  .hn-item.is-link:hover .hn-arrow{stroke:var(--accent);color:var(--accent);transform:translateX(3px);}
+  .hn-item.is-link:hover .hn-arrow.is-brand{transform:none;}
+  .hn-all{display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:13px;font-weight:700;
+    color:var(--muted);text-decoration:none;transition:color .2s;}
+  .hn-all:hover{color:var(--accent);}
+  .hn-all svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+  @media (max-width:560px){
+    .hn-item{flex-wrap:wrap;gap:7px;}
+    .hn-meta{width:100%;}
+    .hn-body{width:100%;flex:1 1 100%;}
+    .hn-title{font-size:14px;}
+  }
+
   /* ---------- Calendar ---------- */
   .calendar{
     background:#101012;
@@ -2095,15 +2124,124 @@
 
     <div class="hub-news reveal delay-2" id="news">
       <div class="hub-news-label">お知らせ</div>
-      <div class="news-list">
-        <div class="news-item"><time>2026.6.30</time><span>7月〜8月のレッスンカレンダーを更新しました！</span></div>
-        <div class="news-item"><time>2026.5.15</time><span>6月のレッスンカレンダーを更新しました！</span></div>
-        <div class="news-item"><time>2026.4.15</time><span>ゴールデンウィーク合宿の案内をアップしました！</span></div>
-        <div class="news-note">※本番では「お知らせ」はスプレッドシート連動にし、行を追加するだけでここに反映される想定です。</div>
-      </div>
+      <div class="news-list" id="topNewsList"></div>
+      <a class="hn-all" href="news.html">すべてのお知らせを見る<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
     </div>
   </div>
 </section>
+
+<!-- NEWS_DATA_INLINE_START -->
+<!-- news.json と同じ内容のオフライン用フォールバックです。patch_index_news.py で更新されます。 -->
+<script type="application/json" id="news-data-inline">{"lastUpdated": "2026-08-11T09:00:00+09:00", "note": "掲載内容はサンプルです。本番公開前に実際のお知らせへ差し替えてください。第2段階でGoogleスプレッドシート連動に切り替えます。", "categories": ["募集", "活動", "大会", "チーム"], "items": [{"date": "2026-08-09", "category": "活動", "title": "8月のウォータージャンプ練習会がスタートしました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-08-01", "category": "募集", "title": "夏休み短期教室の受付を開始しました", "url": "inquiry.html"}, {"date": "2026-07-20", "category": "大会", "title": "サマーコンテストの結果を掲載しました", "url": ""}, {"date": "2026-07-01", "category": "チーム", "title": "コーチ派遣プログラムの受付を開始しました", "url": "program-dispatch.html"}, {"date": "2026-06-15", "category": "活動", "title": "6月の雪上合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-05-20", "category": "募集", "title": "2026-27シーズンの選手育成コース募集について", "url": "program-athlete.html"}, {"date": "2026-04-15", "category": "活動", "title": "ゴールデンウィーク合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2025-12-10", "category": "チーム", "title": "オンラインサポートを開始しました", "url": "program-online.html"}, {"date": "2025-11-02", "category": "大会", "title": "2025-26シーズンの大会結果を更新しました", "url": ""}]}</script>
+<!-- NEWS_DATA_INLINE_END -->
+
+<script>
+(function(){
+  // トップページのお知らせ（最新3件）。
+  // 一覧ページ news.html と同じデータ源を読むので、更新箇所は1つで済む。
+  // ①埋め込みデータで即描画 → ②news.json（将来は公開API）で描き直す
+  // スプレッドシート「MICお知らせ」(mogul.mic@gmail.com) を読む公開API。
+  // シートを直してから最大5分でここに反映される（APIが5分キャッシュするため）。
+  var NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbylFpHjBUu23jCvTOSTGHwJqCRdbGPkfgamu0VoSW6aEte3TfuIH1mS4-8pUG6HVmux/exec';
+  var TOP_COUNT = 3;
+
+  var listEl = document.getElementById('topNewsList');
+  if (!listEl) return;
+
+  // リンク先に応じてアイコンを変える（一覧ページ news.html と同じ規則）
+  var ICON = {
+    arrow: '<svg class="hn-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line>'
+         + '<polyline points="12 5 19 12 12 19"></polyline></svg>',
+    instagram: '<svg class="hn-arrow is-brand" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect>'
+         + '<circle cx="12" cy="12" r="4"></circle>'
+         + '<circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle></svg>',
+    youtube: '<svg class="hn-arrow is-brand" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"></rect>'
+         + '<path d="M10.3 9.6v4.8l4.4-2.4z" fill="currentColor" stroke="none"></path></svg>',
+    external: '<svg class="hn-arrow is-brand" viewBox="0 0 24 24"><path d="M14 4h6v6"></path>'
+         + '<path d="M20 4l-8.5 8.5"></path>'
+         + '<path d="M18 14.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4.5"></path></svg>'
+  };
+
+  function iconFor(url){
+    if (!url) return '';
+    if (url.indexOf('instagram.com') >= 0) return ICON.instagram;
+    if (url.indexOf('youtube.com') >= 0 || url.indexOf('youtu.be') >= 0) return ICON.youtube;
+    if (url.indexOf('https://') === 0) return ICON.external;
+    return ICON.arrow;
+  }
+
+  function esc(t){
+    return String(t).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function fmtDate(iso){
+    var d = String(iso).split('-');
+    if (d.length < 3) return esc(iso);
+    return d[0] + '.' + pad(+d[1]) + '.' + pad(+d[2]);
+  }
+  function safeUrl(u){
+    if (!u) return '';
+    u = String(u).trim();
+    return (/^https:\/\//.test(u) || /^[\w./#?=&-]+$/.test(u)) ? u : '';
+  }
+
+  function apply(data){
+    var items = (data.items || []).slice().sort(function(a,b){
+      return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1);
+    }).slice(0, TOP_COUNT);
+    if (!items.length) return;
+
+    listEl.innerHTML = items.map(function(n){
+      var url  = safeUrl(n.url);
+      var ext  = /^https:\/\//.test(url);
+      var tag  = url ? 'a' : 'div';
+      var attr = url ? ' href="' + esc(url) + '" class="hn-item is-link"'
+                       + (ext ? ' target="_blank" rel="noopener"' : '')
+                     : ' class="hn-item"';
+      return '<' + tag + attr + '>'
+           +   '<div class="hn-meta">'
+           +     '<span class="hn-date">' + fmtDate(n.date) + '</span>'
+           +     '<span class="hn-cat' + (n.category === '募集' ? ' is-boshu' : '') + '">'
+           +       esc(n.category) + '</span>'
+           +   '</div>'
+           +   '<div class="hn-body">'
+           +     '<div class="hn-title">' + esc(n.title) + '</div>'
+           +     iconFor(url)
+           +   '</div>'
+           + '</' + tag + '>';
+    }).join('');
+  }
+
+  function load(){
+    try {
+      var el = document.getElementById('news-data-inline');
+      if (el) apply(JSON.parse(el.textContent));
+    } catch(e){ /* 埋め込みが壊れていても、次のfetchで復帰できる */ }
+
+    function tryFetch(url){
+      return fetch(url, {cache:'no-cache'})
+        .then(function(res){ if(!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
+        .then(function(data){
+          if (!data || data.error || !Array.isArray(data.items)) throw new Error('unexpected payload');
+          apply(data);
+        });
+    }
+
+    var chain = NEWS_API_URL
+      ? tryFetch(NEWS_API_URL).catch(function(){ return tryFetch('news.json'); })
+      : tryFetch('news.json');
+
+    chain.catch(function(err){
+      console.warn('お知らせの最新取得に失敗しました。表示中のデータを使用します。', err);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
+  else load();
+})();
+</script>
 
 <!-- CALENDAR_DATA_INLINE_START -->
 <!-- calendar-data.json と同じ内容のオフライン用フォールバックです。sync_calendar.py / embed_calendar_inline.py で更新されます。 -->
@@ -2515,6 +2653,7 @@
         <a href="#mvv">ミッション・ビジョン</a>
         <a href="#athletes">選手紹介</a>
         <a href="#coaches">コーチ紹介</a>
+        <a href="news.html">お知らせ</a>
       </div>
       <div class="sf-col">
         <div class="sf-col-head">参加する</div>

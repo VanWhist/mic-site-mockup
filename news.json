@@ -1,0 +1,66 @@
+{
+  "lastUpdated": "2026-08-11T09:00:00+09:00",
+  "note": "掲載内容はサンプルです。本番公開前に実際のお知らせへ差し替えてください。第2段階でGoogleスプレッドシート連動に切り替えます。",
+  "categories": [
+    "募集",
+    "活動",
+    "大会",
+    "チーム"
+  ],
+  "items": [
+    {
+      "date": "2026-08-09",
+      "category": "活動",
+      "title": "8月のウォータージャンプ練習会がスタートしました",
+      "url": "https://www.instagram.com/mogul.mic/"
+    },
+    {
+      "date": "2026-08-01",
+      "category": "募集",
+      "title": "夏休み短期教室の受付を開始しました",
+      "url": "inquiry.html"
+    },
+    {
+      "date": "2026-07-20",
+      "category": "大会",
+      "title": "サマーコンテストの結果を掲載しました",
+      "url": ""
+    },
+    {
+      "date": "2026-07-01",
+      "category": "チーム",
+      "title": "コーチ派遣プログラムの受付を開始しました",
+      "url": "program-dispatch.html"
+    },
+    {
+      "date": "2026-06-15",
+      "category": "活動",
+      "title": "6月の雪上合宿を実施しました",
+      "url": "https://www.instagram.com/mogul.mic/"
+    },
+    {
+      "date": "2026-05-20",
+      "category": "募集",
+      "title": "2026-27シーズンの選手育成コース募集について",
+      "url": "program-athlete.html"
+    },
+    {
+      "date": "2026-04-15",
+      "category": "活動",
+      "title": "ゴールデンウィーク合宿を実施しました",
+      "url": "https://www.instagram.com/mogul.mic/"
+    },
+    {
+      "date": "2025-12-10",
+      "category": "チーム",
+      "title": "オンラインサポートを開始しました",
+      "url": "program-online.html"
+    },
+    {
+      "date": "2025-11-02",
+      "category": "大会",
+      "title": "2025-26シーズンの大会結果を更新しました",
+      "url": ""
+    }
+  ]
+}

@@ -2,35 +2,45 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>申し込み・お問い合わせ | MIC — Mogul Improvement Community</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>お知らせ｜MIC Mogul Improvement Community</title>
+<meta name="description" content="MICからのお知らせ一覧。レッスンの募集状況、活動報告、大会結果などの最新情報を掲載しています。">
 <style>
   :root{
     --bg:#0a0a0c;
     --fg:#f5f5f7;
     --accent:#ff5a3c;
-    --line-green:#06C755;
     --muted:#9a9a9f;
-    --serif-num: 'Fraunces', serif;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
-  body{
-    background:#0a0a0c;
-    color:var(--fg);
-    font-family:"Hiragino Sans","Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    overflow-x:hidden;
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
     -webkit-font-smoothing:antialiased;
-    min-height:100vh;
+    /* overflow-x:hidden はスクロールの入れ物を作ってしまい、position:sticky の
+       上部バーが効かなくなる（実際、スクロールするとバーが消えていた）。
+       overflow-x:clip なら横スクロールは同じく止めつつ、sticky は生きる。
+       clip を解さない古いブラウザは上の hidden がそのまま効く。 */
+    overflow-x:hidden;overflow-x:clip;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
   }
-  a{color:inherit;text-decoration:none;}
-  img{display:block;}
+  body::after{
+    content:'';position:fixed;bottom:-15%;right:-15%;width:60%;height:45%;
+    background:radial-gradient(circle, rgba(80,120,255,.10), transparent 70%);
+    filter:blur(50px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
 
   /* ---------- DRAFTバッジ ----------
      画面下の小さなピルにしてある。上端に置くと、常時表示にした上部バーを
      押し下げてしまい、固定配置のハンバーガーと位置がずれるため。
      公開時に削除する要素なので、本体のレイアウトに影響しない位置に置く。 */
-  .draft-badge{
+  .demo-badge{
     position:fixed;bottom:14px;left:14px;z-index:400;
     max-width:calc(100% - 28px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
     background:rgba(255,90,60,.92);color:#fff;
@@ -40,15 +50,83 @@
     text-align:left;border-bottom:none;
     transition:opacity .25s ease, transform .25s ease;
   }
-  body.nav-open .draft-badge{opacity:0;transform:translateY(8px);pointer-events:none;}
+  body.nav-open .demo-badge{opacity:0;transform:translateY(8px);pointer-events:none;}
 
-  /* ---------- Nav ----------
-     他の下層ページ（プログラム・コミュニティ・カレンダー）と同じ形に揃えてある。
-     以前は固定ヘッダーで、820px以下ではナビが丸ごと消えていた（ハンバーガーも無し）。 */
+  /* ---------- top bar ---------- */
   .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
     gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border-bottom:1px solid rgba(255,255,255,.08);}
   .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:36px 6vw 80px;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  /* ---------- filter chips (拠点) ---------- */
+  .filter-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 2px 10px;}
+  .filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px;}
+  .filter-chip{font-size:12.5px;font-weight:700;color:#d8d8dc;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:8px 15px;cursor:pointer;
+    transition:background .2s,border-color .2s,color .2s;}
+  .filter-chip:hover{border-color:rgba(255,255,255,.28);}
+  .filter-chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+
+  /* ---------- お知らせ一覧 ---------- */
+  .news-year{display:flex;align-items:center;gap:14px;margin:34px 2px 4px;}
+  .news-year:first-of-type{margin-top:6px;}
+  .news-year b{font-size:13px;font-weight:800;letter-spacing:.06em;color:var(--muted);}
+  .news-year i{flex:1;height:1px;background:rgba(255,255,255,.09);}
+
+  .n-item{display:flex;align-items:flex-start;gap:14px;padding:16px 4px;
+    border-bottom:1px solid rgba(255,255,255,.08);text-decoration:none;color:inherit;}
+  .n-item.is-link{border-radius:12px;transition:background .2s,padding .2s;}
+  .n-item.is-link:hover{background:rgba(255,255,255,.04);padding-left:10px;padding-right:10px;}
+
+  .n-meta{flex:0 0 auto;display:flex;align-items:center;gap:9px;padding-top:1px;}
+  .n-date{font-size:12.5px;font-weight:700;color:var(--muted);
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;}
+  /* カテゴリの色は増やさない。目を引かせたい「募集」だけアクセント、残りはグレー。
+     4色に塗り分けると、サイト全体のオレンジ1色という約束が崩れるため。 */
+  .n-cat{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:999px;
+    white-space:nowrap;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#cfcfd4;}
+  .n-cat.is-boshu{background:rgba(255,90,60,.14);border-color:rgba(255,90,60,.4);color:var(--accent);}
+
+  .n-body{flex:1;min-width:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .n-title{min-width:0;font-size:14.5px;font-weight:600;line-height:1.6;}
+  /* 矢印はリンクのある項目にだけ出す。押せない行を押せそうに見せない。 */
+  /* color も muted に揃えてある。アイコン内の塗り（Instagramの点など）が currentColor を
+     参照するので、線と塗りが必ず同じ色になる。 */
+  .n-arrow{flex:0 0 auto;width:15px;height:15px;stroke:var(--muted);color:var(--muted);
+    stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-top:4px;
+    transition:stroke .2s,color .2s,transform .2s;}
+  .n-item.is-link:hover .n-arrow{stroke:var(--accent);color:var(--accent);transform:translateX(3px);}
+  /* 外部サービスのアイコンは「移動する」意味ではないので、横滑りさせない */
+  .n-item.is-link:hover .n-arrow.is-brand{transform:none;}
+
+  @media (max-width:560px){
+    .n-item{flex-wrap:wrap;gap:7px;padding:15px 4px;}
+    .n-meta{width:100%;}
+    .n-body{width:100%;flex:1 1 100%;}
+    .n-title{font-size:14px;}
+    .filter-chip{font-size:12px;padding:7px 12px;}
+    .filter-row{gap:6px;}
+  }
+
+  .empty-state{text-align:center;color:var(--muted);font-size:13.5px;padding:38px 10px;
+    background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:18px;margin-top:20px;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  .cal-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:32px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cal-cta svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;flex:0 0 auto;}
+
+  /* ---------- topbar nav (merged with logo row) ---------- */
   .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
   .lp-nav::-webkit-scrollbar{display:none;}
   .lp-nav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
@@ -56,77 +134,8 @@
   .lp-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
   .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
 
-  /* ---------- Reusable eyebrow label ---------- */
-  .eyebrow{
-    font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);
-    margin-bottom:20px;font-weight:600;
-  }
-
-  /* ---------- Scroll reveal ---------- */
-  .reveal{
-    opacity:0;transform:translateY(28px);
-    transition:opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1);
-  }
-  .reveal.in{opacity:1;transform:translateY(0);}
-  .reveal-scale{opacity:0;transform:scale(.92);transition:opacity 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);}
-  .reveal-scale.in{opacity:1;transform:scale(1);}
-  .delay-1{transition-delay:.08s;}
-  .delay-2{transition-delay:.18s;}
-  .delay-3{transition-delay:.28s;}
-
-  /* ---------- Contact hero ---------- */
-  .contact-hero{
-    padding:14vh 6vw 6vh;
-    text-align:center;
-    max-width:760px;
-    margin:0 auto;
-  }
-  .contact-hero .eyebrow{display:flex;justify-content:center;}
-  .contact-hero h1{
-    font-size:clamp(34px,6vw,64px);
-    font-weight:800;letter-spacing:-.02em;line-height:1.15;
-    margin-bottom:24px;
-  }
-  .contact-hero p{
-    color:var(--muted);font-size:16px;line-height:1.9;
-    max-width:520px;margin:0 auto;
-  }
-
-  /* ---------- LINE contact card ---------- */
-  .contact-line{
-    padding:6vh 6vw 18vh;
-    display:flex;justify-content:center;
-  }
-  .line-card{
-    background:#101012;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:28px;
-    padding:6vh 6vw;
-    max-width:480px;
-    width:100%;
-    text-align:center;
-  }
-  .line-btn{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    background:var(--line-green);color:#fff;
-    font-size:16px;font-weight:700;letter-spacing:.02em;
-    padding:18px 28px;border-radius:100px;
-    transition:transform .3s ease, box-shadow .3s ease;
-    box-shadow:0 16px 40px -16px rgba(6,199,85,.5);
-  }
-  .line-btn:hover{transform:translateY(-2px);}
-  .line-btn svg{flex:0 0 auto;}
-  .line-qr{margin-top:36px;}
-  .line-qr img{
-    width:140px;height:140px;margin:0 auto;
-    border-radius:12px;background:#fff;padding:10px;
-  }
-  .qr-caption{margin-top:14px;font-size:12px;color:var(--muted);}
-  .line-note{
-    margin-top:36px;padding-top:32px;
-    border-top:1px solid rgba(255,255,255,.08);
-    font-size:13px;line-height:2;color:var(--muted);
-    text-align:left;
+  @media (max-width:480px){
+    .cal-cell{font-size:12px;}
   }
 
   /* ---------- 全ページ共通フッター ----------
@@ -320,7 +329,7 @@
 </head>
 <body>
 
-<div class="draft-badge">RAFU / DRAFT — トップページ試作（.site環境用・非公開）</div>
+<div class="demo-badge">🚧 RAFU / DRAFT — お知らせ一覧ページの試作。掲載内容はサンプルです。</div>
 
 <div class="lp-topbar">
   <a class="lp-logo" href="index.html">MIC</a>
@@ -332,7 +341,7 @@
     <a href="full-calendar.html">カレンダー</a>
     <a href="news.html" class="only-wide">お知らせ</a>
     <a href="community.html" class="only-wide">コミュニティ</a>
-    <a href="inquiry.html" class="current">お問い合わせ</a>
+    <a href="inquiry.html">お問い合わせ</a>
   </nav>
 </div>
 <!-- バーの外に出してある。メニューを開いている間はバーごと消えるので、
@@ -363,31 +372,25 @@
   </div>
 </nav>
 
+<div class="wrap">
+  <div class="eyebrow">MIC News</div>
+  <div class="headline">お知らせ</div>
+  <div class="subcopy">レッスンの募集状況、活動の報告、大会結果など、MICからの最新のお知らせです。</div>
 
-<section class="contact-hero">
-  <div class="eyebrow reveal">Contact</div>
-  <h1 class="reveal delay-1">申し込み・お問い合わせ</h1>
-  <p class="reveal delay-2">レッスンへのお申し込み・ご質問は、すべて公式LINEアカウントで承っています。お気軽にお問い合わせください。</p>
-</section>
+  <div class="filter-label">カテゴリで絞り込む</div>
+  <div class="filter-row" id="catChips"></div>
 
-<section class="contact-line">
-  <div class="line-card reveal-scale">
-    <a href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" class="line-btn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 5.94 2 10.8c0 4.36 3.58 8.01 8.42 8.71.33.07.78.22.89.5.1.26.07.66.03.92l-.14.87c-.04.26-.2 1 .88.55 1.07-.46 5.79-3.41 7.9-5.84C21.44 14.5 22 12.72 22 10.8 22 5.94 17.52 2 12 2z" fill="#fff"/>
-      </svg>
-      LINEで友だち追加
-    </a>
-    <div class="line-qr">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAAB5ElEQVR4nO2aQYrjMBBFX40FvZShD9BHsW82V7OOkgMMWEuDzO+FZDuBhhkGHDuxtAiW9SAfUfqqVMXE30f49Q8QVKpSL0RFK6OPDoI5CC0sb91Rui5BNZKkYj7dOJv9HoFOkjQep+saVAlvwHpAA5APRH+orvem3P3EJwhfP9y+Z1X/RlQ0k24O65/1jZemctyXUPfJgZ9smQqIx+i6CjXnhAbih6zPHw6CmZm1x+l6d8qV8M5jMoUWEyTubf+s6l+bQhoblcQGoBsbgU95AWik4azqX5vKBg8U0zd8DnkRegz8eIiuK1BI45rQ00iDT3maF/KpOKv616YWa/EJDT6tnqPV7uve70U5YDYRP2TdzSGYTESXit3Ez0N0XYG685xc1ckm4x+eatzvQuXfVtaNLYb/4+iGyQSzE8wGuHRe9a9N3aeS2+UqSZv917jfh1oyGZ+g05LiDHmt3Lp17/ehFpdfavV3Vq+x7v3e1Na3ohHd7aGSr1vtW+1JbX2r2QhfkxHa1Xh8OkzXNaitb7WMuZQwQ+3XPokqnmPZfZTOous9qcee4WTgU07tRWyP03UdSsox3giiK0+hbfRAPV/X+1Nb32o9BdGMTpPV/4jsSD32rdZuVX5XCpznVV+pSv0f9Q0GAhsSx9jmswAAAABJRU5ErkJggg==" alt="MIC公式LINEアカウント QRコード">
-      <div class="qr-caption">スマートフォンのカメラで読み取ってください</div>
-    </div>
-    <div class="line-note">
-      公式アカウントを友だち登録し、お名前をメッセージとして送信してください。<br><br>
-      お申し込み日より通常1〜2営業日以内に、担当より折り返しご連絡いたします。連絡がない場合、お手数ですが再度ご連絡くださいますようお願いいたします。
-    </div>
+  <div id="newsList"></div>
+
+  <a class="cal-cta" href="inquiry.html">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    公式LINEで問い合わせる
+  </a>
+
+  <div class="foot-note">
+    レッスンの日程は<a href="full-calendar.html">フルカレンダー</a>をご覧ください。
   </div>
-</section>
+</div>
 
 <footer class="site-footer">
   <div class="sf-inner">
@@ -408,13 +411,13 @@
         <a href="index.html#mvv">ミッション・ビジョン</a>
         <a href="index.html#athletes">選手紹介</a>
         <a href="index.html#coaches">コーチ紹介</a>
-        <a href="news.html">お知らせ</a>
+        <a href="news.html" class="sf-current">お知らせ</a>
       </div>
       <div class="sf-col">
         <div class="sf-col-head">参加する</div>
         <a href="full-calendar.html">レッスンカレンダー</a>
         <a href="community.html">コミュニティ・活動拠点</a>
-        <a href="inquiry.html" class="sf-current">申し込み・お問い合わせ</a>
+        <a href="inquiry.html">申し込み・お問い合わせ</a>
       </div>
       <div class="sf-col">
         <div class="sf-col-head">フォローする</div>
@@ -430,17 +433,169 @@
     <span>© MIC — Mogul Improvement Community</span>
     <span>※このページは試作用ラフです。</span>
   </div>
-</footer>
+
+<!-- NEWS_DATA_INLINE_START -->
+<!-- news.json と同じ内容のオフライン用フォールバックです。build_news.py で更新されます。 -->
+<script type="application/json" id="news-data-inline">{"lastUpdated": "2026-08-11T09:00:00+09:00", "note": "掲載内容はサンプルです。本番公開前に実際のお知らせへ差し替えてください。第2段階でGoogleスプレッドシート連動に切り替えます。", "categories": ["募集", "活動", "大会", "チーム"], "items": [{"date": "2026-08-09", "category": "活動", "title": "8月のウォータージャンプ練習会がスタートしました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-08-01", "category": "募集", "title": "夏休み短期教室の受付を開始しました", "url": "inquiry.html"}, {"date": "2026-07-20", "category": "大会", "title": "サマーコンテストの結果を掲載しました", "url": ""}, {"date": "2026-07-01", "category": "チーム", "title": "コーチ派遣プログラムの受付を開始しました", "url": "program-dispatch.html"}, {"date": "2026-06-15", "category": "活動", "title": "6月の雪上合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-05-20", "category": "募集", "title": "2026-27シーズンの選手育成コース募集について", "url": "program-athlete.html"}, {"date": "2026-04-15", "category": "活動", "title": "ゴールデンウィーク合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2025-12-10", "category": "チーム", "title": "オンラインサポートを開始しました", "url": "program-online.html"}, {"date": "2025-11-02", "category": "大会", "title": "2025-26シーズンの大会結果を更新しました", "url": ""}]}</script>
+<!-- NEWS_DATA_INLINE_END -->
 
 <script>
-  const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('in');
+(function(){
+  // ---- お知らせデータの読み込み ----
+  // カレンダーと同じ多段構え。
+  // ① まずページ内の埋め込みデータで即座に描画する（待ち時間ゼロ）
+  // ② 続けて news.json（将来は公開API）から最新を取りに行き、取れたら描き直す
+  // ③ どちらも駄目なら①の表示のまま
+  // スプレッドシート「MICお知らせ」(mogul.mic@gmail.com) を読む公開API。
+  // シートを直してから最大5分でここに反映される（APIが5分キャッシュするため）。
+  var NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbylFpHjBUu23jCvTOSTGHwJqCRdbGPkfgamu0VoSW6aEte3TfuIH1mS4-8pUG6HVmux/exec';
+
+  var listEl  = document.getElementById('newsList');
+  var chipsEl = document.getElementById('catChips');
+  // リンク先に応じてアイコンを変える。押す前に「どこへ行くか」が分かるようにするため。
+  var ICON = {
+    arrow: '<svg class="n-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line>'
+         + '<polyline points="12 5 19 12 12 19"></polyline></svg>',
+    instagram: '<svg class="n-arrow is-brand" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect>'
+         + '<circle cx="12" cy="12" r="4"></circle>'
+         + '<circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle></svg>',
+    youtube: '<svg class="n-arrow is-brand" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"></rect>'
+         + '<path d="M10.3 9.6v4.8l4.4-2.4z" fill="currentColor" stroke="none"></path></svg>',
+    external: '<svg class="n-arrow is-brand" viewBox="0 0 24 24"><path d="M14 4h6v6"></path>'
+         + '<path d="M20 4l-8.5 8.5"></path>'
+         + '<path d="M18 14.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4.5"></path></svg>'
+  };
+
+  function iconFor(url){
+    if (!url) return '';
+    if (url.indexOf('instagram.com') >= 0) return ICON.instagram;
+    if (url.indexOf('youtube.com') >= 0 || url.indexOf('youtu.be') >= 0) return ICON.youtube;
+    if (url.indexOf('https://') === 0) return ICON.external;
+    return ICON.arrow;
+  }
+
+  var items = [];
+  var cats  = [];
+  var active = 'すべて';
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
-  }, {threshold: 0.15});
-  revealEls.forEach(el => io.observe(el));
+  }
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function fmtDate(iso){
+    var d = String(iso).split('-');
+    if (d.length < 3) return esc(iso);
+    return d[0] + '.' + pad(+d[1]) + '.' + pad(+d[2]);
+  }
+  // 相対パスと https のみ通す。javascript: 等を弾くため。
+  function safeUrl(u){
+    if (!u) return '';
+    u = String(u).trim();
+    return (/^https:\/\//.test(u) || /^[\w./#?=&-]+$/.test(u)) ? u : '';
+  }
+
+  function render(){
+    var shown = items.filter(function(n){ return active === 'すべて' || n.category === active; });
+    if (!shown.length){
+      listEl.innerHTML = '<div class="empty-state">このカテゴリのお知らせはまだありません。</div>';
+      return;
+    }
+    var html = '', year = null;
+    shown.forEach(function(n){
+      var y = String(n.date).slice(0,4);
+      if (y !== year){ year = y; html += '<div class="news-year"><b>' + esc(y) + '年</b><i></i></div>'; }
+
+      var url  = safeUrl(n.url);
+      var ext  = /^https:\/\//.test(url);
+      var tag  = url ? 'a' : 'div';
+      var attr = url ? ' href="' + esc(url) + '" class="n-item is-link"'
+                       + (ext ? ' target="_blank" rel="noopener"' : '')
+                     : ' class="n-item"';
+      html += '<' + tag + attr + '>'
+            +   '<div class="n-meta">'
+            +     '<span class="n-date">' + fmtDate(n.date) + '</span>'
+            +     '<span class="n-cat' + (n.category === '募集' ? ' is-boshu' : '') + '">'
+            +       esc(n.category) + '</span>'
+            +   '</div>'
+            +   '<div class="n-body">'
+            +     '<div class="n-title">' + esc(n.title) + '</div>'
+            +     iconFor(url)
+            +   '</div>'
+            + '</' + tag + '>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  function renderChips(){
+    chipsEl.innerHTML = '';
+    ['すべて'].concat(cats).forEach(function(c){
+      var b = document.createElement('button');
+      b.className = 'filter-chip' + (c === active ? ' active' : '');
+      b.type = 'button';
+      b.textContent = c;
+      b.addEventListener('click', function(){
+        active = c;
+        chipsEl.querySelectorAll('.filter-chip').forEach(function(el){
+          el.classList.toggle('active', el.textContent === c);
+        });
+        render();
+      });
+      chipsEl.appendChild(b);
+    });
+  }
+
+  function apply(data){
+    items = (data.items || []).slice().sort(function(a,b){
+      return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1);   // 新しい順
+    });
+    // カテゴリは実データから拾う。シート側で増えても自動で追従する。
+    var seen = {};
+    cats = [];
+    (data.categories || []).forEach(function(c){ if(!seen[c]){seen[c]=1;cats.push(c);} });
+    items.forEach(function(n){ if(n.category && !seen[n.category]){seen[n.category]=1;cats.push(n.category);} });
+    if (!cats.indexOf) cats = [];
+    if (cats.indexOf(active) === -1 && active !== 'すべて') active = 'すべて';
+    renderChips();
+    render();
+  }
+
+  function getInline(){
+    var el = document.getElementById('news-data-inline');
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch(e){ return null; }
+  }
+
+  function loadNews(){
+    var painted = false;
+    var inline = getInline();
+    if (inline){ apply(inline); painted = true; }
+
+    function tryFetch(url){
+      return fetch(url, {cache:'no-cache'})
+        .then(function(res){ if(!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
+        .then(function(data){
+          if (!data || data.error || !Array.isArray(data.items)) throw new Error('unexpected payload');
+          apply(data); painted = true;
+        });
+    }
+
+    var chain = NEWS_API_URL
+      ? tryFetch(NEWS_API_URL).catch(function(){ return tryFetch('news.json'); })
+      : tryFetch('news.json');
+
+    chain.catch(function(err){
+      console.warn('お知らせの最新取得に失敗しました。表示中のデータを使用します。', err);
+      if (!painted) listEl.innerHTML = '<div class="empty-state">お知らせを読み込めませんでした。</div>';
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadNews);
+  else loadNews();
+})();
 </script>
+
 
 <script>
   /* 上部ナビ：ハンバーガーで全画面メニューを開閉する（スマホのみ表示） */
@@ -460,6 +615,5 @@
       a.addEventListener('click', function(){ setOpen(false); });
     });
   })();
-</script>
 </body>
 </html>
