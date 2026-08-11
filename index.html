@@ -1164,6 +1164,26 @@
   @media (max-width:380px){
     .sf-cols{grid-template-columns:1fr;}
   }
+  /* ---------- スマホのセクション間余白 ----------
+     各セクションの上下余白は vh 指定なので、画面が縦に短いスマホでは
+     「下22vh ＋ 次の上18vh ＝ 画面の4割が空白」という状態になっていた。
+     PCでは意図した余白なので触らず、狭い画面でだけ約6割に詰める。
+     数値は個別に書き換えず、ここでまとめて上書きしている。 */
+  @media (max-width:700px){
+    .mvv{padding:12vh 6vw 13vh;}
+    .programs{padding:11vh 6vw 12vh;}
+    .athletes{padding:11vh 0 12vh;}
+    .bridge{padding:7vh 6vw 8vh;}
+    .coaches{padding:11vh 0 12vh;}
+    .data-feature{padding:9vh 6vw 10vh;}
+    .calendar{padding:11vh 6vw;}
+    .community{padding:11vh 6vw 12vh;}
+    .stats{padding:8vh 6vw;}
+    .cta{padding:13vh 6vw;}
+    /* MVVカード下の一文は、区切り線からの間隔も詰める */
+    .mvv-teaser{margin-top:6vh;padding-top:4vh;}
+  }
+
 </style>
 </head>
 <body>
