@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>MIC公式Webサイトへの写真掲載に関する同意のお願い</title>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+    --line:rgba(255,255,255,.12);
+    --card:#131316;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:"Hiragino Sans","Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    /* 16px を下回ると iOS が入力欄フォーカス時にページを拡大してしまう */
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:0 20px calc(48px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+
+  header{padding:28px 0 20px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+  .brand{font-size:13px;letter-spacing:.18em;color:var(--muted);font-weight:600;}
+
+  h1{font-size:21px;line-height:1.5;letter-spacing:-.01em;margin:0 0 6px;font-weight:600;}
+  .athlete{
+    display:inline-block;margin:14px 0 4px;padding:10px 16px;border-radius:12px;
+    background:rgba(255,90,60,.12);border:1px solid rgba(255,90,60,.3);
+    font-size:17px;font-weight:600;
+  }
+  .lead{color:var(--muted);font-size:14.5px;margin:14px 0 0;}
+
+  section{margin:30px 0;}
+  h2{font-size:15px;letter-spacing:.04em;margin:0 0 14px;font-weight:600;color:var(--fg);}
+  .version{font-size:11.5px;color:var(--muted);letter-spacing:.06em;margin-left:8px;font-weight:400;}
+
+  .terms{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:20px 20px 6px;
+  }
+  .terms .intro{margin:0 0 4px;font-size:14.5px;}
+  .terms dl{margin:0;}
+  .terms dt{font-size:13px;color:var(--accent);font-weight:600;margin-top:16px;}
+  .terms dt:first-child{margin-top:0;}
+  .terms dd{margin:2px 0 0;font-size:14.5px;color:var(--fg);}
+  .terms dd.warn{color:#ffd9d0;}
+  /* 同意条項ではない補足（ご家庭へのお願い・回答情報の取扱い）。読み物として置く */
+  .terms .ask{
+    margin:20px -20px 0;padding:16px 20px;border-top:1px solid var(--line);
+    background:rgba(255,255,255,.02);
+  }
+  .terms .ask + .ask{margin-top:0;}
+  .terms .ask-title{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:5px;}
+  .terms .ask p{margin:0;font-size:14px;line-height:1.75;}
+  .terms .tail{
+    margin:20px -20px 0;padding:16px 20px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--muted);
+  }
+
+  .field{margin:22px 0;}
+  label.q, span.q{display:block;font-size:14.5px;font-weight:600;margin-bottom:9px;}
+  .req{color:var(--accent);font-size:12px;margin-left:6px;font-weight:600;}
+  input[type=text]{
+    width:100%;padding:14px 15px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);color:var(--fg);
+    font-size:16px;font-family:inherit;
+  }
+  input[type=text]:focus{outline:none;border-color:var(--accent);}
+
+  .choices{display:flex;gap:10px;}
+  .choice{flex:1;position:relative;}
+  .choice input{position:absolute;opacity:0;pointer-events:none;}
+  .choice span{
+    display:block;text-align:center;padding:14px 8px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);font-size:15px;cursor:pointer;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .choice input:checked + span{
+    background:rgba(255,90,60,.14);border-color:var(--accent);font-weight:600;
+  }
+  .choice input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .check{
+    display:flex;gap:13px;align-items:flex-start;padding:15px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);margin-bottom:11px;cursor:pointer;
+  }
+  .check input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--accent);}
+  .check span{font-size:14.5px;line-height:1.6;}
+
+  .notice{
+    display:none;margin:14px 0 0;padding:15px;border-radius:12px;font-size:14px;line-height:1.7;
+    background:rgba(255,90,60,.1);border:1px solid rgba(255,90,60,.35);
+  }
+  .notice.show{display:block;}
+
+  button.submit{
+    width:100%;padding:17px;border:none;border-radius:14px;margin-top:26px;
+    background:var(--accent);color:#fff;font-size:16.5px;font-weight:600;
+    font-family:inherit;cursor:pointer;
+  }
+  button.submit:disabled{background:#2a2a2e;color:#6b6b70;cursor:not-allowed;}
+
+  .foot{
+    margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--muted);line-height:1.8;
+  }
+
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 22px;text-align:center;margin-top:34px;
+  }
+  .panel .icon{font-size:30px;line-height:1;margin-bottom:14px;}
+  .panel h2{font-size:17px;margin:0 0 10px;}
+  .panel p{font-size:14.5px;color:var(--muted);margin:0;}
+
+  /* 同意の控え（スクリーンショットで手元に残していただくためのもの） */
+  .receipt{
+    text-align:left;margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
+  }
+  .receipt-title{
+    font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:600;margin-bottom:14px;
+  }
+  .receipt dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:9px 14px;}
+  .receipt dt{font-size:12.5px;color:var(--muted);white-space:nowrap;}
+  .receipt dd{margin:0;font-size:14px;color:var(--fg);}
+  .receipt dd.small{font-size:12px;color:var(--muted);letter-spacing:.04em;}
+  .receipt-note{
+    margin-top:18px !important;padding-top:14px;border-top:1px solid var(--line);
+    font-size:12.5px;line-height:1.75;text-align:left;
+  }
+
+  [hidden]{display:none !important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">MIC — Mogul Improvement Community</div>
+  </header>
+
+  <!-- 読み込み中 -->
+  <div id="loading" class="panel">
+    <div class="icon">⏳</div>
+    <h2>確認しています</h2>
+    <p>少しお待ちください</p>
+  </div>
+
+  <!-- トークンが無効・期限切れ・停止済み -->
+  <div id="invalid" class="panel" hidden>
+    <div class="icon">🔒</div>
+    <h2 id="invalidTitle">このリンクは使用できません</h2>
+    <p id="invalidText">お手数ですが、コーチまでご連絡ください。</p>
+  </div>
+
+  <!-- すでに同意が登録済み -->
+  <div id="already" class="panel" hidden>
+    <div class="icon">✓</div>
+    <h2>同意はすでに登録されています</h2>
+    <p>あらためての手続きは不要です。ありがとうございます。</p>
+    <p id="alreadyDate" class="receipt-note" style="text-align:center;border:none;padding:0;margin-top:12px !important;" hidden></p>
+  </div>
+
+  <!-- 送信完了（控えを表示する） -->
+  <div id="done" class="panel" hidden>
+    <div class="icon">✓</div>
+    <h2>同意を承りました</h2>
+    <p>ありがとうございます。この画面は閉じていただいて構いません。</p>
+
+    <div class="receipt">
+      <div class="receipt-title">同意の控え</div>
+      <dl>
+        <dt>選手</dt><dd id="rcAthlete"></dd>
+        <dt>回答者</dt><dd id="rcName"></dd>
+        <dt>選手との関係</dt><dd>保護者</dd>
+        <dt>登録日時</dt><dd id="rcDate"></dd>
+        <dt>同意した内容</dt><dd>MIC公式Webサイトの選手紹介ページへの写真掲載</dd>
+        <dt>含まれないもの</dt><dd>SNS・印刷物・広告への利用</dd>
+        <dt>同意文の版</dt><dd id="rcVersion" class="small"></dd>
+      </dl>
+      <p class="receipt-note">
+        この画面はスクリーンショットで保存していただけます。<br>
+        掲載の停止をご希望の場合は、コーチまでご連絡ください。
+      </p>
+    </div>
+  </div>
+
+  <!-- 本体 -->
+  <main id="main" hidden>
+    <h1>MIC公式Webサイトへの<br>写真掲載に関する同意のお願い</h1>
+    <div class="athlete" id="athleteName"></div>
+    <p class="lead">選手の保護者の方へ。下記の内容をご確認のうえ、同意をお願いいたします。</p>
+
+    <section>
+      <h2>掲載の内容について<span class="version" id="versionLabel"></span></h2>
+      <div class="terms">
+<!-- CONSENT_TEXT_START この中身は consent/CONSENT_WEB_PROFILE_V1.md から tools/sync_consent_text.py が生成します。手で編集しないこと。 -->
+        <p class="intro">MIC（Mogul Improvement Community）では、公式Webサイト <strong>https://mogul-mic.com/</strong> の選手紹介ページに、所属選手の写真を掲載しています。掲載にあたり、下記の内容をご確認のうえ、同意をお願いいたします。</p>
+        <dl>
+          <dt>利用するのは誰か</dt>
+          <dd>MIC（Mogul Improvement Community）</dd>
+          <dt>何を利用するか</dt>
+          <dd>選手本人が写った写真</dd>
+          <dt>利用目的</dt>
+          <dd>所属選手の活動・競技実績・目標を紹介し、MICの活動を知っていただくため</dd>
+          <dt>掲載する場所</dt>
+          <dd>MIC公式Webサイト（<strong>https://mogul-mic.com/</strong>）の選手紹介ページ。なお、サイトのリニューアル作業中は、移行前の一時的なアドレス（<strong>https://mogul-mic.site/</strong>）でも同じ内容が公開されます</dd>
+          <dt>公開範囲</dt>
+          <dd class="warn">インターネット上での一般公開（第三者が閲覧・保存できる状態になります）</dd>
+          <dt>写真と一緒に掲載される情報</dt>
+          <dd>氏名、一行紹介（主な実績や目標）、戦歴（大会名・開催日・順位・種目・カテゴリ）。選手カルテを提出している選手は「競技人生の最終到達点」と「今年のシーズン目標」も掲載します。これ以外の情報を追加で掲載する場合は、あらためて保護者の方にご確認します</dd>
+          <dt>掲載しない情報</dt>
+          <dd>学校名、住所、電話番号、通学経路、年齢・学年など、生活圏や個人が特定され得る情報は掲載しません</dd>
+          <dt>掲載期間</dt>
+          <dd>原則としてMICに在籍している期間。退会・退団後は、MICが確認のうえ掲載を終了します</dd>
+          <dt>加工</dt>
+          <dd>トリミング、サイズ変更、明るさ調整などを行う場合があります</dd>
+          <dt>撤回</dt>
+          <dd>掲載後でも、いつでも担当コーチへお申し出いただけます。お申し出後、MICが管理するWebサイトから速やかに削除します</dd>
+          <dt>撤回後の限界</dt>
+          <dd class="warn">検索エンジンのキャッシュや、第三者による保存・転載までは完全に削除できない場合があります</dd>
+          <dt>同意しない場合</dt>
+          <dd>掲載への同意は任意です。同意されない場合も、後から掲載を取りやめた場合も、MICでの活動や指導において不利益が生じることはありません</dd>
+          <dt>この同意に含まれないもの</dt>
+          <dd class="warn">Instagram・YouTube・Facebook 等のSNS、印刷物、広告への利用は本同意には含まれません。別途あらためてご相談します</dd>
+        </dl>
+        <div class="ask">
+          <div class="ask-title">ご家庭へのお願い</div>
+          <p>アップロードいただくのは、ご自身またはご家族が撮影された写真、あるいは撮影者から掲載の許可を得ている写真に限ってください。大会などで他の方が撮影された写真は、撮影者の許可をご確認ください。写っている方の権利とは別に、撮影した方の権利があるためです。</p>
+        </div>
+        <div class="ask">
+          <div class="ask-title">回答情報の取扱い</div>
+          <p>この画面でご入力いただくお名前、選手との関係、同意の内容、回答日時は、同意状況の確認と記録、およびお問い合わせへの対応のために利用します。</p>
+        </div>
+        <div class="tail">この同意は、MIC公式Webサイトの選手紹介ページへの掲載についてのものです。</div>
+<!-- CONSENT_TEXT_END -->
+      </div>
+    </section>
+
+    <section>
+      <h2>ご記入をお願いします</h2>
+
+      <div class="field">
+        <label class="q" for="name">回答者のお名前<span class="req">必須</span></label>
+        <input type="text" id="name" autocomplete="name" placeholder="例：見瀬 太郎" enterkeyhint="done">
+      </div>
+
+      <div class="field">
+        <span class="q">選手との関係<span class="req">必須</span></span>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="relation" value="guardian">
+            <span>保護者</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="relation" value="self">
+            <span>本人</span>
+          </label>
+        </div>
+        <div class="notice" id="selfNotice">
+          この同意は<strong>保護者の方から</strong>いただく必要があります。
+          お手数ですが、このリンクを保護者の方にお渡しください。
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="check">
+          <input type="checkbox" id="agree">
+          <span>上記の内容に同意します</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="athleteAgrees">
+          <span>選手本人に、写真や氏名などがインターネット上で一般公開されることを説明し、本人も掲載を希望していることを確認しました</span>
+        </label>
+      </div>
+
+      <div class="notice" id="errorNotice"></div>
+
+      <button type="button" class="submit" id="submit" disabled>同意して送信する</button>
+    </section>
+
+    <div class="foot">
+      掲載の停止をご希望の場合は、コーチまでご連絡ください。<br>
+      ご不明な点も、遠慮なくお尋ねください。
+    </div>
+  </main>
+
+</div>
+
+<script src="data/api-config.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  // 表示している同意文の版。consent/CONSENT_WEB_PROFILE_<版>.md と対応する。
+  // 文面を変える場合は、既存のファイルを編集せず新しい版のファイルを作り、ここも変更すること。
+  var CONSENT_VERSION = 'CONSENT_WEB_PROFILE_V1';
+
+  var token = new URLSearchParams(location.search).get('t') || '';
+
+  var el = {
+    loading: document.getElementById('loading'),
+    invalid: document.getElementById('invalid'),
+    invalidTitle: document.getElementById('invalidTitle'),
+    invalidText: document.getElementById('invalidText'),
+    already: document.getElementById('already'),
+    alreadyDate: document.getElementById('alreadyDate'),
+    done: document.getElementById('done'),
+    main: document.getElementById('main'),
+    athleteName: document.getElementById('athleteName'),
+    versionLabel: document.getElementById('versionLabel'),
+    name: document.getElementById('name'),
+    agree: document.getElementById('agree'),
+    athleteAgrees: document.getElementById('athleteAgrees'),
+    selfNotice: document.getElementById('selfNotice'),
+    errorNotice: document.getElementById('errorNotice'),
+    submit: document.getElementById('submit'),
+    rcAthlete: document.getElementById('rcAthlete'),
+    rcName: document.getElementById('rcName'),
+    rcDate: document.getElementById('rcDate'),
+    rcVersion: document.getElementById('rcVersion')
+  };
+
+  el.versionLabel.textContent = CONSENT_VERSION;
+  el.rcVersion.textContent = CONSENT_VERSION;
+
+  var athleteName = '';
+
+  function show(node){
+    [el.loading, el.invalid, el.already, el.done, el.main].forEach(function(n){ n.hidden = true; });
+    node.hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function showInvalid(title, text){
+    el.invalidTitle.textContent = title;
+    el.invalidText.textContent = text;
+    show(el.invalid);
+  }
+
+  // Apps Script はカスタムリクエストヘッダを読めず、また Content-Type を
+  // text/plain にしないと CORS のプリフライトが飛んで失敗する。
+  // そのため本文に JSON 文字列を入れて POST する。
+  function callApi(payload){
+    var url = (window.MIC_API && window.MIC_API.uploadApi) || '';
+    if (!url) return Promise.reject(new Error('APIのURLが設定されていません'));
+    return fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      if (!res.ok) throw new Error('サーバーの応答がエラーでした（' + res.status + '）');
+      return res.json();
+    });
+  }
+
+  var REASONS = {
+    invalid:   ['このリンクは使用できません', 'リンクが正しくないようです。お手数ですが、コーチまでご連絡ください。'],
+    expired:   ['このリンクは有効期限が切れています', 'あらためてお送りしますので、コーチまでご連絡ください。'],
+    inactive:  ['このリンクは現在停止されています', 'お手数ですが、コーチまでご連絡ください。'],
+    wrong_use: ['このリンクでは同意の登録ができません', '保護者の方あてにお送りしたリンクをお使いください。ご不明な場合はコーチまでご連絡ください。']
+  };
+
+  function fail(reason){
+    var r = REASONS[reason] || REASONS.invalid;
+    showInvalid(r[0], r[1]);
+  }
+
+  function showAlready(date){
+    if (date) {
+      el.alreadyDate.textContent = '登録日時：' + date;
+      el.alreadyDate.hidden = false;
+    }
+    show(el.already);
+  }
+
+  // ---- 入力状態にあわせて送信ボタンの可否を更新する ----
+  function relation(){
+    var checked = document.querySelector('input[name="relation"]:checked');
+    return checked ? checked.value : '';
+  }
+
+  function refresh(){
+    var isSelf = relation() === 'self';
+    el.selfNotice.classList.toggle('show', isSelf);
+    var ok = el.name.value.trim() !== ''
+      && relation() === 'guardian'      // 「本人」では送信できない
+      && el.agree.checked
+      && el.athleteAgrees.checked;
+    el.submit.disabled = !ok;
+  }
+
+  el.name.addEventListener('input', refresh);
+  el.agree.addEventListener('change', refresh);
+  el.athleteAgrees.addEventListener('change', refresh);
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="relation"]'), function(r){
+    r.addEventListener('change', refresh);
+  });
+
+  // ---- 送信 ----
+  var sending = false;
+  el.submit.addEventListener('click', function(){
+    if (sending || el.submit.disabled) return;
+    sending = true;
+    el.submit.disabled = true;
+    el.submit.textContent = '送信しています…';
+    el.errorNotice.classList.remove('show');
+
+    var respondent = el.name.value.trim();
+
+    callApi({
+      action: 'consent_submit',
+      t: token,
+      respondent_name: respondent,
+      relation: relation(),
+      agree: el.agree.checked,
+      athlete_agrees: el.athleteAgrees.checked,
+      consent_version: CONSENT_VERSION
+    }).then(function(res){
+      if (res && res.ok) {
+        if (res.already) { showAlready(res.consent_date); return; }
+        el.rcAthlete.textContent = athleteName;
+        el.rcName.textContent = respondent;
+        // 日時はサーバ（JST）が記録した値を出す。端末の時計に依存させない。
+        el.rcDate.textContent = res.consent_date || '';
+        show(el.done);
+        return;
+      }
+      if (res && res.reason) { fail(res.reason); return; }
+      throw new Error('登録できませんでした');
+    }).catch(function(err){
+      el.errorNotice.textContent = '送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。（' + err.message + '）';
+      el.errorNotice.classList.add('show');
+      el.submit.textContent = '同意して送信する';
+      el.submit.disabled = false;
+      sending = false;
+    });
+  });
+
+  // ---- 起動 ----
+  if (!token) {
+    fail('invalid');
+    return;
+  }
+
+  callApi({action: 'consent_info', t: token}).then(function(res){
+    if (!res || !res.ok) { fail(res && res.reason); return; }
+    if (res.already) { showAlready(res.consent_date); return; }
+    athleteName = res.athlete_name;
+    el.athleteName.textContent = athleteName + 'さんの保護者の方へ';
+    document.title = athleteName + 'さん｜写真掲載に関する同意のお願い｜MIC';
+    show(el.main);
+    refresh();
+  }).catch(function(err){
+    showInvalid('読み込めませんでした', '通信環境をご確認のうえ、画面を再読み込みしてください。（' + err.message + '）');
+  });
+})();
+</script>
+</body>
+</html>
