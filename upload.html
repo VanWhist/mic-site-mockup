@@ -210,7 +210,7 @@
 
       <div class="field">
         <span class="q">写真を選ぶ<span class="req">必須</span></span>
-        <p class="hint">1回につき5枚まで、1枚10MBまで。JPEG・PNG・HEIC（iPhoneの標準形式）に対応しています。</p>
+        <p class="hint">1回につき5枚まで。JPEG・PNG・HEIC（iPhoneの標準形式）に対応しています。<br>大きな写真は、送信のときに自動で小さくします。そのままお選びください。</p>
         <label class="picker">
           <input type="file" id="picker" accept="image/*,.heic,.heif" multiple>
           <div class="big">写真を選ぶ</div>
@@ -259,7 +259,9 @@
   'use strict';
 
   var MAX_FILES_PER_SEND = 5;
-  var MAX_BYTES = 10 * 1024 * 1024;   // 1枚10MB
+  var MAX_BYTES = 10 * 1024 * 1024;   // 1枚10MB（縮小したあとのサイズで判定する）
+  var MAX_EDGE = 2560;                // 長辺がこれを超える写真は送信前に縮小する
+  var JPEG_QUALITY = 0.85;
 
   var token = new URLSearchParams(location.search).get('t') || '';
 
@@ -407,11 +409,8 @@
       incoming = incoming.slice(0, Math.max(room, 0));
     }
 
+    // ここではサイズで弾かない。一眼で撮った大きな写真は送信前に自動で縮小するため。
     incoming.forEach(function(file){
-      if (file.size > MAX_BYTES) {
-        msgs.push('「' + file.name + '」は' + fmtSize(file.size) + 'あり、10MBを超えるため送れません。');
-        return;
-      }
       picked.push({file: file, previewUrl: URL.createObjectURL(file), error: ''});
     });
 
@@ -441,6 +440,58 @@
   Array.prototype.forEach.call(document.querySelectorAll('input[name="who"]'), function(r){
     r.addEventListener('change', refresh);
   });
+
+  // ---- 送信前の縮小 ----
+  //
+  // 一眼・ミラーレスの最高画質JPEGは8〜25MBあり、10MBの上限に引っかかる。保護者に
+  // 「小さくしてから送ってください」とお願いすると、そこで止まってしまうため自動で縮小する。
+  //
+  // 副次的だが重要な効果として、canvas を経由して作り直した画像には EXIF が引き継がれない。
+  // つまり自宅で撮った写真のGPS座標が、MICのドライブにすら届かなくなる。
+  // （公開用画像のメタデータ除去は反映CLI側にも残してあり、二重に担保している）
+  function loadImage(file){
+    return new Promise(function(resolve, reject){
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function(){ URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('decode')); };
+      img.src = url;
+    });
+  }
+
+  function shrink(file){
+    return loadImage(file).then(function(img){
+      var w = img.naturalWidth, h = img.naturalHeight;
+      var edge = Math.max(w, h);
+      if (!edge) throw new Error('decode');
+      // 長辺が上限以下ならそのまま送る（作り直さない）
+      if (edge <= MAX_EDGE) return {blob: file, resized: false, w: w, h: h};
+
+      var scale = MAX_EDGE / edge;
+      var cw = Math.round(w * scale), ch = Math.round(h * scale);
+      var canvas = document.createElement('canvas');
+      canvas.width = cw; canvas.height = ch;
+      canvas.getContext('2d').drawImage(img, 0, 0, cw, ch);
+
+      return new Promise(function(resolve, reject){
+        canvas.toBlob(function(blob){
+          // iOS Safari は大きな画像で canvas が失敗することがある（null が返る）
+          if (!blob) { reject(new Error('canvas')); return; }
+          resolve({blob: blob, resized: true, w: cw, h: ch, from: {w: w, h: h}});
+        }, 'image/jpeg', JPEG_QUALITY);
+      });
+    }).catch(function(){
+      // HEIC はPC・AndroidのChromeでデコードできず、縮小もできない。
+      // iOSのメモリ制限で失敗することもある。どちらも原本のまま送る（利用者にエラーは見せない）。
+      return {blob: file, resized: false, fallback: true};
+    });
+  }
+
+  /** 縮小したら拡張子を .jpg に揃える（中身がJPEGになるため） */
+  function outName(name, resized){
+    if (!resized) return name;
+    return name.replace(/\.[^.\/]*$/, '') + '.jpg';
+  }
 
   function toBase64(file){
     return new Promise(function(resolve, reject){
@@ -483,20 +534,32 @@
     var chain = Promise.resolve();
     picked.forEach(function(f, i){
       chain = chain.then(function(){
-        el.barLabel.textContent = (i + 1) + '枚目／全' + total + '枚を送信しています…';
+        var head = (i + 1) + '枚目／全' + total + '枚';
         el.barFill.style.width = Math.round(i / total * 100) + '%';
-        return toBase64(f.file).then(function(b64){
-          return callApi({
-            action: 'upload_file',
-            t: token,
-            uploaded_by: who(),
-            filename: f.file.name,
-            mime: f.file.type || '',
-            size: f.file.size,
-            data: b64,
-            consent_upload: el.consentUpload.checked,
-            consent_copyright: el.consentCopyright.checked,
-            message: el.message.value.trim()
+        el.barLabel.textContent = head + '：送信のために画像を縮小しています…';
+
+        return shrink(f.file).then(function(s){
+          if (s.blob.size > MAX_BYTES) {
+            // 縮小しても収まらない、または縮小できずに大きすぎる場合
+            throw new Error('縮小しても' + fmtSize(s.blob.size) + 'あり、10MBに収まりませんでした');
+          }
+          el.barLabel.textContent = head + 'を送信しています…';
+          return toBase64(s.blob).then(function(b64){
+            return callApi({
+              action: 'upload_file',
+              t: token,
+              uploaded_by: who(),
+              filename: outName(f.file.name, s.resized),
+              mime: s.resized ? 'image/jpeg' : (f.file.type || ''),
+              size: s.blob.size,
+              data: b64,
+              resized: !!s.resized,
+              original_size: f.file.size,
+              original_dimensions: s.from ? (s.from.w + 'x' + s.from.h) : '',
+              consent_upload: el.consentUpload.checked,
+              consent_copyright: el.consentCopyright.checked,
+              message: el.message.value.trim()
+            });
           });
         }).then(function(res){
           if (res && res.ok) results.push({name: f.file.name, ok: true});
