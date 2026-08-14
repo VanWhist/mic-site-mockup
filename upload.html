@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>写真の送信｜MIC</title>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+    --line:rgba(255,255,255,.12);
+    --card:#131316;
+    --ok:#4ade80;
+    --ng:#f87171;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:"Hiragino Sans","Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    /* 16px を下回ると iOS が入力欄フォーカス時にページを拡大してしまう */
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:0 20px calc(48px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:600px;margin:0 auto;}
+
+  header{padding:28px 0 20px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+  .brand{font-size:13px;letter-spacing:.18em;color:var(--muted);font-weight:600;}
+
+  h1{font-size:21px;line-height:1.5;margin:0 0 6px;font-weight:600;}
+  .lead{color:var(--muted);font-size:14.5px;margin:12px 0 0;}
+
+  section{margin:30px 0;}
+  h2{font-size:15px;letter-spacing:.04em;margin:0 0 12px;font-weight:600;}
+  .hint{font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.7;}
+
+  /* 現在サイトに載っている写真 */
+  .current{
+    display:flex;gap:15px;align-items:center;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;
+  }
+  .current img{
+    width:88px;height:110px;object-fit:cover;border-radius:11px;background:#1b1b1e;flex:none;
+  }
+  .current .none{
+    width:88px;height:110px;border-radius:11px;background:#1b1b1e;flex:none;
+    display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;
+  }
+  .current .t{font-size:13.5px;color:var(--muted);line-height:1.7;}
+  .current .t strong{color:var(--fg);font-size:15px;display:block;margin-bottom:3px;font-weight:600;}
+
+  .field{margin:22px 0;}
+  span.q{display:block;font-size:14.5px;font-weight:600;margin-bottom:9px;}
+  .req{color:var(--accent);font-size:12px;margin-left:6px;font-weight:600;}
+
+  .choices{display:flex;gap:10px;}
+  .choice{flex:1;position:relative;}
+  .choice input{position:absolute;opacity:0;pointer-events:none;}
+  .choice span{
+    display:block;text-align:center;padding:14px 8px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);font-size:15px;cursor:pointer;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .choice input:checked + span{background:rgba(255,90,60,.14);border-color:var(--accent);font-weight:600;}
+  .choice input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .picker{
+    display:block;text-align:center;padding:22px 16px;border-radius:14px;
+    border:1px dashed rgba(255,255,255,.22);background:#141417;cursor:pointer;
+  }
+  .picker .big{font-size:15.5px;font-weight:600;}
+  .picker .sub{font-size:12.5px;color:var(--muted);margin-top:5px;}
+  .picker input{display:none;}
+
+  .files{margin-top:14px;display:flex;flex-direction:column;gap:10px;}
+  .file{
+    display:flex;gap:13px;align-items:center;padding:11px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);
+  }
+  .file .thumb{width:56px;height:56px;border-radius:9px;object-fit:cover;background:#242428;flex:none;}
+  .file .noimg{
+    width:56px;height:56px;border-radius:9px;background:#242428;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .file .meta{flex:1;min-width:0;}
+  .file .name{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .file .sub{font-size:12px;color:var(--muted);}
+  .file .sub.err{color:var(--ng);}
+  .file .sub.ok{color:var(--ok);}
+  .file .del{
+    border:none;background:transparent;color:var(--muted);font-size:20px;
+    padding:6px 8px;cursor:pointer;flex:none;font-family:inherit;
+  }
+
+  textarea{
+    width:100%;padding:14px 15px;border-radius:12px;min-height:88px;resize:vertical;
+    background:#1b1b1e;border:1px solid var(--line);color:var(--fg);
+    font-size:16px;font-family:inherit;line-height:1.7;
+  }
+  textarea:focus{outline:none;border-color:var(--accent);}
+
+  .check{
+    display:flex;gap:13px;align-items:flex-start;padding:15px;border-radius:12px;
+    background:#1b1b1e;border:1px solid var(--line);margin-bottom:11px;cursor:pointer;
+  }
+  .check input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--accent);}
+  .check span{font-size:14.5px;line-height:1.6;}
+
+  .notice{
+    display:none;margin:14px 0 0;padding:15px;border-radius:12px;font-size:14px;line-height:1.7;
+    background:rgba(255,90,60,.1);border:1px solid rgba(255,90,60,.35);
+  }
+  .notice.show{display:block;}
+  .notice.info{background:rgba(255,255,255,.05);border-color:var(--line);color:var(--fg);}
+
+  button.submit{
+    width:100%;padding:17px;border:none;border-radius:14px;margin-top:26px;
+    background:var(--accent);color:#fff;font-size:16.5px;font-weight:600;
+    font-family:inherit;cursor:pointer;
+  }
+  button.submit:disabled{background:#2a2a2e;color:#6b6b70;cursor:not-allowed;}
+
+  .bar{height:5px;border-radius:3px;background:#26262a;margin-top:14px;overflow:hidden;display:none;}
+  .bar.show{display:block;}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease;}
+  .barlabel{display:none;font-size:13px;color:var(--muted);margin-top:8px;text-align:center;}
+  .barlabel.show{display:block;}
+
+  .foot{
+    margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--muted);line-height:1.8;
+  }
+
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 22px;text-align:center;margin-top:34px;
+  }
+  .panel .icon{font-size:30px;line-height:1;margin-bottom:14px;}
+  .panel h2{font-size:17px;margin:0 0 10px;}
+  .panel p{font-size:14.5px;color:var(--muted);margin:0;}
+  .panel .results{
+    text-align:left;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:13.5px;line-height:1.9;
+  }
+  .panel .results div span.mark{display:inline-block;width:1.4em;}
+  .panel .results .ng{color:var(--ng);}
+
+  [hidden]{display:none !important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">MIC — Mogul Improvement Community</div>
+  </header>
+
+  <div id="loading" class="panel">
+    <div class="icon">⏳</div>
+    <h2>確認しています</h2>
+    <p>少しお待ちください</p>
+  </div>
+
+  <div id="invalid" class="panel" hidden>
+    <div class="icon">🔒</div>
+    <h2 id="invalidTitle">このリンクは使用できません</h2>
+    <p id="invalidText">お手数ですが、コーチまでご連絡ください。</p>
+  </div>
+
+  <!-- 掲載同意が撤回されている場合。受け付け自体を行わない -->
+  <div id="withdrawn" class="panel" hidden>
+    <div class="icon">⏸</div>
+    <h2>現在、掲載を停止しています</h2>
+    <p>再開をご希望の場合は担当コーチへご連絡ください。</p>
+  </div>
+
+  <div id="done" class="panel" hidden>
+    <div class="icon">✓</div>
+    <h2 id="doneTitle">受け付けました</h2>
+    <p id="doneText">コーチが確認してからサイトに反映されます。</p>
+    <div class="results" id="results"></div>
+  </div>
+
+  <main id="main" hidden>
+    <h1 id="title">写真の送信</h1>
+    <p class="lead">サイトの選手紹介に使う写真を送っていただけます。</p>
+
+    <section>
+      <h2>いま載っている写真</h2>
+      <div class="current">
+        <div id="currentMedia"></div>
+        <div class="t"><strong id="currentName"></strong><span id="currentNote">この写真と差し替わります。</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="field">
+        <span class="q">あなたは？<span class="req">必須</span></span>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="who" value="self"><span>選手本人</span></label>
+          <label class="choice"><input type="radio" name="who" value="guardian"><span>保護者</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="q">写真を選ぶ<span class="req">必須</span></span>
+        <p class="hint">1回につき5枚まで、1枚10MBまで。JPEG・PNG・HEIC（iPhoneの標準形式）に対応しています。</p>
+        <label class="picker">
+          <input type="file" id="picker" accept="image/*,.heic,.heif" multiple>
+          <div class="big">写真を選ぶ</div>
+          <div class="sub" id="pickerSub">タップして端末の写真から選んでください</div>
+        </label>
+        <div class="files" id="files"></div>
+        <div class="notice" id="fileNotice"></div>
+      </div>
+
+      <div class="field">
+        <span class="q">コーチへの一言（任意）</span>
+        <textarea id="message" placeholder="例：大会のときに撮った写真です。よろしくお願いします。"></textarea>
+      </div>
+
+      <div class="field">
+        <label class="check">
+          <input type="checkbox" id="consentUpload">
+          <span>この写真が MIC公式Webサイト上で一般公開され、インターネット上の第三者が閲覧・保存できる状態になることを確認し、掲載に同意します。</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="consentCopyright">
+          <span>この写真は、自分または家族が撮影したもの、または撮影者から MIC公式Webサイトへの掲載許可を得たものです。</span>
+        </label>
+      </div>
+
+      <div class="notice info" id="pendingNotice"></div>
+      <div class="notice" id="errorNotice"></div>
+
+      <button type="button" class="submit" id="submit" disabled>送信する</button>
+      <div class="bar" id="bar"><i id="barFill"></i></div>
+      <div class="barlabel" id="barLabel"></div>
+    </section>
+
+    <div class="foot">
+      送っていただいた写真は、コーチが確認してからサイトに反映されます。<br>
+      ご不明な点は、コーチまでお尋ねください。
+    </div>
+  </main>
+
+</div>
+
+<script src="data/api-config.js"></script>
+<script src="data/athletes.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var MAX_FILES_PER_SEND = 5;
+  var MAX_BYTES = 10 * 1024 * 1024;   // 1枚10MB
+
+  var token = new URLSearchParams(location.search).get('t') || '';
+
+  var el = {};
+  ['loading','invalid','invalidTitle','invalidText','withdrawn','done','doneTitle','doneText','results',
+   'main','title','currentMedia','currentName','currentNote','picker','pickerSub','files','fileNotice',
+   'message','consentUpload','consentCopyright','pendingNotice','errorNotice','submit','bar','barFill','barLabel'
+  ].forEach(function(id){ el[id] = document.getElementById(id); });
+
+  var info = null;      // サーバから受け取った選手の情報
+  var picked = [];      // 選択中のファイル
+  var sending = false;
+
+  function show(node){
+    [el.loading, el.invalid, el.withdrawn, el.done, el.main].forEach(function(n){ n.hidden = true; });
+    node.hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function showInvalid(title, text){
+    el.invalidTitle.textContent = title;
+    el.invalidText.textContent = text;
+    show(el.invalid);
+  }
+
+  // Apps Script はカスタムリクエストヘッダを読めず、Content-Type を text/plain に
+  // しないと CORS のプリフライトが飛ぶ。本文に JSON 文字列を入れて POST する。
+  function callApi(payload){
+    var url = (window.MIC_API && window.MIC_API.uploadApi) || '';
+    if (!url) return Promise.reject(new Error('APIのURLが設定されていません'));
+    return fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      if (!res.ok) throw new Error('サーバーの応答がエラーでした（' + res.status + '）');
+      return res.json();
+    });
+  }
+
+  var REASONS = {
+    invalid:    ['このリンクは使用できません', 'リンクが正しくないようです。お手数ですが、コーチまでご連絡ください。'],
+    expired:    ['このリンクは有効期限が切れています', 'あらためてお送りしますので、コーチまでご連絡ください。'],
+    inactive:   ['このリンクは現在停止されています', 'お手数ですが、コーチまでご連絡ください。'],
+    wrong_use:  ['このリンクでは写真を送れません', '選手・保護者あてにお送りした写真送信用のリンクをお使いください。'],
+    limit_daily:['本日の送信上限に達しました', '1日に送れるのは10枚までです。明日以降にお試しください。']
+  };
+
+  function fail(reason){
+    var r = REASONS[reason] || REASONS.invalid;
+    showInvalid(r[0], r[1]);
+  }
+
+  function fmtSize(n){
+    return n >= 1024 * 1024 ? (n / 1024 / 1024).toFixed(1) + 'MB' : Math.ceil(n / 1024) + 'KB';
+  }
+
+  // あと何枚追加できるか（1回5枚の上限と、その日の残り枚数の小さいほう）
+  function roomLeft(){
+    var room = MAX_FILES_PER_SEND - picked.length;
+    if (info && typeof info.remaining_today === 'number') {
+      room = Math.min(room, info.remaining_today - picked.length);
+    }
+    return room;
+  }
+
+  // ---- 選んだ写真の一覧を描く ----
+  function renderFiles(){
+    el.files.innerHTML = '';
+    picked.forEach(function(f, i){
+      var row = document.createElement('div');
+      row.className = 'file';
+
+      var media;
+      if (f.previewUrl) {
+        media = document.createElement('img');
+        media.className = 'thumb';
+        media.src = f.previewUrl;
+        // HEIC は PC・Android の Chrome でデコードできない。失敗したら
+        // ファイル名とサイズの表示に切り替える（送信自体はできる）。
+        media.onerror = function(){
+          f.previewUrl = '';
+          renderFiles();
+        };
+      } else {
+        media = document.createElement('div');
+        media.className = 'noimg';
+        media.textContent = '🖼';
+      }
+
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      var name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = f.file.name;
+      var sub = document.createElement('div');
+      sub.className = 'sub' + (f.error ? ' err' : '');
+      sub.textContent = f.error ? f.error
+        : fmtSize(f.file.size) + (f.previewUrl ? '' : '／この形式はここではプレビューできませんが、送信できます');
+      meta.appendChild(name);
+      meta.appendChild(sub);
+
+      var del = document.createElement('button');
+      del.className = 'del';
+      del.type = 'button';
+      del.setAttribute('aria-label', f.file.name + ' を取り消す');
+      del.textContent = '×';
+      del.addEventListener('click', function(){
+        if (sending) return;
+        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl);
+        picked.splice(i, 1);
+        renderFiles();
+        refresh();
+      });
+
+      row.appendChild(media);
+      row.appendChild(meta);
+      row.appendChild(del);
+      el.files.appendChild(row);
+    });
+    // 追加できる残り枚数は「1回5枚」と「本日の残り」の小さいほう
+    var room = Math.max(roomLeft(), 0);
+    el.pickerSub.textContent = picked.length
+      ? picked.length + '枚を選択中' + (room ? '（あと' + room + '枚まで追加できます）' : '（これ以上は追加できません）')
+      : 'タップして端末の写真から選んでください';
+  }
+
+  function noticeFiles(msg){
+    el.fileNotice.textContent = msg || '';
+    el.fileNotice.classList.toggle('show', !!msg);
+  }
+
+  el.picker.addEventListener('change', function(e){
+    var incoming = Array.prototype.slice.call(e.target.files || []);
+    var msgs = [];
+
+    var room = roomLeft();
+    if (incoming.length > room) {
+      var limit = (info && info.remaining_today < MAX_FILES_PER_SEND)
+        ? '本日はあと' + info.remaining_today + '枚まで送れます'
+        : '一度に送れるのは' + MAX_FILES_PER_SEND + '枚までです';
+      msgs.push(room > 0
+        ? limit + '。はじめの' + room + '枚を選びました。'
+        : limit + '。これ以上は追加できません。');
+      incoming = incoming.slice(0, Math.max(room, 0));
+    }
+
+    incoming.forEach(function(file){
+      if (file.size > MAX_BYTES) {
+        msgs.push('「' + file.name + '」は' + fmtSize(file.size) + 'あり、10MBを超えるため送れません。');
+        return;
+      }
+      picked.push({file: file, previewUrl: URL.createObjectURL(file), error: ''});
+    });
+
+    noticeFiles(msgs.join(' '));
+    e.target.value = '';   // 同じ写真を選び直せるようにする
+    renderFiles();
+    refresh();
+  });
+
+  // ---- 送信できる状態かを判定する ----
+  function who(){
+    var c = document.querySelector('input[name="who"]:checked');
+    return c ? c.value : '';
+  }
+
+  function refresh(){
+    var ok = who() !== ''
+      && picked.length > 0
+      && el.consentUpload.checked
+      && el.consentCopyright.checked
+      && !sending;
+    el.submit.disabled = !ok;
+  }
+
+  el.consentUpload.addEventListener('change', refresh);
+  el.consentCopyright.addEventListener('change', refresh);
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="who"]'), function(r){
+    r.addEventListener('change', refresh);
+  });
+
+  function toBase64(file){
+    return new Promise(function(resolve, reject){
+      var fr = new FileReader();
+      fr.onload = function(){
+        var s = String(fr.result);
+        var i = s.indexOf(',');
+        resolve(i >= 0 ? s.slice(i + 1) : s);
+      };
+      fr.onerror = function(){ reject(new Error('ファイルを読み込めませんでした')); };
+      fr.readAsDataURL(file);
+    });
+  }
+
+  var SEND_ERRORS = {
+    too_large:   'サイズが大きすぎます（10MBまで）',
+    bad_type:    'この形式には対応していません',
+    limit_daily: '本日の送信上限（10枚）に達しました',
+    limit_batch: '一度に送れる枚数を超えています',
+    withdrawn:   '現在、掲載を停止しているため受け付けられません',
+    invalid:     'リンクが無効です',
+    expired:     'リンクの有効期限が切れています',
+    inactive:    'リンクが停止されています'
+  };
+
+  // ---- 送信（1ファイルずつ順に送る） ----
+  el.submit.addEventListener('click', function(){
+    if (sending || el.submit.disabled) return;
+    sending = true;
+    refresh();
+    el.errorNotice.classList.remove('show');
+    el.bar.classList.add('show');
+    el.barLabel.classList.add('show');
+
+    var total = picked.length;
+    var results = [];
+
+    // 10MB×5枚をまとめて base64 にすると Apps Script の受信上限を超えるため、
+    // 1ファイルずつ順に送る。1枚失敗しても残りは続ける。
+    var chain = Promise.resolve();
+    picked.forEach(function(f, i){
+      chain = chain.then(function(){
+        el.barLabel.textContent = (i + 1) + '枚目／全' + total + '枚を送信しています…';
+        el.barFill.style.width = Math.round(i / total * 100) + '%';
+        return toBase64(f.file).then(function(b64){
+          return callApi({
+            action: 'upload_file',
+            t: token,
+            uploaded_by: who(),
+            filename: f.file.name,
+            mime: f.file.type || '',
+            size: f.file.size,
+            data: b64,
+            consent_upload: el.consentUpload.checked,
+            consent_copyright: el.consentCopyright.checked,
+            message: el.message.value.trim()
+          });
+        }).then(function(res){
+          if (res && res.ok) results.push({name: f.file.name, ok: true});
+          else results.push({name: f.file.name, ok: false,
+            reason: SEND_ERRORS[res && res.reason] || '送信できませんでした'});
+        }).catch(function(err){
+          results.push({name: f.file.name, ok: false, reason: err.message});
+        });
+      });
+    });
+
+    chain.then(function(){
+      el.barFill.style.width = '100%';
+      var okCount = results.filter(function(r){ return r.ok; }).length;
+
+      el.results.innerHTML = '';
+      results.forEach(function(r){
+        var d = document.createElement('div');
+        if (!r.ok) d.className = 'ng';
+        var m = document.createElement('span');
+        m.className = 'mark';
+        m.textContent = r.ok ? '✓' : '×';
+        d.appendChild(m);
+        d.appendChild(document.createTextNode(r.name + (r.ok ? '' : '　' + r.reason)));
+        el.results.appendChild(d);
+      });
+
+      if (okCount === 0) {
+        el.doneTitle.textContent = '送信できませんでした';
+        el.doneText.textContent = 'お手数ですが、時間をおいてもう一度お試しください。';
+      } else if (okCount < total) {
+        el.doneTitle.textContent = okCount + '枚を受け付けました';
+        el.doneText.textContent = '送れなかった写真があります。コーチが確認してからサイトに反映されます。';
+      } else {
+        el.doneTitle.textContent = '受け付けました';
+        el.doneText.textContent = info && info.consent_status === 'none'
+          ? '保護者の方の同意確認が済むまでサイトには掲載されません。'
+          : 'コーチが確認してからサイトに反映されます。';
+      }
+      show(el.done);
+    });
+  });
+
+  // ---- 起動 ----
+  if (!token) { fail('invalid'); return; }
+
+  callApi({action: 'upload_info', t: token}).then(function(res){
+    if (!res || !res.ok) { fail(res && res.reason); return; }
+    info = res;
+
+    // 掲載を撤回した家庭からは受け付けない（「まだ取っていない」とは意味が違う）
+    if (res.consent_status === 'withdrawn') { show(el.withdrawn); return; }
+
+    el.title.textContent = res.athlete_name + 'さんの写真';
+    el.currentName.textContent = res.athlete_name + 'さん';
+    document.title = res.athlete_name + 'さんの写真の送信｜MIC';
+
+    // いま載っている写真は data/athletes.js（サイト本体と同じデータ）から引く
+    var me = (window.AP_ATHLETES || []).filter(function(a){ return a.id === res.athlete_id; })[0];
+    var photo = me && me.photo;
+    if (photo && photo.indexOf('_placeholder') < 0) {
+      var img = document.createElement('img');
+      img.src = photo;
+      img.alt = res.athlete_name + 'さんの現在の写真';
+      img.onerror = function(){ el.currentMedia.innerHTML = '<div class="none">表示できません</div>'; };
+      el.currentMedia.appendChild(img);
+    } else {
+      el.currentMedia.innerHTML = '<div class="none">まだ写真が<br>ありません</div>';
+      el.currentNote.textContent = 'ここに載る写真を送っていただけます。';
+    }
+
+    if (res.consent_status === 'none') {
+      el.pendingNotice.textContent = '保護者の方の同意確認が済むまでサイトには掲載されません。写真の受け付けはできます。';
+      el.pendingNotice.classList.add('show');
+    }
+    if (typeof res.remaining_today === 'number' && res.remaining_today <= 0) {
+      fail('limit_daily');
+      return;
+    }
+
+    show(el.main);
+    refresh();
+  }).catch(function(err){
+    showInvalid('読み込めませんでした', '通信環境をご確認のうえ、画面を再読み込みしてください。（' + err.message + '）');
+  });
+})();
+</script>
+</body>
+</html>
