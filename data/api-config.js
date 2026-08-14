@@ -12,6 +12,6 @@
 // 設定手順：Van様が MIC-Upload-API をデプロイしたあと、その /exec URL を uploadApi に入れます。
 
 window.MIC_API = {
-  // 例: 'https://script.google.com/macros/s/AKfycb.../exec'
-  uploadApi: ''
+  // MIC-Upload-API（mogul.mic@gmail.com でデプロイ。2026/08/15 設定）
+  uploadApi: 'https://script.google.com/macros/s/AKfycbxKy_MfsKrCmHpec9yvl2oKxVnkDwT14iM83jPmRxG6KWEMevj1nPt_1zAyd-1HNeCrlA/exec'
 };
