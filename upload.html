@@ -459,15 +459,17 @@
     });
   }
 
+  // ★ 大きい画像だけでなく、すべての画像を canvas で作り直す。
+  //   2560px という閾値は容量のためのもので、位置情報の有無とは関係がない。
+  //   すでに誰かがリサイズした写真や他所から転送された写真にもGPSは残り得るため、
+  //   「canvas を経由しない経路を残さない」という単純な規則にしている。
+  //   戻り値の mode … resized（縮小した）／reencoded（作り直しただけ）／original（フォールバック）
   function shrink(file){
     return loadImage(file).then(function(img){
       var w = img.naturalWidth, h = img.naturalHeight;
-      var edge = Math.max(w, h);
-      if (!edge) throw new Error('decode');
-      // 長辺が上限以下ならそのまま送る（作り直さない）
-      if (edge <= MAX_EDGE) return {blob: file, resized: false, w: w, h: h};
+      if (!w || !h) throw new Error('decode');
 
-      var scale = MAX_EDGE / edge;
+      var scale = Math.min(1, MAX_EDGE / Math.max(w, h));
       var cw = Math.round(w * scale), ch = Math.round(h * scale);
       var canvas = document.createElement('canvas');
       canvas.width = cw; canvas.height = ch;
@@ -477,19 +479,20 @@
         canvas.toBlob(function(blob){
           // iOS Safari は大きな画像で canvas が失敗することがある（null が返る）
           if (!blob) { reject(new Error('canvas')); return; }
-          resolve({blob: blob, resized: true, w: cw, h: ch, from: {w: w, h: h}});
+          resolve({blob: blob, mode: scale < 1 ? 'resized' : 'reencoded',
+                   w: cw, h: ch, from: {w: w, h: h}});
         }, 'image/jpeg', JPEG_QUALITY);
       });
     }).catch(function(){
-      // HEIC はPC・AndroidのChromeでデコードできず、縮小もできない。
-      // iOSのメモリ制限で失敗することもある。どちらも原本のまま送る（利用者にエラーは見せない）。
-      return {blob: file, resized: false, fallback: true};
+      // HEIC はPC・AndroidのChromeでデコードできない。iOSのメモリ制限で失敗することもある。
+      // どちらも原本のまま送る（利用者にエラーは見せない）。この経路でだけ原本にEXIFが残る。
+      return {blob: file, mode: 'original', fallback: true};
     });
   }
 
-  /** 縮小したら拡張子を .jpg に揃える（中身がJPEGになるため） */
-  function outName(name, resized){
-    if (!resized) return name;
+  /** canvas を経由したら拡張子を .jpg に揃える（中身がJPEGになるため） */
+  function outName(name, mode){
+    if (mode === 'original') return name;
     return name.replace(/\.[^.\/]*$/, '') + '.jpg';
   }
 
@@ -549,11 +552,11 @@
               action: 'upload_file',
               t: token,
               uploaded_by: who(),
-              filename: outName(f.file.name, s.resized),
-              mime: s.resized ? 'image/jpeg' : (f.file.type || ''),
+              filename: outName(f.file.name, s.mode),
+              mime: s.mode === 'original' ? (f.file.type || '') : 'image/jpeg',
               size: s.blob.size,
               data: b64,
-              resized: !!s.resized,
+              image_processing: s.mode,
               original_size: f.file.size,
               original_dimensions: s.from ? (s.from.w + 'x' + s.from.h) : '',
               consent_upload: el.consentUpload.checked,
