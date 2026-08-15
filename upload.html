@@ -210,7 +210,7 @@
 
       <div class="field">
         <span class="q">写真を選ぶ<span class="req">必須</span></span>
-        <p class="hint">1回につき5枚まで。JPEG・PNG・HEIC（iPhoneの標準形式）に対応しています。<br>大きな写真は、送信のときに自動で小さくします。そのままお選びください。</p>
+        <p class="hint">1回につき5枚まで。JPEG・PNG・HEIC（iPhoneの標準形式）に対応しています。<br>大きな写真は、送信のときに自動で小さくします。そのままお選びください。<br><strong>顔が大きく写っている写真を選んでください。</strong>サイトでは横長に切り取って表示されるため、全身が小さく写った引きの写真は顔が入らないことがあります。</p>
         <label class="picker">
           <input type="file" id="picker" accept="image/*,.heic,.heif" multiple>
           <div class="big">写真を選ぶ</div>
@@ -236,7 +236,6 @@
         </label>
       </div>
 
-      <div class="notice info" id="pendingNotice"></div>
       <div class="notice" id="errorNotice"></div>
 
       <button type="button" class="submit" id="submit" disabled>送信する</button>
@@ -268,7 +267,7 @@
   var el = {};
   ['loading','invalid','invalidTitle','invalidText','withdrawn','done','doneTitle','doneText','results',
    'main','title','currentMedia','currentName','currentNote','picker','pickerSub','files','fileNotice',
-   'message','consentUpload','consentCopyright','pendingNotice','errorNotice','submit','bar','barFill','barLabel'
+   'message','consentUpload','consentCopyright','errorNotice','submit','bar','barFill','barLabel'
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
   var info = null;      // サーバから受け取った選手の情報
@@ -603,9 +602,7 @@
         el.doneText.textContent = '送れなかった写真があります。コーチが確認してからサイトに反映されます。';
       } else {
         el.doneTitle.textContent = '受け付けました';
-        el.doneText.textContent = info && info.consent_status === 'none'
-          ? '保護者の方の同意確認が済むまでサイトには掲載されません。'
-          : 'コーチが確認してからサイトに反映されます。';
+        el.doneText.textContent = 'コーチが確認してからサイトに反映されます。';
       }
       show(el.done);
     });
@@ -618,7 +615,9 @@
     if (!res || !res.ok) { fail(res && res.reason); return; }
     info = res;
 
-    // 掲載を撤回した家庭からは受け付けない（「まだ取っていない」とは意味が違う）
+    // 掲載を断られた家庭からは受け付けない。
+    // アプリ内での保護者同意（第1層）は 2026/08/15 に廃止したが、この受け口は残してある。
+    // 選手マスタの consent_status に手で withdrawn と入れれば、新規の受付が止まる。
     if (res.consent_status === 'withdrawn') { show(el.withdrawn); return; }
 
     el.title.textContent = res.athlete_name + 'さんの写真';
@@ -639,10 +638,6 @@
       el.currentNote.textContent = 'ここに載る写真を送っていただけます。';
     }
 
-    if (res.consent_status === 'none') {
-      el.pendingNotice.textContent = '保護者の方の同意確認が済むまでサイトには掲載されません。写真の受け付けはできます。';
-      el.pendingNotice.classList.add('show');
-    }
     if (typeof res.remaining_today === 'number' && res.remaining_today <= 0) {
       fail('limit_daily');
       return;
