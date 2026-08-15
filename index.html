@@ -12,7 +12,7 @@
   if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIC | Mogul Improvement Community</title>
+<title>MIC | Mogul Improvement Community — トップページ ラフ案</title>
 <style>
   :root{
     --bg:#0a0a0c;
@@ -841,21 +841,204 @@
   /* ---------- Data feature (選手カルテ) ----------
      詳細は program-athlete.html の開閉ブロックへ集約した。カルテは選手育成コース
      の選手だけが対象なので、トップページでは存在を知らせる予告だけに留めている。 */
-  .data-feature{background:var(--bg);padding:14vh 6vw 15vh;}
-  .df-head{max-width:760px;margin:0 auto;text-align:center;}
-  .df-head .eyebrow{display:flex;justify-content:center;}
-  .df-head h2{font-size:clamp(30px,4.4vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.3;margin:14px 0 18px;}
-  .df-head p{color:var(--muted);font-size:15px;line-height:1.9;}
-  .df-head p span{display:inline-block;}
-  .df-chips{max-width:760px;margin:5vh auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-  .df-chip{display:flex;align-items:center;gap:9px;padding:14px 16px;border-radius:14px;
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
-    font-size:13.5px;font-weight:700;letter-spacing:-.01em;}
-  .df-chip svg{width:18px;height:18px;stroke:var(--accent);stroke-width:1.8;fill:none;
-    stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
-  @media (max-width:640px){
-    .df-chips{grid-template-columns:1fr 1fr;gap:8px;}
-    .df-chip{padding:12px 12px;font-size:12.5px;gap:7px;}
+  /* 選手カルテ：スクロールに合わせて、ホーム画面 → アプリが開く → 4機能が広がる。
+     クラス名はすべて .kb 配下に閉じてある（.home / .app / .cd などの短い名前が
+     ページの他の部分と衝突しないようにするため）。 */
+  .kb{position:relative;background:var(--bg);}
+  .kb-sticky{position:sticky;top:0;height:100vh;padding-top:76px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;overflow:hidden;}
+
+  .kb-head{text-align:center;max-width:880px;padding:0 6vw;margin-bottom:3vh;
+    opacity:0;transform:translateY(16px);
+    transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);}
+  .kb.lit .kb-head{opacity:1;transform:none;}
+  .kb-head .eyebrow{display:flex;justify-content:center;}
+  .kb-title{font-size:clamp(26px,3.4vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.3;}
+  .kb-sub{margin-top:12px;color:var(--muted);font-size:14.5px;line-height:1.9;}
+  .kb-sub span{display:inline-block;}
+
+  .kb-stage{position:relative;width:100%;max-width:1120px;height:500px;}
+
+  .kb-phone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:256px;height:480px;border-radius:36px;background:#141418;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 50px 90px -40px rgba(0,0,0,.95), 0 0 0 8px #08080a;
+    overflow:hidden;z-index:3;}
+  .kb-phone::before{content:'';position:absolute;top:11px;left:50%;transform:translateX(-50%);
+    width:92px;height:21px;border-radius:11px;background:#08080a;z-index:6;}
+
+  /* --- ホーム画面 --- */
+  .kb .home{position:absolute;inset:0;padding:48px 18px 22px;transform-origin:15.7% 39.8%;
+    background:linear-gradient(165deg,#1b1b22,#0e0e12 70%);
+    transition:opacity .45s ease, transform .6s cubic-bezier(.16,1,.3,1);}
+  .kb.opened .home{opacity:0;transform:scale(1.14);}
+  .kb .home-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 14px;}
+  .kb .home-ico{aspect-ratio:1;border-radius:13px;background:rgba(255,255,255,.07);}
+  .kb .home-app{position:relative;}
+  .kb .home-app .ic{aspect-ratio:1;border-radius:13px;
+    background:linear-gradient(150deg,#ff7a52,#e8381a);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px -4px rgba(255,90,60,.6);}
+  .kb .home-app .ic b{font-size:15px;font-weight:900;color:#fff;letter-spacing:.02em;}
+  .kb .home-app .nm{position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 5px);
+    font-size:7.5px;color:rgba(255,255,255,.75);white-space:nowrap;}
+
+  /* --- タップの表現：指の接地点 → 二重の波紋 → アイコンが沈む --- */
+  .kb .touch{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;
+    border-radius:50%;background:rgba(255,255,255,.6);filter:blur(1.5px);
+    opacity:0;pointer-events:none;z-index:3;}
+  .kb.tapped .touch{animation:kbTouch .5s ease-out forwards;}
+  @keyframes kbTouch{
+    0%{opacity:0;transform:scale(1.7);}
+    28%{opacity:.95;transform:scale(1);}
+    100%{opacity:0;transform:scale(.85);}
+  }
+  .kb .ripple{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;
+    border-radius:50%;border:2.5px solid rgba(255,255,255,.95);opacity:0;pointer-events:none;z-index:2;}
+  .kb.tapped .r1{animation:kbRipple .85s cubic-bezier(.16,1,.3,1) forwards;}
+  .kb.tapped .r2{animation:kbRipple .85s cubic-bezier(.16,1,.3,1) .14s forwards;}
+  @keyframes kbRipple{
+    0%{opacity:1;transform:scale(.35);}
+    100%{opacity:0;transform:scale(6.4);}
+  }
+  .kb.tapped .home-app .ic{animation:kbPress .5s cubic-bezier(.34,1.5,.64,1);}
+  @keyframes kbPress{
+    0%{transform:scale(1);filter:brightness(1);}
+    30%{transform:scale(.8);filter:brightness(1.35);}
+    100%{transform:scale(1);filter:brightness(1);}
+  }
+
+  /* --- アプリ画面。アイコンの位置を起点に広がる（iOSと同じ挙動） --- */
+  .kb .app{position:absolute;inset:0;padding:48px 15px 18px;background:#eef1f6;
+    opacity:0;transform:scale(.13);transform-origin:15.7% 39.8%;
+    transition:opacity .22s ease .06s, transform .62s cubic-bezier(.26,.9,.24,1) .06s;}
+  .kb.opened .app{opacity:1;transform:scale(1);}
+
+  /* 画面の中身は 226px 幅で組み、スマホでは .app-inner ごと縮小する
+     （.app 側は「開く」アニメーションのtransformを使うため、拡縮は内側で行う）。
+     中身はカルテを模した架空のデータで、実在の選手の記録ではない。 */
+  .kb .app-inner{width:226px;transform-origin:top left;}
+  .kb .app-inner .hd{display:flex;align-items:center;gap:7px;margin-bottom:11px;}
+  .kb .app-inner .hd i{width:19px;height:19px;border-radius:6px;display:block;flex:0 0 auto;
+    background:linear-gradient(150deg,#ff7a52,#e8381a);}
+  .kb .app-inner .hd b{font-size:12.5px;font-weight:800;color:#1c2430;}
+  .kb .app-inner .hd em{font-style:normal;margin-left:auto;font-size:8.5px;color:#8b93a1;}
+  .kb .app-inner .cd{border-radius:11px;padding:10px 10px 9px;margin-bottom:8px;
+    background:#fff;box-shadow:0 1px 2px rgba(20,30,50,.06);}
+  .kb .app-inner .cd h4{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:800;
+    margin-bottom:8px;color:#1c2430;}
+  .kb .app-inner .cd h4::before{content:'';width:5px;height:5px;border-radius:50%;flex:0 0 auto;background:#3f74c9;}
+  .kb .app-inner .rw{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+  .kb .app-inner .rw:last-child{margin-bottom:0;}
+  .kb .app-inner .rw .lb{width:72px;flex:0 0 auto;text-align:right;font-size:8px;line-height:1.2;color:#4a5464;}
+  .kb .app-inner .rw .st{width:11px;height:11px;border-radius:50%;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;font-size:6px;
+    background:#fdf6e3;border:1px solid #dfc178;color:#c79a2b;}
+  .kb .app-inner .rw .tr{flex:1;height:13px;border-radius:3px;position:relative;overflow:hidden;background:#f1f3f7;}
+  .kb .app-inner .rw .fl{position:absolute;left:0;top:0;bottom:0;border-radius:3px;
+    display:flex;align-items:center;justify-content:flex-end;padding-right:4px;
+    font-size:7.5px;font-weight:800;color:#fff;}
+  .kb .app-inner .fl.v2{background:#7ba4e0;} .kb .app-inner .fl.v3{background:#3f74c9;}
+  .kb .app-inner .fl.v4{background:#2a5bb0;} .kb .app-inner .fl.v5{background:#1c3f80;}
+  .kb .app-inner .note{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:7.5px;color:#8b93a1;}
+  .kb .app-inner .air{display:flex;gap:6px;}
+  .kb .app-inner .air .a{flex:1;border-radius:8px;padding:8px 8px 7px;background:#e8effb;}
+  .kb .app-inner .air .a .t{font-size:8.5px;font-weight:800;margin-bottom:4px;color:#2a5bb0;}
+  .kb .app-inner .air .a .s{font-size:7.5px;line-height:1.55;color:#4a5464;}
+  .kb .app-inner .more{text-align:right;font-size:8px;font-weight:700;margin-top:6px;color:#2a5bb0;}
+  .kb .app-inner .gl{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .kb .app-inner .gl .g{border-radius:7px;padding:6px 7px;background:#eef3fc;}
+  .kb .app-inner .gl .g .k{font-size:7px;font-weight:800;margin-bottom:2px;color:#3f74c9;}
+  .kb .app-inner .gl .g .t{font-size:7.5px;line-height:1.45;color:#3a4452;}
+
+  /* --- 端末から広がる4枚のカード --- */
+  .kb-card{position:absolute;width:288px;
+    display:flex;align-items:flex-start;gap:11px;
+    padding:14px 15px;border-radius:16px;
+    background:rgba(20,20,24,.92);border:1px solid rgba(255,255,255,.13);
+    box-shadow:0 26px 50px -28px rgba(0,0,0,.9);
+    opacity:0;transform:translate(var(--fx), var(--fy)) scale(.62);
+    transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .72s cubic-bezier(.2,1.06,.4,1);
+    transition-delay:calc(var(--i) * .07s);z-index:4;}
+  .kb.burst .kb-card{opacity:1;transform:translate(0,0) scale(1);}
+  .kb-card svg{width:19px;height:19px;flex:0 0 auto;margin-top:1px;
+    stroke:var(--accent);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .kb-card .cn{font-size:14px;font-weight:800;letter-spacing:-.01em;margin-bottom:5px;}
+  .kb-card .cx{font-size:11.5px;line-height:1.7;color:var(--muted);}
+  .kb .c1{left:0;   top:112px;}
+  .kb .c2{left:0;   top:298px;}
+  .kb .c3{right:0;  top:112px;}
+  .kb .c4{right:0;  top:298px;}
+  .kb .c1,.kb .c2{--fx:340px;}
+  .kb .c3,.kb .c4{--fx:-340px;}
+  .kb .c1,.kb .c3{--fy:130px;}
+  .kb .c2,.kb .c4{--fy:-130px;}
+
+  /* 展開前は「スクロール」、展開後は詳細ページへの導線に入れ替わる */
+  .kb-foot{position:relative;margin-top:3vh;height:44px;width:100%;
+    display:flex;align-items:center;justify-content:center;}
+  .kb-hint{position:absolute;font-size:11.5px;color:#3d3d45;letter-spacing:.08em;transition:opacity .4s;}
+  .kb.burst .kb-hint{opacity:0;}
+  .kb-cta{position:absolute;opacity:0;transform:translateY(8px);pointer-events:none;
+    transition:opacity .5s cubic-bezier(.16,1,.3,1) .45s, transform .5s cubic-bezier(.16,1,.3,1) .45s;}
+  .kb.burst .kb-cta{opacity:1;transform:none;pointer-events:auto;}
+
+  /* --- スマホ：端末を上、4機能を2列で下に --- */
+  @media (max-width:980px){
+    .kb-sticky{justify-content:flex-start;padding-top:9vh;}
+    .kb-title{font-size:22px;}
+    .kb-sub{font-size:13px;margin-top:10px;}
+    .kb-stage{height:auto;display:flex;flex-direction:column;align-items:center;padding:0 6vw;}
+    .kb-phone{position:relative;left:auto;top:auto;transform:none;
+      width:186px;height:360px;border-radius:28px;
+      box-shadow:0 30px 55px -32px rgba(0,0,0,.95), 0 0 0 6px #08080a;}
+    .kb-phone::before{width:60px;height:14px;top:8px;border-radius:8px;}
+    .kb .home{padding:34px 13px 16px;}
+    .kb .home-grid{gap:11px 10px;}
+    .kb .home-ico,.kb .home-app .ic{border-radius:9px;}
+    .kb .home-app .ic b{font-size:10px;}
+    .kb .home-app .nm{font-size:6px;}
+    .kb .app{padding:34px 11px 14px;}
+    .kb .app-inner{transform:scale(.726);}
+    /* この大きさでは説明文を読ませるより、4つあることが一目でわかるほうが効く。
+       セレクタを .kb 配下にしているのは、PC用の .kb .c1 などと同じ詳細度にして
+       確実に上書きするため（.kb-card だけでは負けて絶対配置のままになる）。 */
+    .kb .kb-card{position:relative;left:auto;right:auto;top:auto;width:100%;
+      align-items:center;gap:8px;padding:13px 11px;border-radius:13px;}
+    .kb .kb-cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-top:24px;}
+    .kb .c1,.kb .c2,.kb .c3,.kb .c4{--fx:0;--fy:-90px;}
+    .kb .kb-card svg{width:17px;height:17px;margin-top:0;}
+    .kb .kb-card .cn{font-size:12.5px;margin-bottom:0;}
+    .kb .kb-card .cx{display:none;}
+  }
+  @media (min-width:981px){
+    .kb-cards{display:contents;}
+    .kb-title br{display:none;}
+  }
+
+  /* 画面の高さが足りないときは、端末の高さだけを詰めて収める。
+     幅は256pxのまま変えないので、画面の中身の縮尺はいじらなくてよい。 */
+  @media (min-width:981px) and (max-height:860px){
+    .kb-stage{height:440px;}
+    .kb-phone{height:420px;}
+    .kb .c1,.kb .c3{top:96px;}
+    .kb .c2,.kb .c4{top:254px;}
+  }
+  @media (min-width:981px) and (max-height:720px){
+    .kb-sticky{padding-top:70px;}
+    .kb-stage{height:356px;}
+    .kb-phone{height:336px;}
+    .kb-sub{display:none;}
+    .kb .c1,.kb .c3{top:54px;}
+    .kb .c2,.kb .c4{top:212px;}
+  }
+
+  /* 動きを減らす設定のときは、アニメーションなしで完成形をそのまま見せる */
+  @media (prefers-reduced-motion: reduce){
+    .kb-head,.kb-card,.kb-cta{opacity:1 !important;transform:none !important;transition:none !important;}
+    .kb .home{display:none;}
+    .kb .app{opacity:1 !important;transform:none !important;transition:none !important;}
+    .kb-hint{display:none;}
   }
 
   /* ---------- Programs (プログラム紹介) ---------- */
@@ -1175,7 +1358,6 @@
     .athletes{padding:11vh 0 12vh;}
     .bridge{padding:7vh 6vw 8vh;}
     .coaches{padding:11vh 0 12vh;}
-    .data-feature{padding:9vh 6vw 10vh;}
     .calendar{padding:11vh 6vw;}
     .community{padding:11vh 6vw 12vh;}
     .stats{padding:8vh 6vw;}
@@ -1188,7 +1370,7 @@
 </head>
 <body>
 
-<div class="draft-badge">リニューアル準備中</div>
+<div class="draft-badge">RAFU / DRAFT — トップページ試作（.site環境用・非公開）</div>
 
 <header id="siteHeader">
   <div class="logo">MIC</div>
@@ -1437,6 +1619,69 @@
   <button class="g-nav g-nav-prev" type="button" aria-label="前の選手">‹</button>
   <div class="g-fade g-fade-left"></div>
   <div class="gallery reveal-scale" id="athleteGallery" data-wheel-nav="off">
+    <div class="g-card ap-card" data-ap-index="0">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg" alt="見瀬クレア"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">見瀬クレア</div><div class="ap-name-row-tag">世界ジュニア3位・アジアカップ優勝</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="1">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg" alt="鈴木伶菜"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">鈴木伶菜</div><div class="ap-name-row-tag">ジュニアオリンピックMO11位・DM7位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="2">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg" alt="有賀睦人"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">有賀睦人</div><div class="ap-name-row-tag">大阪府ジュニアスキー技術選手権 優勝</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="3">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg" alt="馬路晴世"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">馬路晴世</div><div class="ap-name-row-tag">B級公認大会5位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="4">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg" alt="七海快成"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">七海快成</div><div class="ap-name-row-tag">全日本選手権初出場</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="5">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg" alt="濱田匠真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">濱田匠真</div><div class="ap-name-row-tag">楽しくスキーを頑張る</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="6">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg" alt="濱田誠真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">濱田誠真</div><div class="ap-name-row-tag">B級公認大会出場</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="7">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg" alt="松村聡美"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">松村聡美</div><div class="ap-name-row-tag">GARAカップ 小学生の部 3位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
+    <div class="g-card ap-card" data-ap-index="8">
+      <div class="ap-card-media"><img src="https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg" alt="林遼真"></div>
+      <div class="ap-name-row">
+        <div><div class="ap-name-row-name">林遼真</div><div class="ap-name-row-tag">A級公認大会7位</div></div>
+        <span class="ap-chev" aria-hidden="true">▾</span>
+      </div>
+    </div>
   </div>
   <div class="g-fade g-fade-right"></div>
   <button class="g-nav g-nav-next" type="button" aria-label="次の選手">›</button>
@@ -1449,36 +1694,127 @@
   </div>
 </section>
 
-<script src="data/athletes.js"></script>
 <script>
 (function(){
-  const AP_ATHLETES = window.AP_ATHLETES || [];
-
-  // 選手カードは AP_ATHLETES から組み立てる。写真・氏名・一行紹介を静的HTMLにも持つと
-  // 二重管理になり、反映CLIが data/athletes.js を更新してもカードの写真が変わらないため。
-  // ページ下部の initGallery がループ用にカードを複製するので、そこへ届く前にここで作る。
-  function apEsc(s){
-    return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
-      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];
-    });
-  }
-
-  function apRenderCards(){
-    const gallery = document.getElementById('athleteGallery');
-    if (!gallery) return;
-    gallery.innerHTML = AP_ATHLETES.map(function(a, i){
-      const photo = a.photo || 'assets/athletes/_placeholder.jpg';
-      return '<div class="g-card ap-card" data-ap-index="' + i + '">'
-        + '<div class="ap-card-media"><img src="' + apEsc(photo) + '" alt="' + apEsc(a.name) + '"></div>'
-        + '<div class="ap-name-row">'
-        + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div>'
-        + '<div class="ap-name-row-tag">' + apEsc(a.tag) + '</div></div>'
-        + '<span class="ap-chev" aria-hidden="true">\u25be</span>'
-        + '</div>'
-        + '</div>';
-    }).join('');
-  }
-  apRenderCards();
+  const AP_ATHLETES = [
+    {
+      name:'見瀬クレア',
+      tag:'世界ジュニア3位・アジアカップ優勝',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'鈴木伶菜',
+      tag:'ジュニアオリンピックMO11位・DM7位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:true,
+      results:[
+        {d:'2024-03-09',rank:2,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2025-02-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-08',rank:6,disc:'DM',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-03-01',rank:6,disc:'DM',cat:'SAJ B級',ev:'令和6年度新潟県スキー選手権大会兼第23回国体記念松之山温泉モーグル競技会'},
+        {d:'2025-03-15',rank:7,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    },
+    {
+      name:'有賀睦人',
+      tag:'大阪府ジュニアスキー技術選手権 優勝',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg',
+      hasKarte:true,
+      vision:'ワールドカップなどで活躍したいです。',
+      goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
+      video:'https://vanwhist.github.io/mic-site-mockup/assets/videos/%E7%9D%A6%E4%BA%BA.mp4',
+      tracked:true,
+      results:[
+        {d:'2024-03-08',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2026-03-06',rank:3,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'},
+        {d:'2026-03-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
+      ]
+    },
+    {
+      name:'馬路晴世',
+      tag:'B級公認大会5位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:true,
+      results:[
+        {d:'2021-02-21',rank:2,disc:'MO',cat:'SAJ B級',ev:'2021白馬さのさかモーグル大会 第1戦・第2戦'},
+        {d:'2022-02-25',rank:8,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-02-26',rank:3,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-03-11',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2025-01-31',rank:6,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'},
+        {d:'2025-02-01',rank:5,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'}
+      ]
+    },
+    {
+      name:'七海快成',
+      tag:'全日本選手権初出場',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:true,
+      results:[
+        {d:'2022-02-26',rank:6,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2023-01-27',rank:7,disc:'MO',cat:'SAJ B級',ev:'第23回埼玉県松之山温泉モーグル競技会'},
+        {d:'2023-01-28',rank:6,disc:'MO',cat:'SAJ B級',ev:'令和4年度新潟県スキー選手権大会兼第21回国体記念松之山温泉モーグル競技会'},
+        {d:'2023-02-24',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2023-02-25',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2025-02-07',rank:5,disc:'MO',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-08',rank:7,disc:'DM',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-14',rank:3,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-02-15',rank:8,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-03-14',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-02-06',rank:5,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-13',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    },
+    {
+      name:'濱田匠真',
+      tag:'楽しくスキーを頑張る',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg',
+      hasKarte:true,
+      vision:'スキーモーグルを広めれる人になりたいです。',
+      goal:'B級大会優勝です。',
+      video:null,
+      tracked:true,
+      results:[]
+    },
+    {
+      name:'濱田誠真',
+      tag:'B級公認大会出場',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'松村聡美',
+      tag:'GARAカップ 小学生の部 3位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:false, results:[]
+    },
+    {
+      name:'林遼真',
+      tag:'A級公認大会7位',
+      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg',
+      hasKarte:false, vision:null, goal:null, video:null,
+      tracked:true,
+      results:[
+        {d:'2019-03-01',rank:3,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第1戦'},
+        {d:'2019-03-02',rank:2,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第2戦'},
+        {d:'2022-03-11',rank:7,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2024-02-23',rank:7,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-02-24',rank:5,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-03-15',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2024全日本ジュニアスキー選手権大会フリースタイル競技・種目モーグル'},
+        {d:'2025-02-03',rank:7,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第43回長野県フリースタイルスキー選手権大会 モーグル競技'},
+        {d:'2026-02-07',rank:3,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-13',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-03-14',rank:6,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+      ]
+    }
+  ];
 
   const AP_RESULTS_PREVIEW = 4;
 
@@ -1938,24 +2274,96 @@
   <div class="news-note" style="padding:0 6vw;margin-top:4vh;">※本番ではプロフィール・実績はスプレッドシート連動にし、更新はシート編集だけで反映される想定です。</div>
 </section>
 
-<section class="data-feature" id="data-feature">
-  <div class="df-head">
-    <div class="eyebrow reveal">MIC Data Platform</div>
-    <h2 class="reveal delay-1">選手カルテ、すべてを、<br>一つに。</h2>
-    <p class="reveal delay-2"><span>ノートも、</span><span>Excelも、</span><span>LINEも、</span><span>もう要らない。</span><br><span>練習・体調・目標のすべてを、</span><span>これ一つに。</span></p>
-  </div>
+<section class="kb" id="data-feature">
+  <div class="kb-sticky">
 
-  <div class="df-chips">
-    <div class="df-chip reveal"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1"></circle></svg>目標設定</div>
-    <div class="df-chip reveal delay-1"><svg viewBox="0 0 24 24"><polyline points="3 13 7 13 9 6 13 18 15 10 17 13 21 13"></polyline></svg>コンディション管理</div>
-    <div class="df-chip reveal delay-2"><svg viewBox="0 0 24 24"><path d="M4 18 Q12 3 20 18"></path></svg>エアログ</div>
-    <div class="df-chip reveal"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"></rect><line x1="9" y1="8.5" x2="15" y2="8.5"></line><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="15.5" x2="13" y2="15.5"></line></svg>トレーニングログ</div>
-    <div class="df-chip reveal delay-1"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><line x1="15.8" y1="15.8" x2="21" y2="21"></line></svg>ジャッジ分析</div>
-    <div class="df-chip reveal delay-2"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="6"></circle><circle cx="15" cy="12" r="6"></circle></svg>ライバル分析</div>
-  </div>
+    <div class="kb-head">
+      <div class="eyebrow">MIC Data Platform</div>
+      <h2 class="kb-title">選手カルテ、すべてを、<br>一つに。</h2>
+      <p class="kb-sub"><span>ノートも、</span><span>Excelも、</span><span>LINEも、</span><span>もう要らない。</span><br><span>練習・体調・目標のすべてを、</span><span>自分の手元で。</span></p>
+    </div>
 
-  <div class="cm-cta-wrap reveal">
-    <a class="btn btn-ghost" href="program-athlete.html#karte">選手カルテを詳しく見る</a>
+    <div class="kb-stage">
+
+      <div class="kb-phone">
+        <!-- ホーム画面 -->
+        <div class="home">
+          <div class="home-grid">
+            <div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div>
+            <div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div>
+            <div class="home-app">
+              <div class="ic"><b>MIC</b><span class="ripple r1"></span><span class="ripple r2"></span><span class="touch"></span></div>
+              <span class="nm">選手カルテ</span>
+            </div>
+            <div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div>
+            <div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div><div class="home-ico"></div>
+          </div>
+        </div>
+
+        <!-- アプリ画面（カルテを模したモックアップ。数値・目標文はすべて架空） -->
+        <div class="app">
+          <div class="app-inner">
+            <div class="hd"><i></i><b>MIC選手カルテ</b><em>2026-27</em></div>
+
+            <div class="cd">
+              <h4>自己分析（1〜5段階評価）</h4>
+              <div class="rw"><span class="lb">ターン技術</span><span class="st">★</span><span class="tr"><span class="fl v3" style="width:60%">3</span></span></div>
+              <div class="rw"><span class="lb">エア技術</span><span class="st">★</span><span class="tr"><span class="fl v2" style="width:40%">2</span></span></div>
+              <div class="rw"><span class="lb">スピード</span><span class="tr"><span class="fl v2" style="width:40%">2</span></span></div>
+              <div class="rw"><span class="lb">体力</span><span class="tr"><span class="fl v4" style="width:80%">4</span></span></div>
+              <div class="rw"><span class="lb">柔軟性</span><span class="tr"><span class="fl v3" style="width:60%">3</span></span></div>
+              <div class="rw"><span class="lb">メンタル</span><span class="tr"><span class="fl v4" style="width:80%">4</span></span></div>
+              <div class="rw"><span class="lb">練習への取り組み</span><span class="tr"><span class="fl v5" style="width:100%">5</span></span></div>
+              <div class="note"><span class="st">★</span>今年特に伸ばしたい項目</div>
+            </div>
+
+            <div class="cd">
+              <h4>MICエアlog</h4>
+              <div class="air">
+                <div class="a"><div class="t">ウォータージャンプ</div><div class="s">最新 8/09<br>成功 128 / 260本</div></div>
+                <div class="a"><div class="t">トランポリン</div><div class="s">最新 8/11<br>本数 540本</div></div>
+              </div>
+              <div class="more">アプリを開く →</div>
+            </div>
+
+            <div class="cd">
+              <h4>今年のシーズン目標</h4>
+              <div class="gl">
+                <div class="g"><div class="k">成績</div><div class="t">B級大会で入賞</div></div>
+                <div class="g"><div class="k">技術</div><div class="t">ターンの精度を上げる</div></div>
+                <div class="g"><div class="k">フィジカル</div><div class="t">下半身の強化</div></div>
+                <div class="g"><div class="k">メンタル</div><div class="t">本番で楽しむ</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kb-cards">
+        <div class="kb-card c1" style="--i:0">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1"></circle></svg>
+          <div><div class="cn">目標設定</div><div class="cx">シーズンの目標から今月やることまで、自分で決めた内容が手元に一目で。</div></div>
+        </div>
+        <div class="kb-card c2" style="--i:1">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 13 7 13 9 6 13 18 15 10 17 13 21 13"></polyline></svg>
+          <div><div class="cn">コンディション管理</div><div class="cx">睡眠・疲労・体重を毎日ひと目盛り。自分の調子の波が見えてきます。</div></div>
+        </div>
+        <div class="kb-card c3" style="--i:2">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 Q12 3 20 18"></path></svg>
+          <div><div class="cn">エアログ</div><div class="cx">飛んだ本数と技を記録。積み上げがそのまま自信に。</div></div>
+        </div>
+        <div class="kb-card c4" style="--i:3">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"></rect><line x1="9" y1="8.5" x2="15" y2="8.5"></line><line x1="9" y1="12" x2="15" y2="12"></line></svg>
+          <div><div class="cn">トレーニングログ</div><div class="cx">トレーニングの内容を記録。オフの積み重ねが数字で残ります。</div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="kb-foot">
+      <div class="kb-hint">スクロール</div>
+      <a class="btn btn-ghost kb-cta" href="program-athlete.html#karte">選手カルテを詳しく見る</a>
+    </div>
   </div>
 </section>
 
@@ -2481,7 +2889,7 @@
   </div>
   <div class="stat-item reveal delay-1">
     <div class="stat-label">Athletes</div>
-    <div class="stat-num">9名</div>
+    <div class="stat-num">12名</div>
     <div class="stat-caption">在籍する選手たち</div>
   </div>
   <div class="stat-item reveal delay-2">
@@ -2539,7 +2947,7 @@
   </div>
   <div class="sf-bottom">
     <span>© MIC — Mogul Improvement Community</span>
-    <span>※このページはリニューアル準備中です。内容は今後変更される場合があります。</span>
+    <span>※このページは試作用ラフです。</span>
   </div>
 </footer>
 
@@ -2602,6 +3010,41 @@
   }
   navToggle.addEventListener('click', () => setNavOpen(!siteNav.classList.contains('open')));
   siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+
+  // 選手カルテ：スクロール位置に応じて「ホーム画面 → タップ → アプリが開く → 4機能が広がる」
+  // を切り替える。scroll ハンドラは rAF で1フレーム1回に間引く。
+  (function () {
+    var kb = document.getElementById('data-feature');
+    if (!kb) return;
+    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      // 動きを減らす設定のときはアニメーションさせず、完成形をそのまま出す
+      kb.classList.add('lit', 'opened', 'burst');
+      kb.style.height = 'auto';
+      return;
+    }
+
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var total = kb.offsetHeight - window.innerHeight;
+      if (total <= 0) return;
+      var p = (-kb.getBoundingClientRect().top) / total;
+      p = Math.max(0, Math.min(1, p));
+      kb.classList.toggle('lit',    p > 0.02);
+      kb.classList.toggle('tapped', p > 0.16);
+      kb.classList.toggle('opened', p > 0.29);
+      kb.classList.toggle('burst',  p > 0.38);
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, {passive: true});
+    window.addEventListener('resize', update);
+
+    kb.style.height = '190vh';
+    update();
+  })();
 
   // Scroll reveal via IntersectionObserver
   const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
