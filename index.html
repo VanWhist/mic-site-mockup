@@ -845,7 +845,7 @@
      クラス名はすべて .kb 配下に閉じてある（.home / .app / .cd などの短い名前が
      ページの他の部分と衝突しないようにするため）。 */
   .kb{position:relative;background:var(--bg);}
-  .kb-sticky{position:sticky;top:0;height:100vh;padding-top:76px;display:flex;flex-direction:column;
+  .kb-sticky{position:sticky;top:0;height:100vh;height:100svh;padding-top:76px;display:flex;flex-direction:column;
     align-items:center;justify-content:center;overflow:hidden;}
 
   .kb-head{text-align:center;max-width:880px;padding:0 6vw;margin-bottom:3vh;
@@ -985,7 +985,10 @@
 
   /* --- スマホ：端末を上、4機能を2列で下に --- */
   @media (max-width:980px){
-    .kb-sticky{justify-content:flex-start;padding-top:9vh;}
+    /* スマホでは sticky をやめる。iOS Safari の 100vh はツールバーぶんだけ
+       実際の表示領域より大きいので、画面に収める前提の作りだと下が隠れる。
+       通常の縦積みにして、はみ出したぶんは普通にスクロールさせる。 */
+    .kb-sticky{position:static;height:auto;padding:11vh 0 12vh;justify-content:flex-start;}
     .kb-title{font-size:22px;}
     .kb-sub{font-size:13px;margin-top:10px;}
     .kb-stage{height:auto;display:flex;flex-direction:column;align-items:center;padding:0 6vw;}
@@ -3026,8 +3029,12 @@
     }
 
     var ticking = false;
+    var mode = null;
     function update() {
       ticking = false;
+      // スマホは再生方式が違う（下の playOnce）。ここで class を付け外しすると
+      // 再生済みの状態を消してしまうので、PCのときだけ動かす。
+      if (mode !== 'desktop') return;
       var total = kb.offsetHeight - window.innerHeight;
       if (total <= 0) return;
       var p = (-kb.getBoundingClientRect().top) / total;
@@ -3040,10 +3047,42 @@
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, {passive: true});
-    window.addEventListener('resize', update);
 
-    kb.style.height = '190vh';
-    update();
+    // スマホは sticky を使わないので、スクロール量に応じた進行度が取れない。
+    // 画面に入ったタイミングで一度だけ、順番に再生する。
+    var mobileTimers = [], mobileIO = null;
+    function playOnce() {
+      mobileTimers.forEach(clearTimeout);
+      mobileTimers = [
+        setTimeout(function () { kb.classList.add('lit');    },   0),
+        setTimeout(function () { kb.classList.add('tapped'); }, 500),
+        setTimeout(function () { kb.classList.add('opened'); }, 1000),
+        setTimeout(function () { kb.classList.add('burst');  }, 1550)
+      ];
+    }
+
+    var mq = window.matchMedia('(max-width:980px)');
+    function setMode() {
+      var next = mq.matches ? 'mobile' : 'desktop';
+      if (next === mode) return;
+      mode = next;
+      if (mode === 'mobile') {
+        kb.style.height = 'auto';
+        if (!mobileIO && 'IntersectionObserver' in window) {
+          mobileIO = new IntersectionObserver(function (entries, obs) {
+            if (entries[0].isIntersecting) { playOnce(); obs.disconnect(); mobileIO = null; }
+          }, {threshold: 0.2});
+          mobileIO.observe(kb);
+        } else if (!('IntersectionObserver' in window)) {
+          kb.classList.add('lit', 'opened', 'burst');
+        }
+      } else {
+        kb.style.height = '190vh';
+        update();
+      }
+    }
+    window.addEventListener('resize', function () { setMode(); if (mode === 'desktop') update(); });
+    setMode();
   })();
 
   // Scroll reveal via IntersectionObserver
