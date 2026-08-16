@@ -2,10 +2,14 @@
 
 ## このリポジトリの前提
 - main ブランチ直下（path: /）から GitHub Pages で公開される。ビルドを挟まない。
-- mainへのpushでGitHub Pagesのデプロイが開始され、完了後に公開サイトへ反映される。
-- 複数のClaude Codeセッションが、別々のcloneから同じmainを操作する運用下で、
-  2026年8月に変更の巻き戻しが同日2回発生した。直接原因は調査中。
-- tools/publish_photos.py も data/athletes.js を書き換えてコミットする（pushはしない）。
+- main は保護されており、直接push・直接コミットはできない。
+  公開サイトへの反映は Pull Request のマージによって開始される。
+- 2026年8月、変更の巻き戻しが同日2回発生した。原因は、GitHub API経由のコミットが
+  「親は常に最新、中身は送信側が持っているもの」という構造を持つため、
+  4日前の index.html を土台にした内容が、コンフリクトを起こさずに最新の上に載ったこと。
+  この経路は現在ブランチ保護（PR必須・strict）で塞がれている。
+- tools/publish_photos.py も data/athletes.js と assets/athletes/ を書き換えて
+  コミットする（pushはしない）。
 
 ## ブランチ運用
 - main は保護されている。直接push・直接コミットはできない（API経由も含む）。
@@ -56,13 +60,15 @@
 - 会話の途中で読み込んだ内容をそのまま土台にしない。
   最後のfetchより後に編集を再開する場合は、対象ファイルを読み直す。
 
-## push前に必ず行うこと
-- mainへのpushは本番デプロイを開始するため、毎回事前確認を取る。
-- push前に `git fetch origin main` と `git status --short --branch` を実行する。
-- origin/mainに新しいコミットがある、または履歴が分岐している場合はpushしない。
-- リモートと同期していることを確認したうえで、
-  `git diff --stat origin/main...HEAD` と通常の差分を確認する。
-- 変更量や内容が依頼範囲と一致しない場合はpushせず、差分を報告する。
+## PR作成・マージ前に必ず行うこと
+- 作業ブランチのpushは、origin/mainが進んでいても行ってよい。
+  土台が古いかどうかはマージ時にstrictが判定する。
+- PR作成前に `git fetch origin main` と `git status --short --branch` を実行する。
+- `git diff --stat origin/main...HEAD` と通常の差分を確認する。
+- 変更量や内容が依頼範囲と一致しない場合はPRを作らず、差分を報告する。
+- mergeStateStatus が BEHIND の場合は、土台が古い。マージせず、
+  最新の origin/main を取り込んでから再確認する。
+- マージは GitHub Pages の本番デプロイを開始する。マージ前に必ず確認を取る。
 
 ## データの単一情報源
 - 選手データの正本は data/athletes.js のみとする。
