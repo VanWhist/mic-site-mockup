@@ -4,6 +4,7 @@ on:
     branches: [main]
 jobs:
   check:
+    name: guard
     runs-on: ubuntu-latest
     steps:
       - run: echo "ok"
