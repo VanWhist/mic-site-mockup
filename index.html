@@ -866,10 +866,10 @@
   .kb-sub{margin-top:12px;color:var(--muted);font-size:14.5px;line-height:1.9;}
   .kb-sub span{display:inline-block;}
 
-  .kb-stage{position:relative;width:100%;max-width:1120px;height:500px;}
+  .kb-stage{position:relative;width:100%;max-width:1120px;height:560px;}
 
   .kb-phone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:256px;height:480px;border-radius:36px;background:#141418;
+    width:256px;height:540px;border-radius:36px;background:#141418;
     border:1px solid rgba(255,255,255,.14);
     box-shadow:0 50px 90px -40px rgba(0,0,0,.95), 0 0 0 8px #08080a;
     overflow:hidden;z-index:3;}
@@ -974,10 +974,10 @@
     stroke:var(--accent);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
   .kb-card .cn{font-size:14px;font-weight:800;letter-spacing:-.01em;margin-bottom:5px;}
   .kb-card .cx{font-size:11.5px;line-height:1.7;color:var(--muted);}
-  .kb .c1{left:0;   top:112px;}
-  .kb .c2{left:0;   top:298px;}
-  .kb .c3{right:0;  top:112px;}
-  .kb .c4{right:0;  top:298px;}
+  .kb .c1{left:0;   top:130px;}
+  .kb .c2{left:0;   top:340px;}
+  .kb .c3{right:0;  top:130px;}
+  .kb .c4{right:0;  top:340px;}
   .kb .c1,.kb .c2{--fx:340px;}
   .kb .c3,.kb .c4{--fx:-340px;}
   .kb .c1,.kb .c3{--fy:130px;}
@@ -1002,7 +1002,7 @@
     .kb-sub{font-size:13px;margin-top:10px;}
     .kb-stage{height:auto;display:flex;flex-direction:column;align-items:center;padding:0 6vw;}
     .kb-phone{position:relative;left:auto;top:auto;transform:none;
-      width:186px;height:360px;border-radius:28px;
+      width:186px;height:392px;border-radius:28px;
       box-shadow:0 30px 55px -32px rgba(0,0,0,.95), 0 0 0 6px #08080a;}
     .kb-phone::before{width:60px;height:14px;top:8px;border-radius:8px;}
     .kb .home{padding:34px 13px 16px;}
@@ -1028,21 +1028,22 @@
     .kb-title br{display:none;}
   }
 
-  /* 画面の高さが足りないときは、端末の高さだけを詰めて収める。
-     幅は256pxのまま変えないので、画面の中身の縮尺はいじらなくてよい。 */
-  @media (min-width:981px) and (max-height:860px){
-    .kb-stage{height:440px;}
-    .kb-phone{height:420px;}
-    .kb .c1,.kb .c3{top:96px;}
-    .kb .c2,.kb .c4{top:254px;}
+  /* 画面の高さが足りないときは、端末を丸ごと縮小する。
+     高さだけを詰めると 256:540 の縦横比が崩れて「短いスマホ」に見えるため、
+     transform で全体を縮める。中身も一緒に縮むので、画面側の調整は不要。 */
+  @media (min-width:981px) and (max-height:900px){
+    .kb-stage{height:450px;}
+    .kb-phone{transform:translate(-50%,-50%) scale(.855);}
+    .kb .c1,.kb .c3{top:78px;}
+    .kb .c2,.kb .c4{top:282px;}
   }
   @media (min-width:981px) and (max-height:720px){
     .kb-sticky{padding-top:70px;}
-    .kb-stage{height:356px;}
-    .kb-phone{height:336px;}
+    .kb-stage{height:370px;}
+    .kb-phone{transform:translate(-50%,-50%) scale(.70);}
     .kb-sub{display:none;}
-    .kb .c1,.kb .c3{top:54px;}
-    .kb .c2,.kb .c4{top:212px;}
+    .kb .c1,.kb .c3{top:58px;}
+    .kb .c2,.kb .c4{top:222px;}
   }
 
   /* 動きを減らす設定のときは、アニメーションなしで完成形をそのまま見せる */
