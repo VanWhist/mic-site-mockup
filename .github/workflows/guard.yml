@@ -1,10 +1,27 @@
 name: guard
+
+# ★ push でも走らせる。
+#   以前は pull_request のみだったため、直接 push していた運用では一度も動かず、
+#   しかも成功して緑のチェックが付いていた。守られていると誤解させる分だけ、
+#   無いより悪い状態だった。
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   check:
     name: guard
     runs-on: ubuntu-latest
     steps:
-      - run: echo "ok"
+      - uses: actions/checkout@v4
+
+      # data/athletes.js の構文を node --check で見るため（無ければスクリプト側が
+      # 括弧の対応で代用するが、ここでは本物の構文チェックを通す）
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 設計契約チェック
+        run: bash scripts/check-site.sh
