@@ -136,7 +136,7 @@ window.AP_ATHLETES = [
       id:'katsuta-yumi',
       name:'勝田有美',
       tag:'2026シーズン加入・S-air拠点',
-      photo:'assets/athletes/_placeholder.jpg',
+      photo:'assets/athletes/katsuta-yumi-798cb8f8.jpg',
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
