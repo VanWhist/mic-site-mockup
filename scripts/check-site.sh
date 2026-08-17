@@ -129,29 +129,29 @@ fi
 #   引っかかって即座に落ちる。**利用者の目に入る要素の中身**だけを見る。
 #   バッジ自体は「リニューアル準備中」として残す判断（2026/08/15）なので、
 #   要素の有無ではなく文言を検査する。
+# ★ 検査する場所は、実際に巻き戻った3か所だけに限定する。
+#     ・バッジ  … class="draft-badge" / class="demo-badge" の要素の中身
+#     ・フッター注記 … class="sf-bottom" の中の <span>
+#     ・<title> … タブと共有時に見える
+#   本文まで対象にしない。将来ページ本文に「試作品」と書いた瞬間に落ちてしまい、
+#   チェックが邪魔者になる。落ちるべきでないもので落ちるチェックは、やがて無視される。
 NG_WORDS='試作|ラフ案|ラフです|非公開|RAFU|DRAFT'
 for f in *.html; do
   [ -e "$f" ] || continue
-  # <body> 以降の、表示される要素だけを対象にする（<style> ブロックとHTMLコメントを除く）
-  hits=$(sed -n '/<body/,$p' "$f" \
-    | sed 's/<!--.*-->//g' \
+  body=$(sed -n '/<body/,$p' "$f" | sed 's/<!--.*-->//g')
+
+  badge=$(printf '%s\n' "$body" \
     | grep -nE "class=\"(draft-badge|demo-badge)\"[^>]*>[^<]*($NG_WORDS)" || true)
-  hits2=$(sed -n '/<body/,$p' "$f" | sed 's/<!--.*-->//g' \
-    | grep -nE "<(span|div|p)[^>]*>[^<]*($NG_WORDS)" || true)
-  if [ -z "$hits$hits2" ]; then
-    ok "$f に公開前の下書き文言が表示されていない"
+  footer=$(printf '%s\n' "$body" \
+    | grep -A3 'class="sf-bottom"' \
+    | grep -nE "<span[^>]*>[^<]*($NG_WORDS)" || true)
+  title=$(grep -oE '<title>[^<]*</title>' "$f" | grep -E "$NG_WORDS" || true)
+
+  if [ -z "$badge$footer$title" ]; then
+    ok "$f に公開前の下書き文言が表示されていない（バッジ・フッター注記・title）"
   else
     bad "$f に公開前の下書き文言が表示されている"
-    note "$(printf '%s\n%s' "$hits" "$hits2" | grep . | head -3)"
-  fi
-done
-
-# <title> も利用者に見える（タブ・共有時）
-for f in *.html; do
-  [ -e "$f" ] || continue
-  if grep -oE '<title>[^<]*</title>' "$f" | grep -qE "$NG_WORDS"; then
-    bad "$f の <title> に公開前の下書き文言がある"
-    note "$(grep -oE '<title>[^<]*</title>' "$f")"
+    note "$(printf '%s\n%s\n%s' "$badge" "$footer" "$title" | grep . | head -3)"
   fi
 done
 
