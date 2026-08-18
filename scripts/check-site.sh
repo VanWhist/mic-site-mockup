@@ -111,6 +111,31 @@ EOF_ARRAYS
     note "$(printf '%s' "$over" | head -3)"
   fi
 
+  # ---- 動画の値（2026/08/18）----
+  # ★ video は .mp4 か YouTube の URL だけ。想定外の値は再生ボタンごと出さない作りだが、
+  #   出ないことに気づけないので、値の段階で止める。
+  #   video:null は「動画なし」なので対象外。
+  badvid=''
+  while IFS= read -r v; do
+    [ -z "$v" ] && continue
+    case "$v" in
+      *.mp4|*.mp4\?*|*.mp4\#*) continue ;;
+    esac
+    if printf '%s' "$v" | grep -qE '^https?://(youtu\.be/|(www\.)?youtube\.com/(watch\?([^#]*&)?v=|shorts/|embed/))[A-Za-z0-9_-]{6,}'; then
+      continue
+    fi
+    badvid="${badvid}${v}
+"
+  done <<EOF_VIDEOS
+$(grep -oE "\bvideo:'[^']*'" data/athletes.js | sed "s/^video:'//; s/'$//")
+EOF_VIDEOS
+  if [ -z "$badvid" ]; then
+    ok 'video の値が .mp4 か YouTube の URL になっている'
+  else
+    bad 'video に想定外の値がある（.mp4 か YouTube の URL のみ）'
+    note "$(printf '%s' "$badvid" | head -3)"
+  fi
+
   # 構文チェック。node が無い環境もあるので、無ければ括弧の対応で代用する
   if command -v node >/dev/null 2>&1; then
     if node --check data/athletes.js >/dev/null 2>&1; then
