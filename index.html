@@ -1924,21 +1924,51 @@
     });
   }
 
+  // 自動送りのタイマーは「人」ごとに1本だけ持つ。
+  //
+  // ★ ギャラリーは横スクロールを途切れさせないためカードを複製している。
+  //   カード単位でタイマーを付けると、同じ人を2本のタイマーが別々の位相で叩き、
+  //   切り替え間隔が「3.5秒 → 1.2秒 → 2.3秒」のように不揃いになる（実際にそうなっていた）。
+  //   複製カードは切り替えの対象ではあるが、タイマーの持ち主にはしない。
+  //
+  // ★ マウスが離れたときに setInterval を作り直さない。作り直すと 3.5秒の数え直しになり、
+  //   マウスが横切るだけで周期が乱れる。止める代わりに paused を見るだけにして、
+  //   タイマーそのものは動かし続ける。
   function apAutoRotateInit(){
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const cards = document.querySelectorAll('#athleteGallery .ap-card[data-photo-index]');
-    cards.forEach(function(card, i){
-      const photos = card.querySelectorAll('.ap-photo');
-      if (photos.length < 2) return;
-      let timer = null;
-      function tick(){
-        if (document.visibilityState === 'visible') apSwitchPhoto(card, 1);
-      }
-      function start(){ stop(); timer = setInterval(tick, 3500); }
-      function stop(){ if (timer) { clearInterval(timer); timer = null; } }
-      setTimeout(start, i * 450);   // カードごとに少しずらし、一斉に切り替わらないようにする
-      card.addEventListener('mouseenter', stop);
-      card.addEventListener('mouseleave', start);
+    apRotateGroup('#athleteGallery', '.ap-card', 'data-ap-index', '.ap-photo', apSwitchPhoto);
+  }
+
+  // 選手側とコーチ側で同じ形になるが、共通化はしない方針のため
+  // 「同じ処理の置き場」としてだけ切り出す（呼び出し側は互いに独立）。
+  function apRotateGroup(galleryId, cardSel, indexAttr, photoSel, switchFn){
+    const groups = new Map();     // Map は挿入順を保つので、通し番号がDOM順になる
+    document.querySelectorAll(galleryId + ' ' + cardSel + '[data-photo-index]').forEach(function(card){
+      const key = card.getAttribute(indexAttr);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(card);
+    });
+
+    let n = 0;   // ★ 複製を除いた「人」の通し番号。複製込みだと同じ人の2枚が別々にずれる
+    groups.forEach(function(cards){
+      const lead = cards[0];      // タイマーの持ち主。切り替え自体は複製すべてに及ぶ
+      if (lead.querySelectorAll(photoSel).length < 2) return;
+
+      let paused = false;
+      cards.forEach(function(c){
+        c.addEventListener('mouseenter', function(){ paused = true; });
+        c.addEventListener('mouseleave', function(){ paused = false; });
+      });
+
+      // 一斉に切り替わらないよう、人ごとに開始を450msずつずらす
+      setTimeout(function(){
+        setInterval(function(){
+          if (paused) return;
+          if (document.visibilityState !== 'visible') return;
+          switchFn(lead, 1);
+        }, 3500);
+      }, n * 450);
+      n++;
     });
   }
 
@@ -2106,24 +2136,12 @@
     else { cpOpen(index); }
   }
 
+  // 選手側と同じ問題がここにもあった。公開サイトでは複製込み8枚のカードに
+  // タイマーが8本走り、うち3人は同じ人を2本が別々の位相で叩いていた。
+  // 直し方の説明は apRotateGroup の上を参照。
   function cpAutoRotateInit(){
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const cards = document.querySelectorAll('#coachGallery .cp-card[data-photo-index]');
-    cards.forEach(function(card, i){
-      const photos = card.querySelectorAll('.cp-photo');
-      if (photos.length < 2) return;
-      let timer = null;
-      function tick(){
-        if (document.visibilityState === 'visible') cpSwitchPhoto(card, 1);
-      }
-      function start(){ stop(); timer = setInterval(tick, 3500); }
-      function stop(){ if (timer) { clearInterval(timer); timer = null; } }
-      // stagger the start slightly per card so they don't all flip in lockstep
-      setTimeout(start, i * 450);
-      // pause while the user is looking at this card, resume on mouse-leave
-      card.addEventListener('mouseenter', stop);
-      card.addEventListener('mouseleave', start);
-    });
+    apRotateGroup('#coachGallery', '.cp-card', 'data-cp-index', '.cp-photo', cpSwitchPhoto);
   }
 
   function cpInit(){
