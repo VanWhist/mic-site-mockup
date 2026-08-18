@@ -74,6 +74,43 @@ else
     note 'publish_photos.py は重複があると停止する'
   fi
 
+  # ---- 写真の複数枚化（2026/08/18）----
+  # 単数の photo は廃止した。二重管理を作らないため photos（配列）に一本化している。
+  # 移行漏れと、あとから単数へ戻す変更を止めるための検査。
+  if grep -qE "(^|[^a-zA-Z])photo:" data/athletes.js; then
+    bad 'data/athletes.js に単数の photo: が残っている（photos: の配列へ一本化すること）'
+    note "$(grep -nE "(^|[^a-zA-Z])photo:" data/athletes.js | head -3)"
+  else
+    ok 'data/athletes.js に単数の photo: が無い'
+  fi
+
+  np=$(grep -c "photos:\[" data/athletes.js || true)
+  if [ "$np" -ge 12 ]; then
+    ok "photos: が ${np} 件（12件以上）"
+  else
+    bad "photos: が ${np} 件しかない（12件以上あるべき）"
+    note '移行漏れの可能性がある'
+  fi
+
+  # ★ 1人あたり3枚まで。承認画面（Apps Script）側の「1選手1枚」ガードを外した代わりに
+  #   置いている上限なので、ここが効かないと歯止めが無くなる。
+  over=''
+  while IFS= read -r arr; do
+    [ -z "$arr" ] && continue
+    q=$(printf '%s' "$arr" | tr -cd "'" | wc -c)
+    cnt=$(( q / 2 ))
+    if [ "$cnt" -gt 3 ]; then over="${over}${cnt}枚: ${arr}
+"; fi
+  done <<EOF_ARRAYS
+$(grep -oE "photos:\[[^]]*\]" data/athletes.js)
+EOF_ARRAYS
+  if [ -z "$over" ]; then
+    ok '1人あたりの photos が3枚以下'
+  else
+    bad '1人あたりの photos が3枚を超えている'
+    note "$(printf '%s' "$over" | head -3)"
+  fi
+
   # 構文チェック。node が無い環境もあるので、無ければ括弧の対応で代用する
   if command -v node >/dev/null 2>&1; then
     if node --check data/athletes.js >/dev/null 2>&1; then

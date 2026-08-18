@@ -1,5 +1,8 @@
 // MIC 選手データ
-// このファイルは tools/publish_photos.py が自動更新します（photo の値のみ）。
+// このファイルは tools/publish_photos.py が自動更新します（photos の値のみ）。
+// photos は「1人あたり最大3枚」の配列。先頭が代表写真で、パネルのヒーロー初期表示と
+// 動画の背景に使われます。順序は写真が届いた順（received_at 昇順）。
+// ★ 単数の photo は持ちません。二重管理を作らないため photos に一本化しています。
 // 手で編集する場合は、選手の照合キーが id（ローマ字スラッグ）であることに注意してください。
 // 氏名は表示専用で、照合には使いません（漢字の表記ゆれがあるため）。
 // .json ではなく .js なのは、file:// でローカルプレビューしたときに fetch が CORS で
@@ -10,7 +13,7 @@ window.AP_ATHLETES = [
       id:'mise-kurea',
       name:'見瀬クレア',
       tag:'世界ジュニア3位・アジアカップ優勝',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -18,7 +21,7 @@ window.AP_ATHLETES = [
       id:'suzuki-reina',
       name:'鈴木伶菜',
       tag:'ジュニアオリンピックMO11位・DM7位',
-      photo:'assets/athletes/suzuki-reina-eca44afe.jpg',
+      photos:['assets/athletes/suzuki-reina-eca44afe.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
@@ -33,7 +36,7 @@ window.AP_ATHLETES = [
       id:'aruga-mutsuhito',
       name:'有賀睦人',
       tag:'大阪府ジュニアスキー技術選手権 優勝',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg'],
       hasKarte:true,
       vision:'ワールドカップなどで活躍したいです。',
       goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
@@ -50,7 +53,7 @@ window.AP_ATHLETES = [
       id:'maji-haruyo',
       name:'馬路晴世',
       tag:'B級公認大会5位',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
@@ -66,7 +69,7 @@ window.AP_ATHLETES = [
       id:'nanaumi-kaisei',
       name:'七海快成',
       tag:'全日本選手権初出場',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
@@ -88,7 +91,7 @@ window.AP_ATHLETES = [
       id:'hamada-takuma',
       name:'浜田匠真',
       tag:'楽しくスキーを頑張る',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg'],
       hasKarte:true,
       vision:'スキーモーグルを広めれる人になりたいです。',
       goal:'B級大会優勝です。',
@@ -100,7 +103,7 @@ window.AP_ATHLETES = [
       id:'hamada-seima',
       name:'浜田誠真',
       tag:'B級公認大会出場',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -108,7 +111,7 @@ window.AP_ATHLETES = [
       id:'matsumura-satomi',
       name:'松村聡美',
       tag:'GARAカップ 小学生の部 3位',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -116,7 +119,7 @@ window.AP_ATHLETES = [
       id:'hayashi-ryoma',
       name:'林遼真',
       tag:'A級公認大会7位',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg',
+      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
@@ -136,7 +139,7 @@ window.AP_ATHLETES = [
       id:'katsuta-yumi',
       name:'勝田有美',
       tag:'2026シーズン加入・S-air拠点',
-      photo:'assets/athletes/katsuta-yumi-798cb8f8.jpg',
+      photos:['assets/athletes/katsuta-yumi-798cb8f8.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -144,7 +147,7 @@ window.AP_ATHLETES = [
       id:'fujihara-tomoki',
       name:'藤原朋己',
       tag:'2026シーズン加入',
-      photo:'assets/athletes/_placeholder.jpg',
+      photos:['assets/athletes/_placeholder.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -152,7 +155,7 @@ window.AP_ATHLETES = [
       id:'suzuki-kae',
       name:'鈴木佳英',
       tag:'八方ジュニアテクニカル取得',
-      photo:'assets/athletes/_placeholder.jpg',
+      photos:['assets/athletes/_placeholder.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     }
