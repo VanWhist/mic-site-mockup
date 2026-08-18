@@ -766,6 +766,19 @@
   .ap-panel-hero-img.placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a2a2e,#0e0e10);}
   .ap-panel-hero-img.placeholder .ap-initial{font-size:min(20vw,140px);font-weight:800;color:rgba(255,255,255,.08);letter-spacing:-.04em;}
   .ap-panel-hero-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
+  /* 再生中だけ、枠を動画の縦横比そのものにする。寸法は JS が計算して置く（apSizeHeroForVideo）。
+     静止時（写真を出しているとき）の枠は今までどおりで、ここでは変えていない。 */
+  /* ★ 枠の変化に transition は付けない。
+     見た目のなめらかさより、枠が必ず動画の比率になることを優先する。
+     再生ボタンを押した直後の変化なので、利用者は変わることを期待している場面でもある。
+
+     きっかけは、バックグラウンドのタブで枠が開始時の寸法（横長のまま）で止まる現象を
+     実際に見たこと。ただし原因は requestAnimationFrame が止まることなので、
+     タブに戻れば再開するはずで、**実ユーザーには起きない可能性が高い**。
+     この観測は「付けない」理由の決め手ではなく、きっかけに過ぎない、という記録。 */
+  .ap-panel-hero.ap-playing{margin:0 auto;background:#000;}
+  .ap-panel-hero.ap-playing .ap-panel-hero-video{object-fit:contain;}
+  .ap-panel-hero-frame{width:100%;height:100%;display:block;border:0;background:#000;}
   /* ★ z-index は写真送りのナビ（2）とバー（3）より上。中央24%の空きに収まるが、
      重なり順を上げておかないと、押したつもりが写真送りになる。 */
   .ap-play-btn{position:absolute;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s,transform .2s;}
@@ -1802,10 +1815,18 @@
     const media = photos.length
       ? apHeroMedia(photos, a.name, startIndex)
       : '<div class="ap-panel-hero-img placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
-    const playBtn = a.video
-      ? '<button type="button" class="ap-play-btn" onclick="apPlayVideo(this)" aria-label="' + a.name + 'さんの動画を再生"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>'
+    // ★ 素性の分からない URL では再生ボタンを出さない。
+    //   出してしまうと、値の取り違えがそのまま iframe への流し込みになる。
+    const vid = apVideoSource(a.video);
+    const playBtn = vid
+      ? '<button type="button" class="ap-play-btn" onclick="apPlayVideo(this)" aria-label="' + apEsc(a.name) + 'さんの動画を再生"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>'
       : '';
-    return '<div class="ap-panel-hero" data-video="' + (a.video || '') + '">' + media + playBtn + '</div>'
+    const ratio = apVideoAspect(a.videoAspect);
+    return '<div class="ap-panel-hero"'
+      + (vid ? ' data-video-kind="' + vid.kind + '" data-video-src="' + apEsc(vid.src) + '"'
+             + ' data-video-aspect="' + ratio.w + ':' + ratio.h + '"'
+             + ' data-athlete="' + apEsc(a.name) + '"' : '')
+      + '>' + media + playBtn + '</div>'
       + '<div class="ap-panel-body">'
       + '<div class="ap-panel-head">'
       + '<div><div class="ap-panel-name">' + a.name + '</div><div class="ap-panel-tag">' + a.tag + '</div></div>'
@@ -1816,13 +1837,94 @@
       + '</div>';
   }
 
+  // ---------- 動画 ----------
+  // 値は data/athletes.js の video / videoAspect に持たせる。
+  // ★ YouTube の oEmbed から比率を取る手もあるが、限定公開の動画では取得できないことが
+  //   あるため、データに書く形にしている。
+
+  // 共有されうる5つの形からIDを取り出す。どれにも当てはまらなければ null。
+  function apYouTubeId(url){
+    const u = String(url == null ? '' : url).trim();
+    const pats = [
+      /^https?:\/\/youtu\.be\/([A-Za-z0-9_-]{6,})/,
+      /^https?:\/\/(?:www\.)?youtube\.com\/watch\?(?:[^#]*&)?v=([A-Za-z0-9_-]{6,})/,
+      /^https?:\/\/(?:www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/,
+      /^https?:\/\/(?:www\.)?youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/
+    ];
+    for (let i = 0; i < pats.length; i++) {
+      const m = pats[i].exec(u);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  // 再生できる形に解決する。解決できなければ null（＝再生ボタンを出さない）。
+  function apVideoSource(url){
+    const u = String(url == null ? '' : url).trim();
+    if (!u) return null;
+    // ★ javascript: や data: を弾く。http(s) か、スキームを持たない相対パスだけ通す。
+    if (!/^https?:\/\//i.test(u) && /^[^/?#]*:/.test(u)) return null;
+    if (/\.mp4(?:[?#]|$)/i.test(u)) return {kind: 'mp4', src: u};
+    const id = apYouTubeId(u);
+    // ★ youtube-nocookie を使う。限定公開の動画が実際に再生できることを確認済み
+    //   （IFrame API の応答が isPlayable:true / errorCode:null / duration:13）。
+    //   選手は未成年なので、追跡クッキーの少ないほうを選ぶ。
+    if (id) return {kind: 'youtube',
+                    src: 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1'};
+    return null;
+  }
+
+  // '幅:高さ'。省略・想定外の値は 16:9（横）とみなす。ここで落ちないこと。
+  function apVideoAspect(value){
+    const m = /^(\d{1,4}):(\d{1,4})$/.exec(String(value == null ? '' : value).trim());
+    if (!m) return {w: 16, h: 9};
+    const w = parseInt(m[1], 10), h = parseInt(m[2], 10);
+    return (w > 0 && h > 0) ? {w: w, h: h} : {w: 16, h: 9};
+  }
+
+  // ★ 再生中はヒーローの枠を動画の縦横比そのものにする。
+  //   帯を出さず、切りもしないため。幅いっぱいのまま比率だけ変えると、
+  //   縦動画は高さが1600px超になるので、画面の高さ7割を上限にして幅を詰める。
+  //   CSS の aspect-ratio だけでは上限に当たった時点で比率が崩れるので、寸法を計算して置く。
+  const AP_VIDEO_MAX_VH = 0.7;
+
+  function apSizeHeroForVideo(hero){
+    const a = apVideoAspect(hero.getAttribute('data-video-aspect'));
+    const parent = hero.parentElement;
+    const avail = parent ? parent.clientWidth : hero.clientWidth;
+    if (!avail) return;
+    const maxH = Math.round(window.innerHeight * AP_VIDEO_MAX_VH);
+    let w = avail, h = Math.round(avail * a.h / a.w);
+    if (h > maxH) { h = maxH; w = Math.round(maxH * a.w / a.h); }
+    hero.style.width = w + 'px';
+    hero.style.height = h + 'px';
+  }
+
   window.apPlayVideo = function(btn){
     const hero = btn.closest('.ap-panel-hero');
     if (!hero) return;
-    const url = hero.getAttribute('data-video');
-    if (!url) return;
-    hero.innerHTML = '<video class="ap-panel-hero-video" src="' + url + '" controls autoplay playsinline></video>';
+    const kind = hero.getAttribute('data-video-kind');
+    const src = hero.getAttribute('data-video-src');
+    if (!kind || !src) return;
+    const name = hero.getAttribute('data-athlete') || '';
+    // innerHTML の差し替えで、写真・ストーリーバー・ナビ・再生ボタンはまとめて消える
+    hero.innerHTML = kind === 'youtube'
+      ? '<iframe class="ap-panel-hero-frame" src="' + apEsc(src) + '"'
+        + ' title="' + apEsc(name) + 'さんの動画"'
+        // ★ allow に fullscreen を入れない。allowfullscreen と併記すると
+        //   「Allow attribute will take precedence over 'allowfullscreen'」の警告が出る。
+        + ' allow="autoplay; encrypted-media; picture-in-picture"'
+        + ' allowfullscreen frameborder="0"></iframe>'
+      : '<video class="ap-panel-hero-video" src="' + apEsc(src) + '" controls autoplay playsinline></video>';
+    hero.classList.add('ap-playing');
+    apSizeHeroForVideo(hero);
   };
+
+  // 画面の大きさが変わっても比率を保つ（縦動画では上限に当たるため、寸法が変わる）
+  window.addEventListener('resize', function(){
+    const hero = document.querySelector('#apPanel .ap-panel-hero.ap-playing');
+    if (hero) apSizeHeroForVideo(hero);
+  });
 
   let apActiveIndex = -1;
 
