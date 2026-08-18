@@ -147,7 +147,7 @@ window.AP_ATHLETES = [
       id:'fujihara-tomoki',
       name:'藤原朋己',
       tag:'2026シーズン加入',
-      photos:['assets/athletes/_placeholder.jpg'],
+      photos:[],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -155,7 +155,7 @@ window.AP_ATHLETES = [
       id:'suzuki-kae',
       name:'鈴木佳英',
       tag:'八方ジュニアテクニカル取得',
-      photos:['assets/athletes/_placeholder.jpg'],
+      photos:[],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     }

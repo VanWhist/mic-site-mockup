@@ -717,9 +717,25 @@
 
   /* ---------- Athlete profile (carousel cards + expand-in-place panel) ---------- */
   .g-card.ap-card{height:auto;background:transparent;cursor:pointer;}
-  .ap-card-media{width:100%;height:460px;border-radius:18px;overflow:hidden;background:#1b1b1e;}
+  .ap-card-media{position:relative;width:100%;height:460px;border-radius:18px;overflow:hidden;background:#1b1b1e;}
   .ap-card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1);}
   .g-card.ap-card:hover .ap-card-media img{transform:scale(1.06);}
+
+  /* 1人あたり最大3枚の切り替え。コーチ側（.cp-*）と同じ作りを選手用に写したもの。
+     共通化はしていない。片方を直したときに、もう片方が黙って変わるのを避けるため。
+     写真が1枚の選手ではこれらの要素自体を出さない（コーチ側の1枚のときと同じ扱い）。 */
+  .ap-photos{position:absolute;inset:0;}
+  /* ★ .ap-card-media img が transition:transform を持っており、詳細度で勝ってしまうため
+     こちらは .ap-card-media を前置して両方を明示する。省くと切り替えが即時になる。 */
+  .ap-card-media .ap-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease,transform .8s cubic-bezier(.16,1,.3,1);}
+  .ap-card-media .ap-photo.active{opacity:1;}
+  .ap-story-bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:3;pointer-events:none;}
+  .ap-story-bars .bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;}
+  .ap-story-bars .bar.active{background:rgba(255,255,255,.95);}
+  /* 左右38%ずつ。中央24%を空けるのは、パネルで再生ボタンの当たり判定を奪わないため。 */
+  .ap-photo-nav{position:absolute;top:0;bottom:0;width:38%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
+  .ap-photo-nav-prev{left:0;}
+  .ap-photo-nav-next{right:0;}
   .ap-name-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 2px 0;}
   .ap-name-row-name{font-weight:600;font-size:21px;letter-spacing:-.02em;line-height:1.25;transition:color .25s;background-image:linear-gradient(var(--accent),var(--accent));background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;padding-bottom:2px;transition:background-size .35s cubic-bezier(.16,1,.3,1),color .25s;}
   .g-card.ap-card:hover .ap-name-row-name{background-size:100% 1px;}
@@ -744,10 +760,15 @@
      切り取りで救える範囲には限りがあるので、upload.html の依頼文で
      「中央に、なるべく大きく写っているもの」をお願いする方針とした。 */
   .ap-panel-hero-img{width:100%;height:100%;object-fit:cover;object-position:center 50%;display:block;}
+  /* 複数枚のときは重ねて透明度で切り替える。1枚のときは素の <img> のままなので影響しない。 */
+  .ap-panel-hero-img.ap-hero-photo{position:absolute;inset:0;opacity:0;transition:opacity .4s ease;}
+  .ap-panel-hero-img.ap-hero-photo.active{opacity:1;}
   .ap-panel-hero-img.placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a2a2e,#0e0e10);}
   .ap-panel-hero-img.placeholder .ap-initial{font-size:min(20vw,140px);font-weight:800;color:rgba(255,255,255,.08);letter-spacing:-.04em;}
   .ap-panel-hero-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
-  .ap-play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s,transform .2s;}
+  /* ★ z-index は写真送りのナビ（2）とバー（3）より上。中央24%の空きに収まるが、
+     重なり順を上げておかないと、押したつもりが写真送りになる。 */
+  .ap-play-btn{position:absolute;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.85);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s,transform .2s;}
   .ap-play-btn:hover{background:var(--accent);border-color:var(--accent);transform:translate(-50%,-50%) scale(1.06);}
   .ap-play-btn svg{width:26px;height:26px;margin-left:3px;}
   .ap-panel-body{padding:28px 8% 44px;}
@@ -1716,7 +1737,10 @@
     gallery.innerHTML = AP_ATHLETES.map(function(a, i){
       // photos（配列）が正本。単数の photo は持たない。空配列なら既定画像で埋める。
       const photos = apPhotosOf(a);
-      return '<div class="g-card ap-card" data-ap-index="' + i + '">'
+      // data-photo-index は2枚以上のときだけ付ける。自動送りはこの属性を目印に探すので、
+      // 1枚の選手に付けると回す必要のないカードまで拾ってしまう。
+      return '<div class="g-card ap-card" data-ap-index="' + i + '"'
+        + (photos.length > 1 ? ' data-photo-index="0"' : '') + '>'
         + '<div class="ap-card-media">' + apCardMedia(photos, a.name) + '</div>'
         + '<div class="ap-name-row">'
         + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div>'
@@ -1773,10 +1797,10 @@
       + '<div class="ap-block no-border"><div class="ap-goal-card"><div class="label">今年のシーズン目標</div><p>' + a.goal + '</p></div></div>';
   }
 
-  function apRenderPanel(a){
+  function apRenderPanel(a, startIndex){
     const photos = apPhotosOf(a);
     const media = photos.length
-      ? apHeroMedia(photos, a.name)
+      ? apHeroMedia(photos, a.name, startIndex)
       : '<div class="ap-panel-hero-img placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
     const playBtn = a.video
       ? '<button type="button" class="ap-play-btn" onclick="apPlayVideo(this)" aria-label="' + a.name + 'さんの動画を再生"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>'
@@ -1821,12 +1845,36 @@
   // run either directly or inside document.startViewTransition() for the photo zoom morph.
   function apApplyOpen(index){
     apActiveIndex = index;
-    document.getElementById('apPanel').innerHTML = apRenderPanel(AP_ATHLETES[index]);
+    // カードで見ていた1枚をそのまま開く。先頭に戻すと、拡大アニメーションが
+    // 別の写真へ変わって見えるため。photos[0]（代表写真）は初期表示と動画の背景に使う。
+    const card = document.querySelector('#athleteGallery .ap-card[data-ap-index="' + index + '"]');
+    const start = card ? parseInt(card.getAttribute('data-photo-index') || '0', 10) : 0;
+    document.getElementById('apPanel').innerHTML = apRenderPanel(AP_ATHLETES[index], start);
     document.getElementById('apPanelWrap').classList.add('open');
     apSetActiveCardClass(index);
-    const heroImg = document.querySelector('#apPanel .ap-panel-hero-img');
+    const heroImg = document.querySelector('#apPanel .ap-panel-hero-img.active')
+                 || document.querySelector('#apPanel .ap-panel-hero-img');
     if (heroImg) heroImg.classList.add('ap-vt-photo');
   }
+
+  // パネル側の写真送り。カードと違い複製が無いので、その場の要素だけを動かす。
+  function apPanelSwitchPhoto(hero, dir){
+    const photos = hero.querySelectorAll('.ap-hero-photo');
+    if (photos.length < 2) return;
+    let cur = 0;
+    photos.forEach(function(p, i){ if (p.classList.contains('active')) cur = i; });
+    const next = (cur + dir + photos.length) % photos.length;
+    photos.forEach(function(p, i){ p.classList.toggle('active', i === next); });
+    hero.querySelectorAll('.ap-hero-bars .bar').forEach(function(b, i){ b.classList.toggle('active', i === next); });
+  }
+
+  document.addEventListener('click', function(e){
+    const navBtn = e.target.closest('#apPanel .ap-photo-nav');
+    if (!navBtn) return;
+    const hero = navBtn.closest('.ap-panel-hero');
+    if (!hero) return;
+    apPanelSwitchPhoto(hero, navBtn.classList.contains('ap-photo-nav-next') ? 1 : -1);
+  });
 
   function apOpen(index, clickedImgEl){
     const supportsVT = typeof document.startViewTransition === 'function';
@@ -1860,6 +1908,40 @@
     btn.remove();
   };
 
+  // 写真の切り替え。ギャラリーはループ用にカードを複製するので、同じ選手の複製すべてを
+  // 同時に動かす。片方だけ進むと、横スクロールで戻ったときに絵が飛ぶ。
+  function apSwitchPhoto(card, dir){
+    const idx = card.getAttribute('data-ap-index');
+    const photos = card.querySelectorAll('.ap-photo');
+    if (photos.length < 2) return;
+    let cur = 0;
+    photos.forEach(function(p, i){ if (p.classList.contains('active')) cur = i; });
+    const next = (cur + dir + photos.length) % photos.length;
+    document.querySelectorAll('#athleteGallery .ap-card[data-ap-index="' + idx + '"]').forEach(function(c){
+      c.setAttribute('data-photo-index', String(next));
+      c.querySelectorAll('.ap-photo').forEach(function(p, i){ p.classList.toggle('active', i === next); });
+      c.querySelectorAll('.ap-story-bars .bar').forEach(function(b, i){ b.classList.toggle('active', i === next); });
+    });
+  }
+
+  function apAutoRotateInit(){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const cards = document.querySelectorAll('#athleteGallery .ap-card[data-photo-index]');
+    cards.forEach(function(card, i){
+      const photos = card.querySelectorAll('.ap-photo');
+      if (photos.length < 2) return;
+      let timer = null;
+      function tick(){
+        if (document.visibilityState === 'visible') apSwitchPhoto(card, 1);
+      }
+      function start(){ stop(); timer = setInterval(tick, 3500); }
+      function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+      setTimeout(start, i * 450);   // カードごとに少しずらし、一斉に切り替わらないようにする
+      card.addEventListener('mouseenter', stop);
+      card.addEventListener('mouseleave', start);
+    });
+  }
+
   function apInit(){
     const gallery = document.getElementById('athleteGallery');
     if (!gallery) return;
@@ -1870,11 +1952,20 @@
     });
     gallery.addEventListener('click', function(e){
       if (moved > 6) return; // this was a drag, not a tap
+      // 写真送りのボタンはカードの中にあるので、先に受け止めてパネルを開かせない
+      const navBtn = e.target.closest('.ap-photo-nav');
+      if (navBtn) {
+        const navCard = navBtn.closest('.ap-card');
+        if (!navCard) return;
+        apSwitchPhoto(navCard, navBtn.classList.contains('ap-photo-nav-next') ? 1 : -1);
+        return;
+      }
       const card = e.target.closest('.ap-card'); // whole card (photo or name row) is clickable
       if (!card) return;
       const idx = parseInt(card.getAttribute('data-ap-index'), 10);
       if (isNaN(idx)) return;
-      const imgEl = card.querySelector('.ap-card-media img');
+      // 拡大アニメーションの起点は、いま表示中の1枚。複製カードでも .active を優先する。
+      const imgEl = card.querySelector('.ap-card-media .ap-photo.active') || card.querySelector('.ap-card-media img');
       apToggle(idx, imgEl);
     });
   }
@@ -2062,9 +2153,10 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ apInit(); cpInit(); cpAutoRotateInit(); });
+    document.addEventListener('DOMContentLoaded', function(){ apInit(); apAutoRotateInit(); cpInit(); cpAutoRotateInit(); });
   } else {
     apInit();
+    apAutoRotateInit();
     cpInit();
     cpAutoRotateInit();
   }
