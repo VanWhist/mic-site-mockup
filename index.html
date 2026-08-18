@@ -1658,13 +1658,66 @@
     });
   }
 
+  const AP_PLACEHOLDER = 'assets/athletes/_placeholder.jpg';
+  const AP_MAX_PHOTOS = 3;
+
+  // photos（配列）が選手写真の正本。単数の photo は持たない（二重管理を作らないため）。
+  // 3枚を超える分は表示側でも落とす。反映CLIは4枚以上を停止扱いにするので、ここに来るのは
+  // 手でデータを直したときだけ。落としたことに気づけるよう console に出す。
+  function apPhotosOf(a){
+    const list = (a && Array.isArray(a.photos)) ? a.photos.filter(Boolean) : [];
+    if (list.length > AP_MAX_PHOTOS) {
+      console.warn('[MIC] ' + (a && a.name) + ' の写真が ' + list.length + '枚あります。先頭' + AP_MAX_PHOTOS + '枚だけ表示します。');
+      return list.slice(0, AP_MAX_PHOTOS);
+    }
+    return list;
+  }
+
+  // カードの写真。1枚のときはコーチ側と同じく素の <img> だけを置く。
+  // ストーリーバーとナビは2枚以上のときにしか出さない。
+  function apCardMedia(photos, name){
+    if (photos.length < 2) {
+      return '<img src="' + apEsc(photos[0] || AP_PLACEHOLDER) + '" alt="' + apEsc(name) + '">';
+    }
+    return '<div class="ap-photos">'
+      + photos.map(function(src, i){
+          return '<img class="ap-photo' + (i === 0 ? ' active' : '') + '" data-photo-index="' + i + '" src="'
+            + apEsc(src) + '" alt="' + apEsc(name) + '">';
+        }).join('')
+      + '</div>'
+      + '<div class="ap-story-bars">' + photos.map(function(_, i){
+          return '<span class="bar' + (i === 0 ? ' active' : '') + '"></span>';
+        }).join('') + '</div>'
+      + '<button type="button" class="ap-photo-nav ap-photo-nav-prev" aria-label="前の写真"></button>'
+      + '<button type="button" class="ap-photo-nav ap-photo-nav-next" aria-label="次の写真"></button>';
+  }
+
+  // パネルのヒーロー。動画の再生ボタンと同居するため、ナビは左右38%ずつに留めて
+  // 中央24%を空ける（再生ボタンの当たり判定を奪わない）。
+  function apHeroMedia(photos, name, startIndex){
+    const start = Math.min(Math.max(startIndex || 0, 0), photos.length - 1);
+    if (photos.length < 2) {
+      return '<img class="ap-panel-hero-img" src="' + apEsc(photos[0]) + '" alt="">';
+    }
+    return photos.map(function(src, i){
+        return '<img class="ap-panel-hero-img ap-hero-photo' + (i === start ? ' active' : '') + '" data-photo-index="'
+          + i + '" src="' + apEsc(src) + '" alt="">';
+      }).join('')
+      + '<div class="ap-story-bars ap-hero-bars">' + photos.map(function(_, i){
+          return '<span class="bar' + (i === start ? ' active' : '') + '"></span>';
+        }).join('') + '</div>'
+      + '<button type="button" class="ap-photo-nav ap-photo-nav-prev" aria-label="前の写真"></button>'
+      + '<button type="button" class="ap-photo-nav ap-photo-nav-next" aria-label="次の写真"></button>';
+  }
+
   function apRenderCards(){
     const gallery = document.getElementById('athleteGallery');
     if (!gallery) return;
     gallery.innerHTML = AP_ATHLETES.map(function(a, i){
-      const photo = a.photo || 'assets/athletes/_placeholder.jpg';
+      // photos（配列）が正本。単数の photo は持たない。空配列なら既定画像で埋める。
+      const photos = apPhotosOf(a);
       return '<div class="g-card ap-card" data-ap-index="' + i + '">'
-        + '<div class="ap-card-media"><img src="' + apEsc(photo) + '" alt="' + apEsc(a.name) + '"></div>'
+        + '<div class="ap-card-media">' + apCardMedia(photos, a.name) + '</div>'
         + '<div class="ap-name-row">'
         + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div>'
         + '<div class="ap-name-row-tag">' + apEsc(a.tag) + '</div></div>'
@@ -1721,8 +1774,9 @@
   }
 
   function apRenderPanel(a){
-    const media = a.photo
-      ? '<img class="ap-panel-hero-img" src="' + a.photo + '" alt="">'
+    const photos = apPhotosOf(a);
+    const media = photos.length
+      ? apHeroMedia(photos, a.name)
       : '<div class="ap-panel-hero-img placeholder"><div class="ap-initial">' + a.name.slice(0,1) + '</div></div>';
     const playBtn = a.video
       ? '<button type="button" class="ap-play-btn" onclick="apPlayVideo(this)" aria-label="' + a.name + 'さんの動画を再生"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>'
