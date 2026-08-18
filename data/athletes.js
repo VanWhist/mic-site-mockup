@@ -18,7 +18,7 @@ window.AP_ATHLETES = [
       id:'suzuki-reina',
       name:'鈴木伶菜',
       tag:'ジュニアオリンピックMO11位・DM7位',
-      photo:'https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/B5E480B5-0659-49AD-9919-034674A2404D-2048x1365.jpg',
+      photo:'assets/athletes/suzuki-reina-eca44afe.jpg',
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
