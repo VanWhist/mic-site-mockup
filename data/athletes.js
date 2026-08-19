@@ -150,7 +150,7 @@ window.AP_ATHLETES = [
       id:'fujihara-tomoki',
       name:'藤原朋己',
       tag:'2026シーズン加入',
-      photos:[],
+      photos:['assets/athletes/fujihara-tomoki-db00bb99.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
