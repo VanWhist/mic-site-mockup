@@ -158,7 +158,7 @@ window.AP_ATHLETES = [
       id:'suzuki-kae',
       name:'鈴木佳英',
       tag:'八方ジュニアテクニカル取得',
-      photos:[],
+      photos:['assets/athletes/suzuki-kae-37c1f2b2.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     }
