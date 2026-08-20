@@ -72,7 +72,7 @@ window.AP_ATHLETES = [
       id:'nanaumi-kaisei',
       name:'七海快成',
       tag:'全日本選手権初出場',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/79725F9F-AF13-4B82-9E75-860003098CB2-1024x683.jpg'],
+      photos:['assets/athletes/nanaumi-kaisei-57b62ed8.jpg','assets/athletes/nanaumi-kaisei-f687f276.jpg','assets/athletes/nanaumi-kaisei-3e8fc59f.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
