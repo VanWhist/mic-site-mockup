@@ -114,7 +114,7 @@ window.AP_ATHLETES = [
       id:'matsumura-satomi',
       name:'松村聡美',
       tag:'GARAカップ 小学生の部 3位',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/BAD967C6-F046-4246-B897-E20D5C8FB98E.jpg'],
+      photos:['assets/athletes/matsumura-satomi-e0554086.jpg','assets/athletes/matsumura-satomi-c0fdb7ef.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
