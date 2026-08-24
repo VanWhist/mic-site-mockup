@@ -1842,7 +1842,9 @@
         + '<div class="ap-card-media">' + apCardMedia(photos, a.name) + '</div>'
         + '<div class="ap-name-row">'
         + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div>'
-        + '<div class="ap-name-row-tag">' + apEsc(a.tag) + '</div></div>'
+        // tag が空のときは要素ごと出さない。空の div を置くと margin-top のぶん
+        // 氏名の下に隙間だけが残り、カードごとに高さが揃わなくなる。
+        + (a.tag ? '<div class="ap-name-row-tag">' + apEsc(a.tag) + '</div>' : '') + '</div>'
         + '<span class="ap-chev" aria-hidden="true">\u25be</span>'
         + '</div>'
         + '</div>';
@@ -1914,7 +1916,8 @@
       + '>' + media + playBtn + '</div>'
       + '<div class="ap-panel-body">'
       + '<div class="ap-panel-head">'
-      + '<div><div class="ap-panel-name">' + a.name + '</div><div class="ap-panel-tag">' + a.tag + '</div></div>'
+      + '<div><div class="ap-panel-name">' + apEsc(a.name) + '</div>'
+      + (a.tag ? '<div class="ap-panel-tag">' + apEsc(a.tag) + '</div>' : '') + '</div>'
       + '<button type="button" class="ap-panel-close" onclick="apClose()">閉じる ×</button>'
       + '</div>'
       + apRenderKarte(a)
@@ -2094,6 +2097,84 @@
     list.querySelectorAll('.hidden-row').forEach(function(r){ r.classList.remove('hidden-row'); });
     btn.remove();
   };
+
+  // ---------- 戦歴の取得 ----------
+  // 正本は戦歴API（スプレッドシート「MIC戦歴（自動取得）」＋Apps Script）。
+  // 毎週火曜9:00の自動チェックでSAJ競技データバンクの新着が入るので、
+  // ここで取りに行けば data/athletes.js を手で更新しなくてもサイトが最新になる。
+  // レッスンカレンダーと同じ「埋め込みで即描画 → APIで上書き」の作り。
+  // 取れなければ data/athletes.js の results をそのまま使うので、表示が消えることはない。
+  const AP_HISTORY_API_URL = 'https://script.google.com/macros/s/AKfycbznKEiCkuCYXO-B9e8Y6fV6fuVe9JpaOkSfMqai_bAsspS-mwcU5Ggx1oMOEBwuJnO_8A/exec';
+
+  // SAJ側のカテゴリ名がそのままだと1行に収まらないものだけ短くする。
+  // 一覧に無いものは触らない（勝手に言い換えない）。
+  const AP_CAT_SHORT = {
+    '小学1~6年生以下（SAJ-B級）＊ポイントスケールはB級未満とする': 'SAJ B級未満'
+  };
+
+  // シートの日付セルはJSTの0時で入っているため、JSONではUTCの前日15:00として出てくる。
+  // 文字列を先頭10文字で切ると1日前になるので、+9時間してから暦日を取る。
+  function apJstDate(v){
+    if (v == null) return '';
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    const t = new Date(v).getTime();
+    if (isNaN(t)) return '';
+    return new Date(t + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  }
+
+  function apApplyHistory(rows){
+    // sajId で突き合わせる。氏名は使わない（浜田/濵田のような表記ゆれで取りこぼすため）。
+    const bySaj = new Map();
+    rows.forEach(function(r){
+      const saj = Number(r['SAJ番号']);
+      const d = apJstDate(r.Date);
+      const rank = Number(r.Rank);
+      if (!saj || !d || !rank) return;
+      if (!bySaj.has(saj)) bySaj.set(saj, []);
+      const cat = String(r.Category == null ? '' : r.Category);
+      bySaj.get(saj).push({
+        d: d, rank: rank,
+        disc: String(r.Discipline == null ? '' : r.Discipline),
+        cat: AP_CAT_SHORT[cat] || cat,
+        ev: String(r.Event == null ? '' : r.Event)
+      });
+    });
+    if (bySaj.size === 0) return false;   // 空を掴んだら埋め込みのまま据え置く
+
+    let touched = 0;
+    AP_ATHLETES.forEach(function(a){
+      if (!a.sajId) return;               // APIと結び付かない選手は触らない
+      if (!bySaj.has(a.sajId)) return;    // 0件はAPI側に行が無いだけなので上書きしない
+      a.results = bySaj.get(a.sajId);
+      touched++;
+    });
+    return touched > 0;
+  }
+
+  function apLoadHistory(){
+    fetch(AP_HISTORY_API_URL, {cache:'no-cache'})
+      .then(function(res){ if (!res.ok) throw new Error('history -> ' + res.status); return res.json(); })
+      .then(function(data){
+        const rows = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);
+        if (!rows) throw new Error('unexpected payload');
+        if (!apApplyHistory(rows)) return;
+        // 取得中にパネルを開かれていたら、その場で戦歴だけ描き直す。
+        // パネル全体を作り直すと写真の表示位置と動画の再生状態が戻ってしまう。
+        if (apActiveIndex >= 0) {
+          const block = document.querySelector('#apPanel .ap-block.wide');
+          if (block) block.innerHTML = apRenderResults(AP_ATHLETES[apActiveIndex]);
+        }
+      })
+      .catch(function(err){
+        console.warn('戦歴の最新取得に失敗しました。埋め込みのデータを表示します。', err);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apLoadHistory);
+  } else {
+    apLoadHistory();
+  }
 
   // 写真の切り替え。ギャラリーはループ用にカードを複製するので、同じ選手の複製すべてを
   // 同時に動かす。片方だけ進むと、横スクロールで戻ったときに絵が飛ぶ。
