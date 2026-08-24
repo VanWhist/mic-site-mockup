@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MIC強化練習会 2026年9月｜MIC（モーグル上達コミュニティー）</title>
+<meta name="description" content="9/19-21の3連休、ウォータージャンプO-air（大阪府大東市）で開催するモーグルの強化練習会。大会を目指す小学生〜大人が対象。MIC初参加OK、1枠から参加できます。申込締切9/9(水)。">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    /* overflow-x:hidden はスクロールの入れ物を作ってしまい、position:sticky の
+       上部バーが効かなくなる（実際、スクロールするとバーが消えていた）。
+       overflow-x:clip なら横スクロールは同じく止めつつ、sticky は生きる。
+       clip を解さない古いブラウザは上の hidden がそのまま効く。 */
+    overflow-x:hidden;overflow-x:clip;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  /* ---------- DRAFTバッジ ----------
+     画面下の小さなピルにしてある。上端に置くと、常時表示にした上部バーを
+     押し下げてしまい、固定配置のハンバーガーと位置がずれるため。
+     公開時に削除する要素なので、本体のレイアウトに影響しない位置に置く。 */
+  .demo-badge{
+    position:fixed;bottom:14px;left:14px;z-index:400;
+    max-width:calc(100% - 28px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    background:rgba(255,90,60,.92);color:#fff;
+    font-size:11px;letter-spacing:.06em;font-weight:600;
+    padding:6px 12px;border-radius:100px;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    text-align:left;border-bottom:none;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  body.nav-open .demo-badge{opacity:0;transform:translateY(8px);pointer-events:none;}
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  /* ---------- hero ---------- */
+  .lp-hero-photo{position:relative;width:100%;min-height:320px;display:flex;align-items:flex-end;padding:32px 6vw;
+    overflow:hidden;
+    background:
+      linear-gradient(135deg,#2a2f38,#12151a 60%);}
+  .lp-hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .lp-hero-photo::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg, rgba(10,10,12,0) 25%, rgba(10,10,12,.92) 100%);}
+  .lp-hero-badge{z-index:2;position:absolute;top:24px;left:6vw;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+    color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px 6px 11px;backdrop-filter:blur(6px);}
+  .lp-hero-badge svg{width:13px;height:13px;}
+  .lp-hero-phtag{font-size:11px;color:rgba(255,255,255,.5);border:1px dashed rgba(255,255,255,.28);border-radius:8px;padding:5px 11px;}
+
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:36px 6vw 80px;}
+
+  svg.icon{width:22px;height:22px;stroke:var(--fg);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .headline{font-size:clamp(24px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.4;margin:12px 0 14px;}
+  .subcopy{font-size:14px;line-height:1.85;color:#d3d3d8;margin:0 0 28px;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);
+    margin:40px 0;}
+
+  /* 「同じコーチ陣」を伝えるブリッジ帯 */
+  .philosophy{position:relative;border-radius:20px;padding:22px 22px;margin-bottom:28px;
+    background:linear-gradient(155deg, rgba(255,90,60,.14), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.28);}
+  .philosophy-quote{font-size:16px;font-weight:700;line-height:1.85;color:var(--fg);}
+  .philosophy-quote .accent{color:var(--accent);}
+
+  .spec-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;
+    padding:22px 22px 8px;margin-bottom:16px;}
+  .spec-row{padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .spec-row:last-child{border-bottom:none;margin-bottom:0;}
+  .spec-label{font-size:10.5px;font-weight:800;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+  .spec-value{font-size:14.5px;line-height:1.9;color:#e2e2e6;}
+
+  .lesson-photo-grid{display:flex;flex-direction:column;gap:12px;margin-top:14px;}
+  .lesson-photo-card{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);}
+  .lesson-photo{height:110px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#2a3a4a,#12181e 60%);}
+  .lesson-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .lesson-photo-body{padding:12px 13px 14px;background:rgba(255,255,255,.03);}
+  .lesson-photo-body .lp-title{font-size:13.5px;font-weight:700;margin-bottom:4px;}
+  .lesson-photo-body .lp-desc{font-size:12px;color:var(--muted);line-height:1.7;}
+
+  .price-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .price-label{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  .price-num{font-size:22px;font-weight:800;color:var(--fg);}
+  .price-num .unit{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px;}
+
+  /* レッスン料金表（3種類とも同額のため1つの表にまとめている） */
+  .fee-table{display:flex;flex-direction:column;gap:0;margin:14px 0 12px;
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;}
+  .fee-row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fee-row:last-child{border-bottom:none;}
+  .fee-plan{font-size:14px;font-weight:800;}
+  .fee-time{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.01em;}
+  .fee-amount{font-size:20px;font-weight:800;white-space:nowrap;}
+  .fee-amount .tax{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .fee-note{font-size:12px;line-height:1.8;color:var(--muted);}
+  .fee-note b{color:#d8d8dc;font-weight:700;}
+
+  .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
+    padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .cta-btn svg{width:17px;height:17px;stroke:#fff;stroke-width:2.2;}
+  .cta-btn.ghost{background:rgba(255,255,255,.07);color:var(--fg);box-shadow:none;border:1px solid rgba(255,255,255,.16);}
+  .cta-btn.ghost svg{stroke:var(--fg);}
+
+  /* ---------- その他のサービス（オンラインサポート／コーチ派遣） ---------- */
+  .others-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin:0 0 16px;}
+  .others-list{display:flex;flex-direction:column;gap:14px;}
+  .other-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px 22px;}
+  .other-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .other-icon{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:rgba(255,90,60,.12);
+    border:1px solid rgba(255,90,60,.25);display:flex;align-items:center;justify-content:center;}
+  .other-icon svg{width:19px;height:19px;stroke:var(--accent);}
+  .other-num{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;}
+  .other-title{font-size:15.5px;font-weight:800;margin-top:2px;}
+  .other-desc{font-size:13px;line-height:1.8;color:#d3d3d8;margin-bottom:14px;}
+
+  .usecase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .usecase-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:10px 11px;font-size:12px;font-weight:600;}
+  .usecase-chip svg{width:15px;height:15px;stroke:var(--accent);stroke-width:2.4;flex:0 0 auto;}
+
+  .price-tiers{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px;}
+  .price-tier{display:flex;justify-content:space-between;font-size:12.5px;color:#d8d8dc;
+    padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.08);}
+  .price-tier:last-child{border-bottom:none;}
+  .price-tier b{color:var(--fg);}
+
+  .other-price-line{font-size:13px;font-weight:700;color:var(--fg);margin-bottom:14px;}
+  .other-price-line span{color:var(--muted);font-weight:600;font-size:11.5px;margin-left:4px;}
+
+  .other-cta{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;}
+  .other-cta svg{width:15px;height:15px;stroke:var(--accent);}
+
+  /* ---------- bridge to athlete LP ---------- */
+  .lp-bridge{margin-top:8px;border-radius:20px;padding:26px 24px;text-align:center;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);}
+  .lp-bridge-eyebrow{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.05em;margin-bottom:10px;}
+  .lp-bridge-text{font-size:14.5px;line-height:1.8;color:#e2e2e6;margin-bottom:18px;}
+  .lp-bridge-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
+    color:var(--fg);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;padding:11px 22px;text-decoration:none;}
+  .lp-bridge-link svg{width:15px;height:15px;stroke:var(--fg);stroke-width:2.2;}
+
+  .foot-note{margin-top:40px;text-align:center;font-size:11px;color:var(--muted);line-height:1.9;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:18px;}
+  .foot-note a{color:var(--muted);text-decoration:underline;}
+
+  /* ---------- topbar nav (merged with logo row) ---------- */
+  .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
+  .lp-nav::-webkit-scrollbar{display:none;}
+  .lp-nav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .lp-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
+
+  /* ---------- 全ページ共通フッター ----------
+     どのページから入ってきた人も、サイト全体へ戻れるようにするためのもの。
+     プログラム間の回遊は各プログラムページ下部の OTHER PROGRAMS が担い、
+     こちらは純粋なナビゲーションとして役割を分けている。 */
+  .site-footer{display:block;position:relative;z-index:2;background:#050506;
+    border-top:1px solid rgba(255,255,255,.09);padding:56px 6vw 0;color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    text-align:left;}
+  .sf-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:40px;}
+  .sf-logo{font-size:20px;font-weight:800;letter-spacing:.08em;color:#f5f5f7;}
+  .sf-tagline{font-size:11.5px;line-height:1.7;margin-top:8px;}
+  .sf-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  .sf-col{display:flex;flex-direction:column;gap:11px;}
+  .sf-col-head{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:2px;}
+  .sf-col a{font-size:13px;color:#d3d3d8;text-decoration:none;line-height:1.5;transition:color .2s;}
+  .sf-col a:hover{color:var(--accent);}
+  .sf-col a.sf-current{color:var(--accent);}
+  .sf-social{display:flex;gap:10px;margin-top:2px;}
+  .sf-social a{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);text-decoration:none;
+    transition:border-color .2s,background .2s;}
+  .sf-social a:hover{border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.12);}
+  .sf-social svg{width:15px;height:15px;stroke:var(--accent);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .sf-bottom{max-width:1080px;margin:44px auto 0;padding:18px 0 26px;
+    border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;
+    align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;}
+  @media (max-width:760px){
+    .site-footer{padding:44px 6vw 0;}
+    .sf-inner{grid-template-columns:1fr;gap:30px;}
+    .sf-cols{grid-template-columns:1fr 1fr;gap:24px 18px;}
+    .sf-bottom{margin-top:32px;flex-direction:column;align-items:flex-start;gap:6px;}
+  }
+  @media (max-width:380px){
+    .sf-cols{grid-template-columns:1fr;}
+  }
+
+  /* ---------- OTHER PROGRAMS ----------
+     一番関連の深い1本は理由つきで大きく、残り2本はコンパクトな行で。
+     「あなたにはこれでは？」という提案と、4本すべてへの導線を1ブロックで両立させる。 */
+  .op{margin-top:8px;}
+  .op-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:14px;}
+  .op-feature{display:block;border-radius:20px;padding:22px 22px;text-decoration:none;color:inherit;
+    background:linear-gradient(155deg, rgba(255,90,60,.12), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.26);transition:border-color .2s,transform .25s cubic-bezier(.34,1.3,.64,1);}
+  .op-feature:hover{border-color:rgba(255,90,60,.5);transform:translateY(-2px);}
+  .op-feature-eyebrow{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin-bottom:8px;}
+  .op-feature-title{font-size:19px;font-weight:800;letter-spacing:-.01em;margin-bottom:9px;}
+  .op-feature-text{font-size:13.5px;line-height:1.85;color:#d8d8dc;}
+  .op-feature-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);}
+  .op-price{font-size:13px;font-weight:800;color:var(--fg);}
+  .op-go{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:var(--accent);}
+  .op-go svg{width:14px;height:14px;stroke:var(--accent);stroke-width:2.4;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+  .op-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px 12px;
+    margin-top:10px;border-radius:16px;padding:15px 17px;
+    text-decoration:none;color:inherit;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.1);transition:border-color .2s,background .2s;}
+  .op-row:hover{border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.06);}
+  .op-row-main{flex:1 1 auto;min-width:0;}
+  .op-row-title{font-size:14.5px;font-weight:800;margin-bottom:4px;}
+  .op-row-desc{font-size:12px;line-height:1.65;color:var(--muted);}
+  .op-row-price{flex:0 0 auto;font-size:12.5px;font-weight:800;color:#e2e2e6;white-space:nowrap;}
+  .op-row svg{flex:0 0 auto;width:15px;height:15px;stroke:var(--muted);stroke-width:2.2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+  /* 幅が足りないときは、料金をタイトルの下へ落として矢印は右端に残す。
+     折り返しに任せると矢印まで改行されて不格好になるため、明示的に配置する。 */
+  @media (max-width:520px){
+    .op-row{grid-template-columns:1fr auto;}
+    .op-row-main{grid-column:1;grid-row:1;}
+    .op-row-price{grid-column:1;grid-row:2;}
+    .op-row svg{grid-column:2;grid-row:1 / span 2;}
+  }
+
+  /* ---------- 上部ナビ（全ページ共通の作り） ----------
+     PCではバーに8項目すべてを並べる。スマホでは幅が足りないので
+     プログラム／カレンダー／お問い合わせの3つだけ残し（.only-wide を隠す）、
+     残りは右端のハンバーガーから開く全画面メニューへ。 */
+  .nav-toggle{
+    display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;
+    width:38px;height:38px;padding:0;cursor:pointer;flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(255,255,255,.05);
+    transition:background .3s ease, border-color .3s ease;
+  }
+  .nav-toggle span{
+    display:block;width:17px;height:2px;background:#fff;border-radius:2px;
+    transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .2s ease;
+  }
+  .nav-toggle.open{background:rgba(255,90,60,.18);border-color:rgba(255,90,60,.55);}
+  .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;transform:scaleX(.3);}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  /* 全画面メニューはスマホ専用。PCでは存在ごと隠す */
+  #siteNav{display:none;}
+  /* 下層ページには ul のリセットや a の下線消しが無いので、ここで揃える */
+  #siteNav ul{list-style:none;margin:0;padding:0;}
+  #siteNav a{text-decoration:none;color:inherit;}
+  .nav-eyebrow,.nav-num,.nav-en,.nav-foot{display:none;}
+
+  /* メニューを開いている間は、バーの背景を消して×ボタンだけ浮かせる。
+     バーは #siteNav（z-index:200）より前面に置いてあるのでタップできる。 */
+  .lp-topbar{z-index:300;}
+
+  @media (max-width:820px){
+    .nav-toggle{display:flex;}
+    .only-wide{display:none !important;}
+
+    /* ハンバーガーはバーの外（固定配置）に出す。バーの中に置くと、メニューを
+       開いたときのスクロールロックで sticky が解けてボタンごと画面外へ流れ、
+       閉じられなくなる（実際に発生した）。 */
+    .nav-toggle{position:fixed;top:12px;right:6vw;z-index:400;}
+    /* 3つのリンクとハンバーガーが1行に収まるよう、スマホでは少しだけ詰める */
+    .lp-topbar{padding-right:calc(6vw + 46px);gap:8px;}
+    .lp-nav{gap:2px;justify-content:flex-end;}
+    .lp-nav a{font-size:11px;padding:5px 8px;}
+    body.nav-open .lp-topbar{opacity:0;pointer-events:none;}
+    /* ---------- 全画面メニュー ----------
+       素の中央寄せテキストだと安っぽく見えたので、左揃えの一覧に組み直した。
+       開くと項目が下から順に立ち上がる（--i で1つずつ遅らせている）。 */
+    #siteNav{
+      position:fixed;inset:0;z-index:200;
+      display:flex;align-items:stretch;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(255,90,60,.22), transparent 58%),
+        radial-gradient(circle at 92% 92%, rgba(255,90,60,.10), transparent 55%),
+        rgba(8,8,10,.97);
+      backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .4s cubic-bezier(.16,1,.3,1), visibility .4s;
+    }
+    #siteNav.open{opacity:1;visibility:visible;pointer-events:auto;}
+
+    .nav-panel{
+      display:flex;flex-direction:column;justify-content:center;
+      width:100%;padding:84px 9vw 34px;
+      /* 端末が短いときや横向きのときはメニュー自体をスクロールさせる */
+      max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    }
+
+    .nav-eyebrow{
+      display:block;font-size:10px;font-weight:800;letter-spacing:.34em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+      opacity:0;transform:translateY(14px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav.open .nav-eyebrow{opacity:1;transform:none;transition-delay:.06s;}
+
+    #siteNav ul{flex-direction:column;align-items:stretch;gap:0;width:100%;font-size:inherit;}
+    #siteNav li{
+      border-bottom:1px solid rgba(255,255,255,.07);
+      opacity:0;transform:translateY(24px);
+      transition:opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1);
+    }
+    /* 遅延は「開くとき」だけに付ける。閉じるときまで1つずつ遅れると、
+       閉じ動作がもたついて見えるため。 */
+    #siteNav.open li{opacity:1;transform:none;transition-delay:calc(var(--i) * 45ms + 50ms);}
+
+    #siteNav li a{
+      position:relative;display:flex;align-items:flex-start;gap:13px;
+      padding:13px 2px;opacity:1;
+    }
+    #siteNav li a::after{display:none;}
+    /* タップした項目の左からアクセント線が伸びる */
+    #siteNav li a::before{
+      content:'';position:absolute;left:-9vw;top:calc(50% - 1px);
+      width:0;height:2px;background:var(--accent);
+      transition:width .3s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav li a:active::before{width:7vw;}
+    #siteNav li a:active .nav-jp{color:var(--accent);}
+
+    .nav-num{
+      display:block;flex:0 0 auto;width:24px;padding-top:7px;
+      font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--accent);
+      font-variant-numeric:tabular-nums;
+    }
+    .nav-label{display:flex;flex-direction:column;min-width:0;}
+    .nav-jp{
+      display:block;font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.3;
+      transition:color .2s ease;
+    }
+    .nav-en{
+      display:block;font-size:9.5px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--muted);margin-top:4px;
+    }
+
+    .nav-foot{
+      display:block;margin-top:28px;
+      opacity:0;transform:translateY(18px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav.open .nav-foot{opacity:1;transform:none;transition-delay:.44s;}
+    .nav-cta{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--accent);color:#fff;font-size:14.5px;font-weight:800;
+      border-radius:999px;padding:15px;opacity:1;
+      box-shadow:0 12px 30px -12px rgba(255,90,60,.75);
+    }
+    .nav-cta svg{width:16px;height:16px;stroke:#fff;stroke-width:2.2;fill:none;
+      stroke-linecap:round;stroke-linejoin:round;}
+    .nav-foot-note{margin-top:15px;text-align:center;font-size:10px;letter-spacing:.12em;color:var(--muted);}
+
+    /* 画面の短い端末（iPhone SEなど）では、CTAが画面外へ押し出されないように
+       間隔を詰め、装飾である英字表記は落とす。 */
+    @media (max-height:700px){
+      .nav-panel{padding:70px 9vw 24px;}
+      .nav-eyebrow{margin-bottom:12px;}
+      #siteNav li a{padding:10px 2px;}
+      .nav-num{padding-top:5px;}
+      .nav-jp{font-size:20px;}
+      .nav-en{display:none;}
+      .nav-foot{margin-top:22px;}
+      .nav-cta{padding:13px;font-size:14px;}
+      .nav-foot-note{margin-top:12px;}
+    }
+  }
+
+  /* 動きを控えたい設定の端末では、アニメーションを実質無効にする */
+  @media (prefers-reduced-motion: reduce){
+    #siteNav,#siteNav li,.nav-eyebrow,.nav-foot,.nav-toggle span,#siteNav li a::before{
+      transition-duration:.01ms !important;transition-delay:0ms !important;
+    }
+  }
+</style>
+<style>
+  /* ===== MIC強化練習会 2026年9月（ページ固有） =====
+     クラス名は ek- で始める。土台にした program-general.html と
+     .wrap / .eyebrow が衝突するため、接頭辞なしの名前は使わない。 */
+  .ek-wrap{max-width:880px;margin:0 auto;padding:0 6vw;}
+  /* 土台にした program-general.html には a{text-decoration:none} が無く、
+     ブラウザ既定の下線が出るため、このページの範囲で明示的に消す。 */
+  .ek-hero a, .ek-block a, .ek-wrap a{text-decoration:none;}
+  .ek-eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:var(--accent);margin-bottom:14px;}
+  .ek-h2{font-size:clamp(22px,3.6vw,31px);font-weight:800;letter-spacing:-.02em;line-height:1.35;margin-bottom:18px;}
+  .ek-p{font-size:16px;line-height:1.9;color:#e4e4e8;}
+  .ek-p + .ek-p{margin-top:16px;}
+  .ek-muted{color:var(--muted);font-size:13.5px;line-height:1.8;}
+  .ek-rule{height:1px;background:rgba(255,255,255,.1);}
+  /* 横パディングは .ek-wrap に任せる。padding の一括指定にすると
+     section.ek-block（詳細度 0,0,1,1）が .ek-wrap（0,0,1,0）に勝って左右が0になる。 */
+  section.ek-block{padding-top:8vh;padding-bottom:8vh;}
+
+  /* ---------- hero ---------- */
+  .ek-hero{position:relative;min-height:86vh;display:flex;align-items:flex-end;padding-bottom:7vh;overflow:hidden;}
+  .ek-hero-bg{position:absolute;inset:0;}
+  .ek-hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 40%;}
+  .ek-hero-veil{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(10,10,12,.74) 0%,rgba(10,10,12,.35) 32%,rgba(10,10,12,.92) 88%,#0a0a0c 100%);}
+  .ek-hero-in{position:relative;width:100%;}
+  .ek-kicker{display:inline-flex;align-items:center;background:var(--accent);color:#fff;
+    font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 14px;border-radius:999px;margin-bottom:16px;}
+  .ek-kind{display:inline-block;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.35);
+    font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:5px;margin-right:10px;vertical-align:4px;}
+  .ek-h1{font-size:clamp(30px,6.4vw,54px);font-weight:800;letter-spacing:-.025em;line-height:1.18;margin-bottom:14px;}
+  .ek-lead{font-size:clamp(17px,2.6vw,23px);font-weight:700;line-height:1.6;margin-bottom:20px;}
+  .ek-facts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px;}
+  .ek-fact{font-size:12.5px;color:#dcdce0;background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 14px;}
+
+  .ek-cta{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;
+    font-weight:800;font-size:15.5px;padding:16px 30px;border-radius:999px;
+    transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s;}
+  .ek-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px -14px rgba(255,90,60,.9);}
+  .ek-cta.ek-ghost{background:transparent;border:1px solid rgba(255,255,255,.3);}
+  .ek-cta.ek-ghost:hover{border-color:var(--fg);box-shadow:none;}
+  .ek-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
+  .ek-deadline{font-size:13px;color:var(--muted);}
+  .ek-deadline b{color:var(--fg);font-size:15px;}
+
+  .ek-note-strip{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);
+    border-radius:14px;padding:18px 22px;font-size:13.5px;line-height:1.8;color:#cfcfd4;}
+
+  /* ---------- 練習の1周 ---------- */
+  .ek-loop{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 22px;}
+  .ek-step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    border-radius:13px;padding:16px 14px;}
+  .ek-step-n{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.1em;margin-bottom:7px;}
+  .ek-step-t{font-size:14.5px;font-weight:800;line-height:1.5;}
+  .ek-pull{font-size:clamp(18px,2.9vw,25px);font-weight:800;line-height:1.6;
+    border-left:3px solid var(--accent);padding-left:20px;margin:26px 0;}
+
+  .ek-split{display:grid;grid-template-columns:1fr 300px;gap:36px;align-items:center;}
+  .ek-split img{border-radius:16px;width:100%;height:340px;object-fit:cover;object-position:center 45%;}
+
+  /* ---------- 開催概要 ---------- */
+  .ek-spec{border-top:1px solid rgba(255,255,255,.12);margin-top:8px;}
+  .ek-row{display:grid;grid-template-columns:130px 1fr;gap:18px;padding:15px 2px;
+    border-bottom:1px solid rgba(255,255,255,.08);align-items:start;}
+  .ek-k{font-size:12.5px;font-weight:800;color:var(--accent);}
+  .ek-v{font-size:14.5px;line-height:1.8;}
+
+  /* ---------- 参加費 ---------- */
+  .ek-fee{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;padding:24px 26px;}
+  .ek-fee-head{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:4px;}
+  .ek-fee-scope{font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.7;}
+  .ek-fee-line{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .ek-fee-name{font-size:15px;font-weight:700;}
+  .ek-fee-num{font-size:23px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;}
+  .ek-cpn{margin-top:12px;background:rgba(255,90,60,.1);border:1px solid rgba(255,90,60,.32);
+    border-radius:11px;padding:13px 16px;font-size:13.5px;line-height:1.8;}
+  .ek-cpn b{color:var(--accent);}
+  .ek-fee-sep{margin-top:26px;padding-top:22px;border-top:1px dashed rgba(255,255,255,.18);}
+  .ek-fee-warn{font-size:13.5px;line-height:1.8;color:#e4e4e8;}
+  .ek-fee-warn strong{color:var(--accent);}
+  .ek-fee-list{list-style:none;margin-top:12px;padding:0;}
+  .ek-fee-list li{font-size:12.5px;line-height:1.7;color:var(--muted);padding-left:15px;position:relative;margin-top:7px;}
+  .ek-fee-list li::before{content:'※';position:absolute;left:0;}
+  .ek-fee-link{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:700;color:var(--accent);
+    border-bottom:1px solid rgba(255,90,60,.5);}
+
+  /* ---------- 申込 / 終了後 ---------- */
+  .ek-apply{background:linear-gradient(135deg,rgba(255,90,60,.12),rgba(255,255,255,.03));
+    border:1px solid rgba(255,90,60,.3);border-radius:20px;padding:34px 30px;text-align:center;}
+  .ek-apply .ek-cta-row{justify-content:center;margin-top:20px;}
+  .ek-qna{margin-top:24px;font-size:13.5px;line-height:1.9;color:#cfcfd4;}
+  .ek-qna span{display:inline-block;background:rgba(255,255,255,.07);border-radius:999px;
+    padding:6px 14px;margin:4px 4px 0;font-size:12.5px;}
+  .ek-ended{display:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
+    border-radius:20px;padding:34px 30px;text-align:center;}
+  .ek-ended .ek-cta-row{justify-content:center;margin-top:20px;}
+  .ek-hero-ended{display:none;align-items:center;font-size:14px;color:var(--muted);
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:11px 22px;}
+  /* 締切・開催日を過ぎたら、申込の導線を「終了しました」に差し替える。
+     ページ自体は残す（InstagramやLINEの過去投稿からのリンクが生き続けるため）。 */
+  body.ek-is-ended .ek-apply{display:none;}
+  body.ek-is-ended .ek-ended{display:block;}
+  body.ek-is-ended .ek-hero-live{display:none;}
+  body.ek-is-ended .ek-hero-ended{display:inline-flex;}
+
+  .ek-next{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+    background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;}
+
+  @media (max-width:760px){
+    .ek-loop{grid-template-columns:1fr 1fr;}
+    .ek-split{grid-template-columns:1fr;gap:20px;}
+    .ek-split img{height:250px;}
+    .ek-row{grid-template-columns:1fr;gap:5px;}
+    .ek-next{grid-template-columns:1fr;text-align:left;}
+    .ek-fee{padding:20px 18px;}
+    .ek-apply,.ek-ended{padding:26px 20px;}
+    .ek-cta{width:100%;justify-content:center;}
+    .ek-cta-row{gap:12px;}
+    .ek-deadline{width:100%;text-align:center;}
+  }
+
+</style>
+</head>
+<body>
+
+<div class="demo-badge">🚧 リニューアル準備中のページです。写真等は仮のプレースホルダーです。</div>
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <nav class="lp-nav">
+    <a href="index.html#mvv" class="only-wide">MVV</a>
+    <a href="index.html#programs">プログラム</a>
+    <a href="index.html#athletes" class="only-wide">選手紹介</a>
+    <a href="index.html#coaches" class="only-wide">コーチ紹介</a>
+    <a href="full-calendar.html">カレンダー</a>
+    <a href="news.html" class="only-wide">お知らせ</a>
+    <a href="community.html" class="only-wide">コミュニティ</a>
+    <a href="inquiry.html">お問い合わせ</a>
+  </nav>
+</div>
+<!-- バーの外に出してある。メニューを開いている間はバーごと消えるので、
+     中に置くと閉じるボタンまで一緒に消えてしまう。 -->
+  <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+<nav id="siteNav">
+  <div class="nav-panel">
+    <div class="nav-eyebrow">Menu</div>
+      <ul>
+        <li style="--i:0"><a href="index.html#mvv"><span class="nav-num">01</span><span class="nav-label"><span class="nav-jp">MVV</span><span class="nav-en">Mission Vision Value</span></span></a></li>
+        <li style="--i:1"><a href="index.html#programs"><span class="nav-num">02</span><span class="nav-label"><span class="nav-jp">プログラム</span><span class="nav-en">Programs</span></span></a></li>
+        <li style="--i:2"><a href="index.html#athletes"><span class="nav-num">03</span><span class="nav-label"><span class="nav-jp">選手紹介</span><span class="nav-en">Athletes</span></span></a></li>
+        <li style="--i:3"><a href="index.html#coaches"><span class="nav-num">04</span><span class="nav-label"><span class="nav-jp">コーチ紹介</span><span class="nav-en">Coaches</span></span></a></li>
+        <li style="--i:4"><a href="full-calendar.html"><span class="nav-num">05</span><span class="nav-label"><span class="nav-jp">カレンダー</span><span class="nav-en">Lesson Calendar</span></span></a></li>
+        <li style="--i:5"><a href="news.html"><span class="nav-num">06</span><span class="nav-label"><span class="nav-jp">お知らせ</span><span class="nav-en">News</span></span></a></li>
+        <li style="--i:6"><a href="community.html"><span class="nav-num">07</span><span class="nav-label"><span class="nav-jp">コミュニティ</span><span class="nav-en">Community</span></span></a></li>
+        <li style="--i:7"><a href="inquiry.html"><span class="nav-num">08</span><span class="nav-label"><span class="nav-jp">お問い合わせ</span><span class="nav-en">Contact</span></span></a></li>
+      </ul>
+      <div class="nav-foot">
+        <a class="nav-cta" href="inquiry.html">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          公式LINEで問い合わせる
+        </a>
+        <div class="nav-foot-note">MIC — Mogul Improvement Community</div>
+      </div>
+  </div>
+</nav>
+
+<!-- ===== MIC強化練習会 2026年9月 ===== -->
+<div class="ek-hero">
+  <div class="ek-hero-bg"><img src="assets/event/ev-hero.jpg" alt="ウォータージャンプで空中姿勢をとるモーグル選手"></div>
+  <div class="ek-hero-veil"></div>
+  <div class="ek-hero-in ek-wrap">
+    <span class="ek-kicker">2026年9月19日(土)–21日(月・祝)</span>
+    <h1 class="ek-h1"><span class="ek-kind">モーグル</span>MIC強化練習会</h1>
+    <p class="ek-lead">雪が降る前に、エアをつくる。</p>
+    <div class="ek-facts">
+      <span class="ek-fact">ウォータージャンプ O-air／大阪府大東市</span>
+      <span class="ek-fact">大会を目指す小学生〜大人</span>
+      <span class="ek-fact">MIC初参加OK・1枠から参加できます</span>
+    </div>
+    <div class="ek-hero-live">
+      <div class="ek-cta-row">
+        <a class="ek-cta" href="#ek-apply">お申込み・ご相談へ</a>
+        <span class="ek-deadline">申込締切 <b>9月9日(水)</b></span>
+      </div>
+    </div>
+    <span class="ek-hero-ended">この練習会は終了しました</span>
+  </div>
+</div>
+
+<div class="ek-wrap" style="margin-top:-2vh;">
+  <div class="ek-note-strip">
+    8月まで「MIC夏休み短期教室」としてお伝えしていたものです。やることは変わりません。名前だけ変わりました。
+  </div>
+</div>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-eyebrow">HOW WE PRACTICE</div>
+  <h2 class="ek-h2">いちばん伝えたいのは、練習のやり方です。</h2>
+  <div class="ek-loop">
+    <div class="ek-step"><div class="ek-step-n">STEP 1</div><div class="ek-step-t">飛ぶ</div></div>
+    <div class="ek-step"><div class="ek-step-n">STEP 2</div><div class="ek-step-t">その場で動画を確認する</div></div>
+    <div class="ek-step"><div class="ek-step-n">STEP 3</div><div class="ek-step-t">コーチと直すことを<br>1点決める</div></div>
+    <div class="ek-step"><div class="ek-step-n">STEP 4</div><div class="ek-step-t">もう1本</div></div>
+  </div>
+  <div class="ek-pull">100本飛ぶより、この1周です。</div>
+  <p class="ek-p">修正をはさまない反復は、上達ではありません。間違った動きを、上手に固めているだけです。</p>
+</section>
+
+<div class="ek-wrap"><div class="ek-rule"></div></div>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-split">
+    <div>
+      <div class="ek-eyebrow">WHY 3</div>
+      <h2 class="ek-h2">受入枠を、1枠3名に絞っています。</h2>
+      <p class="ek-p">残りわずか、という話ではありません。コーチが一人ひとりを見る時間を確保するための人数です。</p>
+      <p class="ek-p">この練習会は、MIC選手が普段やっている練習に入っていただく形です。選手も一緒に練習するため、<strong>順番待ちが出ることはあります。</strong>その間も、他の選手のエアを間近で見られます。</p>
+    </div>
+    <img src="assets/event/ev-three.jpg" alt="ジャンプ台へ向かうコーチと選手">
+  </div>
+</section>
+
+<div class="ek-wrap"><div class="ek-rule"></div></div>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-split">
+    <img src="assets/event/ev-water.jpg" alt="ウォータージャンプで逆さ姿勢をとる選手">
+    <div>
+      <div class="ek-eyebrow">WHY WATER</div>
+      <h2 class="ek-h2">水の上でも、痛い。<br>でも、やり直せる。</h2>
+      <p class="ek-p">水の上でも、痛いです。怪我のリスクがゼロになるわけでもありません。</p>
+      <p class="ek-p">それでも雪の上に比べれば、体勢が崩れたときの代償はずっと小さい。だから、まだ完成していない技に挑戦できます。</p>
+    </div>
+  </div>
+</section>
+
+<div class="ek-wrap"><div class="ek-rule"></div></div>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-eyebrow">DETAILS</div>
+  <h2 class="ek-h2">開催概要</h2>
+  <div class="ek-spec">
+    <div class="ek-row"><div class="ek-k">日程</div><div class="ek-v">2026年9月19日(土)・20日(日)・21日(月・敬老の日)</div></div>
+    <div class="ek-row"><div class="ek-k">時間</div><div class="ek-v">午前 10:30–12:30 ／ 午後 14:00–16:00</div></div>
+    <div class="ek-row"><div class="ek-k">会場</div><div class="ek-v">ウォータージャンプ O-air（大阪府大東市）</div></div>
+    <div class="ek-row"><div class="ek-k">枠</div><div class="ek-v">全6枠・18席（1枠3名）<br><span class="ek-muted">1枠だけの参加もできます。</span></div></div>
+    <div class="ek-row"><div class="ek-k">対象</div><div class="ek-v">大会を目指す小学生〜大人<br><span class="ek-muted">MIC初参加OK。今シーズン初めて大会に出る方も対象です。<br>クラブに所属されている方は、担当コーチの了承を取っておいてください。</span></div></div>
+    <div class="ek-row"><div class="ek-k">申込締切</div><div class="ek-v">2026年9月9日(水)</div></div>
+  </div>
+</section>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-eyebrow">FEE</div>
+  <h2 class="ek-h2">参加費</h2>
+  <div class="ek-fee">
+    <div class="ek-fee-head">MICにお支払いいただくもの</div>
+    <div class="ek-fee-scope">料金は1枠（2時間）ごとにかかります。全日程まとめての金額ではありません。</div>
+    <div class="ek-fee-line">
+      <div class="ek-fee-name">MIC参加費（指導料）</div>
+      <div class="ek-fee-num">5,500円</div>
+    </div>
+    <div class="ek-cpn">
+      🎫 MICのレッスンがはじめての方へ<br>
+      公式LINEをはじめて友だち登録すると1,000円割引クーポンをお渡ししています。
+      <b>初回・1枠分のみ 4,500円</b>になります。
+    </div>
+    <div class="ek-fee-sep">
+      <div class="ek-fee-warn"><strong>このほかに、O-airの施設利用料が別途かかります。</strong>MICの参加費には含まれません。</div>
+      <ul class="ek-fee-list">
+        <li>当日、現地の受付でO-airに直接お支払いいただきます。MICはお預かりしません。</li>
+        <li>金額・レンタル料金は変わることがあります。必ずO-airの公式サイトでご確認ください。</li>
+        <li>割引クーポンはMICの参加費にのみ適用されます。施設利用料は割引になりません。</li>
+      </ul>
+      <a class="ek-fee-link" href="https://o-air.square.site/price" target="_blank" rel="noopener">O-airの料金を確認する →</a>
+    </div>
+  </div>
+</section>
+
+<section class="ek-block ek-wrap" id="ek-apply">
+  <div class="ek-apply">
+    <div class="ek-eyebrow">APPLY</div>
+    <h2 class="ek-h2">お申込み・ご相談は、公式LINEから。</h2>
+    <p class="ek-p">友だち追加していただくと、申込フォームがすぐ届きます。</p>
+    <div class="ek-cta-row">
+      <a class="ek-cta" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">公式LINEで申し込む</a>
+      <span class="ek-deadline">申込締切 <b>9月9日(水)</b></span>
+    </div>
+    <div class="ek-qna">
+      こんなご相談も、そのままLINEにどうぞ。<br>
+      <span>うちの子のレベルで参加していいのか</span>
+      <span>1日だけでもいいのか</span>
+    </div>
+  </div>
+
+  <div class="ek-ended">
+    <h2 class="ek-h2">この練習会は終了しました。</h2>
+    <p class="ek-p">ご参加いただいたみなさま、ありがとうございました。<br>MICでは年間を通して、競技を目指す選手の育成を行っています。</p>
+    <div class="ek-cta-row">
+      <a class="ek-cta" href="program-athlete.html">選手育成コースを見る</a>
+      <a class="ek-cta ek-ghost" href="index.html#calendar">今後のレッスン予定を見る</a>
+    </div>
+  </div>
+</section>
+
+<section class="ek-block ek-wrap">
+  <div class="ek-next">
+    <div>
+      <div class="ek-eyebrow">NEXT STEP</div>
+      <h2 class="ek-h2" style="font-size:21px;margin-bottom:8px;">この練習を、1年を通してやっています。</h2>
+      <p class="ek-muted">MIC選手育成コースは、雪上練習・大会引率・トレーニング・ウォータージャンプなどを組み合わせた年間プログラムです。</p>
+    </div>
+    <a class="ek-cta ek-ghost" href="program-athlete.html">選手育成コース →</a>
+  </div>
+</section>
+
+<script>
+  // 開催最終日を過ぎたら、申込の導線を「終了しました」に切り替える。
+  // ページは残す。InstagramやLINEの過去投稿からのリンクが生き続けるため、
+  // 消すとリンク切れになる。
+  (function(){
+    var END = '2026-09-21';   // 開催最終日。この日いっぱいは申込表示のまま
+    if (new Date() > new Date(END + 'T23:59:59+09:00')) {
+      document.body.classList.add('ek-is-ended');
+    }
+  })();
+</script>
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand">
+      <div class="sf-logo">MIC</div>
+      <div class="sf-tagline">Mogul Improvement Community<br>モーグルスキーの育成クラブ</div>
+    </div>
+    <div class="sf-cols">
+      <div class="sf-col">
+        <div class="sf-col-head">プログラム</div>
+        <a href="program-athlete.html">選手育成コース</a>
+        <a href="program-general.html" class="sf-current">一般レッスン</a>
+        <a href="program-online.html">オンラインサポート</a>
+        <a href="program-dispatch.html">コーチ派遣</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">MICについて</div>
+        <a href="index.html#mvv">ミッション・ビジョン</a>
+        <a href="index.html#athletes">選手紹介</a>
+        <a href="index.html#coaches">コーチ紹介</a>
+        <a href="news.html">お知らせ</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">参加する</div>
+        <a href="full-calendar.html">レッスンカレンダー</a>
+        <a href="community.html">コミュニティ・活動拠点</a>
+        <a href="inquiry.html">申し込み・お問い合わせ</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">フォローする</div>
+        <div class="sf-social">
+          <a href="https://www.instagram.com/mogul.mic/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg></a>
+          <a href="https://www.facebook.com/share/1BgiYgcdXj/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z" fill="currentColor" stroke="none"></path></svg></a>
+          <a href="https://www.youtube.com/@mogul-mic" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"></rect><path d="M10.3 9.6v4.8l4.4-2.4z" fill="currentColor" stroke="none"></path></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sf-bottom">
+    <span>© MIC — Mogul Improvement Community</span>
+    <span>※このページはリニューアル準備中です。内容は今後変更される場合があります。</span>
+  </div>
+</footer>
+
+
+<script>
+  /* 上部ナビ：ハンバーガーで全画面メニューを開閉する（スマホのみ表示） */
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var nav = document.getElementById('siteNav');
+    if (!toggle || !nav) return;
+    function setOpen(open){
+      nav.classList.toggle('open', open);
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.classList.toggle('nav-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    toggle.addEventListener('click', function(){ setOpen(!nav.classList.contains('open')); });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+  })();
+</script>
+</body>
+</html>
