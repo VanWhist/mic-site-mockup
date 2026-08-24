@@ -7,35 +7,86 @@
 // 氏名は表示専用で、照合には使いません（漢字の表記ゆれがあるため）。
 // .json ではなく .js なのは、file:// でローカルプレビューしたときに fetch が CORS で
 // 阻まれるためです（レッスンカレンダーで実際に発生済み）。
+//
+// ■ results（戦歴）について
+// ここに書いてある results は「フォールバック」です。正本は戦歴APIで、index.html が
+// 読み込み時に取りに行き、取れたらこの値を上書きします（レッスンカレンダーと同じ作り）。
+// APIには毎週火曜9:00の自動チェックでSAJ競技データバンクの新着が入るので、
+// 通常このファイルを手で更新する必要はありません。APIに届かない環境（file:// で開いた等）
+// でも最低限の表示が出るように、直近の内容を写して置いてあります。
+// 照合キーは sajId（SAJ競技者番号）です。氏名では突き合わせません（浜田/濵田のような
+// 表記ゆれがあるため）。sajId が無い選手はAPIと結び付かず、常にこの値のままになります。
+//
+// ■ tracked について
+// true  … 戦歴APIの取得対象。成績0件なら「まだ8位以内なし」と出る
+// false … 取得対象外。「準備中」と出る。対象に加えるにはバックエンド側の
+//         対象選手リストにも追加が必要（サイト側で tracked を立てるだけでは増えない）
+//
+// ■ tag について
+// 2026/08/24 に、目標設定シート由来でない紹介文（vision / goal 以外）は一旦すべて外しました。
+// 表示側は空なら要素ごと出しません。文言が決まったらここに入れれば復活します。
 
 window.AP_ATHLETES = [
     {
       id:'mise-kurea',
-      name:'見瀬クレア',
-      tag:'世界ジュニア3位・アジアカップ優勝',
+      name:'見瀬クレア', sajId:5001737,
+      tag:'',
       photos:['assets/athletes/mise-kurea-28f910d9.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
-      tracked:false, results:[]
+      tracked:true,
+      results:[
+        {d:'2019-02-17',rank:8,disc:'MO',cat:'B',ev:'2019きはしクリニック東海北陸ブロックモーグル競技会'},
+        {d:'2020-02-01',rank:6,disc:'MO',cat:'B',ev:'2020 東海北陸フリースタイルスキー選手権大会 (Ｂ級）'},
+        {d:'2020-02-02',rank:3,disc:'MO',cat:'B',ev:'2020 東海北陸フリースタイルスキー選手権大会 (Ｂ級）'},
+        {d:'2020-02-07',rank:7,disc:'MO',cat:'B',ev:'第3回小海リエックス・スキーバレーモーグル競技会'},
+        {d:'2021-03-14',rank:2,disc:'MO',cat:'ジュニアオリンンピック（SAJ-A級）',ev:'JOCジュニアオリンピックカップ　2021全日本ジュニアスキー選手権大会フリースタイル競技　モーグル種目'},
+        {d:'2022-02-19',rank:4,disc:'MO',cat:'FIS兼SAJ-A級',ev:'サンガリアシリーズ2022フリースタイルスキーふくしま大会'},
+        {d:'2022-02-22',rank:4,disc:'MO',cat:'SAJ A級',ev:'第40回長野県フリースタイルスキー選手権大会'},
+        {d:'2022-02-23',rank:6,disc:'MO',cat:'SAJ A級',ev:'2022HSCフリースタイル選手権大会モーグル大会'},
+        {d:'2022-03-12',rank:1,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2024-01-27',rank:7,disc:'MO',cat:'SAJ A級',ev:'第24回ばんけいモーグル競技会'},
+        {d:'2024-02-11',rank:1,disc:'MO',cat:'SAJ A級',ev:'2024白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2024-02-12',rank:1,disc:'MO',cat:'SAJ A級',ev:'2024白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2024-02-17',rank:7,disc:'MO',cat:'FIS兼SAJ-A級',ev:'2024 世界遺産五箇山フリースタイルスキー選手権大会/2024 FIS A級 たいら　モーグル競技会'},
+        {d:'2024-02-18',rank:5,disc:'MO',cat:'FISアジアカップ兼SAJ-A級',ev:'2024 世界遺産五箇山フリースタイルスキー選手権大会/2024 アジアカップ　たいら　モーグル競技会'},
+        {d:'2024-02-24',rank:7,disc:'DM',cat:'FIS兼SAJ-A級',ev:'第43回北海道スキー選手権大会フリースタイル競技DM/MO種目'},
+        {d:'2024-02-25',rank:2,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第43回北海道スキー選手権大会フリースタイル競技DM/MO種目'},
+        {d:'2024-03-02',rank:8,disc:'MO',cat:'FISアジアカップ兼SAJ-A級',ev:'アジアカップ　第33回札幌モーグル競技会'},
+        {d:'2024-03-03',rank:4,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第95回宮様スキー大会国際競技会'},
+        {d:'2024-03-16',rank:4,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2024全日本ジュニアスキー選手権大会フリースタイル競技・種目モーグル'},
+        {d:'2024-03-24',rank:7,disc:'MO',cat:'全日本',ev:'第44回全日本スキー選手権大会・フリースタイル競技・種目デュアルモーグル・モーグル'},
+        {d:'2025-02-01',rank:8,disc:'MO',cat:'SAJ A級',ev:'第25回ばんけいモーグル競技会'},
+        {d:'2025-02-02',rank:5,disc:'MO',cat:'SAJ A級',ev:'第25回ばんけいモーグル競技会'},
+        {d:'2025-02-23',rank:3,disc:'DM',cat:'FIS兼SAJ-A級',ev:'第44回北海道スキー選手権大会フリースタイル競技DM/MO種目'},
+        {d:'2025-02-24',rank:3,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第44回北海道スキー選手権大会フリースタイル競技DM/MO種目'},
+        {d:'2025-03-01',rank:5,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第96回宮様スキー大会国際競技会'},
+        {d:'2025-03-08',rank:3,disc:'MO',cat:'FISアジアカップ兼SAJ-A級',ev:'2025 アジアカップ　たいら　モーグル競技会/2025 世界遺産五箇山フリースタイルスキー選手権大会/第1戦/第2戦'},
+        {d:'2025-03-09',rank:1,disc:'MO',cat:'FISアジアカップ兼SAJ-A級',ev:'2025 アジアカップ　たいら　モーグル競技会/2025 世界遺産五箇山フリースタイルスキー選手権大会/第1戦/第2戦'},
+        {d:'2025-03-15',rank:1,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2025-03-16',rank:1,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2025-03-29',rank:8,disc:'DM',cat:'全日本',ev:'第45回全日本スキー選手権大会フリースタイル競技　種目：デュアルモーグル・モーグル'},
+        {d:'2025-03-30',rank:7,disc:'MO',cat:'全日本',ev:'第45回全日本スキー選手権大会フリースタイル競技　種目：デュアルモーグル・モーグル'}
+      ]
     },
     {
       id:'suzuki-reina',
-      name:'鈴木伶菜',
-      tag:'ジュニアオリンピックMO11位・DM7位',
+      name:'鈴木伶菜', sajId:5002151,
+      tag:'',
       photos:['assets/athletes/suzuki-reina-eca44afe.jpg','assets/athletes/suzuki-reina-4b8122aa.jpg','assets/athletes/suzuki-reina-8c8be600.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
-        {d:'2024-03-09',rank:2,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
-        {d:'2025-02-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
-        {d:'2025-02-08',rank:6,disc:'DM',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
-        {d:'2025-03-01',rank:6,disc:'DM',cat:'SAJ B級',ev:'令和6年度新潟県スキー選手権大会兼第23回国体記念松之山温泉モーグル競技会'},
-        {d:'2025-03-15',rank:7,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+        {d:'2024-03-10',rank:2,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2025-02-08',rank:2,disc:'MO',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-09',rank:6,disc:'DM',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-03-02',rank:6,disc:'DM',cat:'SAJ B級',ev:'令和6年度新潟県スキー選手権大会兼第23回国体記念松之山温泉モーグル競技会'},
+        {d:'2025-03-16',rank:7,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
       ]
     },
     {
       id:'aruga-mutsuhito',
-      name:'有賀睦人',
-      tag:'大阪府ジュニアスキー技術選手権 優勝',
+      name:'有賀睦人', sajId:5002208,
+      tag:'',
       photos:['assets/athletes/aruga-mutsuhito-08c84026.jpg'],
       hasKarte:true,
       vision:'ワールドカップなどで活躍したいです。',
@@ -46,54 +97,54 @@ window.AP_ATHLETES = [
       videoAspect:'9:16',   // 縦動画。省略時は '16:9'（横）とみなす
       tracked:true,
       results:[
-        {d:'2024-03-08',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
         {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
-        {d:'2026-03-06',rank:3,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'},
-        {d:'2026-03-07',rank:2,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
+        {d:'2024-03-10',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
+        {d:'2026-03-07',rank:3,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'},
+        {d:'2026-03-08',rank:2,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
       ]
     },
     {
       id:'maji-haruyo',
-      name:'馬路晴世',
-      tag:'B級公認大会5位',
+      name:'馬路晴世', sajId:5001932,
+      tag:'',
       photos:['assets/athletes/maji-haruyo-beac64ec.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
-        {d:'2021-02-21',rank:2,disc:'MO',cat:'SAJ B級',ev:'2021白馬さのさかモーグル大会 第1戦・第2戦'},
-        {d:'2022-02-25',rank:8,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
-        {d:'2022-02-26',rank:3,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
-        {d:'2022-03-11',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
-        {d:'2025-01-31',rank:6,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'},
-        {d:'2025-02-01',rank:5,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'}
+        {d:'2021-02-22',rank:2,disc:'MO',cat:'SAJ B級',ev:'2021白馬さのさかモーグル大会 第1戦・第2戦'},
+        {d:'2022-02-26',rank:8,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-02-27',rank:3,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2022-03-12',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2025-02-01',rank:6,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'},
+        {d:'2025-02-02',rank:5,disc:'MO',cat:'SAJ B級',ev:'2025HSCフリースタイルスキー選手権大会 B級モーグル大会 第1戦、第2戦'}
       ]
     },
     {
       id:'nanaumi-kaisei',
-      name:'七海快成',
-      tag:'全日本選手権初出場',
+      name:'七海快成', sajId:5001891,
+      tag:'',
       photos:['assets/athletes/nanaumi-kaisei-57b62ed8.jpg','assets/athletes/nanaumi-kaisei-f687f276.jpg','assets/athletes/nanaumi-kaisei-3e8fc59f.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
-        {d:'2022-02-26',rank:6,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
-        {d:'2023-01-27',rank:7,disc:'MO',cat:'SAJ B級',ev:'第23回埼玉県松之山温泉モーグル競技会'},
-        {d:'2023-01-28',rank:6,disc:'MO',cat:'SAJ B級',ev:'令和4年度新潟県スキー選手権大会兼第21回国体記念松之山温泉モーグル競技会'},
-        {d:'2023-02-24',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2022-02-27',rank:6,disc:'MO',cat:'SAJ B級',ev:'2022大阪府はくのりモーグル大会'},
+        {d:'2023-01-28',rank:7,disc:'MO',cat:'SAJ B級',ev:'第23回埼玉県松之山温泉モーグル競技会'},
+        {d:'2023-01-29',rank:6,disc:'MO',cat:'SAJ B級',ev:'令和4年度新潟県スキー選手権大会兼第21回国体記念松之山温泉モーグル競技会'},
         {d:'2023-02-25',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
-        {d:'2025-02-07',rank:5,disc:'MO',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
-        {d:'2025-02-08',rank:7,disc:'DM',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
-        {d:'2025-02-14',rank:3,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
-        {d:'2025-02-15',rank:8,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
-        {d:'2025-03-14',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
-        {d:'2026-02-06',rank:5,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
-        {d:'2026-03-13',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+        {d:'2023-02-26',rank:6,disc:'MO',cat:'SAJ B級',ev:'2023大阪府はくのりモーグル大会'},
+        {d:'2025-02-08',rank:5,disc:'MO',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-09',rank:7,disc:'DM',cat:'SAJ A級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2025-02-15',rank:3,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-02-16',rank:8,disc:'MO',cat:'SAJ A級',ev:'2025 白馬乗鞍埼玉県モーグル選手権大会'},
+        {d:'2025-03-15',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2025全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-02-07',rank:5,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-14',rank:6,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
       ]
     },
     {
       id:'hamada-takuma',
-      name:'浜田匠真',
-      tag:'楽しくスキーを頑張る',
+      name:'浜田匠真', sajId:5002069,
+      tag:'',
       photos:['assets/athletes/hamada-takuma-b48ce6d0.jpg'],
       hasKarte:true,
       vision:'スキーモーグルを広めれる人になりたいです。',
@@ -104,44 +155,48 @@ window.AP_ATHLETES = [
     },
     {
       id:'hamada-seima',
-      name:'浜田誠真',
-      tag:'B級公認大会出場',
+      name:'浜田誠真', sajId:5001957,
+      tag:'',
       photos:['assets/athletes/hamada-seima-3cb34465.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
-      tracked:false, results:[]
+      tracked:true,
+      results:[
+        {d:'2025-02-09',rank:5,disc:'DM',cat:'SAJ B級',ev:'2025フリースタイルスキー秋田・田沢湖モーグル競技会'},
+        {d:'2026-03-08',rank:5,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
+      ]
     },
     {
       id:'matsumura-satomi',
       name:'松村聡美',
-      tag:'GARAカップ 小学生の部 3位',
+      tag:'',
       photos:['assets/athletes/matsumura-satomi-e0554086.jpg','assets/athletes/matsumura-satomi-c0fdb7ef.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
     {
       id:'hayashi-ryoma',
-      name:'林遼真',
-      tag:'A級公認大会7位',
+      name:'林遼真', sajId:5001654,
+      tag:'',
       photos:['assets/athletes/hayashi-ryoma-3bc998ac.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
-        {d:'2019-03-01',rank:3,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第1戦'},
-        {d:'2019-03-02',rank:2,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第2戦'},
-        {d:'2022-03-11',rank:7,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
-        {d:'2024-02-23',rank:7,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
-        {d:'2024-02-24',rank:5,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
-        {d:'2024-03-15',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2024全日本ジュニアスキー選手権大会フリースタイル競技・種目モーグル'},
-        {d:'2025-02-03',rank:7,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第43回長野県フリースタイルスキー選手権大会 モーグル競技'},
-        {d:'2026-02-07',rank:3,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
-        {d:'2026-03-13',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
-        {d:'2026-03-14',rank:6,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
+        {d:'2019-03-02',rank:3,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第1戦'},
+        {d:'2019-03-03',rank:2,disc:'MO',cat:'B',ev:'イマトクCUPハチ北モーグル大会 第2戦'},
+        {d:'2022-03-12',rank:7,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2022全日本ジュニアスキー選手権大会・フリースタイル競技・種目モーグル'},
+        {d:'2024-02-24',rank:7,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-02-25',rank:5,disc:'MO',cat:'SAJ B級',ev:'2024森下仁丹 大阪府はくのりモーグル大会'},
+        {d:'2024-03-16',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2024全日本ジュニアスキー選手権大会フリースタイル競技・種目モーグル'},
+        {d:'2025-02-04',rank:7,disc:'MO',cat:'FIS兼SAJ-A級',ev:'第43回長野県フリースタイルスキー選手権大会 モーグル競技'},
+        {d:'2026-02-08',rank:3,disc:'MO',cat:'SAJ A級',ev:'森下仁丹2026大阪府はくのりモーグル大会'},
+        {d:'2026-03-14',rank:2,disc:'MO',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'},
+        {d:'2026-03-15',rank:6,disc:'DM',cat:'全日本ジュニア',ev:'JOCジュニアオリンピックカップ2026全日本ジュニアスキー選手権大会フリースタイル競技デュアルモーグル・モーグル種目'}
       ]
     },
     {
       id:'katsuta-yumi',
       name:'勝田有美',
-      tag:'2026シーズン加入・S-air拠点',
+      tag:'',
       photos:['assets/athletes/katsuta-yumi-798cb8f8.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
@@ -149,17 +204,21 @@ window.AP_ATHLETES = [
     {
       id:'fujihara-tomoki',
       name:'藤原朋己',
-      tag:'2026シーズン加入',
+      tag:'',
       photos:['assets/athletes/fujihara-tomoki-db00bb99.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
     {
       id:'suzuki-kae',
-      name:'鈴木佳英',
-      tag:'八方ジュニアテクニカル取得',
+      name:'鈴木佳英', sajId:5002440,
+      tag:'',
       photos:['assets/athletes/suzuki-kae-37c1f2b2.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
-      tracked:false, results:[]
+      tracked:true,
+      results:[
+        {d:'2026-01-24',rank:8,disc:'MO',cat:'SAJ B級',ev:'第1回戸狩温泉モーグル競技会'},
+        {d:'2026-03-08',rank:5,disc:'MO',cat:'SAJ B級',ev:'森下仁丹2026大阪府はくのりモーグル里見大会'}
+      ]
     }
 ];
