@@ -624,9 +624,13 @@
     el.currentName.textContent = res.athlete_name + 'さん';
     document.title = res.athlete_name + 'さんの写真の送信｜MIC';
 
-    // いま載っている写真は data/athletes.js（サイト本体と同じデータ）から引く
+    // いま載っている写真は data/athletes.js（サイト本体と同じデータ）から引く。
+    // ★ 単数の photo は持たない。photos（配列）に一本化してあり、先頭が代表写真。
+    //   me.photo を見ると常に undefined になり、写真が載っている選手にも
+    //   「まだ写真がありません」と出る（2026/08/24 まで実際にそうなっていた）。
+    //   単数の photo を復活させて直さないこと（check-site.sh が落ちる）。
     var me = (window.AP_ATHLETES || []).filter(function(a){ return a.id === res.athlete_id; })[0];
-    var photo = me && me.photo;
+    var photo = me && me.photos && me.photos[0];
     if (photo && photo.indexOf('_placeholder') < 0) {
       var img = document.createElement('img');
       img.src = photo;
