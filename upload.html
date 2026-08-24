@@ -120,12 +120,24 @@
   .nowintro{
     background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:13px 15px;margin-bottom:14px;
+    display:flex;gap:12px;align-items:center;
   }
+  .nowintro .c{flex:1;min-width:0;}
   .nowintro .lb{
     display:block;font-size:11.5px;color:var(--muted);font-weight:600;
     letter-spacing:.04em;margin-bottom:6px;
   }
   .nowintro .tx{margin:0;font-size:15px;line-height:1.75;}
+  /* ★ 指で押せる大きさを確保する（44px）。スマホで使う画面なので、
+     小さいと隣の文章を選択してしまう。 */
+  .nowintro .copy{
+    flex:none;min-height:44px;padding:11px 14px;border-radius:10px;
+    background:#26262a;border:1px solid var(--line);color:var(--fg);
+    font-size:13px;font-family:inherit;font-weight:600;
+    cursor:pointer;white-space:nowrap;
+  }
+  .nowintro .copy:active{background:#33333a;}
+  .nowintro .copy.done{color:var(--ok);border-color:rgba(74,222,128,.45);}
   label.sub{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:8px;}
   .counter{font-size:12.5px;color:var(--muted);text-align:right;margin-top:6px;}
   .counter.over{color:var(--accent);font-weight:700;}
@@ -258,8 +270,15 @@
              入力欄に初期値として入れていたときは、いま載っている文章と
              これから送る文章が同じ枠に見えていて、消していいのかどうかが分からなかった。 -->
         <div class="nowintro" id="introNow" hidden>
-          <span class="lb">いまサイトに載っている紹介文</span>
-          <p class="tx" id="introNowText"></p>
+          <div class="c">
+            <span class="lb">いまサイトに載っている紹介文</span>
+            <p class="tx" id="introNowText"></p>
+          </div>
+          <!-- ★ 一部だけ直したい人が、全部打ち直さずに済むようにする。
+               入力欄に初期値として入れる方式に戻すのではなく、
+               本人が押したときだけ入れる。押さなければ入力欄は空のまま。 -->
+          <button type="button" class="copy" id="introCopy"
+                  aria-label="いまの紹介文を下の入力欄にコピーする">コピー</button>
         </div>
 
         <label class="sub" id="introInputLabel" for="intro">紹介文を入力</label>
@@ -318,7 +337,8 @@
   var el = {};
   ['loading','invalid','invalidTitle','invalidText','withdrawn','done','doneTitle','doneText','results',
    'main','title','currentMedia','currentName','currentNote','picker','pickerSub','files','fileNotice',
-   'message','intro','introCount','introNote','introNow','introNowText','introInputLabel','copyrightRow',
+   'message','intro','introCount','introNote','introNow','introNowText','introInputLabel',
+   'introCopy','copyrightRow',
    'consentUpload','consentCopyright','errorNotice','submit','bar','barFill','barLabel'
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
@@ -540,6 +560,26 @@
   }
 
   el.intro.addEventListener('input', refresh);
+
+  // いま載っている文章を入力欄に写す。★ 一部だけ直したい人が全部打ち直さずに済むように。
+  //   自動では入れない。押した本人の操作としてだけ入る。
+  //   写した直後は「いまと同じ文章」なので送信ボタンは押せないままになる。
+  //   これは正しい。1文字でも直せば押せるようになる。
+  var copyTimer = null;
+  el.introCopy.addEventListener('click', function(){
+    el.intro.value = introCurrent;
+    refresh();
+    el.intro.focus();
+    // 末尾から書き足せるようにする。iOS で先頭にカーソルが残ると書きにくい。
+    try { el.intro.setSelectionRange(introCurrent.length, introCurrent.length); } catch (e) {}
+    el.introCopy.textContent = '入れました';
+    el.introCopy.classList.add('done');
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function(){
+      el.introCopy.textContent = 'コピー';
+      el.introCopy.classList.remove('done');
+    }, 2000);
+  });
   el.consentUpload.addEventListener('change', refresh);
   el.consentCopyright.addEventListener('change', refresh);
   Array.prototype.forEach.call(document.querySelectorAll('input[name="who"]'), function(r){
@@ -815,6 +855,7 @@
       : '例：目標はオリンピックに出場することです。';
     el.introNote.textContent = introCurrent
       ? 'ここに入力して送ると、上の文章と入れ替わります。'
+        + '一部だけ直したいときは「コピー」を押すと、上の文章が入力欄に入ります。'
         + '空のまま送れば、いまの紹介文はそのまま残ります。'
         + 'いま載っている紹介文を取り下げたいときは、担当コーチへお伝えください。'
       : 'まだ紹介文はありません。空のまま送っても、何も起きません。';
