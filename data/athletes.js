@@ -204,7 +204,11 @@ window.AP_ATHLETES = [
       id:'katsuta-yumi',
       name:'勝田有美',
       intro:'',
-      photos:['assets/athletes/katsuta-yumi-798cb8f8.jpg'],
+      // 1枚目は暫定。本人に確認済みで他に写真が無いため、引きの写真を使っている。
+      // シーズンに入ったら撮り直して差し替える予定（2026/08/24）。
+      // 2枚目は元から載っていたもの。消さないこと。
+      photos:['assets/athletes/katsuta-yumi-6010c19f.jpg',
+              'assets/athletes/katsuta-yumi-798cb8f8.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
