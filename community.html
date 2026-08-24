@@ -660,13 +660,13 @@
     {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", logo:"assets/community/snowbase98.png",
      links:[{type:"instagram", url:"https://www.instagram.com/snowbase98"},
             {type:"facebook",  url:"https://www.facebook.com/people/SNOW-BASE-98/61562297623040/"}]},
-    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       logo:"assets/community/hiroshima-freestyle.png", dark:true,
+    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true,
      links:[{type:"site", url:"https://ski-hiroshima.org/competition/freestyle"}]},
-    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             logo:"assets/community/trj-logo.png", dark:true,
+    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             logo:"assets/community/trj-logo.png", dark:true, boost:true,
      links:[{type:"site", url:"https://www.mogulteam-trj-nagano.com/"}]},
     {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         logo:"assets/community/equipe-fsc-logo.png",
      links:[{type:"instagram", url:"https://www.instagram.com/equipe_f.s.c._"}]},
-    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", logo:"assets/community/shimada-hospital.png",
+    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", logo:"assets/community/shimada-hospital.png", boost:true,
      links:[{type:"site", url:"https://www.heartful-health.or.jp/shimadahp/"}]}
   ];
 
@@ -697,7 +697,7 @@
       img.decoding = 'async';
       img.addEventListener('load', function () {
         item.dataset.ratio = img.naturalWidth / img.naturalHeight; /* 実寸から比率を取得 */
-        sizeOne(item);
+        sizeOne(item, p);
         place();
       });
       img.src = p.logo;
@@ -721,23 +721,34 @@
     items.push(item);
   });
 
-  /* プレートは高さを揃え、幅はロゴの比率のまま可変にする */
+  /* プレートは幅を固定。ロゴは比率を保ったまま中央に収める（レターボックス）。
+     boost:true の先だけ、幅は揃えたまま高さを増やして表示を大きくする
+     （SNOW BASE 98 / EQUIPE のような横長ロゴは幅で頭打ちのため高さを増やしても変わらず、
+     広島・Tr-J・しまだ病院のような正方形寄りのロゴだけが実際に大きくなる）。 */
   function box() {
     var cw = wrap.clientWidth;
-    if (cw > 700) return {w: 190, h: 44};
-    /* プレートの左右余白と枠線ぶん（26px）を引いて、行の半分に収まる幅にする */
-    return {w: Math.max(80, Math.min(132, Math.floor(cw / 2) - 5 - 26)), h: 34};
+    if (cw > 700) return {w: 180, h: 74};
+    /* プレートの左右余白ぶんを引いて、行の半分に収まる幅にする */
+    return {w: Math.max(104, Math.min(156, Math.floor(cw / 2) - 5)), h: 56};
   }
-  function sizeOne(item) {
+  function sizeOne(item, p) {
+    var plate = item.querySelector('.mic-plate');
+    var b = box();
+    var boostH = (p && p.boost) ? Math.round(b.h * 1.35) : b.h;
+    plate.style.width = b.w + 'px';
+    plate.style.height = boostH + 'px';
     var img = item.querySelector('img');
     var r = parseFloat(item.dataset.ratio);
     if (!img || !r) return;
-    var b = box(), h = b.h, w = h * r;
-    if (w > b.w) { w = b.w; h = w / r; }
+    var desktop = wrap.clientWidth > 700;
+    var padX = desktop ? 16 : 12, padY = desktop ? 14 : 11;
+    var innerW = b.w - padX * 2, innerH = boostH - padY * 2;
+    var w = innerH * r, h = innerH;
+    if (w > innerW) { w = innerW; h = w / r; }
     img.width = Math.round(w);
     img.height = Math.round(h);
   }
-  function sizeAll() { items.forEach(sizeOne); }
+  function sizeAll() { items.forEach(function (item, i) { sizeOne(item, PARTNERS[i]); }); }
 
   /* リンクのチップ。キャプション内なので、アクティブな1社ぶんだけ出る */
   function renderLinks(p) {
