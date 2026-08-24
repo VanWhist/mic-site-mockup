@@ -13,7 +13,7 @@ window.AP_ATHLETES = [
       id:'mise-kurea',
       name:'見瀬クレア',
       tag:'世界ジュニア3位・アジアカップ優勝',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__71491609-2.jpg'],
+      photos:['assets/athletes/mise-kurea-28f910d9.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -36,7 +36,7 @@ window.AP_ATHLETES = [
       id:'aruga-mutsuhito',
       name:'有賀睦人',
       tag:'大阪府ジュニアスキー技術選手権 優勝',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/4C82761B-A841-49F2-B548-A37442EA875D.jpg'],
+      photos:['assets/athletes/aruga-mutsuhito-08c84026.jpg'],
       hasKarte:true,
       vision:'ワールドカップなどで活躍したいです。',
       goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
@@ -56,7 +56,7 @@ window.AP_ATHLETES = [
       id:'maji-haruyo',
       name:'馬路晴世',
       tag:'B級公認大会5位',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/06/2769E8BF-BFBE-4469-B8CD-034E8AB7A0E8-731x1024.jpg'],
+      photos:['assets/athletes/maji-haruyo-beac64ec.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
@@ -94,7 +94,7 @@ window.AP_ATHLETES = [
       id:'hamada-takuma',
       name:'浜田匠真',
       tag:'楽しくスキーを頑張る',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2023/06/352538139_155384994191123_6081636642944124410_n.jpg'],
+      photos:['assets/athletes/hamada-takuma-b48ce6d0.jpg'],
       hasKarte:true,
       vision:'スキーモーグルを広めれる人になりたいです。',
       goal:'B級大会優勝です。',
@@ -106,7 +106,7 @@ window.AP_ATHLETES = [
       id:'hamada-seima',
       name:'浜田誠真',
       tag:'B級公認大会出場',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2023/09/356241684_166366369759652_8476162081763316629_n.jpg'],
+      photos:['assets/athletes/hamada-seima-3cb34465.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
     },
@@ -122,7 +122,7 @@ window.AP_ATHLETES = [
       id:'hayashi-ryoma',
       name:'林遼真',
       tag:'A級公認大会7位',
-      photos:['https://mogul-mic.com/mic2026/wp-content/uploads/2025/05/S__5562378-925x1024.jpg'],
+      photos:['assets/athletes/hayashi-ryoma-3bc998ac.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
