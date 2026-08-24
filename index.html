@@ -1888,13 +1888,15 @@
       + moreBtn;
   }
 
+  // 選手カルテ（目標設定シート）の転記は 2026/08/24 に取り下げた。
+  // カルテはコーチ・本人が見る前提で書かれたもので、公開を想定した文章ではないため。
+  // 紹介文は今後、選手セルフアップロードアプリで本人・保護者に公開前提で書いてもらう。
+  // 空のときは「回答が届き次第ここに表示されます」とは出さずに、枠ごと出さない。
+  // 出す予定のないものを待っているように見せないため。
   function apRenderKarte(a){
-    if(!a.hasKarte){
-      return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点 ／ 今年のシーズン目標</div>'
-        + '<div class="ap-empty-note">選手カルテはまだ今シーズンの回答が登録されていません。回答が届き次第、ここに表示されます。</div></div>';
-    }
-    return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点</div><p class="ap-quote">' + a.vision + '</p></div>'
-      + '<div class="ap-block no-border"><div class="ap-goal-card"><div class="label">今年のシーズン目標</div><p>' + a.goal + '</p></div></div>';
+    if(!a.hasKarte || !a.vision || !a.goal) return '';
+    return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点</div><p class="ap-quote">' + apEsc(a.vision) + '</p></div>'
+      + '<div class="ap-block no-border"><div class="ap-goal-card"><div class="label">今年のシーズン目標</div><p>' + apEsc(a.goal) + '</p></div></div>';
   }
 
   function apRenderPanel(a, startIndex){

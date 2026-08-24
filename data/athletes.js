@@ -22,9 +22,14 @@
 // false … 取得対象外。「準備中」と出る。対象に加えるにはバックエンド側の
 //         対象選手リストにも追加が必要（サイト側で tracked を立てるだけでは増えない）
 //
-// ■ tag について
-// 2026/08/24 に、目標設定シート由来でない紹介文（vision / goal 以外）は一旦すべて外しました。
-// 表示側は空なら要素ごと出しません。文言が決まったらここに入れれば復活します。
+// ■ 紹介文（tag / vision / goal）について
+// 2026/08/24、選手紹介に出す文章はいったん全員分ゼロにしました。
+//   tag           … 氏名の下に出る短い肩書き。もともと手書きだったものを削除
+//   vision / goal … 選手カルテ（目標設定シート）から転記していたもの。
+//                   カルテはコーチ・本人が見る前提で書かれたもので、公開を想定した文章では
+//                   ないため取り下げた。データもここには残していない（このリポジトリは公開のため）
+// 今後は、選手セルフアップロードアプリ（upload.html）で本人・保護者に公開前提で
+// 書いてもらった短い肩書きを tag に入れる方針。表示側は空なら要素ごと出しません。
 
 window.AP_ATHLETES = [
     {
@@ -88,9 +93,7 @@ window.AP_ATHLETES = [
       name:'有賀睦人', sajId:5002208,
       tag:'',
       photos:['assets/athletes/aruga-mutsuhito-08c84026.jpg'],
-      hasKarte:true,
-      vision:'ワールドカップなどで活躍したいです。',
-      goal:'今年からはA級なのでまずは、A級に残れる順位を取りたいです。',
+      hasKarte:false, vision:null, goal:null,
       // 有賀睦人｜MIC 選手紹介（MICモーグルチャンネル・限定公開・0:13）。
       // 元の assets/videos/睦人.mp4 と同じ映像。MP4 は参照されなくなるだけで残してある。
       video:'https://youtu.be/FTWfsrykCzk',
@@ -146,10 +149,7 @@ window.AP_ATHLETES = [
       name:'浜田匠真', sajId:5002069,
       tag:'',
       photos:['assets/athletes/hamada-takuma-b48ce6d0.jpg'],
-      hasKarte:true,
-      vision:'スキーモーグルを広めれる人になりたいです。',
-      goal:'B級大会優勝です。',
-      video:null,
+      hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[]
     },
