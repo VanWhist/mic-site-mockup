@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>写真の送信｜MIC</title>
+<title>写真と紹介文の送信｜MIC</title>
 <style>
   :root{
     --bg:#0a0a0c;
@@ -105,6 +105,17 @@
   }
   textarea:focus{outline:none;border-color:var(--accent);}
 
+  /* ★ サイトに載る欄だけ、枠の色と左の線で見た目を変える。
+     スマホで縦に並ぶと、見出しの文言だけでは区別が付きにくい。 */
+  span.q.public::before{
+    content:'サイトに載ります';
+    display:inline-block;margin-right:8px;padding:2px 7px;border-radius:5px;
+    background:var(--accent);color:#fff;font-size:11px;font-weight:700;vertical-align:2px;
+  }
+  textarea.public{border-color:rgba(255,90,60,.55);border-left:3px solid var(--accent);}
+  .counter{font-size:12.5px;color:var(--muted);text-align:right;margin-top:6px;}
+  .counter.over{color:var(--accent);font-weight:700;}
+
   .check{
     display:flex;gap:13px;align-items:flex-start;padding:15px;border-radius:12px;
     background:#1b1b1e;border:1px solid var(--line);margin-bottom:11px;cursor:pointer;
@@ -188,8 +199,8 @@
   </div>
 
   <main id="main" hidden>
-    <h1 id="title">写真の送信</h1>
-    <p class="lead">サイトの選手紹介に使う写真を送っていただけます。</p>
+    <h1 id="title">写真と紹介文の送信</h1>
+    <p class="lead">サイトの選手紹介に使う写真と紹介文を送っていただけます。どちらか一方だけでも送れます。</p>
 
     <section>
       <h2>いま載っている写真</h2>
@@ -220,17 +231,34 @@
         <div class="notice" id="fileNotice"></div>
       </div>
 
+      <!-- ★ この欄と下の「コーチへの一言」は、性質が正反対。
+           こちらはサイトに載り、下は載らない。似た入力欄が2つ並ぶので、
+           見出し・枠の色・補足文の3つで差を付けている。スマホで縦に並んだときに
+           取り違えられるのが、この画面でいちばん困る。 -->
+      <div class="field">
+        <span class="q public">サイトに載せる紹介文（任意・80字まで）</span>
+        <p class="hint">選手紹介のページに、あなたの言葉として載ります。<br>
+        <strong>ここに書いた文章はサイトに載ります。学校名・住所・電話番号といった居場所や連絡先が分かること、ほかの人の名前は書かないでください。</strong><br>
+        記入例：モーグルを初めてから全国に友達がいっぱいできました！もっと上手くなって大会では入賞を狙います！</p>
+        <textarea id="intro" class="public" maxlength="200" placeholder="例：目標はオリンピックに出場することです。"></textarea>
+        <div class="counter" id="introCount"></div>
+        <p class="hint" id="introNote"></p>
+      </div>
+
       <div class="field">
         <span class="q">コーチへの一言（任意）</span>
+        <p class="hint">※この内容は<strong>サイトには載りません</strong>。コーチだけが読みます。</p>
         <textarea id="message" placeholder="例：大会のときに撮った写真です。よろしくお願いします。"></textarea>
       </div>
 
       <div class="field">
         <label class="check">
           <input type="checkbox" id="consentUpload">
-          <span>この写真が MIC公式Webサイト上で一般公開され、インターネット上の第三者が閲覧・保存できる状態になることを確認し、掲載に同意します。</span>
+          <span>この画面から送る写真・紹介文が MIC公式Webサイト上で一般公開され、インターネット上の第三者が閲覧・保存できる状態になることを確認し、掲載に同意します。</span>
         </label>
-        <label class="check">
+        <!-- ★ 著作権の同意は写真固有の内容。紹介文だけを送るときは、そもそも出さない。
+             押せないチェックが並んでいると「なぜ押せないのか」を考えさせる。 -->
+        <label class="check" id="copyrightRow" hidden>
           <input type="checkbox" id="consentCopyright">
           <span>この写真は、自分または家族が撮影したもの、または撮影者から MIC公式Webサイトへの掲載許可を得たものです。</span>
         </label>
@@ -267,7 +295,8 @@
   var el = {};
   ['loading','invalid','invalidTitle','invalidText','withdrawn','done','doneTitle','doneText','results',
    'main','title','currentMedia','currentName','currentNote','picker','pickerSub','files','fileNotice',
-   'message','consentUpload','consentCopyright','errorNotice','submit','bar','barFill','barLabel'
+   'message','intro','introCount','introNote','copyrightRow',
+   'consentUpload','consentCopyright','errorNotice','submit','bar','barFill','barLabel'
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
   var info = null;      // サーバから受け取った選手の情報
@@ -305,7 +334,7 @@
     invalid:    ['このリンクは使用できません', 'リンクが正しくないようです。お手数ですが、コーチまでご連絡ください。'],
     expired:    ['このリンクは有効期限が切れています', 'あらためてお送りしますので、コーチまでご連絡ください。'],
     inactive:   ['このリンクは現在停止されています', 'お手数ですが、コーチまでご連絡ください。'],
-    wrong_use:  ['このリンクでは写真を送れません', '選手・保護者あてにお送りした写真送信用のリンクをお使いください。'],
+    wrong_use:  ['このリンクでは送信できません', '選手・保護者あてにお送りした送信用のリンクをお使いください。'],
     limit_daily:['本日の送信上限に達しました', '1日に送れるのは10枚までです。明日以降にお試しください。'],
     // 下の2つは一時的な不調。リンク自体は正しいので、そのように伝える
     busy:        ['ただいま混み合っています', '少し時間をおいてから、画面を再読み込みしてお試しください。'],
@@ -428,15 +457,56 @@
     return c ? c.value : '';
   }
 
+  // 紹介文の上限。★ 同じ「80」が MIC-Upload-API（MAX_INTRO_CHARS）、
+  //   tools/publish_photos.py、scripts/check-site.sh にもある。まとめて変えること。
+  var MAX_INTRO = 80;
+  var introInitial = '';   // いま載っている紹介文。初期値として入力欄に入れる
+
+  /** 1行に整える。改行・タブ・制御文字を落とし、前後の空白を取る（API 側と同じ扱い）。 */
+  function introValue(){
+    var raw = String(el.intro.value || '');
+    var out = '';
+    for (var i = 0; i < raw.length; i++) {
+      var c = raw.charCodeAt(i);
+      if (c < 32 || c === 127) continue;
+      out += raw.charAt(i);
+    }
+    return out.trim();
+  }
+
+  /** ★ コードポイントで数える。str.length は絵文字を2と数えるため使わない。 */
+  function introLength(){
+    return Array.from(introValue()).length;
+  }
+
+  /** ★ 初期値と同じなら送らない。触っていないものを毎回送信しないため。 */
+  function introChanged(){
+    return introValue() !== introInitial;
+  }
+
+  function renderIntroCount(){
+    var n = introLength();
+    el.introCount.textContent = n + ' / ' + MAX_INTRO + '字';
+    el.introCount.classList.toggle('over', n > MAX_INTRO);
+  }
+
   function refresh(){
+    renderIntroCount();
+    var hasPhoto = picked.length > 0;
+    var hasIntro = introChanged() && introValue() !== '';
+    // ★ 写真がないときは著作権の同意そのものを出さない（写真固有の内容のため）
+    el.copyrightRow.hidden = !hasPhoto;
+
     var ok = who() !== ''
-      && picked.length > 0
+      && (hasPhoto || hasIntro)                       // どちらか一方でも送れる
+      && introLength() <= MAX_INTRO                   // 80字を超えていたら送れない
       && el.consentUpload.checked
-      && el.consentCopyright.checked
+      && (!hasPhoto || el.consentCopyright.checked)   // 著作権は写真があるときだけ
       && !sending;
     el.submit.disabled = !ok;
   }
 
+  el.intro.addEventListener('input', refresh);
   el.consentUpload.addEventListener('change', refresh);
   el.consentCopyright.addEventListener('change', refresh);
   Array.prototype.forEach.call(document.querySelectorAll('input[name="who"]'), function(r){
@@ -512,6 +582,8 @@
   }
 
   var SEND_ERRORS = {
+    too_long:   '紹介文が80字を超えています',
+    empty_text: '紹介文が空です',
     too_large:   'サイズが大きすぎます（10MBまで）',
     bad_type:    'この形式には対応していません',
     limit_daily: '本日の送信上限（10枚）に達しました',
@@ -535,6 +607,13 @@
 
     var total = picked.length;
     var results = [];
+    // ★ 紹介文は写真とは独立に、送信につき1回だけ送る。
+    //   写真ごとのペイロードに相乗りさせると、5枚送ったら同じ文が5回送られる。
+    //   写真が0枚のときに loop が回らず、紹介文だけを送れないという問題もある。
+    var sendIntro = introChanged() && introValue() !== '';
+    var introResult = null;
+    var steps = total + (sendIntro ? 1 : 0);
+    var doneSteps = 0;
 
     // 10MB×5枚をまとめて base64 にすると Apps Script の受信上限を超えるため、
     // 1ファイルずつ順に送る。1枚失敗しても残りは続ける。
@@ -542,7 +621,7 @@
     picked.forEach(function(f, i){
       chain = chain.then(function(){
         var head = (i + 1) + '枚目／全' + total + '枚';
-        el.barFill.style.width = Math.round(i / total * 100) + '%';
+        el.barFill.style.width = Math.round(doneSteps / steps * 100) + '%';
         el.barLabel.textContent = head + '：送信のために画像を縮小しています…';
 
         return shrink(f.file).then(function(s){
@@ -574,9 +653,31 @@
             reason: SEND_ERRORS[res && res.reason] || '送信できませんでした'});
         }).catch(function(err){
           results.push({name: f.file.name, ok: false, reason: err.message});
-        });
+        }).then(function(){ doneSteps++; });
       });
     });
+
+    // 紹介文は写真のあとに1回だけ
+    if (sendIntro) {
+      chain = chain.then(function(){
+        el.barFill.style.width = Math.round(doneSteps / steps * 100) + '%';
+        el.barLabel.textContent = '紹介文を送信しています…';
+        return callApi({
+          action: 'submit_profile',
+          t: token,
+          uploaded_by: who(),
+          profile_text: introValue(),
+          consent_upload: el.consentUpload.checked,
+          message: el.message.value.trim()
+        }).then(function(res){
+          introResult = (res && res.ok)
+            ? {ok: true}
+            : {ok: false, reason: SEND_ERRORS[res && res.reason] || '送信できませんでした'};
+        }).catch(function(err){
+          introResult = {ok: false, reason: err.message};
+        }).then(function(){ doneSteps++; });
+      });
+    }
 
     chain.then(function(){
       el.barFill.style.width = '100%';
@@ -594,15 +695,38 @@
         el.results.appendChild(d);
       });
 
-      if (okCount === 0) {
+      // ★ 紹介文だけを送ったときに「0枚中0枚」と出さない。
+      //   送信直後のこの画面は「ちゃんと届いたのか」を確かめる唯一の場所。
+      //   ここが変だと、不安になって何度も送信されてしまう。
+      if (introResult) {
+        var d = document.createElement('div');
+        if (!introResult.ok) d.className = 'ng';
+        var im = document.createElement('span');
+        im.className = 'mark';
+        im.textContent = introResult.ok ? '✓' : '×';
+        d.appendChild(im);
+        d.appendChild(document.createTextNode(
+          '紹介文' + (introResult.ok ? '' : '　' + introResult.reason)));
+        el.results.appendChild(d);
+      }
+
+      var introOk = introResult ? introResult.ok : null;
+      var anyOk = okCount > 0 || introOk === true;
+
+      if (!anyOk) {
         el.doneTitle.textContent = '送信できませんでした';
         el.doneText.textContent = 'お手数ですが、時間をおいてもう一度お試しください。';
-      } else if (okCount < total) {
-        el.doneTitle.textContent = okCount + '枚を受け付けました';
-        el.doneText.textContent = '送れなかった写真があります。コーチが確認してからサイトに反映されます。';
       } else {
-        el.doneTitle.textContent = '受け付けました';
-        el.doneText.textContent = 'コーチが確認してからサイトに反映されます。';
+        var parts = [];
+        if (okCount > 0) parts.push('写真' + okCount + '枚');
+        if (introOk === true) parts.push('紹介文');
+        el.doneTitle.textContent = parts.join('と') + 'を受け付けました';
+
+        var failed = [];
+        if (total > 0 && okCount < total) failed.push('送れなかった写真があります。');
+        if (introOk === false) failed.push('紹介文は送れませんでした。');
+        el.doneText.textContent =
+          failed.join('') + 'コーチが確認してからサイトに反映されます。';
       }
       show(el.done);
     });
@@ -620,9 +744,9 @@
     // 選手マスタの consent_status に手で withdrawn と入れれば、新規の受付が止まる。
     if (res.consent_status === 'withdrawn') { show(el.withdrawn); return; }
 
-    el.title.textContent = res.athlete_name + 'さんの写真';
+    el.title.textContent = res.athlete_name + 'さんの写真と紹介文';
     el.currentName.textContent = res.athlete_name + 'さん';
-    document.title = res.athlete_name + 'さんの写真の送信｜MIC';
+    document.title = res.athlete_name + 'さんの写真と紹介文の送信｜MIC';
 
     // いま載っている写真は data/athletes.js（サイト本体と同じデータ）から引く。
     // ★ 単数の photo は持たない。photos（配列）に一本化してあり、先頭が代表写真。
@@ -641,6 +765,17 @@
       el.currentMedia.innerHTML = '<div class="none">まだ写真が<br>ありません</div>';
       el.currentNote.textContent = 'ここに載る写真を送っていただけます。';
     }
+
+    // ★ いま載っている紹介文は、表示するだけでなく入力欄の初期値として入れる。
+    //   そのまま送れば「本人が同意した文面」として記録され、
+    //   書き換えて送れば新しい文面になる。触らなければ何も送らない（introChanged）。
+    introInitial = (me && me.intro) ? String(me.intro) : '';
+    el.intro.value = introInitial;
+    el.introNote.textContent = introInitial
+      ? 'いま載っている文章が入っています。直したいときは書き換えてください。'
+        + '触らずに送ると、紹介文は変わりません。'
+        + 'いま載っている紹介文を取り下げたいときは、担当コーチへお伝えください。'
+      : 'まだ紹介文はありません。空のまま送っても、何も起きません。';
 
     if (typeof res.remaining_today === 'number' && res.remaining_today <= 0) {
       fail('limit_daily');

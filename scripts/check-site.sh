@@ -111,6 +111,51 @@ EOF_ARRAYS
     note "$(printf '%s' "$over" | head -3)"
   fi
 
+  # ---- 紹介文（2026/08/24）----
+  # ★ 単数の tag（氏名の下の短い肩書き）は廃止した。実績の一行は戦歴の欄が担っている。
+  #   復活させると「どちらに書くか」で迷う元になる。
+  if grep -qE "(^|[^a-zA-Z])tag:" data/athletes.js; then
+    bad 'data/athletes.js に tag: が残っている（intro へ一本化したもの。復活させない）'
+    note "$(grep -nE "(^|[^a-zA-Z])tag:" data/athletes.js | head -3)"
+  else
+    ok 'data/athletes.js に tag: が無い'
+  fi
+
+  ni=$(grep -c "intro:'" data/athletes.js || true)
+  if [ "$ni" -ge 12 ]; then
+    ok "intro: が ${ni} 件（12件以上）"
+  else
+    bad "intro: が ${ni} 件しかない（12件以上あるべき）"
+    note '移行漏れの可能性がある'
+  fi
+
+  # ★ 80字まで。同じ「80」が upload.html・MIC-Upload-API・publish_photos.py にもある。
+  # ★ 数え方はコードポイント。awk の length() や wc -m はロケール依存で、
+  #   日本語をバイト数で数えて誤検知する（実際にそうなった）。node で数える。
+  if command -v node >/dev/null 2>&1; then
+    longintro=$(node -e '
+      const fs = require("fs");
+      const src = fs.readFileSync("data/athletes.js", "utf8");
+      const out = [];
+      for (const m of src.matchAll(/intro:.([^.]*)./g)) {}
+      const re = /\bintro\s*:\s*.([^\x27]*)\x27/g;
+      let m;
+      while ((m = re.exec(src)) !== null) {
+        const n = [...m[1]].length;
+        if (n > 80) out.push(n + "字: " + m[1].slice(0, 40));
+      }
+      process.stdout.write(out.join("\n"));
+    ' 2>/dev/null || true)
+    if [ -z "$longintro" ]; then
+      ok '紹介文が80字以内（コードポイント・node で計測）'
+    else
+      bad '紹介文が80字を超えている'
+      note "$(printf '%s' "$longintro" | head -3)"
+    fi
+  else
+    printf '       %s\n' '--   node が無いため紹介文の字数は未検証（CI では検査される）'
+  fi
+
   # ---- 動画の値（2026/08/18）----
   # ★ video は .mp4 か YouTube の URL だけ。想定外の値は再生ボタンごと出さない作りだが、
   #   出ないことに気づけないので、値の段階で止める。

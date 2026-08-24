@@ -1841,10 +1841,10 @@
         + (photos.length > 1 ? ' data-photo-index="0"' : '') + '>'
         + '<div class="ap-card-media">' + apCardMedia(photos, a.name) + '</div>'
         + '<div class="ap-name-row">'
-        + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div>'
-        // tag が空のときは要素ごと出さない。空の div を置くと margin-top のぶん
-        // 氏名の下に隙間だけが残り、カードごとに高さが揃わなくなる。
-        + (a.tag ? '<div class="ap-name-row-tag">' + apEsc(a.tag) + '</div>' : '') + '</div>'
+        // ★ 氏名の下の短い肩書き（tag）は 2026/08/24 に廃止した。
+        //   実績の一行は戦歴の欄が担っており、二重に持つ意味がない。
+        //   本人の言葉による紹介文（intro）は、パネルを開いたときに本文として出す。
+        + '<div><div class="ap-name-row-name">' + apEsc(a.name) + '</div></div>'
         + '<span class="ap-chev" aria-hidden="true">\u25be</span>'
         + '</div>'
         + '</div>';
@@ -1893,6 +1893,16 @@
   // 紹介文は今後、選手セルフアップロードアプリで本人・保護者に公開前提で書いてもらう。
   // 空のときは「回答が届き次第ここに表示されます」とは出さずに、枠ごと出さない。
   // 出す予定のないものを待っているように見せないため。
+  // 本人の言葉による紹介文。★ 空なら枠ごと出さない。
+  //   空の枠を置くと「これから何か入る」ように見える。出す予定のないものを待たせない
+  //   （PR #28 で選手カルテの枠を消したときと同じ方針）。
+  // ★ 見出しは付けない。本人の言葉がそのまま出るほうが、引用として素直に読める。
+  function apRenderIntro(a){
+    var t = (a.intro || '').trim();
+    if (!t) return '';
+    return '<div class="ap-block"><p class="ap-quote">' + apEsc(t) + '</p></div>';
+  }
+
   function apRenderKarte(a){
     if(!a.hasKarte || !a.vision || !a.goal) return '';
     return '<div class="ap-block"><div class="ap-kicker">競技人生の最終到達点</div><p class="ap-quote">' + apEsc(a.vision) + '</p></div>'
@@ -1918,10 +1928,10 @@
       + '>' + media + playBtn + '</div>'
       + '<div class="ap-panel-body">'
       + '<div class="ap-panel-head">'
-      + '<div><div class="ap-panel-name">' + apEsc(a.name) + '</div>'
-      + (a.tag ? '<div class="ap-panel-tag">' + apEsc(a.tag) + '</div>' : '') + '</div>'
+      + '<div><div class="ap-panel-name">' + apEsc(a.name) + '</div></div>'
       + '<button type="button" class="ap-panel-close" onclick="apClose()">閉じる ×</button>'
       + '</div>'
+      + apRenderIntro(a)
       + apRenderKarte(a)
       + '<div class="ap-block wide">' + apRenderResults(a) + '</div>'
       + '</div>';
