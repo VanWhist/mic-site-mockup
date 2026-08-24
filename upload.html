@@ -113,6 +113,20 @@
     background:var(--accent);color:#fff;font-size:11px;font-weight:700;vertical-align:2px;
   }
   textarea.public{border-color:rgba(255,90,60,.55);border-left:3px solid var(--accent);}
+
+  /* いま載っている紹介文。★ 表示だけで、入力欄ではない。
+     入力欄（オレンジの枠）と見た目をはっきり分ける。同じ見た目にすると、
+     どちらに書けばいいのか分からなくなる。 */
+  .nowintro{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;margin-bottom:14px;
+  }
+  .nowintro .lb{
+    display:block;font-size:11.5px;color:var(--muted);font-weight:600;
+    letter-spacing:.04em;margin-bottom:6px;
+  }
+  .nowintro .tx{margin:0;font-size:15px;line-height:1.75;}
+  label.sub{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:8px;}
   .counter{font-size:12.5px;color:var(--muted);text-align:right;margin-top:6px;}
   .counter.over{color:var(--accent);font-weight:700;}
 
@@ -240,6 +254,15 @@
         <p class="hint">選手紹介のページに、あなたの言葉として載ります。<br>
         <strong>ここに書いた文章はサイトに載ります。学校名・住所・電話番号といった居場所や連絡先が分かること、ほかの人の名前は書かないでください。</strong><br>
         記入例：モーグルを初めてから全国に友達がいっぱいできました！もっと上手くなって大会では入賞を狙います！</p>
+        <!-- ★ いま載っている文章は「表示だけ」。入力欄は下に別に置く。
+             入力欄に初期値として入れていたときは、いま載っている文章と
+             これから送る文章が同じ枠に見えていて、消していいのかどうかが分からなかった。 -->
+        <div class="nowintro" id="introNow" hidden>
+          <span class="lb">いまサイトに載っている紹介文</span>
+          <p class="tx" id="introNowText"></p>
+        </div>
+
+        <label class="sub" id="introInputLabel" for="intro">紹介文を入力</label>
         <textarea id="intro" class="public" maxlength="200" placeholder="例：目標はオリンピックに出場することです。"></textarea>
         <div class="counter" id="introCount"></div>
         <p class="hint" id="introNote"></p>
@@ -295,7 +318,7 @@
   var el = {};
   ['loading','invalid','invalidTitle','invalidText','withdrawn','done','doneTitle','doneText','results',
    'main','title','currentMedia','currentName','currentNote','picker','pickerSub','files','fileNotice',
-   'message','intro','introCount','introNote','copyrightRow',
+   'message','intro','introCount','introNote','introNow','introNowText','introInputLabel','copyrightRow',
    'consentUpload','consentCopyright','errorNotice','submit','bar','barFill','barLabel'
   ].forEach(function(id){ el[id] = document.getElementById(id); });
 
@@ -460,7 +483,10 @@
   // 紹介文の上限。★ 同じ「80」が MIC-Upload-API（MAX_INTRO_CHARS）、
   //   tools/publish_photos.py、scripts/check-site.sh にもある。まとめて変えること。
   var MAX_INTRO = 80;
-  var introInitial = '';   // いま載っている紹介文。初期値として入力欄に入れる
+  // いま載っている紹介文。★ 上の枠に表示するだけで、入力欄には入れない。
+  //   入れてしまうと「消して書き直す」操作が必要になり、
+  //   うっかり全部消したまま送られたときに取り下げと区別が付かない。
+  var introCurrent = '';
 
   /** 1行に整える。改行・タブ・制御文字を落とし、前後の空白を取る（API 側と同じ扱い）。 */
   function introValue(){
@@ -479,9 +505,16 @@
     return Array.from(introValue()).length;
   }
 
-  /** ★ 初期値と同じなら送らない。触っていないものを毎回送信しないため。 */
+  /** 送るべき新しい紹介文が入力されているか。
+   *
+   * ★ 空欄は「変更なし」。取り下げではない。
+   *   取り下げは担当コーチが承認画面で採用を外す経路だけにしてある。
+   *   本人が空欄のまま送っただけでサイトから消えると、事故と区別が付かない。
+   * ★ いま載っているものと同じ文章なら送らない。同じ内容の行を増やさないため。
+   */
   function introChanged(){
-    return introValue() !== introInitial;
+    var v = introValue();
+    return v !== '' && v !== introCurrent;
   }
 
   function renderIntroCount(){
@@ -493,7 +526,7 @@
   function refresh(){
     renderIntroCount();
     var hasPhoto = picked.length > 0;
-    var hasIntro = introChanged() && introValue() !== '';
+    var hasIntro = introChanged();   // 空欄なら送らない（introChanged の中で見ている）
     // ★ 写真がないときは著作権の同意そのものを出さない（写真固有の内容のため）
     el.copyrightRow.hidden = !hasPhoto;
 
@@ -610,7 +643,7 @@
     // ★ 紹介文は写真とは独立に、送信につき1回だけ送る。
     //   写真ごとのペイロードに相乗りさせると、5枚送ったら同じ文が5回送られる。
     //   写真が0枚のときに loop が回らず、紹介文だけを送れないという問題もある。
-    var sendIntro = introChanged() && introValue() !== '';
+    var sendIntro = introChanged();
     var introResult = null;
     var steps = total + (sendIntro ? 1 : 0);
     var doneSteps = 0;
@@ -766,14 +799,23 @@
       el.currentNote.textContent = 'ここに載る写真を送っていただけます。';
     }
 
-    // ★ いま載っている紹介文は、表示するだけでなく入力欄の初期値として入れる。
-    //   そのまま送れば「本人が同意した文面」として記録され、
-    //   書き換えて送れば新しい文面になる。触らなければ何も送らない（introChanged）。
-    introInitial = (me && me.intro) ? String(me.intro) : '';
-    el.intro.value = introInitial;
-    el.introNote.textContent = introInitial
-      ? 'いま載っている文章が入っています。直したいときは書き換えてください。'
-        + '触らずに送ると、紹介文は変わりません。'
+    // ★ いま載っている紹介文は上の枠に「表示するだけ」。入力欄は空で始める。
+    //   入力があったときだけ送る（introChanged）。空欄は「変更なし」であって
+    //   取り下げではない。取り下げはコーチが承認画面で採用を外す経路だけ。
+    introCurrent = (me && me.intro) ? String(me.intro) : '';
+    el.introNow.hidden = !introCurrent;
+    el.introNowText.textContent = introCurrent;
+    // ★ 入力欄は必ず空で始める。いま載っている文章は上の枠で見せる。
+    el.intro.value = '';
+    el.introInputLabel.textContent = introCurrent
+      ? '書き換えたいときは、こちらに新しい文章を入力してください'
+      : '紹介文を入力';
+    el.intro.placeholder = introCurrent
+      ? '書き換えたいときだけ入力してください'
+      : '例：目標はオリンピックに出場することです。';
+    el.introNote.textContent = introCurrent
+      ? 'ここに入力して送ると、上の文章と入れ替わります。'
+        + '空のまま送れば、いまの紹介文はそのまま残ります。'
         + 'いま載っている紹介文を取り下げたいときは、担当コーチへお伝えください。'
       : 'まだ紹介文はありません。空のまま送っても、何も起きません。';
 
