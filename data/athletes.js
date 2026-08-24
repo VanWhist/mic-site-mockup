@@ -22,20 +22,27 @@
 // false … 取得対象外。「準備中」と出る。対象に加えるにはバックエンド側の
 //         対象選手リストにも追加が必要（サイト側で tracked を立てるだけでは増えない）
 //
-// ■ 紹介文（tag / vision / goal）について
-// 2026/08/24、選手紹介に出す文章はいったん全員分ゼロにしました。
-//   tag           … 氏名の下に出る短い肩書き。もともと手書きだったものを削除
-//   vision / goal … 選手カルテ（目標設定シート）から転記していたもの。
-//                   カルテはコーチ・本人が見る前提で書かれたもので、公開を想定した文章では
-//                   ないため取り下げた。データもここには残していない（このリポジトリは公開のため）
-// 今後は、選手セルフアップロードアプリ（upload.html）で本人・保護者に公開前提で
-// 書いてもらった短い肩書きを tag に入れる方針。表示側は空なら要素ごと出しません。
+// ■ 紹介文（intro）について
+// 選手紹介の本文。**本人の言葉による文章**で、パネルを開いたときに出ます。
+// 上限80字（コードポイント）。空なら枠ごと出しません。
+//
+//   ★ 単数の tag（氏名の下の短い肩書き）は 2026/08/24 に廃止しました。
+//     実績の一行は戦歴の欄が担っているため、二重に持つ意味がありません。
+//     復活させないこと。どちらに書くかで迷う元になります。
+//
+//   ★ vision / goal（選手カルテ＝目標設定シートからの転記）は取り下げたままです。
+//     カルテはコーチ・本人が見る前提で書かれたもので、公開を想定した文章ではありません。
+//     **同意の問題であって実装の問題ではない。** データを引いて復活させないこと。
+//
+// 初期値は mogul-mic.com（公式サイト）で現に公開されている本人の文章を写したものです。
+// 新たな公開にはあたりません。選手セルフアップロードアプリ（upload.html）で本人に見せ、
+// 「そのまま送る／書き換えて送る」を選んでもらうことで、本人の同意を伴った文面に置き換わります。
 
 window.AP_ATHLETES = [
     {
       id:'mise-kurea',
       name:'見瀬クレア', sajId:5001737,
-      tag:'',
+      intro:'海外の選手とも沢山コミニュケーションがとりたくて英語を勉強中です。ワールドカップに出場しオリンピック目指して頑張ります。',
       photos:['assets/athletes/mise-kurea-28f910d9.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -76,7 +83,7 @@ window.AP_ATHLETES = [
     {
       id:'suzuki-reina',
       name:'鈴木伶菜', sajId:5002151,
-      tag:'',
+      intro:'目標 オリンピックに出場すること。',
       photos:['assets/athletes/suzuki-reina-eca44afe.jpg','assets/athletes/suzuki-reina-4b8122aa.jpg','assets/athletes/suzuki-reina-8c8be600.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -91,7 +98,7 @@ window.AP_ATHLETES = [
     {
       id:'aruga-mutsuhito',
       name:'有賀睦人', sajId:5002208,
-      tag:'',
+      intro:'モーグルを初めてから全国に友達がいっぱいできました！もっと上手くなって大会では入賞を狙います！',
       photos:['assets/athletes/aruga-mutsuhito-08c84026.jpg'],
       hasKarte:false, vision:null, goal:null,
       // 有賀睦人｜MIC 選手紹介（MICモーグルチャンネル・限定公開・0:13）。
@@ -109,7 +116,7 @@ window.AP_ATHLETES = [
     {
       id:'maji-haruyo',
       name:'馬路晴世', sajId:5001932,
-      tag:'',
+      intro:'いつも元気に本気で頑張ります！目標はオリンピックとワールドカップで優勝することです。',
       photos:['assets/athletes/maji-haruyo-beac64ec.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -125,7 +132,7 @@ window.AP_ATHLETES = [
     {
       id:'nanaumi-kaisei',
       name:'七海快成', sajId:5001891,
-      tag:'',
+      intro:'来シーズンはもっと攻めた滑りを魅せます！',
       photos:['assets/athletes/nanaumi-kaisei-57b62ed8.jpg','assets/athletes/nanaumi-kaisei-f687f276.jpg','assets/athletes/nanaumi-kaisei-3e8fc59f.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -147,7 +154,7 @@ window.AP_ATHLETES = [
     {
       id:'hamada-takuma',
       name:'浜田匠真', sajId:5002069,
-      tag:'',
+      intro:'楽しくスキーをしたいです。目標はオリンピックで金メダルを取ることです。',
       photos:['assets/athletes/hamada-takuma-b48ce6d0.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -156,7 +163,7 @@ window.AP_ATHLETES = [
     {
       id:'hamada-seima',
       name:'浜田誠真', sajId:5001957,
-      tag:'',
+      intro:'目標 B級公認大会優勝',
       photos:['assets/athletes/hamada-seima-3cb34465.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -168,7 +175,7 @@ window.AP_ATHLETES = [
     {
       id:'matsumura-satomi',
       name:'松村聡美',
-      tag:'',
+      intro:'人見知り、犬好き、身体柔らかめ、足速めの小学６年生です。モーグルがんばります！',
       photos:['assets/athletes/matsumura-satomi-e0554086.jpg','assets/athletes/matsumura-satomi-c0fdb7ef.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
@@ -176,7 +183,7 @@ window.AP_ATHLETES = [
     {
       id:'hayashi-ryoma',
       name:'林遼真', sajId:5001654,
-      tag:'',
+      intro:'怪我しない転び方習得します。',
       photos:['assets/athletes/hayashi-ryoma-3bc998ac.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
@@ -196,7 +203,7 @@ window.AP_ATHLETES = [
     {
       id:'katsuta-yumi',
       name:'勝田有美',
-      tag:'',
+      intro:'',
       photos:['assets/athletes/katsuta-yumi-798cb8f8.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
@@ -204,7 +211,7 @@ window.AP_ATHLETES = [
     {
       id:'fujihara-tomoki',
       name:'藤原朋己',
-      tag:'',
+      intro:'',
       photos:['assets/athletes/fujihara-tomoki-db00bb99.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
@@ -212,7 +219,7 @@ window.AP_ATHLETES = [
     {
       id:'suzuki-kae',
       name:'鈴木佳英', sajId:5002440,
-      tag:'',
+      intro:'',
       photos:['assets/athletes/suzuki-kae-37c1f2b2.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
