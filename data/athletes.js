@@ -175,7 +175,7 @@ window.AP_ATHLETES = [
     {
       id:'matsumura-satomi',
       name:'松村聡美',
-      intro:'人見知り、犬好き、身体柔らかめ、足速めの小学６年生です。モーグルがんばります！',
+      intro:'運動好きな中学生です。モーグルがんばります！',
       photos:['assets/athletes/matsumura-satomi-e0554086.jpg','assets/athletes/matsumura-satomi-c0fdb7ef.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
