@@ -215,7 +215,7 @@ window.AP_ATHLETES = [
     {
       id:'fujihara-tomoki',
       name:'藤原朋己',
-      intro:'',
+      intro:'今シーズンからモーグルを始めます。がんばります！',
       photos:['assets/athletes/fujihara-tomoki-db00bb99.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:false, results:[]
