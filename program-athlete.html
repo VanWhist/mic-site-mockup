@@ -631,7 +631,7 @@
   <div class="clinic-card">
     <div class="clinic-head">
       <span class="clinic-dot"></span>
-      <span class="clinic-eyebrow">短期教室（不定期開催）</span>
+      <span class="clinic-eyebrow">MIC強化練習会（不定期開催）</span>
     </div>
     <!-- ★ ここにベタ書きの日付を置かないこと。
          2026/08/30 まで「8月15日（土）〜16日（日）」と書かれており、過ぎた日程を
@@ -640,7 +640,7 @@
          初期表示は「読み込み中…」。空欄にすると壊れて見える（電波の悪い場所で数秒続く）。 -->
     <div class="clinic-status upcoming" id="clinicStatus" hidden>開催予定</div>
     <div class="clinic-dates" id="clinicDates">読み込み中…</div>
-    <div class="clinic-desc">単発参加OKの短期教室です。開催日程はレッスンカレンダーと連動して自動更新されます。</div>
+    <div class="clinic-desc">単発参加OKのMIC強化練習会です。開催日程はレッスンカレンダーと連動して自動更新されます。</div>
     <a class="clinic-link" href="full-calendar.html">
       レッスンカレンダーで詳細を見る
       <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -893,7 +893,7 @@
 })();
 </script>
 <script>
-// 短期教室カードの日程を、レッスンカレンダーから出す。
+// MIC強化練習会カードの日程を、レッスンカレンダーから出す。
 //
 // ★ 2026/08/30 まで「8月15日（土）〜16日（日）」がベタ書きで、過ぎた日程を
 //   「開催予定」として出していた。「自動更新されます」と書いてありながら、
@@ -971,7 +971,7 @@
       // ★ 名前で絞る作りの穴。カレンダー側の名前が変わると、黙って何も出なくなる。
       //   予定はあるのに拾えていない場合は、人が気づけるようにここで知らせる。
       if (future.length > 0) {
-        console.warn('[短期教室] 今日以降の予定は ' + future.length + '件ありますが、'
+        console.warn('[MIC強化練習会] 今日以降の予定は ' + future.length + '件ありますが、'
           + '「' + CLINIC_KEYWORD + '」を含むものは0件でした。'
           + 'カレンダーの予定名が変わっていないか確認してください。',
           Array.from(new Set(future.map(function (ev) { return ev.title; }))));
@@ -1019,7 +1019,7 @@
       .catch(function () { return tryFetch('calendar-data.json'); })
       .then(apply)
       .catch(function (err) {
-        console.warn('[短期教室] レッスンカレンダーを読めませんでした。', err);
+        console.warn('[MIC強化練習会] レッスンカレンダーを読めませんでした。', err);
         showUnknown();                            // ★ ベタ書きの日付には倒さない
       });
   }
