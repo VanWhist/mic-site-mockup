@@ -633,8 +633,13 @@
       <span class="clinic-dot"></span>
       <span class="clinic-eyebrow">短期教室（不定期開催）</span>
     </div>
-    <div class="clinic-status upcoming">開催予定</div>
-    <div class="clinic-dates">8月15日（土）〜16日（日）</div>
+    <!-- ★ ここにベタ書きの日付を置かないこと。
+         2026/08/30 まで「8月15日（土）〜16日（日）」と書かれており、過ぎた日程を
+         「開催予定」として出していた。「自動更新されます」と書いてあったが、
+         このページにはカレンダーを読む処理が1つも無かった。
+         初期表示は「読み込み中…」。空欄にすると壊れて見える（電波の悪い場所で数秒続く）。 -->
+    <div class="clinic-status upcoming" id="clinicStatus" hidden>開催予定</div>
+    <div class="clinic-dates" id="clinicDates">読み込み中…</div>
     <div class="clinic-desc">単発参加OKの短期教室です。開催日程はレッスンカレンダーと連動して自動更新されます。</div>
     <a class="clinic-link" href="full-calendar.html">
       レッスンカレンダーで詳細を見る
@@ -885,6 +890,145 @@
     }
   }, {threshold: 0.15});
   for (i = 0; i < targets.length; i++) io.observe(targets[i]);
+})();
+</script>
+<script>
+// 短期教室カードの日程を、レッスンカレンダーから出す。
+//
+// ★ 2026/08/30 まで「8月15日（土）〜16日（日）」がベタ書きで、過ぎた日程を
+//   「開催予定」として出していた。「自動更新されます」と書いてありながら、
+//   このページにはカレンダーを読む処理が1つも無かった。
+//
+// ★ index.html とは読み込み方が違う。あちらはページ内に埋め込みJSONを持ち、
+//   それで先に描いてから API で上書きする。こちらは埋め込みを持たない。
+//   同じ埋め込みを2ファイルに置くと sync_calendar.py / embed_calendar_inline.py が
+//   両方を更新する前提になり、片方だけ古くなる経路が新しく生まれる。
+//   それは今回直している不具合そのものなので、増やさない。
+//   出所は index.html と同じ API と calendar-data.json なので、日程は一致する。
+(function () {
+  var CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbw4Ld53wjYfI8qVkick48qNsQssm7HXQ8mE1RFwME0TYa2Fig2_AboL0HSkpG068umU/exec';
+  var CLINIC_KEYWORD = '強化練習会';
+  var TIMEOUT_MS = 8000;
+  var DOWS = ['日', '月', '火', '水', '木', '金', '土'];
+
+  var elDates = document.getElementById('clinicDates');
+  var elStatus = document.getElementById('clinicStatus');
+  if (!elDates || !elStatus) return;
+
+  // index.html の todayStr() と同じ。getFullYear/getMonth/getDate を使い、
+  // toISOString() は使わない（UTC に寄って日付が1日ずれる）。
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')
+         + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function fmt(iso, withMonth) {
+    var p = iso.split('-');
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    var dow = DOWS[d.getDay()];
+    // ★ 「祝」は付けない。祝日の判定を持っていないので、推測で書かない。
+    //   トップの特集枠は手書きで「9/21（月・祝）」だが、ここは「（月）」までにする。
+    return (withMonth ? Number(p[1]) + '月' : '') + Number(p[2]) + '日（' + dow + '）';
+  }
+
+  /** 先頭から連続している日だけをひとまとまりにする。
+   *  9/19, 9/20, 9/21 → 9/19〜9/21     9/19, 9/20, 10/5 → 9/19〜9/20 */
+  function firstRun(dates) {
+    var run = [dates[0]];
+    for (var i = 1; i < dates.length; i++) {
+      var prev = new Date(dates[i - 1] + 'T00:00:00');
+      var cur = new Date(dates[i] + 'T00:00:00');
+      if ((cur - prev) !== 86400000) break;
+      run.push(dates[i]);
+    }
+    return run;
+  }
+
+  // 表示は4通り。★ どの経路でも古い日付を出さない。
+  function showDates(run) {                       // ① 今日以降の強化練習会がある
+    elStatus.hidden = false;
+    elDates.textContent = run.length === 1
+      ? fmt(run[0], true)
+      : fmt(run[0], true) + '〜' + fmt(run[run.length - 1], false);
+  }
+  function showUnknown() {                        // ②③④ 日程が分からない
+    elStatus.hidden = true;                       // ★ 「開催予定」を出さない
+    elDates.textContent = '次回の日程はレッスンカレンダーをご覧ください';
+  }
+
+  function apply(data) {
+    var today = todayStr();
+    var future = (data.events || []).filter(function (ev) {
+      return ev && ev.date && ev.date >= today;
+    });
+    // ★ rawSummary ではなく title で絞る（rawSummary は "MIC強化練習会　O-air"）
+    var clinic = future.filter(function (ev) {
+      return String(ev.title || '').indexOf(CLINIC_KEYWORD) >= 0;
+    });
+
+    if (clinic.length === 0) {
+      // ★ 名前で絞る作りの穴。カレンダー側の名前が変わると、黙って何も出なくなる。
+      //   予定はあるのに拾えていない場合は、人が気づけるようにここで知らせる。
+      if (future.length > 0) {
+        console.warn('[短期教室] 今日以降の予定は ' + future.length + '件ありますが、'
+          + '「' + CLINIC_KEYWORD + '」を含むものは0件でした。'
+          + 'カレンダーの予定名が変わっていないか確認してください。',
+          Array.from(new Set(future.map(function (ev) { return ev.title; }))));
+      }
+      showUnknown();
+      return;
+    }
+
+    // 同じ日に2枠（10:30 / 14:00）あるので、日付でユニークにする
+    var dates = Array.from(new Set(clinic.map(function (ev) { return ev.date; }))).sort();
+    showDates(firstRun(dates));
+  }
+
+  // ★ タイムアウトを設ける。index.html は埋め込みで先に描いているので fetch が
+  //   返らなくても中身が出るが、こちらは埋め込みを持たない。時間切れを失敗として
+  //   扱わないと「読み込み中…」のまま固まる。古い日付が出るのと同じくらい困る。
+  function tryFetch(url) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var timer = setTimeout(function () {
+        if (!done) { done = true; reject(new Error(url + ' -> timeout')); }
+      }, TIMEOUT_MS);
+      fetch(url, {cache: 'no-cache'})
+        .then(function (res) { if (!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
+        .then(function (data) {
+          if (!data || data.error || !Array.isArray(data.events)) throw new Error('unexpected payload');
+          if (done) return;
+          done = true; clearTimeout(timer); resolve(data);
+        })
+        .catch(function (err) {
+          if (done) return;
+          done = true; clearTimeout(timer); reject(err);
+        });
+    });
+  }
+
+  function load() {
+    // index.html と同じ出所・同じ順序。両ページで違う日程が出ないようにする。
+    //
+    // ★ タイムアウトは直列。両方が「応答なしで待たされる」と 8秒＋8秒＝最悪16秒、
+    //   「読み込み中…」が続く。後で「全体で8秒」に変える余地がある。
+    //   いまは直していない。両方が同時に無反応なのは通信そのものが駄目な状況で、
+    //   そのときはページ全体が読めていないため。
+    tryFetch(CALENDAR_API_URL)
+      .catch(function () { return tryFetch('calendar-data.json'); })
+      .then(apply)
+      .catch(function (err) {
+        console.warn('[短期教室] レッスンカレンダーを読めませんでした。', err);
+        showUnknown();                            // ★ ベタ書きの日付には倒さない
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
 })();
 </script>
 </body>
