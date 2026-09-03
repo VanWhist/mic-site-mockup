@@ -196,30 +196,20 @@
   .k-caption{text-align:center;font-size:11px;color:var(--muted);margin-top:13px;line-height:1.7;}
   .k-caption{max-width:520px;margin-left:auto;margin-right:auto;}
   .k-flow + .k-showcase-label{margin-top:40px;}
-  .k-caption + .k-label{margin-top:40px;}
-  .k-roles + .k-terms{margin-top:34px;}
+  .k-caption + .k-terms{margin-top:40px;}
 
   /* ---- 1日の使われ方。カードの連続を断ち切るため、罫線だけの表にしている ---- */
   .k-flow{border-top:1px solid rgba(255,255,255,.12);margin-bottom:6px;}
-  .k-flow-row{display:grid;grid-template-columns:104px 1fr 1fr;gap:14px;
+  .k-flow-row{display:grid;grid-template-columns:104px 1fr;gap:14px;
     padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.08);align-items:start;}
-  .k-flow-head{padding:9px 2px;border-bottom:1px solid rgba(255,255,255,.12);}
-  .k-flow-head div{font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--muted);}
   .k-flow-when{font-size:13px;font-weight:800;color:var(--accent);}
   .k-flow-do{font-size:13px;line-height:1.75;color:#e4e4e8;}
-  .k-flow-eff{font-size:12.5px;line-height:1.75;color:var(--muted);}
+  /* 折り返しの単位。語の途中や1文字だけの行送りを避ける（kb-sub と同じ作法） */
+  .k-flow-do span{display:inline-block;}
+  /* ★ スマホでも「練習の前」と内容を同じ行に並べる（縦に崩さない） */
   @media (max-width:640px){
-    .k-flow-row{grid-template-columns:1fr;gap:5px;padding:14px 2px;}
-    .k-flow-head{display:none;}
-    .k-flow-eff{padding-left:11px;border-left:2px solid rgba(255,90,60,.35);}
+    .k-flow-row{grid-template-columns:92px 1fr;gap:8px;padding:12px 2px;}
   }
-
-  /* ---- それぞれがすること。カードをやめて行にした ---- */
-  .k-roles{border-top:1px solid rgba(255,255,255,.08);}
-  .k-role{display:flex;gap:16px;align-items:baseline;padding:12px 2px;
-    border-bottom:1px solid rgba(255,255,255,.08);}
-  .k-role-who{flex:0 0 72px;font-size:13px;font-weight:800;}
-  .k-role-what{font-size:12.5px;line-height:1.75;color:var(--muted);}
 
   /* ---- 記録の扱い。目立たせないが、必ず置く ---- */
   .k-terms{margin-top:34px;padding:18px 20px;border-radius:14px;
@@ -681,42 +671,33 @@
       <span class="karte-sum-text">
         <span class="karte-sum-eyebrow">MIC Data Platform</span>
         <span class="karte-sum-title">選手カルテ</span>
-        <span class="karte-sum-desc">練習・体調・目標のすべてを一本化するデジタルカルテ。選手育成コースの選手が使えます。</span>
+        <span class="karte-sum-desc">選手が決めた目標に合わせて記録を積み上げる、MIC独自の選手カルテ。選手育成コースの選手だけが使えます。</span>
       </span>
       <svg class="karte-chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </summary>
 
     <div class="karte-body">
       <div class="k-def">
-        <div class="k-def-text">選手カルテは、記録を増やすための仕組みではありません。<br>選手が自分の現在地を確かめ、保護者やコーチも同じ情報を見ながら支えるための基盤です。</div>
+        <div class="k-def-text">記録を増やすためではなく、選手が自分の現在地を知り、保護者・コーチと同じものを見て話すためのものです。</div>
       </div>
 
       <div class="k-label">1日の使われ方</div>
       <div class="k-flow">
-        <div class="k-flow-row k-flow-head">
-          <div class="k-flow-when">タイミング</div>
-          <div class="k-flow-do">選手がすること</div>
-          <div class="k-flow-eff">そこから何が起きるか</div>
-        </div>
         <div class="k-flow-row k-anim" style="--d:1">
           <div class="k-flow-when">練習の前</div>
-          <div class="k-flow-do">睡眠・疲労・体重を記録する</div>
-          <div class="k-flow-eff">その日の状態を見て、練習の強度を調整できる</div>
+          <div class="k-flow-do"><span>睡眠・疲労・体重を</span><span>ひと目盛り</span></div>
         </div>
         <div class="k-flow-row k-anim" style="--d:2">
           <div class="k-flow-when">練習の中</div>
-          <div class="k-flow-do">飛んだ本数と技を記録する</div>
-          <div class="k-flow-eff">技ごとの成功率が、シーズンを通して積み上がる</div>
+          <div class="k-flow-do">飛んだ本数と技</div>
         </div>
         <div class="k-flow-row k-anim" style="--d:3">
           <div class="k-flow-when">練習のあと</div>
-          <div class="k-flow-do">トレーニングの内容を記録する</div>
-          <div class="k-flow-eff">次の練習を組むときの材料になる</div>
+          <div class="k-flow-do">トレーニングの内容</div>
         </div>
         <div class="k-flow-row k-anim" style="--d:4">
           <div class="k-flow-when">シーズンの節目</div>
-          <div class="k-flow-do">目標の達成度と自己分析を見直す</div>
-          <div class="k-flow-eff">選手・保護者・コーチが同じものを見て話せる</div>
+          <div class="k-flow-do"><span>目標の達成度と</span><span>自己分析を見直す</span></div>
         </div>
       </div>
 
@@ -758,13 +739,6 @@
         </div>
       </div>
       <div class="k-caption">選手が自分のスマートフォンで使う画面のイメージです。点数・本数・目標はすべて架空のもので、実在の選手の記録ではありません。</div>
-
-      <div class="k-label">それぞれがすること</div>
-      <div class="k-roles">
-        <div class="k-role k-anim" style="--d:1"><span class="k-role-who">選手</span><span class="k-role-what">記録し、振り返り、次にやることを決める</span></div>
-        <div class="k-role k-anim" style="--d:2"><span class="k-role-who">保護者</span><span class="k-role-what">成長とコンディションの経過を見守る</span></div>
-        <div class="k-role k-anim" style="--d:3"><span class="k-role-who">コーチ</span><span class="k-role-what">記録を読み、声かけと練習の設計に反映する</span></div>
-      </div>
 
       <div class="k-terms k-anim">
         <div class="k-terms-title">記録の扱いについて</div>
