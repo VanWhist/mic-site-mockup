@@ -1191,12 +1191,13 @@
   .pt-persona-card.is-general .pt-persona-badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(6px);}
   .pt-persona-badge svg{width:13px;height:13px;}
   .pt-persona-body{padding:30px 30px 32px;display:flex;flex-direction:column;}
-  .pt-persona-meta{font-size:12.5px;color:var(--muted);margin-bottom:10px;}
-  .pt-persona-title{font-size:clamp(19px,2.2vw,24px);font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+  /* 対象が主役。大見出し＝対象（〜の方へ）、小見出し＝プログラム名（大見出しの下） */
+  .pt-persona-title{font-size:clamp(19px,2.2vw,24px);font-weight:800;margin-bottom:6px;letter-spacing:-.01em;}
+  .pt-persona-meta{font-size:12.5px;color:var(--muted);margin-bottom:12px;}
   .pt-persona-desc{font-size:13.5px;line-height:1.85;color:#d8d8dc;margin-bottom:18px;}
   .pt-persona-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.1);padding-top:18px;margin-top:auto;}
-  .pt-persona-price-label{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
-  .pt-persona-price{font-size:19px;font-weight:800;margin-top:3px;color:var(--fg);}
+  /* 値段は消さず、小さく・単位付きで1行に（税の表記は各カードの文言どおり） */
+  .pt-persona-price{font-size:12.5px;font-weight:700;color:var(--muted);}
   .pt-persona-cta{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--accent);}
   .pt-persona-card.is-general .pt-persona-cta{color:var(--fg);}
   .pt-persona-cta svg{width:16px;height:16px;}
@@ -1650,13 +1651,12 @@
         <img class="ph-img" src="assets/top/athlete_A.jpg" alt="バックフリップを決めるMICの選手" loading="lazy" decoding="async">
       </div>
       <div class="pt-persona-body">
-        <div class="pt-persona-meta">対象：本格的に競技を始めたい方</div>
-        <div class="pt-persona-title">選手育成コース</div>
+        <div class="pt-persona-title">本格的に競技を目指す方へ</div>
+        <div class="pt-persona-meta">選手育成コース</div>
         <div class="pt-persona-desc">上を目指す選手のための本格プログラム。年間を通じた育成プランと専属コーチングで、競技力を伸ばす。</div>
         <div class="pt-persona-foot">
           <div>
-            <div class="pt-persona-price-label">年間100日以上のプログラム</div>
-            <div class="pt-persona-price">¥360,000〜</div>
+            <div class="pt-persona-price">年間 ¥360,000〜</div>
           </div>
           <div class="pt-persona-cta">詳しく見る
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -1679,13 +1679,12 @@
         </picture>
       </div>
       <div class="pt-persona-body">
-        <div class="pt-persona-meta">対象：モーグルが上達したい方へ。全レベル対象</div>
-        <div class="pt-persona-title">一般レッスン</div>
+        <div class="pt-persona-title">まずは上達したい方へ</div>
+        <div class="pt-persona-meta">一般レッスン</div>
         <div class="pt-persona-desc">経験豊富なコーチ陣が指導。雪上レッスン・ウォータージャンプ・エアマットの3種類から、目的に合わせて選べます。</div>
         <div class="pt-persona-foot">
           <div>
-            <div class="pt-persona-price-label">半日レッスン・税込</div>
-            <div class="pt-persona-price">¥5,500〜</div>
+            <div class="pt-persona-price">半日 ¥5,500〜・税込</div>
           </div>
           <div class="pt-persona-cta">詳しく見る
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--fg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -1708,13 +1707,12 @@
         </picture>
       </div>
       <div class="pt-persona-body">
-        <div class="pt-persona-meta">対象：拠点が遠い方・レッスンに来られない方</div>
-        <div class="pt-persona-title">オンラインサポート</div>
+        <div class="pt-persona-title">遠くにいても上達したい方へ</div>
+        <div class="pt-persona-meta">オンラインサポート</div>
         <div class="pt-persona-desc">滑っている動画を公式LINEに送るだけ。いま一番優先して直すべきポイントと、その練習方法をお返しします。</div>
         <div class="pt-persona-foot">
           <div>
-            <div class="pt-persona-price-label">おためし・税込</div>
-            <div class="pt-persona-price">¥1,100〜</div>
+            <div class="pt-persona-price">おためし ¥1,100〜・税込</div>
           </div>
           <div class="pt-persona-cta">詳しく見る
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--fg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -1737,13 +1735,12 @@
         </picture>
       </div>
       <div class="pt-persona-body">
-        <div class="pt-persona-meta">対象：スキークラブ・ジュニアチーム</div>
-        <div class="pt-persona-title">コーチ派遣</div>
+        <div class="pt-persona-title">クラブチームでコーチをお探しの方へ</div>
+        <div class="pt-persona-meta">コーチ派遣</div>
         <div class="pt-persona-desc">MICのコーチがチームの練習会場へ伺います。事前に課題を伺ったうえで、当日の指導内容を組み立てます。</div>
         <div class="pt-persona-foot">
           <div>
-            <div class="pt-persona-price-label">1日指導・税込</div>
-            <div class="pt-persona-price">¥44,000〜</div>
+            <div class="pt-persona-price">1日 ¥44,000〜・税込</div>
           </div>
           <div class="pt-persona-cta">詳しく見る
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--fg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
