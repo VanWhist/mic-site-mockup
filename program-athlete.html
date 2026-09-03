@@ -103,6 +103,19 @@
   .recommend-item:last-child{margin-bottom:0;}
   .recommend-item svg{width:16px;height:16px;stroke:var(--accent);stroke-width:2.4;flex:0 0 auto;margin-top:2px;}
 
+  /* 所属選手の主な実績。1人1行。★ min-width:0 が無いと ellipsis が効かない */
+  .hl-list{display:flex;flex-direction:column;gap:10px;}
+  .hl-row{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:10px;}
+  .hl-name{font-size:14px;font-weight:800;color:var(--fg);}
+  .hl-what{font-size:11.5px;color:var(--muted);line-height:1.5;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;}
+  .hl-rank{font-size:15px;font-weight:800;color:var(--accent);white-space:nowrap;}
+  .hl-year{font-size:11px;color:var(--muted);margin-left:6px;font-weight:600;}
+  .hl-more{display:inline-flex;align-items:center;gap:6px;margin-top:14px;
+    font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;}
+  .hl-more svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+
   .price-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
   .price-label{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
   .price-num{font-size:22px;font-weight:800;color:var(--fg);}
@@ -613,6 +626,17 @@
       </div>
     </div>
 
+    <!-- 所属選手の主な実績。★ ここに選手名も結果も直接書かないこと。
+         台帳（戦歴API）から機械的に選ぶ。読めなければブロックごと出さない。
+         ベタ書きのフォールバックを置くと、台帳が変わっても看板だけ古いまま残る。 -->
+    <div class="spec-row" id="athleteHighlights" hidden>
+      <div class="spec-label">所属選手の主な実績</div>
+      <div class="hl-list" id="athleteHighlightsList"></div>
+      <a class="hl-more" href="index.html#athletes">選手全員を見る
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+
     <div class="spec-row">
       <div class="spec-label">料金</div>
       <div class="price-row">
@@ -1029,6 +1053,100 @@
   } else {
     load();
   }
+})();
+</script>
+
+<script src="data/athletes.js"></script>
+<script src="data/history-rules.js"></script>
+<script>
+// 所属選手の主な実績。★ 誰を出すかを手で決めない。台帳から機械的に選ぶ。
+//
+// 規則は data/history-rules.js が唯一の出所。ここに帯の表や順位の判定を書かないこと。
+// 2026/08/30 の短期教室カードが「同じものをもう1か所に置いたら片方だけ腐った」例。
+//
+// ★ 読めなければブロックごと出さない。ベタ書きのフォールバックは置かない。
+//   見出しだけ出て中身が空、という状態も作らない（hidden のまま）。
+(function () {
+  const R = window.MIC_HISTORY_RULES;
+  const ATH = window.AP_ATHLETES || [];
+  const TIMEOUT_MS = 8000;
+
+  const elBlock = document.getElementById('athleteHighlights');
+  const elList  = document.getElementById('athleteHighlightsList');
+  if (!elBlock || !elList || !R || !ATH.length) return;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /** 載せる選手と、その代表1件。
+   *  ★ 人数で切らない。帯 HIGHLIGHT_BAND_MAX 以内の結果を持つ選手は全員（出場だけでも）。
+   *    誰を出すか・どの1件か・並び順は、すべて data/history-rules.js が決める。
+   *    ここに条件を足さない。 */
+  function pick() {
+    const rows = [];
+    ATH.forEach(function (a) {
+      const t = R.highlightResult(a);
+      if (t) rows.push({ name: a.name, top: t });
+    });
+    rows.sort(function (x, y) { return R.compareHighlights(x.top, y.top); });
+    return rows;
+  }
+
+  function render(rows) {
+    if (!rows.length) return;          // 0名なら出さない。空のブロックは作らない
+    elList.innerHTML = rows.map(function (o) {
+      const t = o.top;
+      // ★ 出すのは 選手名・大会の格・種目・順位・年 だけ。主観の言葉は入れない。
+      //   順位の表記は resultLabel に任せる（掲載基準の外なら「出場」）。
+      //   ここで独自の言い換えを作ると、選手紹介の「主な成績」と食い違う。
+      const disc = R.DISCIPLINE_JA[t.disc] || t.disc;
+      return '<div class="hl-row">'
+        + '<div><div class="hl-name">' + esc(o.name) + '</div>'
+        + '<div class="hl-what">' + esc(t.label) + '　' + esc(disc) + '</div></div>'
+        + '<div><span class="hl-rank">' + esc(R.resultLabel(t)) + '</span>'
+        + '<span class="hl-year">' + esc(t.d.slice(0, 4)) + '</span></div>'
+        + '</div>';
+    }).join('');
+    elBlock.hidden = false;
+  }
+
+  function withTimeout(url) {
+    return new Promise(function (resolve, reject) {
+      let done = false;
+      const timer = setTimeout(function () {
+        if (done) return;
+        done = true;
+        reject(new Error('timeout ' + TIMEOUT_MS + 'ms'));
+      }, TIMEOUT_MS);
+      fetch(url, { cache: 'no-cache' })
+        .then(function (res) {
+          if (!res.ok) throw new Error('history -> ' + res.status);
+          return res.json();
+        })
+        .then(function (d) { if (done) return; done = true; clearTimeout(timer); resolve(d); })
+        .catch(function (e) { if (done) return; done = true; clearTimeout(timer); reject(e); });
+    });
+  }
+
+  withTimeout(R.HISTORY_API_URL)
+    .then(function (data) {
+      const rows = Array.isArray(data) ? data : (data && Array.isArray(data.items) ? data.items : null);
+      if (!rows) throw new Error('unexpected payload');
+      const bySaj = R.groupBySajId(rows);
+      if (bySaj.size === 0) throw new Error('no rows');
+      // ★ API に行がある選手だけ上書きする。0件は「API側に行が無い」だけなので触らない。
+      ATH.forEach(function (a) {
+        if (a.sajId && bySaj.has(a.sajId)) a.results = bySaj.get(a.sajId);
+      });
+      render(pick());
+    })
+    .catch(function (err) {
+      // ★ ここでベタ書きの実績に倒さない。出さないほうが安全側。
+      console.warn('[所属選手の主な実績] 台帳を読めませんでした。ブロックを出しません。', err);
+    });
 })();
 </script>
 </body>
