@@ -1087,13 +1087,16 @@
     .kb .c1,.kb .c3{top:78px;}
     .kb .c2,.kb .c4{top:282px;}
   }
+  /* 高さ720px以下では、以前は .kb-sub を display:none で丸ごと隠していた。
+     本文がこのセクションのウリになったため隠せなくなったので、
+     端末モックをさらに縮めて本文4行ぶん（110px）の場所を作る。
+     本文の文字サイズは PC と同じ 14.5px のまま変えていない。 */
   @media (min-width:981px) and (max-height:720px){
-    .kb-sticky{padding-top:70px;}
-    .kb-stage{height:370px;}
-    .kb-phone{transform:translate(-50%,-50%) scale(.70);}
-    .kb-sub{display:none;}
-    .kb .c1,.kb .c3{top:58px;}
-    .kb .c2,.kb .c4{top:222px;}
+    .kb-sticky{padding-top:40px;}
+    .kb-stage{height:280px;}
+    .kb-phone{transform:translate(-50%,-50%) scale(.52);}
+    .kb .c1,.kb .c3{top:28px;}
+    .kb .c2,.kb .c4{top:178px;}
   }
 
   /* 動きを減らす設定のときは、アニメーションなしで完成形をそのまま見せる */
