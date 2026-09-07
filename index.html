@@ -718,6 +718,17 @@
   /* ---------- Athlete profile (carousel cards + expand-in-place panel) ---------- */
   .g-card.ap-card{height:auto;background:transparent;cursor:pointer;}
   .ap-card-media{position:relative;width:100%;height:460px;border-radius:18px;overflow:hidden;background:#1b1b1e;}
+
+  /* 写真はドラッグできてはいけない。<img> は既定でドラッグ可能で、押したまま数px動かすと
+     ネイティブの画像ドラッグが始まり、pointerup も click も発火しなくなる
+     （2026/09/07 実測。揺れ7pxで 10/10 失敗）。
+     クラス名で拾うと、写真1枚の選手・コーチ（apCardMedia がクラス無しの <img> を返す）が
+     漏れるので、カード内の img すべてを対象にする。
+     ★ -webkit-user-drag は Firefox が解釈しないため、これだけでは足りない。
+       本命は apInit / cpInit に置いた dragstart の preventDefault。 */
+  .ap-card-media img, .cp-card-media img{
+    -webkit-user-drag:none; user-select:none;
+  }
   .ap-card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1);}
   .g-card.ap-card:hover .ap-card-media img{transform:scale(1.06);}
 
@@ -2278,13 +2289,21 @@
   function apInit(){
     const gallery = document.getElementById('athleteGallery');
     if (!gallery) return;
-    let downX = 0, downY = 0, moved = 0;
-    gallery.addEventListener('pointerdown', function(e){ downX = e.clientX; downY = e.clientY; moved = 0; });
+    // 写真の上でドラッグが始まると click が消えるので、ギャラリー単位で止める。
+    // セレクタで拾うと写真1枚のカード（クラス無しの <img>）が漏れるため、ここで受ける。
+    gallery.addEventListener('dragstart', function(e){ e.preventDefault(); });
+
+    let downX = 0, downY = 0, moved = 0, ptrType = 'mouse';
+    gallery.addEventListener('pointerdown', function(e){
+      downX = e.clientX; downY = e.clientY; moved = 0; ptrType = e.pointerType || 'mouse';
+    });
     gallery.addEventListener('pointermove', function(e){
       if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
     });
     gallery.addEventListener('click', function(e){
-      if (moved > 6) return; // this was a drag, not a tap
+      // マウスは押してから離すまでに数px動く（実測4〜12px）。指より動くので、
+      // マウスのときだけ判定を緩める。タッチ・ペンは従来どおり 6px。
+      if (moved > (ptrType === 'mouse' ? 12 : 6)) return; // this was a drag, not a tap
       // 写真送りのボタンはカードの中にあるので、先に受け止めてパネルを開かせない
       const navBtn = e.target.closest('.ap-photo-nav');
       if (navBtn) {
@@ -2450,13 +2469,21 @@
   function cpInit(){
     const gallery = document.getElementById('coachGallery');
     if (!gallery) return;
-    let downX = 0, downY = 0, moved = 0;
-    gallery.addEventListener('pointerdown', function(e){ downX = e.clientX; downY = e.clientY; moved = 0; });
+    // 写真の上でドラッグが始まると click が消えるので、ギャラリー単位で止める。
+    // セレクタで拾うと写真1枚のカード（クラス無しの <img>）が漏れるため、ここで受ける。
+    gallery.addEventListener('dragstart', function(e){ e.preventDefault(); });
+
+    let downX = 0, downY = 0, moved = 0, ptrType = 'mouse';
+    gallery.addEventListener('pointerdown', function(e){
+      downX = e.clientX; downY = e.clientY; moved = 0; ptrType = e.pointerType || 'mouse';
+    });
     gallery.addEventListener('pointermove', function(e){
       if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
     });
     gallery.addEventListener('click', function(e){
-      if (moved > 6) return; // this was a drag, not a tap
+      // マウスは押してから離すまでに数px動く（実測4〜12px）。指より動くので、
+      // マウスのときだけ判定を緩める。タッチ・ペンは従来どおり 6px。
+      if (moved > (ptrType === 'mouse' ? 12 : 6)) return; // this was a drag, not a tap
       const navBtn = e.target.closest('.cp-photo-nav');
       if (navBtn) {
         const navCard = navBtn.closest('.cp-card');
