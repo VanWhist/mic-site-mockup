@@ -13,6 +13,9 @@
     --muted:#9a9a9f;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  /* hidden 属性を効かせる。.qrow{display:flex} のように display を持つ要素は
+     hidden だけでは消えないため。準備中のブロックを隠すのに使っている（2026/09/07） */
+  [hidden]{display:none !important;}
   html{scroll-behavior:smooth;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
@@ -607,7 +610,8 @@
       <div class="qtext"><div class="qtitle">活動拠点</div><div class="qmeta">雪上・ウォータージャンプ・トランポリン・メディカル</div></div>
       <div class="qcount">9拠点</div>
     </a>
-    <a class="qrow" href="#c3">
+    <!-- 準備中のため一時的に非表示。公開するときは hidden を消す（2026/09/07） -->
+    <a class="qrow" href="#c3" hidden>
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
       <div class="qtext"><div class="qtitle">Become a Partner</div><div class="qmeta">協賛・提携のご案内</div></div>
       <div class="qcount">→</div>
@@ -1020,10 +1024,11 @@
   </div>
   </div>
 
-  <div class="divider"></div>
+  <!-- ③ Become a Partner ／ 準備中のため一時的に非表示。公開するときは hidden を消す（2026/09/07）
+       区切り線も一緒に隠す。③だけ隠すと線が2本続いて余白が不自然になるため。 -->
+  <div class="divider" hidden></div>
 
-  <!-- ③ Become a Partner -->
-  <div class="sec" id="c3">
+  <div class="sec" id="c3" hidden>
     <div class="recruit-block">
       <div class="recruit-eyebrow">Become a Partner</div>
       <div class="recruit-title">未来の日本代表を、<br>一緒に育てませんか。</div>
