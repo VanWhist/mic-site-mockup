@@ -106,6 +106,28 @@
   /* 外部サービスのアイコンは「移動する」意味ではないので、横滑りさせない */
   .n-item.is-link:hover .n-arrow.is-brand{transform:none;}
 
+  /* ---------- 読み込み中の骨組み（スケルトン） ----------
+     お知らせは GAS の応答を待つため、表示まで実測 3〜5秒かかる。
+     ★ 速くする仕組みではない。待っているあいだ枠が空に見えないようにするだけ。
+     実データと同じ .hn-item を描き、文字のところだけ帯に置き換える。
+     帯の中身は &nbsp; なので、高さは実際の文字の行送りとそのまま同じになる。
+     件数は1件。お知らせを1件に整理したため、3件出すと実データで縮んで下がズレる。 */
+  .is-skel{pointer-events:none;}
+  .sk{display:block;color:transparent;border-radius:4px;background:rgba(255,255,255,.06);
+      position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;}
+  .sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+      animation:skShimmer 1.7s ease-in-out infinite;}
+  @keyframes skShimmer{0%{transform:translateX(-100%);}55%,100%{transform:translateX(100%);}}
+  /* 動きを減らす設定の人には光を流さない */
+  @media (prefers-reduced-motion:reduce){.sk::after{animation:none;}}
+  .n-cat.sk,.filter-chip.sk{border-color:transparent;border-radius:999px;}
+  /* .n-title は flex 項目で、中身が帯だけだと幅を持たずに潰れる */
+  .is-skel .n-title{width:100%;}
+  /* タイトルの2行目はスマホだけ。1200pxでは実データが1行に収まる。 */
+  .sk-l2{display:none;}
+  @media (max-width:760px){.sk-l2{display:block;}}
+
   @media (max-width:560px){
     .n-item{flex-wrap:wrap;gap:7px;padding:15px 4px;}
     .n-meta{width:100%;}
@@ -556,6 +578,7 @@
     items.forEach(function(n){ if(n.category && !seen[n.category]){seen[n.category]=1;cats.push(n.category);} });
     if (!cats.indexOf) cats = [];
     if (cats.indexOf(active) === -1 && active !== 'すべて') active = 'すべて';
+    listEl.removeAttribute('aria-busy');
     renderChips();
     render();
   }
@@ -568,7 +591,23 @@
 
   function loadNews(){
     var painted = false;
-    listEl.innerHTML = '<div class="empty-state">お知らせを読み込んでいます…</div>';
+    // 絞り込みチップも空のままだと、データが来たときに一覧が下へずれる。同じ高さを先に取る。
+    chipsEl.innerHTML =
+        '<span class="filter-chip sk" aria-hidden="true" style="width:64px">&nbsp;</span>'
+      + '<span class="filter-chip sk" aria-hidden="true" style="width:52px">&nbsp;</span>';
+    listEl.setAttribute('aria-busy', 'true');
+    listEl.innerHTML =
+        '<div class="news-year" aria-hidden="true"><b><span class="sk" style="width:52px">&nbsp;</span></b><i></i></div>'
+      + '<div class="n-item is-skel" aria-hidden="true">'
+      +   '<div class="n-meta">'
+      +     '<span class="n-date"><span class="sk" style="width:79px">&nbsp;</span></span>'
+      +     '<span class="n-cat sk" style="width:42px">&nbsp;</span>'
+      +   '</div>'
+      +   '<div class="n-body"><div class="n-title">'
+      +     '<span class="sk" style="width:86%">&nbsp;</span>'
+      +     '<span class="sk sk-l2" style="width:50%">&nbsp;</span>'
+      +   '</div></div>'
+      + '</div>';
     // 埋め込みデータは items が空（サンプルを置かない運用）。中身があるときだけ先に描く。
     var inline = getInline();
     if (inline && Array.isArray(inline.items) && inline.items.length){ apply(inline); painted = true; }
@@ -590,7 +629,11 @@
 
     chain.catch(function(err){
       console.warn('お知らせの最新取得に失敗しました。表示中のデータを使用します。', err);
-      if (!painted) listEl.innerHTML = '<div class="empty-state">お知らせを読み込めませんでした。しばらくしてからお試しください。</div>';
+      if (!painted) {
+        listEl.removeAttribute('aria-busy');
+        chipsEl.innerHTML = '';
+        listEl.innerHTML = '<div class="empty-state">お知らせを読み込めませんでした。しばらくしてからお試しください。</div>';
+      }
     });
   }
 
