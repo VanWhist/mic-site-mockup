@@ -231,34 +231,32 @@ else
   ok 'consent.html が存在しない（第1層廃止のとおり）'
 fi
 
-# ---------------------------------------------------------------- 8. 公開前の下書き文言
-# ★ 全文検索にすると CSS のコメント（「メニューを開いている間はDRAFTバッジを引っ込める」等）に
-#   引っかかって即座に落ちる。**利用者の目に入る要素の中身**だけを見る。
-#   バッジ自体は「リニューアル準備中」として残す判断（2026/08/15）なので、
-#   要素の有無ではなく文言を検査する。
-# ★ 検査する場所は、実際に巻き戻った3か所だけに限定する。
-#     ・バッジ  … class="draft-badge" / class="demo-badge" の要素の中身
+# ---------------------------------------------------------------- 8. 公開前の下書き文言・準備中バッジ
+# ★ 2026/08/15 の判断で「リニューアル準備中」バッジを残していたが、.com 移行の準備で
+#   全ページから外した（2026/09/08）。ここでは「外したものが巻き戻っていないこと」を見る。
+#   全文検索にすると CSS のコメントに引っかかるので、**利用者の目に入る要素**だけを見る。
+#     ・バッジ  … class="draft-badge" / class="demo-badge" の要素そのもの（存在したら NG）
 #     ・フッター注記 … class="sf-bottom" の中の <span>
 #     ・<title> … タブと共有時に見える
-#   本文まで対象にしない。将来ページ本文に「試作品」と書いた瞬間に落ちてしまい、
-#   チェックが邪魔者になる。落ちるべきでないもので落ちるチェックは、やがて無視される。
-NG_WORDS='試作|ラフ案|ラフです|非公開|RAFU|DRAFT'
+#   本文まで対象にしない。落ちるべきでないもので落ちるチェックは、やがて無視される。
+NG_WORDS='試作|ラフ案|ラフです|非公開|RAFU|DRAFT|リニューアル準備中'
 for f in *.html; do
   [ -e "$f" ] || continue
   body=$(sed -n '/<body/,$p' "$f" | sed 's/<!--.*-->//g')
 
-  badge=$(printf '%s\n' "$body" \
-    | grep -nE "class=\"(draft-badge|demo-badge)\"[^>]*>[^<]*($NG_WORDS)" || true)
-  footer=$(printf '%s\n' "$body" \
-    | grep -A3 'class="sf-bottom"' \
-    | grep -nE "<span[^>]*>[^<]*($NG_WORDS)" || true)
+  badge=$(printf '%s
+' "$body"     | grep -nE 'class="(draft-badge|demo-badge)"' || true)
+  footer=$(printf '%s
+' "$body"     | grep -A3 'class="sf-bottom"'     | grep -nE "<span[^>]*>[^<]*($NG_WORDS)" || true)
   title=$(grep -oE '<title>[^<]*</title>' "$f" | grep -E "$NG_WORDS" || true)
 
   if [ -z "$badge$footer$title" ]; then
-    ok "$f に公開前の下書き文言が表示されていない（バッジ・フッター注記・title）"
+    ok "$f に準備中バッジ・下書き文言が表示されていない（バッジ要素・フッター注記・title）"
   else
-    bad "$f に公開前の下書き文言が表示されている"
-    note "$(printf '%s\n%s\n%s' "$badge" "$footer" "$title" | grep . | head -3)"
+    bad "$f に準備中バッジまたは下書き文言が表示されている"
+    note "$(printf '%s
+%s
+%s' "$badge" "$footer" "$title" | grep . | head -3)"
   fi
 done
 
