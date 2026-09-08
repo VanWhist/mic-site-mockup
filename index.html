@@ -743,8 +743,11 @@
   .ap-story-bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:3;pointer-events:none;}
   .ap-story-bars .bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;}
   .ap-story-bars .bar.active{background:rgba(255,255,255,.95);}
-  /* 左右38%ずつ。中央24%を空けるのは、パネルで再生ボタンの当たり判定を奪わないため。 */
-  .ap-photo-nav{position:absolute;top:0;bottom:0;width:38%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
+  /* 左右あわせて写真の76%を覆っていたため、写真の大部分が「押しても
+     プロフィールが開かない場所」になっていた（375px 実測）。
+     22% にすると中央56%（375pxで112px）が開く帯になり、三角自体も
+     44px 幅を確保できる。 */
+  .ap-photo-nav{position:absolute;top:0;bottom:0;width:22%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
   .ap-photo-nav-prev{left:0;}
   .ap-photo-nav-next{right:0;}
   .ap-name-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 2px 0;}
@@ -878,7 +881,11 @@
   .cp-story-bars{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:3;pointer-events:none;}
   .cp-story-bars .bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden;}
   .cp-story-bars .bar.active{background:rgba(255,255,255,.95);}
-  .cp-photo-nav{position:absolute;top:0;bottom:0;width:38%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
+  /* 左右あわせて写真の76%を覆っていたため、写真の大部分が「押しても
+     プロフィールが開かない場所」になっていた（375px 実測）。
+     22% にすると中央56%（375pxで112px）が開く帯になり、三角自体も
+     44px 幅を確保できる。 */
+  .cp-photo-nav{position:absolute;top:0;bottom:0;width:22%;background:none;border:none;padding:0;margin:0;cursor:pointer;z-index:2;-webkit-tap-highlight-color:transparent;}
   .cp-photo-nav-prev{left:0;}
   .cp-photo-nav-next{right:0;}
 
@@ -1848,8 +1855,9 @@
       + '<button type="button" class="ap-photo-nav ap-photo-nav-next" aria-label="次の写真"></button>';
   }
 
-  // パネルのヒーロー。動画の再生ボタンと同居するため、ナビは左右38%ずつに留めて
-  // 中央24%を空ける（再生ボタンの当たり判定を奪わない）。
+  // パネルのヒーロー。動画の再生ボタン（.ap-play-btn・中央76px・z-index:4）と同居する。
+  // ナビは左右22%ずつなので中央56%が空き、再生ボタンの当たり判定は奪わない。
+  // （再生ボタンは z-index が上なので、仮に重なっても押せる）
   function apHeroMedia(photos, name, startIndex){
     const start = Math.min(Math.max(startIndex || 0, 0), photos.length - 1);
     if (photos.length < 2) {
@@ -2293,17 +2301,23 @@
     // セレクタで拾うと写真1枚のカード（クラス無しの <img>）が漏れるため、ここで受ける。
     gallery.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
-    let downX = 0, downY = 0, moved = 0, ptrType = 'mouse';
+    let downX = 0, downY = 0, moved = 0;
     gallery.addEventListener('pointerdown', function(e){
-      downX = e.clientX; downY = e.clientY; moved = 0; ptrType = e.pointerType || 'mouse';
+      downX = e.clientX; downY = e.clientY; moved = 0;
     });
     gallery.addEventListener('pointermove', function(e){
       if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
     });
     gallery.addEventListener('click', function(e){
-      // マウスは押してから離すまでに数px動く（実測4〜12px）。指より動くので、
-      // マウスのときだけ判定を緩める。タッチ・ペンは従来どおり 6px。
-      if (moved > (ptrType === 'mouse' ? 12 : 6)) return; // this was a drag, not a tap
+      // 押してから離すまでに、マウスは実測4〜12px、指は7px程度動く。
+      // 6px だと正確に押しても捨てられるため、タッチも同じ 12px にする。
+      //
+      // 緩めても「払ったのに開く」にはならないと考えている。指でスクロールした
+      // 場合はブラウザが click 自体を出さないためで、initGallery は
+      // mousedown/mousemove なので touch を見ていない。
+      // ★ ただし iOS 実機では未検証（2026/09/08）。合成タッチでは本物の慣性
+      //   スクロールを再現できないため、この点は測定では確かめられていない。
+      if (moved > 12) return; // this was a drag, not a tap
       // 写真送りのボタンはカードの中にあるので、先に受け止めてパネルを開かせない
       const navBtn = e.target.closest('.ap-photo-nav');
       if (navBtn) {
@@ -2473,17 +2487,23 @@
     // セレクタで拾うと写真1枚のカード（クラス無しの <img>）が漏れるため、ここで受ける。
     gallery.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
-    let downX = 0, downY = 0, moved = 0, ptrType = 'mouse';
+    let downX = 0, downY = 0, moved = 0;
     gallery.addEventListener('pointerdown', function(e){
-      downX = e.clientX; downY = e.clientY; moved = 0; ptrType = e.pointerType || 'mouse';
+      downX = e.clientX; downY = e.clientY; moved = 0;
     });
     gallery.addEventListener('pointermove', function(e){
       if (e.buttons) moved = Math.max(moved, Math.abs(e.clientX - downX), Math.abs(e.clientY - downY));
     });
     gallery.addEventListener('click', function(e){
-      // マウスは押してから離すまでに数px動く（実測4〜12px）。指より動くので、
-      // マウスのときだけ判定を緩める。タッチ・ペンは従来どおり 6px。
-      if (moved > (ptrType === 'mouse' ? 12 : 6)) return; // this was a drag, not a tap
+      // 押してから離すまでに、マウスは実測4〜12px、指は7px程度動く。
+      // 6px だと正確に押しても捨てられるため、タッチも同じ 12px にする。
+      //
+      // 緩めても「払ったのに開く」にはならないと考えている。指でスクロールした
+      // 場合はブラウザが click 自体を出さないためで、initGallery は
+      // mousedown/mousemove なので touch を見ていない。
+      // ★ ただし iOS 実機では未検証（2026/09/08）。合成タッチでは本物の慣性
+      //   スクロールを再現できないため、この点は測定では確かめられていない。
+      if (moved > 12) return; // this was a drag, not a tap
       const navBtn = e.target.closest('.cp-photo-nav');
       if (navBtn) {
         const navCard = navBtn.closest('.cp-card');
