@@ -1905,7 +1905,7 @@
   function apRenderResults(a){
     if(!a.tracked){
       return '<div class="ap-results-head"><div class="ap-kicker" style="margin:0;">戦歴</div></div>'
-        + '<p class="ap-not-tracked">戦歴データは準備中です。SAJ競技データバンクとの連携が完了次第、順次掲載します。</p>';
+        + '<p class="ap-not-tracked">公式大会の成績は掲載していません。</p>';
     }
     const shown = apApplyLimits(apPickBySource(apNormalizeResults(a.results), a.name));
     if(!shown.length){
@@ -2795,8 +2795,8 @@
 </section>
 
 <!-- NEWS_DATA_INLINE_START -->
-<!-- news.json と同じ内容のオフライン用フォールバックです。patch_index_news.py で更新されます。 -->
-<script type="application/json" id="news-data-inline">{"lastUpdated": "2026-08-11T09:00:00+09:00", "note": "掲載内容はサンプルです。本番公開前に実際のお知らせへ差し替えてください。第2段階でGoogleスプレッドシート連動に切り替えます。", "categories": ["募集", "活動", "大会", "チーム"], "items": [{"date": "2026-08-09", "category": "活動", "title": "8月のウォータージャンプ練習会がスタートしました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-08-01", "category": "募集", "title": "夏休み短期教室の受付を開始しました", "url": "inquiry.html"}, {"date": "2026-07-20", "category": "大会", "title": "サマーコンテストの結果を掲載しました", "url": ""}, {"date": "2026-07-01", "category": "チーム", "title": "コーチ派遣プログラムの受付を開始しました", "url": "program-dispatch.html"}, {"date": "2026-06-15", "category": "活動", "title": "6月の雪上合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2026-05-20", "category": "募集", "title": "2026-27シーズンの選手育成コース募集について", "url": "program-athlete.html"}, {"date": "2026-04-15", "category": "活動", "title": "ゴールデンウィーク合宿を実施しました", "url": "https://www.instagram.com/mogul.mic/"}, {"date": "2025-12-10", "category": "チーム", "title": "オンラインサポートを開始しました", "url": "program-online.html"}, {"date": "2025-11-02", "category": "大会", "title": "2025-26シーズンの大会結果を更新しました", "url": ""}]}</script>
+<!-- APIが落ちたときのフォールバック。サンプルを埋め込むと陳腐化するので items は空のまま運用し、失敗時は案内文だけを出す（2026/09/08） -->
+<script type="application/json" id="news-data-inline">{"lastUpdated": "2026-09-08T00:00:00+09:00", "note": "APIが落ちたときのフォールバック。サンプルを埋め込むと陳腐化するので items は空のまま運用し、失敗時は案内文だけを出す（2026/09/08）。", "categories": ["募集", "活動", "大会", "チーム"], "items": []}</script>
 <!-- NEWS_DATA_INLINE_END -->
 
 <script>
@@ -2879,9 +2879,13 @@
   }
 
   function load(){
+    var painted = false;
+    listEl.innerHTML = '<div class="news-note" style="margin-top:0;">お知らせを読み込んでいます…</div>';
+    // 埋め込みデータは items が空（サンプルを置かない運用）。中身があるときだけ先に描く。
     try {
       var el = document.getElementById('news-data-inline');
-      if (el) apply(JSON.parse(el.textContent));
+      var inline = el ? JSON.parse(el.textContent) : null;
+      if (inline && Array.isArray(inline.items) && inline.items.length){ apply(inline); painted = true; }
     } catch(e){ /* 埋め込みが壊れていても、次のfetchで復帰できる */ }
 
     function tryFetch(url){
@@ -2889,7 +2893,9 @@
         .then(function(res){ if(!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
         .then(function(data){
           if (!data || data.error || !Array.isArray(data.items)) throw new Error('unexpected payload');
-          apply(data);
+          // フォールバック（news.json）は items を空にしてある。空なら「取れなかった」扱いにして案内文へ。
+          if (!data.items.length && url !== NEWS_API_URL) throw new Error(url + ' has no items');
+          apply(data); painted = true;
         });
     }
 
@@ -2898,7 +2904,8 @@
       : tryFetch('news.json');
 
     chain.catch(function(err){
-      console.warn('お知らせの最新取得に失敗しました。表示中のデータを使用します。', err);
+      console.warn('お知らせの最新取得に失敗しました。', err);
+      if (!painted) listEl.innerHTML = '<div class="news-note" style="margin-top:0;">お知らせを読み込めませんでした。しばらくしてからお試しください。</div>';
     });
   }
 
