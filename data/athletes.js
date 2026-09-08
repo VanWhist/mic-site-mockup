@@ -103,8 +103,8 @@ window.AP_ATHLETES = [
       hasKarte:false, vision:null, goal:null,
       // 有賀睦人｜MIC 選手紹介（MICモーグルチャンネル・限定公開・0:13）。
       // 元の assets/videos/睦人.mp4 と同じ映像。MP4 は参照されなくなるだけで残してある。
-      video:'https://youtu.be/FTWfsrykCzk',
-      videoAspect:'9:16',   // 縦動画。省略時は '16:9'（横）とみなす
+      video:null,        // 2026/09/08 いったん非表示。元: https://youtu.be/FTWfsrykCzk
+      videoAspect:null,  // 元: '9:16'（縦動画。省略時は '16:9'（横）とみなす）
       tracked:true,
       results:[
         {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
