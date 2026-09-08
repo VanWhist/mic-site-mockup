@@ -2311,9 +2311,12 @@
     gallery.addEventListener('click', function(e){
       // 押してから離すまでに、マウスは実測4〜12px、指は7px程度動く。
       // 6px だと正確に押しても捨てられるため、タッチも同じ 12px にする。
-      // 指でスクロールした場合はブラウザが click 自体を出さない（initGallery は
-      // mousedown/mousemove なので touch を見ていない）ので、ここを緩めても
-      // 「払ったのに開く」にはならない。実測で確認済み。
+      //
+      // 緩めても「払ったのに開く」にはならないと考えている。指でスクロールした
+      // 場合はブラウザが click 自体を出さないためで、initGallery は
+      // mousedown/mousemove なので touch を見ていない。
+      // ★ ただし iOS 実機では未検証（2026/09/08）。合成タッチでは本物の慣性
+      //   スクロールを再現できないため、この点は測定では確かめられていない。
       if (moved > 12) return; // this was a drag, not a tap
       // 写真送りのボタンはカードの中にあるので、先に受け止めてパネルを開かせない
       const navBtn = e.target.closest('.ap-photo-nav');
@@ -2494,9 +2497,12 @@
     gallery.addEventListener('click', function(e){
       // 押してから離すまでに、マウスは実測4〜12px、指は7px程度動く。
       // 6px だと正確に押しても捨てられるため、タッチも同じ 12px にする。
-      // 指でスクロールした場合はブラウザが click 自体を出さない（initGallery は
-      // mousedown/mousemove なので touch を見ていない）ので、ここを緩めても
-      // 「払ったのに開く」にはならない。実測で確認済み。
+      //
+      // 緩めても「払ったのに開く」にはならないと考えている。指でスクロールした
+      // 場合はブラウザが click 自体を出さないためで、initGallery は
+      // mousedown/mousemove なので touch を見ていない。
+      // ★ ただし iOS 実機では未検証（2026/09/08）。合成タッチでは本物の慣性
+      //   スクロールを再現できないため、この点は測定では確かめられていない。
       if (moved > 12) return; // this was a drag, not a tap
       const navBtn = e.target.closest('.cp-photo-nav');
       if (navBtn) {
