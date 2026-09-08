@@ -630,6 +630,28 @@
     transition:stroke .2s,color .2s,transform .2s;}
   .hn-item.is-link:hover .hn-arrow{stroke:var(--accent);color:var(--accent);transform:translateX(3px);}
   .hn-item.is-link:hover .hn-arrow.is-brand{transform:none;}
+
+  /* ---------- 読み込み中の骨組み（スケルトン） ----------
+     お知らせは GAS の応答を待つため、表示まで実測 3〜5秒かかる。
+     ★ 速くする仕組みではない。待っているあいだ枠が空に見えないようにするだけ。
+     実データと同じ .hn-item を描き、文字のところだけ帯に置き換える。
+     帯の中身は &nbsp; なので、高さは実際の文字の行送りとそのまま同じになる。
+     件数は1件。お知らせを1件に整理したため、3件出すと実データで縮んで下がズレる。 */
+  .is-skel{pointer-events:none;}
+  .sk{display:block;color:transparent;border-radius:4px;background:rgba(255,255,255,.06);
+      position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;}
+  .sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+      animation:skShimmer 1.7s ease-in-out infinite;}
+  @keyframes skShimmer{0%{transform:translateX(-100%);}55%,100%{transform:translateX(100%);}}
+  /* 動きを減らす設定の人には光を流さない */
+  @media (prefers-reduced-motion:reduce){.sk::after{animation:none;}}
+  .hn-cat.sk{border-color:transparent;border-radius:999px;}
+  /* .hn-title は flex 項目で、中身が帯だけだと幅を持たずに潰れる */
+  .is-skel .hn-title{width:100%;}
+  /* タイトルの2行目はスマホだけ。1200pxでは実データが1行に収まる。 */
+  .sk-l2{display:none;}
+  @media (max-width:760px){.sk-l2{display:block;}}
   .hn-all{display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:13px;font-weight:700;
     color:var(--muted);text-decoration:none;transition:color .2s;}
   .hn-all:hover{color:var(--accent);}
@@ -2849,6 +2871,7 @@
     }).slice(0, TOP_COUNT);
     if (!items.length) return;
 
+    listEl.removeAttribute('aria-busy');
     listEl.innerHTML = items.map(function(n){
       var url  = safeUrl(n.url);
       var ext  = /^https:\/\//.test(url);
@@ -2872,7 +2895,18 @@
 
   function load(){
     var painted = false;
-    listEl.innerHTML = '<div class="news-note" style="margin-top:0;">お知らせを読み込んでいます…</div>';
+    listEl.setAttribute('aria-busy', 'true');
+    listEl.innerHTML =
+        '<div class="hn-item is-skel" aria-hidden="true">'
+      +   '<div class="hn-meta">'
+      +     '<span class="hn-date"><span class="sk" style="width:67px">&nbsp;</span></span>'
+      +     '<span class="hn-cat sk" style="width:42px">&nbsp;</span>'
+      +   '</div>'
+      +   '<div class="hn-body"><div class="hn-title">'
+      +     '<span class="sk" style="width:88%">&nbsp;</span>'
+      +     '<span class="sk sk-l2" style="width:54%">&nbsp;</span>'
+      +   '</div></div>'
+      + '</div>';
     // 埋め込みデータは items が空（サンプルを置かない運用）。中身があるときだけ先に描く。
     try {
       var el = document.getElementById('news-data-inline');
@@ -2897,7 +2931,10 @@
 
     chain.catch(function(err){
       console.warn('お知らせの最新取得に失敗しました。', err);
-      if (!painted) listEl.innerHTML = '<div class="news-note" style="margin-top:0;">お知らせを読み込めませんでした。しばらくしてからお試しください。</div>';
+      if (!painted) {
+        listEl.removeAttribute('aria-busy');
+        listEl.innerHTML = '<div class="news-note" style="margin-top:0;">お知らせを読み込めませんでした。しばらくしてからお試しください。</div>';
+      }
     });
   }
 
