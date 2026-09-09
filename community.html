@@ -271,23 +271,42 @@
   .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
 
   /* ===================== 活動拠点：マップ／ブリーフィング ===================== */
-  :root{ --land:#222226; --edge:rgba(255,255,255,.15); --ease:cubic-bezier(.22,.61,.36,1); }
+  :root{ --land:#222226; --edge:rgba(255,255,255,.15); --ease:cubic-bezier(.22,.61,.36,1);
+       /* 地図の横幅。.stage の高さの計算にも使うので1か所にまとめてある */
+       --map-w:min(340px,84vw); }
   .bases a{text-decoration:none;color:inherit;}
   .bases a:hover{color:var(--accent);}
-.stage{position:sticky;top:58px;z-index:2;display:flex;flex-direction:column;align-items:center;padding:24px 0 26px;
+/* ★ 2026/09/09 修正：一覧に入った瞬間、地図が縮むぶんだけ下の一覧が指と無関係に
+   持ち上がり「カクッ」となっていた（375px で -169px、1200px で -185px を実測）。
+   原因は .stage 自身の**レイアウト高さ**が 343→166px と変わっていたこと。
+   sticky でも文書の中にある要素なので、縮めばその下は必ず動く。
+
+   直し方：レイアウト高さを持つ箱（.stage）と、実際に縮む中身（.stage-in）を分けた。
+     .stage    … 高さは常に「展開時の高さ」で固定。だから一覧は1pxも動かない
+     .stage-in … position:absolute なのでレイアウトに影響しない。ここだけが縮む
+   .stage の余った下側は透明なので、一覧はその下を通って見える（見え方は従来と同じ）。
+   透明な部分がカードのタップを吸わないよう、pointer-events を .stage-in にだけ戻している。 */
+.stage{position:sticky;top:58px;z-index:2;pointer-events:none;
+  /* 24(上余白) ＋ 地図の高さ ＋ 2(cap の上余白) ＋ 18(cap) ＋ 26(下余白)。
+     地図は viewBox 132×114.2 の SVG を height:auto で置いているので、
+     高さ ＝ 横幅 × 114.2/132 になる。実測（320/375/768/1200px）と一致を確認済み。 */
+  height:calc(70px + var(--map-w) * 0.8651515)}
+.stage-in{position:absolute;left:0;right:0;top:0;pointer-events:auto;
+  display:flex;flex-direction:column;align-items:center;padding:24px 0 26px;
   transition:padding .7s var(--ease);
   background:#0a0a0c}
-.stage::after{content:'';position:absolute;left:-6vw;right:-6vw;bottom:0;height:1px;
+.stage-in::after{content:'';position:absolute;left:-6vw;right:-6vw;bottom:0;height:1px;
   background:rgba(255,255,255,.08);opacity:0;transition:opacity .5s var(--ease)}
-.stage.focused::after{opacity:1}
-/* 幅で縮める。transform:scale だとレイアウト上の高さが変わらず、
-   スクロール中も地図が画面を占有し続けてしまうため。 */
-.mapbox{width:min(340px,84vw);transition:width .7s var(--ease)}
-.stage.focused{padding:12px 0 14px}
+.stage.focused .stage-in::after{opacity:1}
+/* 幅で縮める。transform:scale だと地図の**見た目**の高さが変わらず、
+   縮めても画面を占有し続けてしまうため。 */
+.mapbox{width:var(--map-w);transition:width .7s var(--ease)}
+.stage.focused .stage-in{padding:12px 0 14px}
 .stage.focused .mapbox{width:min(168px,43vw)}
-.cap{margin:2px 0 0;font-size:12px;letter-spacing:.09em;color:var(--muted);
-  max-height:24px;overflow:hidden;transition:max-height .55s var(--ease),margin .55s var(--ease),opacity .4s ease}
-.stage.focused .cap{max-height:0!important;margin:0!important;opacity:0!important}
+/* line-height を明示しておく。上の height 計算の 18px がこれで確定する */
+.cap{margin:2px 0 0;font-size:12px;line-height:18px;letter-spacing:.09em;color:var(--muted);
+  height:18px;overflow:hidden;transition:height .55s var(--ease),margin .55s var(--ease),opacity .4s ease}
+.stage.focused .cap{height:0!important;margin:0!important;opacity:0!important}
 /* 縮小時は地図が小さくなるぶん、ラベルの文字を大きくして可読性を保つ */
 .lb,.ln{transition:font-size .7s var(--ease)}
 .stage.focused .lb{font-size:8.2px}
@@ -348,7 +367,7 @@
 .js .halo{opacity:.35}.js .ring{opacity:.35}
 .js .line,.js .net{stroke-dashoffset:0!important}
 .js .sweep{display:none}
-.mapbox,.area,.card,.focusring,.stage,.cap,.lb,.ln{transition:none!important}
+.mapbox,.area,.card,.focusring,.stage,.stage-in,.cap,.lb,.ln{transition:none!important}
 }
 
   /* ---------- 全ページ共通フッター ----------
@@ -875,6 +894,7 @@
   <p class="lede">北は宮城から南は大阪まで、4エリア9拠点。雪上・ウォータージャンプ・トランポリン・メディカルを、ひとつのネットワークとして運用しています。</p>
 
   <div class="stage">
+   <div class="stage-in">
     <div class="mapbox">
       <svg class="map" viewBox="-16 0 132 114.2" role="img" aria-label="日本地図。宮城・埼玉・白馬・大阪の4エリアに拠点があります。">
         <defs>
@@ -968,6 +988,7 @@
       </svg>
     </div>
     <p class="cap">全国4エリア・9拠点で活動</p>
+   </div>
   </div>
 
   <div class="groups">
