@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /upload.html
+
+Sitemap: https://mogul-mic.com/sitemap.xml
