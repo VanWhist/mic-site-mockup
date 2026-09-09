@@ -47,13 +47,14 @@
     var isFirstPv = !sGet(K_SEEN);
 
     /* ---- UTM（セッション最初に受け取ったものを保持） ---------------- */
-    var utm = { s: '', m: '', c: '' };
+    var utm = { s: '', m: '', c: '', t: '' };
     var qsSource = qs ? (qs.get('utm_source') || '') : '';
     if (qsSource) {
       utm = {
         s: qsSource,
         m: (qs.get('utm_medium') || ''),
-        c: (qs.get('utm_campaign') || '')
+        c: (qs.get('utm_campaign') || ''),
+        t: (qs.get('utm_content') || '')
       };
       sSet(K_UTM, JSON.stringify(utm));
     } else {
@@ -113,7 +114,8 @@
       n:  isFirstPv ? '1' : '',
       us: String(utm.s || '').slice(0, 40),
       um: String(utm.m || '').slice(0, 40),
-      uc: String(utm.c || '').slice(0, 60)
+      uc: String(utm.c || '').slice(0, 60),
+      uct: String(utm.t || '').slice(0, 60)
     });
     sSet(K_SEEN, '1');
 
