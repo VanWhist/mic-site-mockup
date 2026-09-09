@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MIC強化練習会 2026年9月｜MIC（モーグル上達コミュニティー）</title>
-<meta name="description" content="9/19-21の3連休、ウォータージャンプO-air（大阪府大東市）で開催するモーグルの強化練習会。大会を目指す小学生〜大人が対象。MIC初参加OK、1枠から参加できます。申込締切9/9(水)。">
+<meta name="description" content="9/19-21の3連休、ウォータージャンプO-air（大阪府大東市）で開催するモーグルの強化練習会。大会を目指す小学生〜大人が対象。MIC初参加OK、1枠から参加できます。お申込みの受付は終了しました。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MIC — Mogul Improvement Community">
 <meta property="og:title" content="MIC強化練習会 2026年9月｜MIC（モーグル上達コミュニティー）">
-<meta property="og:description" content="9/19-21の3連休、ウォータージャンプO-air（大阪府大東市）で開催するモーグルの強化練習会。大会を目指す小学生〜大人が対象。MIC初参加OK、1枠から参加できます。申込締切9/9(水)。">
+<meta property="og:description" content="9/19-21の3連休、ウォータージャンプO-air（大阪府大東市）で開催するモーグルの強化練習会。大会を目指す小学生〜大人が対象。MIC初参加OK、1枠から参加できます。お申込みの受付は終了しました。">
 <meta property="og:url" content="https://mogul-mic.com/event-kyoka-202609.html">
 <link rel="canonical" href="https://mogul-mic.com/event-kyoka-202609.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-event-kyoka.jpg">
@@ -504,12 +504,26 @@
   .ek-ended .ek-cta-row{justify-content:center;margin-top:20px;}
   .ek-hero-ended{display:none;align-items:center;font-size:14px;color:var(--muted);
     border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:11px 22px;}
-  /* 締切・開催日を過ぎたら、申込の導線を「終了しました」に差し替える。
-     ページ自体は残す（InstagramやLINEの過去投稿からのリンクが生き続けるため）。 */
+  .ek-closed{display:none;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);
+    border-radius:20px;padding:34px 30px;text-align:center;}
+  .ek-closed .ek-cta-row{justify-content:center;margin-top:20px;}
+  .ek-hero-closed{display:none;align-items:center;font-size:14px;color:var(--muted);
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:11px 22px;}
+  .ek-closed-note{display:none;}
+  /* 締切・開催日を過ぎたら、申込の導線を差し替える。
+     ページ自体は残す（InstagramやLINEの過去投稿からのリンクが生き続けるため）。
+     申込締切を過ぎた時点は「受付終了」。開催はまだ先なので「練習会は終了」とは書かない。 */
+  body.ek-apply-closed .ek-apply{display:none;}
+  body.ek-apply-closed .ek-closed{display:block;}
+  body.ek-apply-closed .ek-hero-live{display:none;}
+  body.ek-apply-closed .ek-hero-closed{display:inline-flex;}
+  /* 開催最終日を過ぎたら「この練習会は終了しました」へ。 */
   body.ek-is-ended .ek-apply{display:none;}
   body.ek-is-ended .ek-ended{display:block;}
   body.ek-is-ended .ek-hero-live{display:none;}
   body.ek-is-ended .ek-hero-ended{display:inline-flex;}
+  body.ek-apply-closed .ek-closed-note,
+  body.ek-is-ended .ek-closed-note{display:inline;}
 
   .ek-next{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
     background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:26px 28px;}
@@ -521,7 +535,7 @@
     .ek-row{grid-template-columns:1fr;gap:5px;}
     .ek-next{grid-template-columns:1fr;text-align:left;}
     .ek-fee{padding:20px 18px;}
-    .ek-apply,.ek-ended{padding:26px 20px;}
+    .ek-apply,.ek-ended,.ek-closed{padding:26px 20px;}
     .ek-cta{width:100%;justify-content:center;}
     .ek-cta-row{gap:12px;}
     .ek-deadline{width:100%;text-align:center;}
@@ -592,6 +606,7 @@
         <span class="ek-deadline">申込締切 <b>9月9日(水)</b></span>
       </div>
     </div>
+    <span class="ek-hero-closed">お申込みの受付は終了しました</span>
     <span class="ek-hero-ended">この練習会は終了しました</span>
   </div>
 </div>
@@ -654,7 +669,7 @@
     <div class="ek-row"><div class="ek-k">会場</div><div class="ek-v">ウォータージャンプ O-air（大阪府大東市）</div></div>
     <div class="ek-row"><div class="ek-k">枠</div><div class="ek-v">全6枠・18席（1枠3名）<br><span class="ek-muted">1枠だけの参加もできます。</span></div></div>
     <div class="ek-row"><div class="ek-k">対象</div><div class="ek-v">大会を目指す小学生〜大人<br><span class="ek-muted">MIC初参加OK。今シーズン初めて大会に出る方も対象です。<br>クラブに所属されている方は、担当コーチの了承を取っておいてください。</span></div></div>
-    <div class="ek-row"><div class="ek-k">申込締切</div><div class="ek-v">2026年9月9日(水)</div></div>
+    <div class="ek-row"><div class="ek-k">申込締切</div><div class="ek-v">2026年9月9日(水)<span class="ek-closed-note ek-muted"><br>受付は終了しました。</span></div></div>
   </div>
 </section>
 
@@ -701,6 +716,15 @@
     </div>
   </div>
 
+  <div class="ek-closed">
+    <h2 class="ek-h2">お申込みの受付は終了しました。</h2>
+    <p class="ek-p">たくさんのお申込みをありがとうございました。<br>9月19日(土)–21日(月・祝)の練習会は、予定どおり開催します。</p>
+    <div class="ek-cta-row">
+      <a class="ek-cta" href="program-athlete.html">選手育成コースを見る</a>
+      <a class="ek-cta ek-ghost" href="index.html#calendar">今後のレッスン予定を見る</a>
+    </div>
+  </div>
+
   <div class="ek-ended">
     <h2 class="ek-h2">この練習会は終了しました。</h2>
     <p class="ek-p">ご参加いただいたみなさま、ありがとうございました。<br>MICでは年間を通して、競技を目指す選手の育成を行っています。</p>
@@ -723,13 +747,20 @@
 </section>
 
 <script>
-  // 開催最終日を過ぎたら、申込の導線を「終了しました」に切り替える。
+  // 申込の導線を、日付に応じて3段階で切り替える。
   // ページは残す。InstagramやLINEの過去投稿からのリンクが生き続けるため、
   // 消すとリンク切れになる。
+  //   〜9/9   申込を受け付けている
+  //   9/10〜  受付は終了。ただし開催はこれからなので「終了しました」とは書かない
+  //   9/22〜  練習会そのものが終了
   (function(){
-    var END = '2026-09-21';   // 開催最終日。この日いっぱいは申込表示のまま
-    if (new Date() > new Date(END + 'T23:59:59+09:00')) {
+    var APPLY_END = '2026-09-09';   // 申込締切。この日いっぱいは申込表示のまま
+    var END       = '2026-09-21';   // 開催最終日
+    var now = new Date();
+    if (now > new Date(END + 'T23:59:59+09:00')) {
       document.body.classList.add('ek-is-ended');
+    } else if (now > new Date(APPLY_END + 'T23:59:59+09:00')) {
+      document.body.classList.add('ek-apply-closed');
     }
   })();
 </script>
