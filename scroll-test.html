@@ -1209,13 +1209,21 @@
           <span class="m-sub" id="vhlog">アドレスバーが伸び縮みした回数</span></div>
       </div>
       <div class="m-row">
+        <div class="m-k">設定</div>
+        <div class="m-v" style="font-size:17px"><span id="rm">–</span>
+          <span class="m-sub">端末の「視差効果を減らす」／地図の縮小にかかる時間</span></div>
+      </div>
+      <div class="m-row">
         <div class="m-k">ずれ</div>
         <div class="m-v"><span id="voff">–</span><small>px</small>
           <span class="m-sub">バーの伸縮で見える範囲が変わった最大量</span></div>
       </div>
     </div>
     <div class="tester-b" style="margin-bottom:6px">
-      <button data-k="shrink" class="hero" style="flex:1 0 100%">★ ⑦ 地図を縮めない（まずこれを試す）</button>
+      <button data-k="shrink" class="hero" style="flex:1 0 100%">⑦ 地図を縮めない</button>
+    </div>
+    <div class="tester-b" style="margin-bottom:6px">
+      <button data-k="anim" class="hero" style="flex:1 0 100%">★ ⑧ 縮小をゆっくりに戻す（これを試す）</button>
     </div>
     <div class="tester-b">
       <button data-k="nav">① 全画面メニュー</button>
@@ -1230,7 +1238,7 @@
       <button id="allOn" style="flex:1 0 32%">全部戻す</button>
       <button id="reset" style="flex:1 0 32%">計測やり直し</button>
     </div>
-    <div class="tester-n">計測は3回とも正常でした（詰まり・とび・バーすべて異常なし）。①〜⑥のどれを切っても<b>地図が縮む動きだけは残っていた</b>ので、それを止めるのが⑦です。<b>まず⑦だけを押して</b>、下へスクロールしてみてください。これで滑らかなら原因は縮小、変わらなければ縮小も無関係とわかります。</div>
+    <div class="tester-n"><b>「設定」の行を見てください。</b>「オン」または「縮小 0s」なら、端末の<b>視差効果を減らす</b>設定でアニメーションが切られ、地図が一瞬で縮んでいます。それがカクッの正体です。<b>⑧を押すと</b>アニメーションが戻るので、ゆっくり縮むようになるはずです。⑦は縮小そのものをやめる案です。</div>
   </div>
 </div>
 <style>
@@ -1260,7 +1268,7 @@
   .tester-n{margin-top:7px;font-size:10.5px;line-height:1.65;color:#9a9a9f}
   .tester-n b{color:#f5f5f7}
   .tester.folded #foldable{display:none}
-  body{padding-bottom:285px}
+  body{padding-bottom:345px}
   .tester.folded ~ * {}
   /* 切ったときに効く指定 */
   html.off-nav #siteNav{display:none!important}
@@ -1277,6 +1285,11 @@
   html.off-shrink .cap{height:0!important;margin:0!important;opacity:0!important;transition:none!important}
   html.off-shrink .lb{font-size:8.2px!important;transition:none!important}
   html.off-shrink .ln{font-size:6.2px!important;transition:none!important}
+  /* ⑧ 「視差効果を減らす」で切られた transition を、強制的に戻す */
+  html.off-anim .mapbox{transition:width .7s cubic-bezier(.22,.61,.36,1)!important}
+  html.off-anim .stage-in{transition:padding .7s cubic-bezier(.22,.61,.36,1)!important}
+  html.off-anim .cap{transition:height .55s cubic-bezier(.22,.61,.36,1),margin .55s cubic-bezier(.22,.61,.36,1),opacity .4s ease!important}
+  html.off-anim .lb,html.off-anim .ln{transition:font-size .7s cubic-bezier(.22,.61,.36,1)!important}
 </style>
 <script>
 (function(){
@@ -1284,7 +1297,7 @@
   var worstEl=document.getElementById('worst'), cntEl=document.getElementById('cnt'),
       frEl=document.getElementById('frames'), jumpEl=document.getElementById('jump'),
       vhcEl=document.getElementById('vhc'), vhlogEl=document.getElementById('vhlog'),
-      voffEl=document.getElementById('voff');
+      voffEl=document.getElementById('voff'), rmEl=document.getElementById('rm');
   var vs=document.querySelectorAll('.m-v');
   var worst=0, cnt=0, frames=0, jump=0, vhc=0, voff=0;
   /* ★ iOS Safari はアドレスバーが縮んでも innerHeight が変わらない。
@@ -1336,8 +1349,18 @@
     for(var i=0;i<vs.length;i++) vs[i].classList.remove('bad'); }
   document.getElementById('reset').addEventListener('click', resetM);
 
+  /* 端末の「視差効果を減らす」が入っていると、CSS 側でアニメーションが切られ、
+     地図が一瞬で縮む。実際に効いている時間も併せて出す。 */
+  function showRM(){
+    var on = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var d  = getComputedStyle(document.querySelector('.mapbox')).transitionDuration;
+    rmEl.textContent = (on?'オン':'オフ') + '／縮小 ' + d;
+    rmEl.parentNode.classList.toggle('bad', on || d==='0s');
+  }
+  showRM(); setInterval(showRM, 1200);
+
   /* ---- 切り替え ---- */
-  var map={nav:'off-nav',bar:'off-bar',glow:'off-glow',tilt:'off-tilt',stick:'off-stick',shrink:'off-shrink'};
+  var map={nav:'off-nav',bar:'off-bar',glow:'off-glow',tilt:'off-tilt',stick:'off-stick',shrink:'off-shrink',anim:'off-anim'};
   var bs=[].slice.call(document.querySelectorAll('.tester-b button[data-k]'));
   function apply(b,off){
     var k=b.dataset.k;
@@ -1350,7 +1373,7 @@
   document.getElementById('fold').addEventListener('click',function(){
     var t=document.getElementById('tester'), f=t.classList.toggle('folded');
     this.textContent=f?'ひらく':'たたむ';
-    document.body.style.paddingBottom=f?'70px':'285px';
+    document.body.style.paddingBottom=f?'70px':'345px';
   });
 })();
 </script>
