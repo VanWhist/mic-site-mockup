@@ -561,8 +561,7 @@
 <script>document.documentElement.className='js';</script>
 </head>
 <body>
-<!-- ★ スクロールのカクつきの原因を切り分けるための一時ページ（2026/09/09）。
-     community.html の複製に検証用UIを足しただけ。どこからもリンクしない。原因が分かったら削除する。 -->
+<!-- ★ スクロールのカクつきの原因を切り分けるための一時ページ（2026/09/09）。原因が分かったら削除する。 -->
 <div class="bg-glow" aria-hidden="true"><i></i><i></i></div>
 
 
@@ -1205,9 +1204,14 @@
           <span class="m-sub">指と関係なく中身が動いた最大量。0が正常</span></div>
       </div>
       <div class="m-row">
-        <div class="m-k">画面高</div>
+        <div class="m-k">バー</div>
         <div class="m-v"><span id="vhc">–</span><small>回</small>
-          <span class="m-sub" id="vhlog">アドレスバーの伸縮で変わった回数</span></div>
+          <span class="m-sub" id="vhlog">アドレスバーが伸び縮みした回数</span></div>
+      </div>
+      <div class="m-row">
+        <div class="m-k">ずれ</div>
+        <div class="m-v"><span id="voff">–</span><small>px</small>
+          <span class="m-sub">バーの伸縮で見える範囲が変わった最大量</span></div>
       </div>
     </div>
     <div class="tester-b">
@@ -1223,7 +1227,7 @@
       <button id="allOn" style="flex:1 0 32%">全部戻す</button>
       <button id="reset" style="flex:1 0 32%">計測やり直し</button>
     </div>
-    <div class="tester-n">上から下へ普通にスクロールして、<b>3つの数字</b>を教えてください。<b>詰まり</b>が小さいのに<b>とび</b>が大きければ「位置が飛んでいる」、<b>画面高</b>が変わっていればアドレスバーの伸縮が原因です。まず何も押さずに1回、次に「全部切る」で1回お願いします。</div>
+    <div class="tester-n">何も押さずに、いつもカクッとなるあたりを普通にスクロールして、<b>4つの数字</b>を教えてください。<b>バー</b>が増えていれば、原因は iOS のアドレスバーの伸縮です（ページの作りではありません）。</div>
   </div>
 </div>
 <style>
@@ -1251,7 +1255,7 @@
   .tester-n{margin-top:7px;font-size:10.5px;line-height:1.65;color:#9a9a9f}
   .tester-n b{color:#f5f5f7}
   .tester.folded #foldable{display:none}
-  body{padding-bottom:260px}
+  body{padding-bottom:285px}
   .tester.folded ~ * {}
   /* 切ったときに効く指定 */
   html.off-nav #siteNav{display:none!important}
@@ -1267,23 +1271,31 @@
   /* ---- スクロール中のフレームの詰まりを測る ---- */
   var worstEl=document.getElementById('worst'), cntEl=document.getElementById('cnt'),
       frEl=document.getElementById('frames'), jumpEl=document.getElementById('jump'),
-      vhcEl=document.getElementById('vhc'), vhlogEl=document.getElementById('vhlog');
+      vhcEl=document.getElementById('vhc'), vhlogEl=document.getElementById('vhlog'),
+      voffEl=document.getElementById('voff');
   var vs=document.querySelectorAll('.m-v');
-  var worst=0, cnt=0, frames=0, jump=0, vhc=0;
+  var worst=0, cnt=0, frames=0, jump=0, vhc=0, voff=0;
+  /* ★ iOS Safari はアドレスバーが縮んでも innerHeight が変わらない。
+        変わるのは visualViewport のほうなので、そちらを見る。 */
+  var vv = window.visualViewport || null;
+  function vh(){ return vv ? Math.round(vv.height) : innerHeight; }
   var last=performance.now(), scrolling=false, tid=0;
   var probe=document.querySelector('.groups') || document.querySelector('.group');
   var pT=null, pY=null, lastVH=null;
   addEventListener('scroll', function(){
-    if(lastVH===null) lastVH=innerHeight;   /* 読み込み直後のぶれを数えない */
+    if(lastVH===null) lastVH=vh();   /* 読み込み直後のぶれを数えない */
     scrolling=true; clearTimeout(tid);
     tid=setTimeout(function(){ scrolling=false; pT=null; }, 260);
   }, {passive:true});
   (function tick(){
     var n=performance.now(), d=n-last; last=n;
     /* 画面の高さが変わった＝iOSのアドレスバーが伸縮した */
-    if(lastVH!==null && innerHeight!==lastVH){
-      vhc++; vhlogEl.textContent=lastVH+' → '+innerHeight+' px に変化';
-      lastVH=innerHeight; vhcEl.textContent=vhc; vs[2].classList.add('bad');
+    var nowVH=vh();
+    if(lastVH!==null && nowVH!==lastVH){
+      var d2=nowVH-lastVH;
+      vhc++; vhlogEl.textContent=lastVH+' → '+nowVH+' px（'+(d2>0?'+':'')+d2+'）';
+      if(Math.abs(d2)>Math.abs(voff)){ voff=d2; voffEl.textContent=(d2>0?'+':'')+d2; vs[3].classList.toggle('bad', Math.abs(d2)>=3); }
+      lastVH=nowVH; vhcEl.textContent=vhc; vs[2].classList.add('bad');
       pT=null;   /* 高さが変わった直後は「とび」に数えない */
     }
     if(scrolling && d<600){
@@ -1305,9 +1317,10 @@
     }
     requestAnimationFrame(tick);
   })();
-  function resetM(){ worst=0;cnt=0;frames=0;jump=0;vhc=0;pT=null;lastVH=null;
+  function resetM(){ worst=0;cnt=0;frames=0;jump=0;vhc=0;voff=0;pT=null;lastVH=null;
     worstEl.textContent='–';cntEl.textContent='–';frEl.textContent='–';jumpEl.textContent='–';
-    vhcEl.textContent='–';vhlogEl.textContent='アドレスバーの伸縮で変わった回数';
+    voffEl.textContent='–';
+    vhcEl.textContent='–';vhlogEl.textContent=(window.visualViewport?'アドレスバーが伸び縮みした回数':'※この端末は visualViewport 非対応');
     for(var i=0;i<vs.length;i++) vs[i].classList.remove('bad'); }
   document.getElementById('reset').addEventListener('click', resetM);
 
@@ -1325,7 +1338,7 @@
   document.getElementById('fold').addEventListener('click',function(){
     var t=document.getElementById('tester'), f=t.classList.toggle('folded');
     this.textContent=f?'ひらく':'たたむ';
-    document.body.style.paddingBottom=f?'70px':'260px';
+    document.body.style.paddingBottom=f?'70px':'285px';
   });
 })();
 </script>
