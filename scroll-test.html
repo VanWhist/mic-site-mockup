@@ -562,8 +562,7 @@
 </head>
 <body>
 <!-- ★ スクロールのカクつきの原因を切り分けるための一時ページ（2026/09/09）。
-     community.html の複製に検証用UIを足しただけのもの。どこからもリンクしない。
-     原因が分かったら削除する。 -->
+     community.html の複製に検証用UIを足しただけ。どこからもリンクしない。原因が分かったら削除する。 -->
 <div class="bg-glow" aria-hidden="true"><i></i><i></i></div>
 
 
@@ -1195,11 +1194,20 @@
   </div>
   <div id="foldable">
     <div class="meter">
-      <div class="m-big"><span id="worst">–</span><small>ms</small></div>
-      <div class="m-side">
-        <div>直近のスクロールで<b>いちばん詰まった時間</b></div>
-        <div class="m-sub">16ms = なめらか　／　33ms超 = カクッと見える</div>
-        <div class="m-sub">33ms超が <b id="cnt">–</b> 回　（<span id="frames">–</span> フレーム中）</div>
+      <div class="m-row">
+        <div class="m-k">詰まり</div>
+        <div class="m-v"><span id="worst">–</span><small>ms</small>
+          <span class="m-sub">33ms超 <b id="cnt">–</b>回／<span id="frames">–</span>フレーム</span></div>
+      </div>
+      <div class="m-row">
+        <div class="m-k">とび</div>
+        <div class="m-v"><span id="jump">–</span><small>px</small>
+          <span class="m-sub">指と関係なく中身が動いた最大量。0が正常</span></div>
+      </div>
+      <div class="m-row">
+        <div class="m-k">画面高</div>
+        <div class="m-v"><span id="vhc">–</span><small>回</small>
+          <span class="m-sub" id="vhlog">アドレスバーの伸縮で変わった回数</span></div>
       </div>
     </div>
     <div class="tester-b">
@@ -1215,7 +1223,7 @@
       <button id="allOn" style="flex:1 0 32%">全部戻す</button>
       <button id="reset" style="flex:1 0 32%">計測やり直し</button>
     </div>
-    <div class="tester-n">いまは<b>本番と同じ</b>。上から下へ普通にスクロールして、上の数字を見てください。→ ①を切って同じようにスクロール → 変わらなければ②も足す…と増やします。<b>数字が下がった時点で押した項目が原因</b>です。</div>
+    <div class="tester-n">上から下へ普通にスクロールして、<b>3つの数字</b>を教えてください。<b>詰まり</b>が小さいのに<b>とび</b>が大きければ「位置が飛んでいる」、<b>画面高</b>が変わっていればアドレスバーの伸縮が原因です。まず何も押さずに1回、次に「全部切る」で1回お願いします。</div>
   </div>
 </div>
 <style>
@@ -1226,14 +1234,16 @@
   .tester-t{font-size:11px;font-weight:800;letter-spacing:.06em;color:#ff5a3c}
   .fold{font:700 11px/1 -apple-system,sans-serif;color:#9a9a9f;background:rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:6px 10px}
-  .meter{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.045);
-    border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:9px 11px;margin-bottom:8px}
-  .m-big{flex:0 0 auto;font:800 30px/1 -apple-system,sans-serif;color:#f5f5f7;min-width:76px}
-  .m-big small{font-size:12px;font-weight:700;color:#9a9a9f;margin-left:2px}
-  .m-big.bad{color:#ff5a3c}
-  .m-side{font-size:11px;line-height:1.55;color:#d8d8dc}
-  .m-sub{font-size:10px;color:#9a9a9f}
-  .m-side b{color:#f5f5f7}
+  .meter{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+    border-radius:11px;padding:7px 11px;margin-bottom:8px}
+  .m-row{display:flex;align-items:baseline;gap:10px;padding:4px 0}
+  .m-row+.m-row{border-top:1px solid rgba(255,255,255,.07)}
+  .m-k{flex:0 0 46px;font:700 11px/1.4 -apple-system,sans-serif;color:#9a9a9f}
+  .m-v{flex:1;font:800 24px/1.1 -apple-system,sans-serif;color:#f5f5f7}
+  .m-v small{font-size:11px;font-weight:700;color:#9a9a9f;margin-left:2px}
+  .m-v.bad{color:#ff5a3c}
+  .m-sub{display:block;margin-top:3px;font:500 10px/1.5 -apple-system,sans-serif;color:#9a9a9f}
+  .m-sub b{color:#f5f5f7}
   .tester-b{display:flex;gap:6px;flex-wrap:wrap}
   .tester-b button{flex:1 0 30%;font:700 11.5px/1.35 -apple-system,sans-serif;color:#d8d8dc;
     background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:9px 4px}
@@ -1241,7 +1251,7 @@
   .tester-n{margin-top:7px;font-size:10.5px;line-height:1.65;color:#9a9a9f}
   .tester-n b{color:#f5f5f7}
   .tester.folded #foldable{display:none}
-  body{padding-bottom:230px}
+  body{padding-bottom:260px}
   .tester.folded ~ * {}
   /* 切ったときに効く指定 */
   html.off-nav #siteNav{display:none!important}
@@ -1256,23 +1266,49 @@
 (function(){
   /* ---- スクロール中のフレームの詰まりを測る ---- */
   var worstEl=document.getElementById('worst'), cntEl=document.getElementById('cnt'),
-      frEl=document.getElementById('frames'), bigEl=document.querySelector('.m-big');
-  var worst=0, cnt=0, frames=0, last=performance.now(), scrolling=false, tid=0;
+      frEl=document.getElementById('frames'), jumpEl=document.getElementById('jump'),
+      vhcEl=document.getElementById('vhc'), vhlogEl=document.getElementById('vhlog');
+  var vs=document.querySelectorAll('.m-v');
+  var worst=0, cnt=0, frames=0, jump=0, vhc=0;
+  var last=performance.now(), scrolling=false, tid=0;
+  var probe=document.querySelector('.groups') || document.querySelector('.group');
+  var pT=null, pY=null, lastVH=null;
   addEventListener('scroll', function(){
+    if(lastVH===null) lastVH=innerHeight;   /* 読み込み直後のぶれを数えない */
     scrolling=true; clearTimeout(tid);
-    tid=setTimeout(function(){ scrolling=false; }, 260);
+    tid=setTimeout(function(){ scrolling=false; pT=null; }, 260);
   }, {passive:true});
   (function tick(){
     var n=performance.now(), d=n-last; last=n;
+    /* 画面の高さが変わった＝iOSのアドレスバーが伸縮した */
+    if(lastVH!==null && innerHeight!==lastVH){
+      vhc++; vhlogEl.textContent=lastVH+' → '+innerHeight+' px に変化';
+      lastVH=innerHeight; vhcEl.textContent=vhc; vs[2].classList.add('bad');
+      pT=null;   /* 高さが変わった直後は「とび」に数えない */
+    }
     if(scrolling && d<600){
       frames++;
       if(d>33) cnt++;
-      if(d>worst){ worst=d; worstEl.textContent=Math.round(d); bigEl.classList.toggle('bad', d>33); }
+      if(d>worst){ worst=d; worstEl.textContent=Math.round(d); vs[0].classList.toggle('bad', d>33); }
       cntEl.textContent=cnt; frEl.textContent=frames;
+      /* 指の動き（scrollY）と関係なく中身が動いた量 */
+      if(probe){
+        var t=probe.getBoundingClientRect().top, y=window.scrollY||pageYOffset;
+        if(pT!==null){
+          var dd=(t-pT)+(y-pY);
+          if(Math.abs(dd)>Math.abs(jump)) jump=dd;
+          jumpEl.textContent=(jump>0?'+':'')+Math.round(jump);
+          vs[1].classList.toggle('bad', Math.abs(jump)>=3);
+        }
+        pT=t; pY=y;
+      }
     }
     requestAnimationFrame(tick);
   })();
-  function resetM(){ worst=0;cnt=0;frames=0;worstEl.textContent='–';cntEl.textContent='–';frEl.textContent='–';bigEl.classList.remove('bad'); }
+  function resetM(){ worst=0;cnt=0;frames=0;jump=0;vhc=0;pT=null;lastVH=null;
+    worstEl.textContent='–';cntEl.textContent='–';frEl.textContent='–';jumpEl.textContent='–';
+    vhcEl.textContent='–';vhlogEl.textContent='アドレスバーの伸縮で変わった回数';
+    for(var i=0;i<vs.length;i++) vs[i].classList.remove('bad'); }
   document.getElementById('reset').addEventListener('click', resetM);
 
   /* ---- 切り替え ---- */
@@ -1289,7 +1325,7 @@
   document.getElementById('fold').addEventListener('click',function(){
     var t=document.getElementById('tester'), f=t.classList.toggle('folded');
     this.textContent=f?'ひらく':'たたむ';
-    document.body.style.paddingBottom=f?'70px':'230px';
+    document.body.style.paddingBottom=f?'70px':'260px';
   });
 })();
 </script>
