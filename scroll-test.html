@@ -561,7 +561,7 @@
 <script>document.documentElement.className='js';</script>
 </head>
 <body>
-<!-- ★ スクロールのカクつきの原因を切り分けるための一時ページ（2026/09/09）。原因が分かったら削除する。 -->
+<!-- ★ スクロールのカクつきを直すための一時ページ（2026/09/09）。A/B/C を見比べるためのもの。原因が決まったら削除する。 -->
 <div class="bg-glow" aria-hidden="true"><i></i><i></i></div>
 
 
@@ -836,7 +836,6 @@
   var ticking = false;
   var holdUntil = 0;   /* タップ・ホバー直後は、スクロールで奪わない */
   function onScroll() {
-    if (window.__offPartner) return;   /* 検証ページ用 */
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(function () {
@@ -1187,193 +1186,101 @@
 
 <!-- ===== 検証用UI（この scroll-test.html だけのもの。community.html には無い） ===== -->
 <div class="tester" id="tester">
-  <div class="tester-head">
-    <div class="tester-t">スクロール検証</div>
-    <button id="fold" class="fold">たたむ</button>
+  <div class="t-row">
+    <button data-m="a" class="on">A 現状</button>
+    <button data-m="b">B 縮めない</button>
+    <button data-m="c">C 連動</button>
+    <button id="fold" class="mini">×</button>
   </div>
-  <div id="foldable">
-    <div class="meter">
-      <div class="m-row">
-        <div class="m-k">詰まり</div>
-        <div class="m-v"><span id="worst">–</span><small>ms</small>
-          <span class="m-sub">33ms超 <b id="cnt">–</b>回／<span id="frames">–</span>フレーム</span></div>
-      </div>
-      <div class="m-row">
-        <div class="m-k">とび</div>
-        <div class="m-v"><span id="jump">–</span><small>px</small>
-          <span class="m-sub">指と関係なく中身が動いた最大量。0が正常</span></div>
-      </div>
-      <div class="m-row">
-        <div class="m-k">バー</div>
-        <div class="m-v"><span id="vhc">–</span><small>回</small>
-          <span class="m-sub" id="vhlog">アドレスバーが伸び縮みした回数</span></div>
-      </div>
-      <div class="m-row">
-        <div class="m-k">設定</div>
-        <div class="m-v" style="font-size:17px"><span id="rm">–</span>
-          <span class="m-sub">端末の「視差効果を減らす」／地図の縮小にかかる時間</span></div>
-      </div>
-      <div class="m-row">
-        <div class="m-k">ずれ</div>
-        <div class="m-v"><span id="voff">–</span><small>px</small>
-          <span class="m-sub">バーの伸縮で見える範囲が変わった最大量</span></div>
-      </div>
-    </div>
-    <div class="tester-b" style="margin-bottom:6px">
-      <button data-k="shrink" class="hero" style="flex:1 0 100%">⑦ 地図を縮めない</button>
-    </div>
-    <div class="tester-b" style="margin-bottom:6px">
-      <button data-k="anim" class="hero" style="flex:1 0 100%">★ ⑧ 縮小をゆっくりに戻す（これを試す）</button>
-    </div>
-    <div class="tester-b">
-      <button data-k="nav">① 全画面メニュー</button>
-      <button data-k="bar">② 上部バーのぼかし</button>
-      <button data-k="glow">③ 背景グロー</button>
-      <button data-k="tilt">④ 地図の傾き</button>
-      <button data-k="partner">⑤ パートナー監視</button>
-      <button data-k="stick">⑥ 地図の貼り付け</button>
-    </div>
-    <div class="tester-b" style="margin-top:6px">
-      <button id="allOff" style="flex:1 0 32%">全部切る</button>
-      <button id="allOn" style="flex:1 0 32%">全部戻す</button>
-      <button id="reset" style="flex:1 0 32%">計測やり直し</button>
-    </div>
-    <div class="tester-n"><b>「設定」の行を見てください。</b>「オン」または「縮小 0s」なら、端末の<b>視差効果を減らす</b>設定でアニメーションが切られ、地図が一瞬で縮んでいます。それがカクッの正体です。<b>⑧を押すと</b>アニメーションが戻るので、ゆっくり縮むようになるはずです。⑦は縮小そのものをやめる案です。</div>
-  </div>
+  <div class="t-note">A＝いまの本番。B＝地図の大きさを変えない。C＝指の動きに合わせて連続的に縮む。3つを見比べて、良いものを教えてください。</div>
 </div>
 <style>
-  .tester{position:fixed;left:0;right:0;bottom:0;z-index:99999;background:rgba(12,12,14,.97);
-    border-top:1px solid rgba(255,255,255,.16);padding:9px 12px calc(9px + env(safe-area-inset-bottom));
+  .tester{position:fixed;left:0;right:0;bottom:0;z-index:99999;background:rgba(12,12,14,.96);
+    border-top:1px solid rgba(255,255,255,.16);padding:8px 10px calc(8px + env(safe-area-inset-bottom));
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}
-  .tester-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
-  .tester-t{font-size:11px;font-weight:800;letter-spacing:.06em;color:#ff5a3c}
-  .fold{font:700 11px/1 -apple-system,sans-serif;color:#9a9a9f;background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:6px 10px}
-  .meter{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
-    border-radius:11px;padding:7px 11px;margin-bottom:8px}
-  .m-row{display:flex;align-items:baseline;gap:10px;padding:4px 0}
-  .m-row+.m-row{border-top:1px solid rgba(255,255,255,.07)}
-  .m-k{flex:0 0 46px;font:700 11px/1.4 -apple-system,sans-serif;color:#9a9a9f}
-  .m-v{flex:1;font:800 24px/1.1 -apple-system,sans-serif;color:#f5f5f7}
-  .m-v small{font-size:11px;font-weight:700;color:#9a9a9f;margin-left:2px}
-  .m-v.bad{color:#ff5a3c}
-  .m-sub{display:block;margin-top:3px;font:500 10px/1.5 -apple-system,sans-serif;color:#9a9a9f}
-  .m-sub b{color:#f5f5f7}
-  .tester-b{display:flex;gap:6px;flex-wrap:wrap}
-  .tester-b button{flex:1 0 30%;font:700 11.5px/1.35 -apple-system,sans-serif;color:#d8d8dc;
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:9px 4px}
-  .tester-b button.off{background:#ff5a3c;border-color:#ff5a3c;color:#fff;text-decoration:line-through}
-  .tester-b button.hero{font-size:12.5px;padding:11px 6px;border-color:rgba(255,90,60,.55);color:#ff8f7a}
-  .tester-b button.hero.off{color:#fff}
-  .tester-n{margin-top:7px;font-size:10.5px;line-height:1.65;color:#9a9a9f}
-  .tester-n b{color:#f5f5f7}
-  .tester.folded #foldable{display:none}
-  body{padding-bottom:345px}
-  .tester.folded ~ * {}
-  /* 切ったときに効く指定 */
-  html.off-nav #siteNav{display:none!important}
-  html.off-bar .lp-topbar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
-    background:rgba(10,10,12,.97)!important}
-  html.off-glow .bg-glow{display:none!important}
-  html.off-tilt .map{transform:none!important}
-  html.off-stick .stage{position:static!important}
-  html.off-stick .stage-in{position:static!important}
-  /* ⑦ 地図の大きさを最初から変えない。縮むアニメーションが一切起きなくなる。 */
-  html.off-shrink .mapbox{width:min(168px,43vw)!important;transition:none!important}
-  html.off-shrink .stage{height:calc(70px + min(168px,43vw) * 0.8651515)!important}
-  html.off-shrink .stage-in{padding:12px 0 14px!important;transition:none!important}
-  html.off-shrink .cap{height:0!important;margin:0!important;opacity:0!important;transition:none!important}
-  html.off-shrink .lb{font-size:8.2px!important;transition:none!important}
-  html.off-shrink .ln{font-size:6.2px!important;transition:none!important}
-  /* ⑧ 「視差効果を減らす」で切られた transition を、強制的に戻す */
-  html.off-anim .mapbox{transition:width .7s cubic-bezier(.22,.61,.36,1)!important}
-  html.off-anim .stage-in{transition:padding .7s cubic-bezier(.22,.61,.36,1)!important}
-  html.off-anim .cap{transition:height .55s cubic-bezier(.22,.61,.36,1),margin .55s cubic-bezier(.22,.61,.36,1),opacity .4s ease!important}
-  html.off-anim .lb,html.off-anim .ln{transition:font-size .7s cubic-bezier(.22,.61,.36,1)!important}
+  .t-row{display:flex;gap:6px}
+  .t-row button{flex:1;font:700 13px/1 -apple-system,sans-serif;color:#d8d8dc;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:11px 4px}
+  .t-row button.on{background:#ff5a3c;border-color:#ff5a3c;color:#fff}
+  .t-row button.mini{flex:0 0 42px;font-size:15px;color:#9a9a9f}
+  .t-note{margin-top:6px;font-size:10.5px;line-height:1.6;color:#9a9a9f}
+  .tester.folded .t-note{display:none}
+  body{padding-bottom:104px}
+
+  /* ---- B：地図の大きさを最初から変えない ---- */
+  html.mode-b .mapbox{width:min(168px,43vw)!important;transition:none!important}
+  html.mode-b .stage{height:calc(70px + min(168px,43vw) * 0.8651515)!important}
+  html.mode-b .stage-in{padding:12px 0 14px!important;transition:none!important}
+  html.mode-b .cap{height:0!important;margin:0!important;opacity:0!important;transition:none!important}
+  html.mode-b .lb{font-size:8.2px!important;transition:none!important}
+  html.mode-b .ln{font-size:6.2px!important;transition:none!important}
+
+  /* ---- C：スクロールに連動して連続的に縮む（大きさは JS が毎フレーム決める） ----
+     transition は使わない。指の動きとずれる原因になるため。
+     縮小は transform:scale で行う。width を変えると地図SVGを毎フレーム組み直すことになる。 */
+  html.mode-c .mapbox,html.mode-c .stage-in,html.mode-c .cap,
+  html.mode-c .lb,html.mode-c .ln{transition:none!important}
+  html.mode-c .mapbox{width:var(--map-w)!important;transform-origin:top center}
+  html.mode-c .stage-in{overflow:hidden}
+  html.mode-c .stage.focused .stage-in{padding:24px 0 26px}
+  html.mode-c .stage.focused .cap{height:18px;margin:2px 0 0}
+  html.mode-c .stage.focused .lb{font-size:5.4px}
+  html.mode-c .stage.focused .ln{font-size:4.2px}
 </style>
 <script>
 (function(){
-  /* ---- スクロール中のフレームの詰まりを測る ---- */
-  var worstEl=document.getElementById('worst'), cntEl=document.getElementById('cnt'),
-      frEl=document.getElementById('frames'), jumpEl=document.getElementById('jump'),
-      vhcEl=document.getElementById('vhc'), vhlogEl=document.getElementById('vhlog'),
-      voffEl=document.getElementById('voff'), rmEl=document.getElementById('rm');
-  var vs=document.querySelectorAll('.m-v');
-  var worst=0, cnt=0, frames=0, jump=0, vhc=0, voff=0;
-  /* ★ iOS Safari はアドレスバーが縮んでも innerHeight が変わらない。
-        変わるのは visualViewport のほうなので、そちらを見る。 */
-  var vv = window.visualViewport || null;
-  function vh(){ return vv ? Math.round(vv.height) : innerHeight; }
-  var last=performance.now(), scrolling=false, tid=0;
-  var probe=document.querySelector('.groups') || document.querySelector('.group');
-  var pT=null, pY=null, lastVH=null;
-  addEventListener('scroll', function(){
-    if(lastVH===null) lastVH=vh();   /* 読み込み直後のぶれを数えない */
-    scrolling=true; clearTimeout(tid);
-    tid=setTimeout(function(){ scrolling=false; pT=null; }, 260);
-  }, {passive:true});
-  (function tick(){
-    var n=performance.now(), d=n-last; last=n;
-    /* 画面の高さが変わった＝iOSのアドレスバーが伸縮した */
-    var nowVH=vh();
-    if(lastVH!==null && nowVH!==lastVH){
-      var d2=nowVH-lastVH;
-      vhc++; vhlogEl.textContent=lastVH+' → '+nowVH+' px（'+(d2>0?'+':'')+d2+'）';
-      if(Math.abs(d2)>Math.abs(voff)){ voff=d2; voffEl.textContent=(d2>0?'+':'')+d2; vs[3].classList.toggle('bad', Math.abs(d2)>=3); }
-      lastVH=nowVH; vhcEl.textContent=vhc; vs[2].classList.add('bad');
-      pT=null;   /* 高さが変わった直後は「とび」に数えない */
-    }
-    if(scrolling && d<600){
-      frames++;
-      if(d>33) cnt++;
-      if(d>worst){ worst=d; worstEl.textContent=Math.round(d); vs[0].classList.toggle('bad', d>33); }
-      cntEl.textContent=cnt; frEl.textContent=frames;
-      /* 指の動き（scrollY）と関係なく中身が動いた量 */
-      if(probe){
-        var t=probe.getBoundingClientRect().top, y=window.scrollY||pageYOffset;
-        if(pT!==null){
-          var dd=(t-pT)+(y-pY);
-          if(Math.abs(dd)>Math.abs(jump)) jump=dd;
-          jumpEl.textContent=(jump>0?'+':'')+Math.round(jump);
-          vs[1].classList.toggle('bad', Math.abs(jump)>=3);
-        }
-        pT=t; pY=y;
-      }
-    }
-    requestAnimationFrame(tick);
-  })();
-  function resetM(){ worst=0;cnt=0;frames=0;jump=0;vhc=0;voff=0;pT=null;lastVH=null;
-    worstEl.textContent='–';cntEl.textContent='–';frEl.textContent='–';jumpEl.textContent='–';
-    voffEl.textContent='–';
-    vhcEl.textContent='–';vhlogEl.textContent=(window.visualViewport?'アドレスバーが伸び縮みした回数':'※この端末は visualViewport 非対応');
-    for(var i=0;i<vs.length;i++) vs[i].classList.remove('bad'); }
-  document.getElementById('reset').addEventListener('click', resetM);
+  var html=document.documentElement;
+  var stage=document.querySelector('.stage'), inn=document.querySelector('.stage-in'),
+      mb=document.querySelector('.mapbox'), cap=document.querySelector('.cap'),
+      groups=document.querySelector('.groups');
+  var lbs=[].slice.call(document.querySelectorAll('.lb')),
+      lns=[].slice.call(document.querySelectorAll('.ln'));
+  var RATIO=0.8651515;          /* 地図の高さ ÷ 横幅（viewBox 132×114.2） */
+  var SMALL=0.4941;             /* 168 ÷ 340 */
+  var mode='a', ticking=false;
 
-  /* 端末の「視差効果を減らす」が入っていると、CSS 側でアニメーションが切られ、
-     地図が一瞬で縮む。実際に効いている時間も併せて出す。 */
-  function showRM(){
-    var on = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var d  = getComputedStyle(document.querySelector('.mapbox')).transitionDuration;
-    rmEl.textContent = (on?'オン':'オフ') + '／縮小 ' + d;
-    rmEl.parentNode.classList.toggle('bad', on || d==='0s');
+  function clearInline(){
+    [inn,mb,cap].forEach(function(e){ if(e) e.removeAttribute('style'); });
+    lbs.concat(lns).forEach(function(e){ e.style.fontSize=''; });
   }
-  showRM(); setInterval(showRM, 1200);
 
-  /* ---- 切り替え ---- */
-  var map={nav:'off-nav',bar:'off-bar',glow:'off-glow',tilt:'off-tilt',stick:'off-stick',shrink:'off-shrink',anim:'off-anim'};
-  var bs=[].slice.call(document.querySelectorAll('.tester-b button[data-k]'));
-  function apply(b,off){
-    var k=b.dataset.k;
-    if(k==='partner') window.__offPartner=off; else document.documentElement.classList.toggle(map[k],off);
-    b.classList.toggle('off',off);
+  /* C：スクロール位置から進み具合（0〜1）を出し、その場の大きさを決める */
+  function update(){
+    ticking=false;
+    if(mode!=='c' || !groups) return;
+    var top=groups.getBoundingClientRect().top;
+    var start=innerHeight*0.92, end=innerHeight*0.30;
+    var p=(start-top)/(start-end); p=p<0?0:(p>1?1:p);
+    var baseW=parseFloat(getComputedStyle(mb).width);
+    var mapH=baseW*RATIO;
+    var s=1-p*(1-SMALL);
+    var openH=70+mapH, smallH=26+mapH*SMALL;
+    inn.style.height=(openH+(smallH-openH)*p)+'px';
+    inn.style.paddingTop=(24-12*p)+'px';
+    inn.style.paddingBottom=(26-12*p)+'px';
+    mb.style.transform='scale('+s+')';
+    if(cap) cap.style.opacity=Math.max(0,1-p*2);
+    /* 縮んでも文字の見た目の大きさが保たれるよう、逆向きに拡大しておく */
+    lbs.forEach(function(e){ e.style.fontSize=((5.4+2.8*p)/s)+'px'; });
+    lns.forEach(function(e){ e.style.fontSize=((4.2+2.0*p)/s)+'px'; });
   }
-  bs.forEach(function(b){ b.addEventListener('click',function(){ apply(b,!b.classList.contains('off')); resetM(); }); });
-  document.getElementById('allOff').addEventListener('click',function(){ bs.forEach(function(b){apply(b,true)}); resetM(); });
-  document.getElementById('allOn').addEventListener('click',function(){ bs.forEach(function(b){apply(b,false)}); resetM(); });
+  addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(update);} },{passive:true});
+  addEventListener('resize',update,{passive:true});
+
+  var bs=[].slice.call(document.querySelectorAll('.t-row button[data-m]'));
+  function setMode(m){
+    mode=m;
+    html.classList.remove('mode-b','mode-c');
+    clearInline();
+    if(m==='b') html.classList.add('mode-b');
+    if(m==='c'){ html.classList.add('mode-c'); update(); }
+    bs.forEach(function(b){ b.classList.toggle('on', b.dataset.m===m); });
+  }
+  bs.forEach(function(b){ b.addEventListener('click',function(){ setMode(b.dataset.m); }); });
   document.getElementById('fold').addEventListener('click',function(){
-    var t=document.getElementById('tester'), f=t.classList.toggle('folded');
-    this.textContent=f?'ひらく':'たたむ';
-    document.body.style.paddingBottom=f?'70px':'345px';
+    var f=document.getElementById('tester').classList.toggle('folded');
+    this.textContent=f?'?':'×';
+    document.body.style.paddingBottom=f?'72px':'104px';
   });
 })();
 </script>
