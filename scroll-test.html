@@ -1214,6 +1214,9 @@
           <span class="m-sub">バーの伸縮で見える範囲が変わった最大量</span></div>
       </div>
     </div>
+    <div class="tester-b" style="margin-bottom:6px">
+      <button data-k="shrink" class="hero" style="flex:1 0 100%">★ ⑦ 地図を縮めない（まずこれを試す）</button>
+    </div>
     <div class="tester-b">
       <button data-k="nav">① 全画面メニュー</button>
       <button data-k="bar">② 上部バーのぼかし</button>
@@ -1227,7 +1230,7 @@
       <button id="allOn" style="flex:1 0 32%">全部戻す</button>
       <button id="reset" style="flex:1 0 32%">計測やり直し</button>
     </div>
-    <div class="tester-n">何も押さずに、いつもカクッとなるあたりを普通にスクロールして、<b>4つの数字</b>を教えてください。<b>バー</b>が増えていれば、原因は iOS のアドレスバーの伸縮です（ページの作りではありません）。</div>
+    <div class="tester-n">計測は3回とも正常でした（詰まり・とび・バーすべて異常なし）。①〜⑥のどれを切っても<b>地図が縮む動きだけは残っていた</b>ので、それを止めるのが⑦です。<b>まず⑦だけを押して</b>、下へスクロールしてみてください。これで滑らかなら原因は縮小、変わらなければ縮小も無関係とわかります。</div>
   </div>
 </div>
 <style>
@@ -1252,6 +1255,8 @@
   .tester-b button{flex:1 0 30%;font:700 11.5px/1.35 -apple-system,sans-serif;color:#d8d8dc;
     background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:9px 4px}
   .tester-b button.off{background:#ff5a3c;border-color:#ff5a3c;color:#fff;text-decoration:line-through}
+  .tester-b button.hero{font-size:12.5px;padding:11px 6px;border-color:rgba(255,90,60,.55);color:#ff8f7a}
+  .tester-b button.hero.off{color:#fff}
   .tester-n{margin-top:7px;font-size:10.5px;line-height:1.65;color:#9a9a9f}
   .tester-n b{color:#f5f5f7}
   .tester.folded #foldable{display:none}
@@ -1265,6 +1270,13 @@
   html.off-tilt .map{transform:none!important}
   html.off-stick .stage{position:static!important}
   html.off-stick .stage-in{position:static!important}
+  /* ⑦ 地図の大きさを最初から変えない。縮むアニメーションが一切起きなくなる。 */
+  html.off-shrink .mapbox{width:min(168px,43vw)!important;transition:none!important}
+  html.off-shrink .stage{height:calc(70px + min(168px,43vw) * 0.8651515)!important}
+  html.off-shrink .stage-in{padding:12px 0 14px!important;transition:none!important}
+  html.off-shrink .cap{height:0!important;margin:0!important;opacity:0!important;transition:none!important}
+  html.off-shrink .lb{font-size:8.2px!important;transition:none!important}
+  html.off-shrink .ln{font-size:6.2px!important;transition:none!important}
 </style>
 <script>
 (function(){
@@ -1325,7 +1337,7 @@
   document.getElementById('reset').addEventListener('click', resetM);
 
   /* ---- 切り替え ---- */
-  var map={nav:'off-nav',bar:'off-bar',glow:'off-glow',tilt:'off-tilt',stick:'off-stick'};
+  var map={nav:'off-nav',bar:'off-bar',glow:'off-glow',tilt:'off-tilt',stick:'off-stick',shrink:'off-shrink'};
   var bs=[].slice.call(document.querySelectorAll('.tester-b button[data-k]'));
   function apply(b,off){
     var k=b.dataset.k;
