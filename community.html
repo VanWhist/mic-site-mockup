@@ -291,26 +291,26 @@
      地図は viewBox 132×114.2 の SVG を height:auto で置いているので、
      高さ ＝ 横幅 × 114.2/132 になる。実測（320/375/768/1200px）と一致を確認済み。 */
   height:calc(70px + var(--map-w) * 0.8651515)}
+/* ★ 2026/09/09 修正その2：地図の縮小をスクロールに連動させた。
+   それまでは、しきい値を越えた瞬間に .focused を付けて 0.7秒かけて縮めていた。
+   指を動かした量と無関係に地図だけが動くため、実機で「一気に縮む」と感じられていた
+   （Van様の確認：縮小を止めるとカクつきは出ない）。
+
+   いまはスクロール量から 0〜1 の進み具合を出し、その場の大きさを直接あてている。
+   transition は使わない。指の動きとずれる原因そのものだから。
+   大きさ・余白・キャプション・ラベルの文字は、すべて下の JS が毎フレーム決める。
+   ★ 縮小は transform:scale で行う。width を毎フレーム変えると、
+     地図SVG（長いパス1本）を毎フレーム組み直すことになるため。 */
 .stage-in{position:absolute;left:0;right:0;top:0;pointer-events:auto;
   display:flex;flex-direction:column;align-items:center;padding:24px 0 26px;
-  transition:padding .7s var(--ease);
   background:#0a0a0c}
+/* --p は進み具合（0〜1）。JS が .stage-in に入れる。 */
 .stage-in::after{content:'';position:absolute;left:-6vw;right:-6vw;bottom:0;height:1px;
-  background:rgba(255,255,255,.08);opacity:0;transition:opacity .5s var(--ease)}
-.stage.focused .stage-in::after{opacity:1}
-/* 幅で縮める。transform:scale だと地図の**見た目**の高さが変わらず、
-   縮めても画面を占有し続けてしまうため。 */
-.mapbox{width:var(--map-w);transition:width .7s var(--ease)}
-.stage.focused .stage-in{padding:12px 0 14px}
-.stage.focused .mapbox{width:min(168px,43vw)}
+  background:rgba(255,255,255,.08);opacity:var(--p,0)}
+.mapbox{width:var(--map-w);transform-origin:top center;will-change:transform}
 /* line-height を明示しておく。上の height 計算の 18px がこれで確定する */
 .cap{margin:2px 0 0;font-size:12px;line-height:18px;letter-spacing:.09em;color:var(--muted);
-  height:18px;overflow:hidden;transition:height .55s var(--ease),margin .55s var(--ease),opacity .4s ease}
-.stage.focused .cap{height:0!important;margin:0!important;opacity:0!important}
-/* 縮小時は地図が小さくなるぶん、ラベルの文字を大きくして可読性を保つ */
-.lb,.ln{transition:font-size .7s var(--ease)}
-.stage.focused .lb{font-size:8.2px}
-.stage.focused .ln{font-size:6.2px}
+  height:18px;overflow:hidden}
 .map{display:block;width:100%;height:auto;overflow:visible;
   transform:perspective(900px) rotateX(9deg) rotateZ(-1deg)}
 .fill{fill:var(--land)}
@@ -367,7 +367,7 @@
 .js .halo{opacity:.35}.js .ring{opacity:.35}
 .js .line,.js .net{stroke-dashoffset:0!important}
 .js .sweep{display:none}
-.mapbox,.area,.card,.focusring,.stage,.stage-in,.cap,.lb,.ln{transition:none!important}
+.area,.card,.focusring{transition:none!important}
 }
 
   /* ---------- 全ページ共通フッター ----------
@@ -1097,11 +1097,58 @@
     groups.forEach(function(g){g.classList.toggle('on',g.dataset.area===name)});
     areas.forEach(function(a){a.classList.toggle('on',a.dataset.area===name)});
     map.classList.toggle('dim',!!name);
-    stage.classList.toggle('focused',!!name);
   }
+
+  /* ---- 地図の大きさを、スクロール位置から直接決める ----
+     0 = 一覧がまだ画面の下  →  1 = 一覧が画面の上のほうまで来た。
+     途中の値もそのまま使うので、指を止めればそこで止まる。 */
+  var MAP_RATIO=0.8651515;   /* 地図の高さ ÷ 横幅（viewBox 132×114.2） */
+  var MAP_MIN=0.4941;        /* 168 ÷ 340。縮みきったときの倍率 */
+  var inn=sec.querySelector('.stage-in');
+  var mapbox=sec.querySelector('.mapbox');
+  var cap=sec.querySelector('.cap');
+  var lbs=[].slice.call(sec.querySelectorAll('.lb'));
+  var lns=[].slice.call(sec.querySelectorAll('.ln'));
+  var groupsEl=sec.querySelector('.groups');
+  /* 動きを減らす設定の人には、最初から縮んだ状態で固定する（スクロールで動かさない） */
+  var reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var baseW=0, mapH=0;
+  function measure(){ baseW=parseFloat(getComputedStyle(mapbox).width)||0; mapH=baseW*MAP_RATIO; }
+
+  /* 登場アニメーションは opacity と transform を forwards で固定するため、
+     終わるまで下の inline 指定が効かない。終わった時点で外しておく。 */
+  if(cap) cap.addEventListener('animationend', function(){ cap.style.animation='none'; });
+
+  function layout(){
+    if(!groupsEl||!mapH) return;
+    var p=1;
+    if(!reduceMotion){
+      var top=groupsEl.getBoundingClientRect().top;
+      var from=innerHeight*0.92, to=innerHeight*0.30;
+      p=(from-top)/(from-to);
+      p=p<0?0:(p>1?1:p);
+    }
+    var s=1-p*(1-MAP_MIN);
+    var openH=70+mapH, smallH=26+mapH*MAP_MIN;
+    inn.style.height=(openH+(smallH-openH)*p)+'px';
+    inn.style.paddingTop=(24-12*p)+'px';
+    inn.style.paddingBottom=(26-12*p)+'px';
+    inn.style.setProperty('--p', p);
+    mapbox.style.transform='scale('+s+')';
+    /* 地図はレイアウト上の高さが変わらないので、縮んだぶんキャプションを上へ寄せる */
+    if(cap){
+      cap.style.transform='translateY('+(-mapH*(1-s))+'px)';
+      cap.style.opacity=Math.max(0,1-p*2);
+    }
+    /* 縮んでも文字の見た目の大きさが変わらないよう、逆向きに拡大する */
+    for(var i=0;i<lbs.length;i++) lbs[i].style.fontSize=((5.4+2.8*p)/s)+'px';
+    for(var j=0;j<lns.length;j++) lns[j].style.fontSize=((4.2+2.0*p)/s)+'px';
+  }
+
   var ticking=false;
   function pick(){
     ticking=false;
+    layout();
     var line=innerHeight*0.58, hit=null, best=1e9;
     var atEnd=(scrollY+innerHeight)>=(document.documentElement.scrollHeight-6);
     if(atEnd){ setActive(groups[groups.length-1].dataset.area); return; }
@@ -1114,8 +1161,8 @@
     setActive(hit);
   }
   addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(pick)} },{passive:true});
-  addEventListener('resize',pick,{passive:true});
-  pick();
+  addEventListener('resize',function(){ measure(); pick(); },{passive:true});
+  measure(); pick();
 })();
 </script>
 
