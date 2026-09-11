@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FrameReplay｜MIC Mogul Improvement Community</title>
+<meta name="description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。現在、App Storeでの公開に向けて準備を進めています。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MIC — Mogul Improvement Community">
+<meta property="og:title" content="FrameReplay｜MIC Mogul Improvement Community">
+<meta property="og:description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。現在、App Storeでの公開に向けて準備を進めています。">
+<meta property="og:url" content="https://mogul-mic.com/frame-replay.html">
+<link rel="canonical" href="https://mogul-mic.com/frame-replay.html">
+<!-- OGP画像は素材が届いてから差し替える。それまでは他ページと同じ既定画像を使う -->
+<meta property="og:image" content="https://mogul-mic.com/assets/brand/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+    /* 上部バーの高さぶん。アンカーで飛んだとき見出しがバーの裏に隠れないようにする。
+       Instagram から各機能へ直接飛んでくる前提なので、全アンカーに効かせる。 */
+    --bar:76px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    /* overflow-x:hidden はスクロールの入れ物を作ってしまい、position:sticky の
+       上部バーが効かなくなる。overflow-x:clip なら横スクロールは同じく止めつつ sticky は生きる。 */
+    overflow-x:hidden;overflow-x:clip;}
+
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+
+  a{color:inherit;}
+
+  /* ---------- top bar ---------- */
+  .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
+  .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
+  .lp-nav::-webkit-scrollbar{display:none;}
+  .lp-nav a{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .lp-nav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .lp-nav a.current{color:var(--accent);background:rgba(255,90,60,.14);}
+
+  /* ---------- アンカー ----------
+     機能ごとに個別の id を持たせ、Instagram から直接その位置へ飛べるようにしている。
+     バーは sticky なので、scroll-margin-top を入れないと見出しが裏に隠れる。 */
+  .fr-hero[id],.fr-sec[id],.feat[id]{scroll-margin-top:var(--bar);}
+
+  /* ---------- hero ---------- */
+  .fr-hero{position:relative;padding:56px 6vw 48px;overflow:hidden;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255,140,100,.22), transparent 58%),
+      linear-gradient(150deg,#241a17,#101013 64%);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .fr-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;}
+  .fr-eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  .fr-title{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.35;margin:12px 0 16px;}
+  .fr-lead{font-size:14.5px;line-height:1.85;color:#d8d8dc;margin:0 0 22px;}
+  .fr-status{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.08em;
+    color:var(--muted);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;}
+
+  /* ---------- 本文 ---------- */
+  .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:44px 6vw 80px;}
+  .fr-sec{padding-top:8px;}
+  .fr-sec + .fr-sec{margin-top:52px;}
+  .sec-label{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;}
+  .sec-title{font-size:19px;font-weight:800;line-height:1.55;margin:0 0 16px;}
+  .sec-body{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0 0 12px;}
+  .sec-body:last-child{margin-bottom:0;}
+  .sec-body b{color:#fff;font-weight:800;}
+  .sec-note{font-size:12.5px;line-height:1.9;color:var(--muted);margin:14px 0 0;}
+  .sec-note b{color:#d8d8dc;font-weight:700;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);margin:48px 0;}
+
+  /* ---------- 現場で起きていたこと ----------
+     太字だけ拾い読みしても意味が通るように、困りごとを見出し、中身を次の行に置く。 */
+  .fld{display:flex;flex-direction:column;gap:2px;}
+  .fld-item{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fld-item:last-child{border-bottom:none;padding-bottom:0;}
+  .fld-item:first-child{padding-top:4px;}
+  .fld-t{font-size:14.5px;font-weight:800;line-height:1.7;margin:0 0 5px;}
+  .fld-d{font-size:13px;line-height:1.85;color:var(--muted);margin:0;}
+
+  /* ---------- できること ----------
+     アンカーで飛んできた人はここだけ読んで帰る。1項目が単独で読める作りにしている。 */
+  .feats{display:flex;flex-direction:column;gap:12px;}
+  .feat{border-radius:16px;padding:18px 20px;
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+  .feat-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    font-size:15.5px;font-weight:800;line-height:1.5;margin:0 0 9px;}
+  /* 「開発中」は目立たせない。事実として機能名の右に置くだけ */
+  .feat-dev{flex:0 0 auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    color:var(--muted);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:5px;padding:2px 8px;}
+  .feat-b{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0;}
+  .feat-b + .feat-b{margin-top:8px;}
+  .feat-b b{color:#fff;font-weight:800;}
+  .feat-note{font-size:12.5px;line-height:1.8;color:var(--muted);margin:10px 0 0;
+    padding-top:10px;border-top:1px solid rgba(255,255,255,.08);}
+
+  /* ---------- 実例 ---------- */
+  .story{border-radius:18px;padding:22px 22px;
+    background:linear-gradient(155deg, rgba(255,90,60,.10), rgba(255,255,255,.02));
+    border:1px solid rgba(255,90,60,.24);}
+  .story p{font-size:13.5px;line-height:1.95;color:#d8d8dc;margin:0 0 12px;}
+  .story p:last-child{margin-bottom:0;}
+  .story p b{color:#fff;font-weight:800;}
+  .story blockquote{margin:0 0 12px;padding:14px 18px;border-left:3px solid var(--accent);
+    background:rgba(0,0,0,.22);border-radius:0 12px 12px 0;
+    font-size:14px;line-height:1.95;color:#eaeaee;}
+  .story .story-note{font-size:12.5px;color:var(--muted);}
+  .story .story-note b{color:#d8d8dc;font-weight:700;}
+
+  /* ---------- 入手 ---------- */
+  .get{border-radius:18px;padding:22px 22px;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.1);}
+  .get .get-t{font-size:17px;font-weight:800;line-height:1.6;margin:0 0 12px;}
+  .get p{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0 0 10px;}
+  .get p b{color:#fff;font-weight:800;}
+  .get .get-spec{font-size:12.5px;color:var(--muted);margin:14px 0 0;padding-top:12px;
+    border-top:1px solid rgba(255,255,255,.08);}
+
+  /* ---------- 全ページ共通フッター ---------- */
+  .site-footer{display:block;position:relative;z-index:2;background:#050506;
+    border-top:1px solid rgba(255,255,255,.09);padding:56px 6vw 0;color:var(--muted);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    text-align:left;}
+  .sf-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:40px;}
+  .sf-logo{font-size:20px;font-weight:800;letter-spacing:.08em;color:#f5f5f7;}
+  .sf-tagline{font-size:11.5px;line-height:1.7;margin-top:8px;}
+  .sf-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  .sf-col{display:flex;flex-direction:column;gap:11px;}
+  .sf-col-head{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:2px;}
+  .sf-col a{font-size:13px;color:#d3d3d8;text-decoration:none;line-height:1.5;transition:color .2s;}
+  .sf-col a:hover{color:var(--accent);}
+  .sf-col a.sf-current{color:var(--accent);}
+  .sf-social{display:flex;gap:10px;margin-top:2px;}
+  .sf-social a{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);text-decoration:none;
+    transition:border-color .2s,background .2s;}
+  .sf-social a:hover{border-color:rgba(255,90,60,.5);background:rgba(255,90,60,.12);}
+  .sf-social svg{width:15px;height:15px;stroke:var(--accent);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .sf-bottom{max-width:1080px;margin:44px auto 0;padding:18px 0 26px;
+    border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;
+    align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;}
+  @media (max-width:760px){
+    .site-footer{padding:44px 6vw 0;}
+    .sf-inner{grid-template-columns:1fr;gap:30px;}
+    .sf-cols{grid-template-columns:1fr 1fr;gap:24px 18px;}
+    .sf-bottom{margin-top:32px;flex-direction:column;align-items:flex-start;gap:6px;}
+  }
+  @media (max-width:380px){
+    .sf-cols{grid-template-columns:1fr;}
+  }
+
+  /* ---------- 上部ナビ（全ページ共通の作り） ---------- */
+  .nav-toggle{
+    display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;
+    width:38px;height:38px;padding:0;cursor:pointer;flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(255,255,255,.05);
+    transition:background .3s ease, border-color .3s ease;
+  }
+  .nav-toggle span{
+    display:block;width:17px;height:2px;background:#fff;border-radius:2px;
+    transition:transform .3s cubic-bezier(.16,1,.3,1), opacity .2s ease;
+  }
+  .nav-toggle.open{background:rgba(255,90,60,.18);border-color:rgba(255,90,60,.55);}
+  .nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;transform:scaleX(.3);}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  /* 全画面メニューはスマホ専用。PCでは存在ごと隠す */
+  #siteNav{display:none;}
+  #siteNav ul{list-style:none;margin:0;padding:0;}
+  #siteNav a{text-decoration:none;color:inherit;}
+  .nav-eyebrow,.nav-num,.nav-en,.nav-foot{display:none;}
+
+  .lp-topbar{z-index:300;}
+
+  @media (max-width:820px){
+    .nav-toggle{display:flex;}
+    .only-wide{display:none !important;}
+    .nav-toggle{position:fixed;top:12px;right:6vw;z-index:400;}
+    .lp-topbar{padding-right:calc(6vw + 46px);gap:8px;}
+    .lp-nav{gap:2px;justify-content:flex-end;}
+    .lp-nav a{font-size:11px;padding:5px 8px;}
+    body.nav-open .lp-topbar{opacity:0;pointer-events:none;}
+    #siteNav{
+      position:fixed;inset:0;z-index:200;
+      display:flex;align-items:stretch;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(255,90,60,.22), transparent 58%),
+        radial-gradient(circle at 92% 92%, rgba(255,90,60,.10), transparent 55%),
+        rgba(8,8,10,.97);
+      backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .4s cubic-bezier(.16,1,.3,1), visibility .4s;
+    }
+    #siteNav.open{opacity:1;visibility:visible;pointer-events:auto;}
+
+    .nav-panel{
+      display:flex;flex-direction:column;justify-content:center;
+      width:100%;padding:84px 9vw 34px;
+      max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    }
+
+    .nav-eyebrow{
+      display:block;font-size:10px;font-weight:800;letter-spacing:.34em;
+      text-transform:uppercase;color:var(--accent);margin-bottom:20px;
+      opacity:0;transform:translateY(14px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav.open .nav-eyebrow{opacity:1;transform:none;transition-delay:.06s;}
+
+    #siteNav ul{flex-direction:column;align-items:stretch;gap:0;width:100%;font-size:inherit;}
+    #siteNav li{
+      border-bottom:1px solid rgba(255,255,255,.07);
+      opacity:0;transform:translateY(24px);
+      transition:opacity .55s cubic-bezier(.16,1,.3,1), transform .55s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav.open li{opacity:1;transform:none;transition-delay:calc(var(--i) * 45ms + 50ms);}
+
+    #siteNav li a{
+      position:relative;display:flex;align-items:flex-start;gap:13px;
+      padding:13px 2px;opacity:1;
+    }
+    #siteNav li a::after{display:none;}
+    #siteNav li a::before{
+      content:'';position:absolute;left:-9vw;top:calc(50% - 1px);
+      width:0;height:2px;background:var(--accent);
+      transition:width .3s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav li a:active::before{width:7vw;}
+    #siteNav li a:active .nav-jp{color:var(--accent);}
+
+    .nav-num{
+      display:block;flex:0 0 auto;width:24px;padding-top:7px;
+      font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--accent);
+      font-variant-numeric:tabular-nums;
+    }
+    .nav-label{display:flex;flex-direction:column;min-width:0;}
+    .nav-jp{
+      display:block;font-size:23px;font-weight:800;letter-spacing:-.01em;line-height:1.3;
+      transition:color .2s ease;
+    }
+    .nav-en{
+      display:block;font-size:9.5px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--muted);margin-top:4px;
+    }
+
+    .nav-foot{
+      display:block;margin-top:28px;
+      opacity:0;transform:translateY(18px);
+      transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    }
+    #siteNav.open .nav-foot{opacity:1;transform:none;transition-delay:.44s;}
+    .nav-cta{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      background:var(--accent);color:#fff;font-size:14.5px;font-weight:800;
+      border-radius:999px;padding:15px;opacity:1;
+      box-shadow:0 12px 30px -12px rgba(255,90,60,.75);
+    }
+    .nav-cta svg{width:16px;height:16px;stroke:#fff;stroke-width:2.2;fill:none;
+      stroke-linecap:round;stroke-linejoin:round;}
+    .nav-foot-note{margin-top:15px;text-align:center;font-size:10px;letter-spacing:.12em;color:var(--muted);}
+
+    @media (max-height:700px){
+      .nav-panel{padding:70px 9vw 24px;}
+      .nav-eyebrow{margin-bottom:12px;}
+      #siteNav li a{padding:10px 2px;}
+      .nav-num{padding-top:5px;}
+      .nav-jp{font-size:20px;}
+      .nav-en{display:none;}
+      .nav-foot{margin-top:22px;}
+      .nav-cta{padding:13px;font-size:14px;}
+      .nav-foot-note{margin-top:12px;}
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    #siteNav,#siteNav li,.nav-eyebrow,.nav-foot,.nav-toggle span,#siteNav li a::before{
+      transition-duration:.01ms !important;transition-delay:0ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+<div class="lp-topbar">
+  <a class="lp-logo" href="index.html">MIC</a>
+  <nav class="lp-nav">
+    <a href="index.html#mvv" class="only-wide">MVV</a>
+    <a href="index.html#programs">プログラム</a>
+    <a href="index.html#athletes" class="only-wide">選手紹介</a>
+    <a href="index.html#coaches" class="only-wide">コーチ紹介</a>
+    <a href="full-calendar.html">カレンダー</a>
+    <a href="news.html" class="only-wide">お知らせ</a>
+    <a href="community.html" class="only-wide">コミュニティ</a>
+    <a href="inquiry.html">お問い合わせ</a>
+  </nav>
+</div>
+<!-- バーの外に出してある。メニューを開いている間はバーごと消えるので、
+     中に置くと閉じるボタンまで一緒に消えてしまう。 -->
+  <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+<nav id="siteNav">
+  <div class="nav-panel">
+    <div class="nav-eyebrow">Menu</div>
+      <ul>
+        <li style="--i:0"><a href="index.html#mvv"><span class="nav-num">01</span><span class="nav-label"><span class="nav-jp">MVV</span><span class="nav-en">Mission Vision Value</span></span></a></li>
+        <li style="--i:1"><a href="index.html#programs"><span class="nav-num">02</span><span class="nav-label"><span class="nav-jp">プログラム</span><span class="nav-en">Programs</span></span></a></li>
+        <li style="--i:2"><a href="index.html#athletes"><span class="nav-num">03</span><span class="nav-label"><span class="nav-jp">選手紹介</span><span class="nav-en">Athletes</span></span></a></li>
+        <li style="--i:3"><a href="index.html#coaches"><span class="nav-num">04</span><span class="nav-label"><span class="nav-jp">コーチ紹介</span><span class="nav-en">Coaches</span></span></a></li>
+        <li style="--i:4"><a href="full-calendar.html"><span class="nav-num">05</span><span class="nav-label"><span class="nav-jp">カレンダー</span><span class="nav-en">Lesson Calendar</span></span></a></li>
+        <li style="--i:5"><a href="news.html"><span class="nav-num">06</span><span class="nav-label"><span class="nav-jp">お知らせ</span><span class="nav-en">News</span></span></a></li>
+        <li style="--i:6"><a href="community.html"><span class="nav-num">07</span><span class="nav-label"><span class="nav-jp">コミュニティ</span><span class="nav-en">Community</span></span></a></li>
+        <li style="--i:7"><a href="inquiry.html"><span class="nav-num">08</span><span class="nav-label"><span class="nav-jp">お問い合わせ</span><span class="nav-en">Contact</span></span></a></li>
+      </ul>
+      <div class="nav-foot">
+        <a class="nav-cta" href="inquiry.html">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          公式LINEで問い合わせる
+        </a>
+        <div class="nav-foot-note">MIC — Mogul Improvement Community</div>
+      </div>
+  </div>
+</nav>
+
+
+<!-- ===== ヒーロー ===== -->
+<div class="fr-hero" id="top">
+  <div class="fr-hero-inner">
+    <div class="fr-eyebrow">FrameReplay</div>
+    <h1 class="fr-title">撮る。見る。比べる。</h1>
+    <p class="fr-lead">スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。</p>
+    <p style="margin:0;"><span class="fr-status">公開準備中</span></p>
+    <!-- ★ 画像を入れる場所（1/4）：ヒーロー。
+         Build 124 相当の iPhone の画面。iPad の素材は使わない。
+         素材が届いたら、このコメントの位置に <img> を入れる。 -->
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ===== 現場で起きていたこと ===== -->
+  <section class="fr-sec" id="field">
+    <div class="sec-label">Why we built it</div>
+    <h2 class="sec-title">現場で、こういうことが起きていました。</h2>
+    <div class="fld">
+      <div class="fld-item">
+        <p class="fld-t">撮ったあと、すぐ見たい。</p>
+        <p class="fld-d">滑り終わった選手を待たせずに、いま撮った映像をその場で見返したい。</p>
+      </div>
+      <div class="fld-item">
+        <p class="fld-t">前の一本と、今の一本を比べたい。</p>
+        <p class="fld-d">良かったときと今とで何が違うのか、その場で並べて見たい。</p>
+      </div>
+      <div class="fld-item">
+        <p class="fld-t">同じところを見ながら話したい。</p>
+        <p class="fld-d">コーチが言っている「ここ」と、選手が思っている「ここ」を一致させたい。</p>
+      </div>
+      <div class="fld-item">
+        <p class="fld-t">一人で練習しているとき、誰もカメラを操作できない。</p>
+        <p class="fld-d">自分の動きを撮りたくても、録画を止めて再生する人がいない。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== できること =====
+       ★ 各機能に個別の id を付けている。Instagram のストーリーズから
+         frame-replay.html#comparison のように直接飛んでくる前提。
+         id を変えると、過去に貼ったリンクの飛び先が無くなる。
+       ★ 「重ねる」は #comparison の本文に、「レーン」は #continuous の本文に含めてある。
+         単独の見出し・アンカーにしない（#overlay #lane は廃止）。 -->
+  <section class="fr-sec" id="features">
+    <div class="sec-label">What it does</div>
+    <h2 class="sec-title">できること</h2>
+
+    <div class="feats">
+
+      <article class="feat" id="record">
+        <h3 class="feat-h">撮る</h3>
+        <p class="feat-b">アプリの中で撮れます。撮った映像は、そのまま次の操作に使えます。</p>
+      </article>
+
+      <article class="feat" id="instant">
+        <h3 class="feat-h">撮影後すぐ見る</h3>
+        <p class="feat-b">録画を止めた瞬間に、その場で再生できます。撮ったものを探す手間がありません。</p>
+      </article>
+
+      <article class="feat" id="frame-by-frame">
+        <h3 class="feat-h">1コマ送り</h3>
+        <p class="feat-b">1枚ずつ進めて、見たい瞬間で止められます。「ここ」と指させます。</p>
+      </article>
+
+      <article class="feat" id="slow">
+        <h3 class="feat-h">スロー再生</h3>
+        <p class="feat-b">速度を落として、動きの順番を追えます。</p>
+      </article>
+
+      <article class="feat" id="comparison">
+        <h3 class="feat-h">2本比較</h3>
+        <p class="feat-b">2本を並べて同時に再生できます。前回と今回、選手と手本。<b>並べて初めて分かることがあります。</b></p>
+        <p class="feat-b">並べ方は3つ。<b>左右、上下、重ねる。</b>重ねるときは上の映像を指で動かして位置と大きさを合わせ、濃さを変えられます。</p>
+        <!-- ★ 画像を入れる場所（2/4）：2本比較。Build 124 相当の iPhone の画面。 -->
+      </article>
+
+      <article class="feat" id="drawing">
+        <h3 class="feat-h">描画</h3>
+        <p class="feat-b">1本の映像を見ながら、画面に線を引いて伝えられます。言葉で足りないところを、絵で補えます。</p>
+      </article>
+
+      <article class="feat" id="import">
+        <h3 class="feat-h">写真から読み込む</h3>
+        <p class="feat-b">写真アプリに入っている動画を読み込んで、同じ画面で見られます。</p>
+      </article>
+
+      <article class="feat" id="export">
+        <h3 class="feat-h">書き出し</h3>
+        <p class="feat-b">見た映像を写真アプリに保存したり、ほかのアプリで共有したりできます。比較した2本は、並べたまま1本の動画として保存できます。</p>
+      </article>
+
+      <article class="feat" id="favorites">
+        <h3 class="feat-h">お気に入り／お手本</h3>
+        <p class="feat-b">よく見返す一本をお気に入りに、基準にしたい一本をお手本に登録できます。比較を開くと、お手本が自動で相手側に入ります。選手ごとにお手本を分けて持てます。</p>
+      </article>
+
+      <article class="feat" id="customize">
+        <h3 class="feat-h">UIカスタマイズ</h3>
+        <p class="feat-b">使わないボタンを消し、位置・順序・大きさを自分の使い方に合わせられます。手袋のままでも押せるように、ボタンを大きくすることもできます。</p>
+      </article>
+
+      <!-- 開発中の2つは末尾にまとめる。ラベルはアンカーで飛んだ位置で見えるよう、
+           機能名の右に置く。本文の最後にも1行置く（ラベルだけでは読み飛ばされる）。 -->
+      <article class="feat" id="replay">
+        <h3 class="feat-h">リプレイ <span class="feat-dev">開発中</span></h3>
+        <p class="feat-b">録画ボタンを押さなくても、少し前の動きを見返せます。設定した秒数だけ遅れた映像が流れ続けているので、跳んだ直後に画面を見れば、いまの一本が映っています。</p>
+        <p class="feat-b">大会など、次々に人が跳ぶ場面でも、自分の一本だけを見返せます。</p>
+        <p class="feat-b">画面に触れれば止まり、前後を自由に探せます。もとに戻すのは左上の「追っかけへ」。<b>残したい一本だけ「残す」で保存します。それ以外は何も保存されません。</b></p>
+        <!-- ★ 画像を入れる場所（3/4）：リプレイ。開発中の機能なので開発版の画面でもよいが、
+             そのときは「開発版の画面です」と必ず明示する。iPad の素材は使わない。 -->
+        <p class="feat-note">この機能は現在開発中です。</p>
+      </article>
+
+      <article class="feat" id="continuous">
+        <h3 class="feat-h">連続モード <span class="feat-dev">開発中</span></h3>
+        <p class="feat-b">端末を置いておくだけ。動きを見つけて自動で区切り、一本終わるたびに再生します。<b>誰も操作しなくていい。</b></p>
+        <p class="feat-b">台が複数あるときは「台の数」を設定し、跳ぶ台の上空を指で囲みます。カメラ1台・端末1台で、最大3台まで。</p>
+        <!-- ★ 画像を入れる場所（4/4）：連続モード。開発中の機能なので開発版の画面でもよいが、
+             そのときは「開発版の画面です」と必ず明示する。iPad の素材は使わない。 -->
+        <p class="feat-note">この機能は現在開発中です。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== 連続モードの実例 ===== -->
+  <section class="fr-sec" id="continuous-story">
+    <div class="sec-label">In the field</div>
+    <h2 class="sec-title">一人で練習していたコーチの話。</h2>
+    <div class="story">
+      <p>MICの渡辺大晴コーチが、一人でウォータージャンプの練習をしていました。自分の動きを確かめたくて、iPadの標準カメラを回しっぱなしにして撮っていました。</p>
+      <p>そこで連続モードを使ってみました。端末を置いたまま、アプリが動きを見つけて演技ごとに区切り、一本終わるたびに自動で再生しました。</p>
+      <p>操作した回数はゼロです。跳んで、降りて、画面を見て、また跳ぶ。<b>それだけで練習が回りました。</b></p>
+      <p>渡辺コーチは、その日のうちにこう書いていました。</p>
+      <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
+      <p>この使い方は、作った側も想定していませんでした。</p>
+      <p class="story-note"><b>連続モードは現在開発中です。</b>公開版で使えるようになったら、このページでお知らせします。</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== 採点はしません ===== -->
+  <section class="fr-sec" id="not">
+    <div class="sec-label">What it isn't</div>
+    <h2 class="sec-title">採点はしません。</h2>
+    <p class="sec-body">FrameReplayは、映像を見やすくするための道具です。良し悪しを判断するのは、見ている人です。</p>
+    <p class="sec-body">点数をつける機能、自動で良し悪しを判定する機能は、<b>意図的に入れていません。</b>コーチが見て、選手が見て、二人で話す。そのための時間を作るのがこのアプリの役目です。</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== MICとFrameReplay =====
+       MICへの言及はこのセクションだけに集約している。将来 FrameReplay を
+       独立させるときは、ここを差し替えれば済む。 -->
+  <section class="fr-sec" id="mic">
+    <div class="sec-label">Where it comes from</div>
+    <h2 class="sec-title">MICの現場で生まれました。</h2>
+    <p class="sec-body">FrameReplayは、MIC（Mogul Improvement Community）のコーチが現場で必要になって作ったアプリです。いまもモーグル、ウォータージャンプ、トランポリンの練習で使いながら、直し続けています。</p>
+    <p class="sec-body"><b>モーグル専用のアプリではありません。</b>映像で動きを確かめるスポーツであれば、競技を問わず使えます。</p>
+    <p class="sec-note">MICについて → <a href="https://mogul-mic.com/">mogul-mic.com</a></p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== 入手 =====
+       ★ 公開前の文。公開後の文は実装していない。
+       ★ App Store のバッジ・リンクは審査が通るまで置かない。
+         リンク先がない状態で置くと、入手できると誤認させる。 -->
+  <section class="fr-sec" id="get">
+    <div class="sec-label">Availability</div>
+    <div class="get">
+      <p class="get-t">公開準備中です。</p>
+      <p>現在、App Storeでの公開に向けて準備を進めています。</p>
+      <p>公開したら、MICの<b>公式LINE</b>と<b>Instagram</b>でお知らせします。</p>
+      <p class="get-spec">対応：iPhone / iPad</p>
+    </div>
+  </section>
+
+</div>
+
+
+<footer class="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand">
+      <div class="sf-logo">MIC</div>
+      <div class="sf-tagline">Mogul Improvement Community<br>モーグルスキーの育成クラブ</div>
+    </div>
+    <div class="sf-cols">
+      <div class="sf-col">
+        <div class="sf-col-head">プログラム</div>
+        <a href="program-athlete.html">選手育成コース</a>
+        <a href="program-general.html">一般レッスン</a>
+        <a href="program-online.html">オンラインサポート</a>
+        <a href="program-dispatch.html">コーチ派遣</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">MICについて</div>
+        <a href="index.html#mvv">ミッション・ビジョン</a>
+        <a href="index.html#athletes">選手紹介</a>
+        <a href="index.html#coaches">コーチ紹介</a>
+        <a href="news.html">お知らせ</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">参加する</div>
+        <a href="full-calendar.html">レッスンカレンダー</a>
+        <a href="community.html">コミュニティ・活動拠点</a>
+        <a href="inquiry.html">申し込み・お問い合わせ</a>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-head">フォローする</div>
+        <div class="sf-social">
+          <a href="https://www.instagram.com/mogul.mic/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg></a>
+          <a href="https://www.facebook.com/share/1BgiYgcdXj/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z" fill="currentColor" stroke="none"></path></svg></a>
+          <a href="https://www.youtube.com/@mogul-mic" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"></rect><path d="M10.3 9.6v4.8l4.4-2.4z" fill="currentColor" stroke="none"></path></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sf-bottom">
+    <span>© MIC — Mogul Improvement Community</span>
+  </div>
+</footer>
+
+
+<script>
+  /* 上部ナビ：ハンバーガーで全画面メニューを開閉する（スマホのみ表示） */
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var nav = document.getElementById('siteNav');
+    if (!toggle || !nav) return;
+    function setOpen(open){
+      nav.classList.toggle('open', open);
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.classList.toggle('nav-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    toggle.addEventListener('click', function(){ setOpen(!nav.classList.contains('open')); });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+  })();
+</script>
+  <script src="/assets/js/mic-analytics.js" defer></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "267adc99d15146b38cc2356821ce739d"}'></script>
+</body>
+</html>

@@ -666,6 +666,43 @@
   }
 
   /* ---------- Calendar ---------- */
+  /* ---------- FROM THE FIELD（自分たちで作った道具） ----------
+     いまは FrameReplay の1枚だけ。将来ゲームと豆知識が並ぶ前提で器を作ってある。
+     ★ flex で、カードは伸びない（flex-grow:0）。1枚のときに横幅いっぱいへ伸びない。
+       3枚でも1行に収まる。狭い画面では max-width:100% で1列に落ちる。
+       grid の auto-fit は、列数を上限値で決めるため3枚目が折り返した。flex に変えてある。
+     ★ 価格の行は作らない。4枚のプログラムカードには価格があるので、
+       ここに価格が無いこと自体が「商品ではない」というサインになる。 */
+  .tools{background:var(--bg);padding:14vh 6vw 16vh;position:relative;}
+  .tl-head{max-width:1160px;margin:0 auto;text-align:center;}
+  .tl-head h2{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.02em;
+    line-height:1.4;margin:14px 0 18px;}
+  .tl-head p{font-size:15px;line-height:1.9;color:#d3d3d8;margin:0 auto 10px;max-width:44em;}
+  .tl-head p.tl-sub{font-size:13.5px;color:var(--muted);margin-top:16px;}
+  .tl-grid{max-width:1160px;margin:6vh auto 0;display:flex;flex-wrap:wrap;
+    justify-content:center;gap:24px;}
+  .tl-card{flex:0 1 340px;max-width:100%;
+    display:flex;flex-direction:column;border-radius:24px;padding:28px 28px 26px;
+    background:linear-gradient(155deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.14);text-decoration:none;color:inherit;
+    transition:border-color .2s,transform .3s cubic-bezier(.34,1.3,.64,1);}
+  .tl-card:hover{border-color:rgba(255,255,255,.3);transform:translateY(-4px);}
+  .tl-card-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:12px;}
+  .tl-card-title{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px;}
+  .tl-card-lead{font-size:14.5px;font-weight:700;color:var(--accent);margin-bottom:12px;}
+  .tl-card-desc{font-size:13.5px;line-height:1.85;color:#d8d8dc;}
+  .tl-card-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);}
+  .tl-card-status{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--muted);}
+  .tl-card-cta{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:var(--accent);}
+  .tl-card-cta svg{width:15px;height:15px;stroke:var(--accent);stroke-width:2.2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+  @media (max-width:560px){
+    .tools{padding:11vh 6vw 12vh;}
+    .tl-card{padding:24px 22px 22px;}
+  }
+
   .calendar{
     background:#101012;
     padding:17vh 6vw;
@@ -2769,6 +2806,35 @@
       <div class="kb-hint">スクロール</div>
       <a class="btn btn-ghost kb-cta" href="program-athlete.html#karte">選手カルテを詳しく見る</a>
     </div>
+  </div>
+</section>
+
+
+<!-- ===== FROM THE FIELD =====
+     選手カルテ（#data-feature）の直後、レッスンカレンダー（#calendar）の前。
+     公開前なのでナビゲーションには入れていない。 -->
+<section class="tools" id="tools">
+  <div class="tl-head">
+    <div class="eyebrow reveal">From the Field</div>
+    <h2 class="reveal delay-1">現場で必要だったから、<br>自分たちで作りました。</h2>
+    <p class="reveal delay-2">MICのコーチは、選手を指導するだけでなく、現場で足りない道具を自分たちで作っています。</p>
+    <p class="reveal delay-2">FrameReplayは、その一つです。撮った滑りをその場で見返し、前の一本と並べて比べる。コーチと選手が同じ画面を見ながら話すための、iPhone / iPadアプリです。</p>
+    <p class="tl-sub reveal delay-3">モーグルだけの道具ではありません。いまはウォータージャンプやトランポリンの練習でも使っています。</p>
+  </div>
+
+  <div class="tl-grid">
+    <a class="tl-card reveal-scale" href="frame-replay.html">
+      <div class="tl-card-label">iPhone / iPad App</div>
+      <div class="tl-card-title">FrameReplay</div>
+      <div class="tl-card-lead">撮る。見る。比べる。</div>
+      <div class="tl-card-desc">撮った動きをその場で確かめるためのアプリ。</div>
+      <div class="tl-card-foot">
+        <span class="tl-card-status">公開準備中</span>
+        <span class="tl-card-cta">詳しく見る
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </span>
+      </div>
+    </a>
   </div>
 </section>
 
