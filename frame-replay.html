@@ -11,8 +11,8 @@
 <meta property="og:description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。現在、App Storeでの公開に向けて準備を進めています。">
 <meta property="og:url" content="https://mogul-mic.com/frame-replay.html">
 <link rel="canonical" href="https://mogul-mic.com/frame-replay.html">
-<!-- OGP画像は素材が届いてから差し替える。それまでは他ページと同じ既定画像を使う -->
-<meta property="og:image" content="https://mogul-mic.com/assets/brand/og-default.jpg">
+<!-- FrameReplay 専用のOGP画像（2026-09-12差し替え） -->
+<meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
@@ -22,10 +22,20 @@
 <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 <style>
   :root{
-    --bg:#0a0a0c;
-    --fg:#f5f5f7;
+    --bg:#0B1016;
+    --fg:#F6F8FA;
+    /* --accent は MIC 共通パーツ（上部バー・フッター）用の赤。ここは変えない */
     --accent:#ff5a3c;
-    --muted:#9a9a9f;
+    --muted:#8A95A1;
+    /* ---- FrameReplay ブランド（アプリアイコンからの実測値） ---- */
+    --surface:#111923;
+    --surface-2:#0E141C;
+    --line:#24303C;
+    --body:#C3CCD6;
+    --brand-lite:#5DD7FE;
+    --brand:#2EA6E2;
+    --brand-deep:#0177C6;
+    --alert:#FF3B30;
     /* 上部バーの高さぶん。アンカーで飛んだとき見出しがバーの裏に隠れないようにする。
        Instagram から各機能へ直接飛んでくる前提なので、全アンカーに効かせる。 */
     --bar:76px;
@@ -41,7 +51,7 @@
 
   body::before{
     content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
-    background:radial-gradient(circle, rgba(255,90,60,.10), transparent 70%);
+    background:radial-gradient(circle, rgba(46,166,226,.12), transparent 70%);
     filter:blur(45px);pointer-events:none;z-index:0;
   }
 
@@ -49,7 +59,7 @@
 
   /* ---------- top bar ---------- */
   .lp-topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
-    gap:12px;padding:14px 6vw;background:rgba(10,10,12,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    gap:12px;padding:14px 6vw;background:rgba(11,16,22,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border-bottom:1px solid rgba(255,255,255,.08);}
   .lp-logo{font-weight:800;letter-spacing:.02em;font-size:14px;color:#fff;text-decoration:none;flex:0 0 auto;}
   .lp-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;justify-content:flex-start;}
@@ -67,34 +77,49 @@
   /* ---------- hero ---------- */
   .fr-hero{position:relative;padding:56px 6vw 48px;overflow:hidden;
     background:
-      radial-gradient(circle at 18% 12%, rgba(255,140,100,.22), transparent 58%),
-      linear-gradient(150deg,#241a17,#101013 64%);
-    border-bottom:1px solid rgba(255,255,255,.08);}
+      radial-gradient(circle at 22% 8%, rgba(93,215,254,.20), transparent 60%),
+      linear-gradient(165deg,#0E2A3E,#0B1016 62%);
+    border-bottom:1px solid rgba(46,166,226,.30);}
   .fr-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;}
-  .fr-eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
-  .fr-title{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.35;margin:12px 0 16px;}
-  .fr-lead{font-size:14.5px;line-height:1.85;color:#d8d8dc;margin:0 0 22px;}
+  .fr-eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--brand-lite);text-transform:uppercase;}
+  /* コピーは3行固定。句点で必ず折り返す（自動折り返しに任せない） */
+  .fr-title{font-size:clamp(34px,10vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.18;margin:14px 0 18px;}
+  .fr-title span{display:block;}
+  .fr-lead{font-size:13px;line-height:1.85;color:var(--muted);margin:0 0 20px;max-width:22em;}
+  .fr-hero-media{margin:22px 0 0;}
   .fr-status{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.08em;
-    color:var(--muted);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;}
+    color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;}
 
   /* ---------- 本文 ---------- */
   .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:44px 6vw 80px;}
   .fr-sec{padding-top:8px;}
-  .fr-sec + .fr-sec{margin-top:52px;}
-  .sec-label{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;}
-  .sec-title{font-size:19px;font-weight:800;line-height:1.55;margin:0 0 16px;}
-  .sec-body{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0 0 12px;}
+  .fr-sec + .fr-sec{margin-top:72px;}
+  .sec-label{font-size:11px;font-weight:800;color:var(--brand-lite);letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;}
+  .sec-title{font-size:20px;font-weight:800;line-height:1.55;margin:0 0 16px;}
+  .sec-title--sub{font-size:17px;}
+  .sec-label--alert{color:var(--alert);}
+  .sec-body{font-size:13.5px;line-height:1.95;color:var(--body);margin:0 0 12px;}
   .sec-body:last-child{margin-bottom:0;}
   .sec-body b{color:#fff;font-weight:800;}
   .sec-note{font-size:12.5px;line-height:1.9;color:var(--muted);margin:14px 0 0;}
-  .sec-note b{color:#d8d8dc;font-weight:700;}
+  .sec-note b{color:var(--body);font-weight:700;}
 
-  .divider{height:1px;background:linear-gradient(to right, transparent, rgba(255,255,255,.14), transparent);margin:48px 0;}
+  /* ===== 実画面のスクリーンショット =====
+     iPhone の縦画面なので、幅いっぱいに広げず端末サイズで置く。
+     比率は画像ごとに異なる（揃える必要はない）。width/height を必ず入れ、
+     読み込み前にレイアウトがずれないようにする。 */
+  .shot-wrap{margin:22px 0 0;}
+  .feat .shot-wrap{margin:16px 0 0;}
+  .shot{display:block;margin:0 auto;width:100%;height:auto;
+    max-width:260px;border-radius:14px;border:1px solid var(--line);background:#000;}
+  .feat .shot{max-width:240px;}
+
+  .divider{height:1px;background:linear-gradient(to right, transparent, #24303C, transparent);margin:48px 0;}
 
   /* ---------- 現場で起きていたこと ----------
      太字だけ拾い読みしても意味が通るように、困りごとを見出し、中身を次の行に置く。 */
   .fld{display:flex;flex-direction:column;gap:2px;}
-  .fld-item{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+  .fld-item{padding:16px 0;border-bottom:1px solid var(--line);}
   .fld-item:last-child{border-bottom:none;padding-bottom:0;}
   .fld-item:first-child{padding-top:4px;}
   .fld-t{font-size:14.5px;font-weight:800;line-height:1.7;margin:0 0 5px;}
@@ -102,42 +127,63 @@
 
   /* ---------- できること ----------
      アンカーで飛んできた人はここだけ読んで帰る。1項目が単独で読める作りにしている。 */
-  .feats{display:flex;flex-direction:column;gap:12px;}
-  .feat{border-radius:16px;padding:18px 20px;
-    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+  .feats{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media (min-width:560px){
+    .feats{grid-template-columns:1fr 1fr;}
+    .feat--wide{grid-column:1 / -1;}
+  }
+  .feat{border-radius:16px;padding:22px 20px;
+    background:var(--surface);border:1px solid var(--line);}
   .feat-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-    font-size:15.5px;font-weight:800;line-height:1.5;margin:0 0 9px;}
+    font-size:16px;font-weight:800;line-height:1.5;margin:0 0 9px;}
   /* 「開発中」は目立たせない。事実として機能名の右に置くだけ */
+  /* 赤は「意味のある赤」。面では使わず、点と文字だけに使う */
   .feat-dev{flex:0 0 auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;
-    color:var(--muted);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    color:var(--body);background:transparent;border:1px solid rgba(255,59,48,.42);
     border-radius:5px;padding:2px 8px;}
-  .feat-b{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0;}
+  .feat-dev::before{content:'\25CF';color:var(--alert);font-size:8px;margin-right:5px;vertical-align:1px;}
+  .feat-b{font-size:13.5px;line-height:1.95;color:var(--body);margin:0;}
   .feat-b + .feat-b{margin-top:8px;}
   .feat-b b{color:#fff;font-weight:800;}
   .feat-note{font-size:12.5px;line-height:1.8;color:var(--muted);margin:10px 0 0;
-    padding-top:10px;border-top:1px solid rgba(255,255,255,.08);}
+    padding-top:10px;border-top:1px solid var(--line);}
+
+  /* ---------- そのほかにも ----------
+     完成機能だが主役ではないもの。カードにせず罫線だけで並べ、面を持たせない。
+     ★ id は既存のまま。Instagram の過去リンクの飛び先を変えないこと。 */
+  .more-head{font-size:13px;font-weight:800;letter-spacing:.04em;color:var(--muted);
+    margin:40px 0 4px;}
+  .more{border-top:1px solid var(--line);margin-top:10px;}
+  .more-item{padding:15px 2px;border-bottom:1px solid var(--line);}
+  .more-t{font-size:14px;font-weight:800;line-height:1.6;color:var(--fg);margin:0 0 4px;}
+  .more-d{font-size:12.5px;line-height:1.85;color:var(--muted);margin:0;}
+
+  /* ---------- 改善中の機能 ----------
+     完成機能より一段沈める。カード面を本文背景より暗くして「奥」に置く。 */
+  .inprog .feat{background:var(--surface-2);}
+  .inprog-story{margin-top:36px;}
 
   /* ---------- 実例 ---------- */
   .story{border-radius:18px;padding:22px 22px;
-    background:linear-gradient(155deg, rgba(255,90,60,.10), rgba(255,255,255,.02));
-    border:1px solid rgba(255,90,60,.24);}
-  .story p{font-size:13.5px;line-height:1.95;color:#d8d8dc;margin:0 0 12px;}
+    background:linear-gradient(155deg, rgba(46,166,226,.10), rgba(255,255,255,.02));
+    border:1px solid rgba(46,166,226,.28);}
+  .story p{font-size:13.5px;line-height:1.95;color:var(--body);margin:0 0 12px;}
   .story p:last-child{margin-bottom:0;}
   .story p b{color:#fff;font-weight:800;}
-  .story blockquote{margin:0 0 12px;padding:14px 18px;border-left:3px solid var(--accent);
-    background:rgba(0,0,0,.22);border-radius:0 12px 12px 0;
-    font-size:14px;line-height:1.95;color:#eaeaee;}
+  .story blockquote{margin:0 0 12px;padding:14px 18px;border-left:3px solid var(--brand-lite);
+    background:rgba(11,16,22,.55);border-radius:0 12px 12px 0;
+    font-size:14px;line-height:1.95;color:#E6EDF3;}
   .story .story-note{font-size:12.5px;color:var(--muted);}
-  .story .story-note b{color:#d8d8dc;font-weight:700;}
+  .story .story-note b{color:var(--body);font-weight:700;}
 
   /* ---------- 入手 ---------- */
-  .get{border-radius:18px;padding:22px 22px;background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.1);}
+  .get{border-radius:18px;padding:22px 22px;background:var(--surface);
+    border:1px solid var(--line);}
   .get .get-t{font-size:17px;font-weight:800;line-height:1.6;margin:0 0 12px;}
-  .get p{font-size:13.5px;line-height:1.9;color:#d3d3d8;margin:0 0 10px;}
+  .get p{font-size:13.5px;line-height:1.9;color:var(--body);margin:0 0 10px;}
   .get p b{color:#fff;font-weight:800;}
   .get .get-spec{font-size:12.5px;color:var(--muted);margin:14px 0 0;padding-top:12px;
-    border-top:1px solid rgba(255,255,255,.08);}
+    border-top:1px solid var(--line);}
 
   /* ---------- 全ページ共通フッター ---------- */
   .site-footer{display:block;position:relative;z-index:2;background:#050506;
@@ -354,12 +400,17 @@
 <div class="fr-hero" id="top">
   <div class="fr-hero-inner">
     <div class="fr-eyebrow">FrameReplay</div>
-    <h1 class="fr-title">撮る。見る。比べる。</h1>
+    <h1 class="fr-title"><span>撮る。</span><span>見る。</span><span>比べる。</span></h1>
     <p class="fr-lead">スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。</p>
     <p style="margin:0;"><span class="fr-status">公開準備中</span></p>
     <!-- ★ 画像を入れる場所（1/4）：ヒーロー。
-         Build 124 相当の iPhone の画面。iPad の素材は使わない。
-         素材が届いたら、このコメントの位置に <img> を入れる。 -->
+         2本比較の画面。Build 124 相当の iPhone の画面。iPad の素材は使わない。
+         素材が届いたら、この枠を <img> に差し替える。 -->
+    <div class="fr-hero-media shot-wrap">
+      <img class="shot" src="assets/framereplay/fr-hero-compare.jpg"
+           width="620" height="1126" loading="eager" decoding="async"
+           alt="FrameReplayの2本比較画面。2本の映像を左右に並べ、下の「同時再生」で同時に再生する。">
+    </div>
   </div>
 </div>
 
@@ -423,76 +474,97 @@
         <p class="feat-b">速度を落として、動きの順番を追えます。</p>
       </article>
 
-      <article class="feat" id="comparison">
+      <article class="feat feat--wide" id="comparison">
         <h3 class="feat-h">2本比較</h3>
         <p class="feat-b">2本を並べて同時に再生できます。前回と今回、選手と手本。<b>並べて初めて分かることがあります。</b></p>
         <p class="feat-b">並べ方は3つ。<b>左右、上下、重ねる。</b>重ねるときは上の映像を指で動かして位置と大きさを合わせ、濃さを変えられます。</p>
-        <!-- ★ 画像を入れる場所（2/4）：2本比較。Build 124 相当の iPhone の画面。 -->
+        <!-- ★ 画像を入れる場所（2/4）：2本比較。Build 124 相当の iPhone の画面。ヒーローとは別カット。 -->
+        <div class="shot-wrap">
+          <img class="shot" src="assets/framereplay/fr-overlay.jpg"
+               width="620" height="912" loading="lazy" decoding="async"
+               alt="2本の映像を重ねて表示している画面。上下に重なった映像の濃さをスライダーで調整できる。">
+        </div>
       </article>
 
-      <article class="feat" id="drawing">
+      <article class="feat feat--wide" id="drawing">
         <h3 class="feat-h">描画</h3>
         <p class="feat-b">1本の映像を見ながら、画面に線を引いて伝えられます。言葉で足りないところを、絵で補えます。</p>
+        <!-- ★ 画像を入れる場所（3/4）：描画。線や印を書き込んでいる Build 124 相当の iPhone の画面。 -->
+        <div class="shot-wrap">
+          <img class="shot" src="assets/framereplay/fr-drawing.jpg"
+               width="620" height="972" loading="lazy" decoding="async"
+               alt="映像に赤い線を引き、角度46°が表示されている描画画面。">
+        </div>
       </article>
 
-      <article class="feat" id="import">
-        <h3 class="feat-h">写真アプリから読み込む</h3>
-        <p class="feat-b">写真アプリに入っている動画を読み込んで、同じ画面で見られます。</p>
-      </article>
+    </div>
 
-      <article class="feat" id="export">
-        <h3 class="feat-h">書き出し</h3>
-        <p class="feat-b">見た映像を写真アプリに保存したり、ほかのアプリで共有したりできます。比較した2本は、並べたまま1本の動画として保存できます。</p>
-      </article>
-
-      <article class="feat" id="favorites">
-        <h3 class="feat-h">お気に入り／お手本</h3>
-        <p class="feat-b">よく見返す一本をお気に入りに、基準にしたい一本をお手本に登録できます。比較を開くと、お手本が自動で相手側に入ります。選手ごとにお手本を分けて持てます。</p>
-      </article>
-
-      <article class="feat" id="customize">
-        <h3 class="feat-h">UIカスタマイズ</h3>
-        <p class="feat-b">使わないボタンを消し、位置・順序・大きさを自分の使い方に合わせられます。手袋のままでも押せるように、ボタンを大きくすることもできます。</p>
-      </article>
-
-      <!-- 開発中の2つは末尾にまとめる。ラベルはアンカーで飛んだ位置で見えるよう、
-           機能名の右に置く。本文の最後にも1行置く（ラベルだけでは読み飛ばされる）。 -->
-      <article class="feat" id="replay">
-        <h3 class="feat-h">リプレイ <span class="feat-dev">開発中</span></h3>
-        <p class="feat-b">録画ボタンを押さなくても、少し前の動きを見返せます。設定した秒数だけ遅れた映像が流れ続けているので、跳んだ直後に画面を見れば、いまの一本が映っています。</p>
-        <p class="feat-b">大会など、次々に人が跳ぶ場面でも、自分の一本だけを見返せます。</p>
-        <p class="feat-b">画面に触れれば止まり、前後を自由に探せます。もとに戻すのは左上の「追っかけへ」。<b>残したい一本だけ「残す」で保存します。それ以外は何も保存されません。</b></p>
-        <!-- ★ 画像を入れる場所（3/4）：リプレイ。開発中の機能なので開発版の画面でもよいが、
-             そのときは「開発版の画面です」と必ず明示する。iPad の素材は使わない。 -->
-        <p class="feat-note">この機能は現在開発中です。</p>
-      </article>
-
-      <article class="feat" id="continuous">
-        <h3 class="feat-h">連続モード <span class="feat-dev">開発中</span></h3>
-        <p class="feat-b">端末を置いておくだけ。動きを見つけて自動で区切り、一本終わるたびに再生します。<b>誰も操作しなくていい。</b></p>
-        <p class="feat-b">台が複数あるときは「台の数」を設定し、跳ぶ台の上空を指で囲みます。カメラ1台・端末1台で、最大3台まで。</p>
-        <!-- ★ 画像を入れる場所（4/4）：連続モード。開発中の機能なので開発版の画面でもよいが、
-             そのときは「開発版の画面です」と必ず明示する。iPad の素材は使わない。 -->
-        <p class="feat-note">この機能は現在開発中です。</p>
-      </article>
-
+    <!-- ===== そのほかにも =====
+         完成機能だが主役ではないもの。カードをやめて罫線リストにし、一段弱く見せる。
+         ★ id は従来どおり。過去に貼ったリンクの飛び先を変えないこと。 -->
+    <p class="more-head">そのほかにも</p>
+    <div class="more">
+      <div class="more-item" id="import">
+        <p class="more-t">写真アプリから読み込む</p>
+        <p class="more-d">写真アプリに入っている動画を読み込んで、同じ画面で見られます。</p>
+      </div>
+      <div class="more-item" id="export">
+        <p class="more-t">書き出し</p>
+        <p class="more-d">見た映像を写真アプリに保存したり、ほかのアプリで共有したりできます。比較した2本は、並べたまま1本の動画として保存できます。</p>
+      </div>
+      <div class="more-item" id="favorites">
+        <p class="more-t">お気に入り／お手本</p>
+        <p class="more-d">よく見返す一本をお気に入りに、基準にしたい一本をお手本に登録できます。比較を開くと、お手本が自動で相手側に入ります。選手ごとにお手本を分けて持てます。</p>
+      </div>
+      <div class="more-item" id="customize">
+        <p class="more-t">UIカスタマイズ</p>
+        <p class="more-d">使わないボタンを消し、位置・順序・大きさを自分の使い方に合わせられます。手袋のままでも押せるように、ボタンを大きくすることもできます。</p>
+      </div>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== 連続モードの実例 ===== -->
-  <section class="fr-sec" id="continuous-story">
-    <div class="sec-label">In the field</div>
-    <h2 class="sec-title">一人で練習していたコーチの話。</h2>
-    <div class="story">
-      <p>渡辺大晴コーチが、一人でウォータージャンプの練習をしていました。自分の動きを確かめたくて、iPadの標準カメラを回しっぱなしにして撮っていました。</p>
-      <p>そこで連続モードを使ってみました。端末を置いたまま、アプリが動きを見つけて演技ごとに区切り、一本終わるたびに自動で再生しました。</p>
-      <p>操作した回数はゼロです。跳んで、降りて、画面を見て、また跳ぶ。<b>それだけで練習が回りました。</b></p>
-      <p>渡辺コーチは、その日のうちにこう書いていました。</p>
-      <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
-      <p>作った機能が、実際の現場でこう使われました。</p>
-      <p class="story-note"><b>連続モードは現在も改善を続けています。</b>安定してご案内できる状態になったら、このページでお知らせします。</p>
+  <!-- ===== 改善中の機能 =====
+       完成機能と混ぜない。カード面を一段暗くして「奥」に置き、赤はバッジの●と枠線だけに使う。
+       ★ #replay #continuous #continuous-story の id は従来どおり。 -->
+  <section class="fr-sec" id="inprogress">
+    <div class="sec-label sec-label--alert">In progress</div>
+    <h2 class="sec-title">現場で使いながら、いま育てている機能。</h2>
+    <p class="sec-body">すでに使える機能ですが、実際の練習で使いながら、より安定して使えるよう改善を続けています。</p>
+
+    <div class="feats inprog">
+
+      <article class="feat feat--wide" id="replay">
+        <h3 class="feat-h">リプレイ <span class="feat-dev">改善中</span></h3>
+        <p class="feat-b">録画ボタンを押さなくても、少し前の動きを見返せます。設定した秒数だけ遅れた映像が流れているので、跳んだ直後に画面を見れば、いまの一本が映っています。大会など、次々に人が跳ぶ場面でも、自分の一本だけを見返せます。</p>
+        <p class="feat-b">画面に触れれば止まり、前後を探せます。<b>残したい一本だけ「残す」で保存します。残さなかった分は、リプレイを抜けると消えます。</b></p>
+      </article>
+
+      <article class="feat feat--wide" id="continuous">
+        <h3 class="feat-h">連続モード <span class="feat-dev">改善中</span></h3>
+        <p class="feat-b">端末を置いておくだけ。動きを見つけて演技ごとに区切り、一本終わるたびに再生します。<b>誰も操作しなくていい。</b></p>
+        <p class="feat-b">台が複数ある場所でも、端末は1台だけ。跳ぶ台は3つまで、台ごとに分けて記録します。</p>
+        <!-- ★ 画像を入れる場所（4/4）：連続モード。ここだけアプリ画面ではなく「現場写真」。
+             端末を置いて撮っている場面。iPad が写っていても可（UI紹介素材とは別扱い）。
+             素材が未提供のため要素を置かない。届いたら他の3枚と同じ .shot-wrap / .shot で入れる。 -->
+      </article>
+
+    </div>
+
+    <!-- 実例は連続モードの直下に置く。独立セクションから移動（id は維持） -->
+    <div class="inprog-story" id="continuous-story">
+      <div class="sec-label">In the field</div>
+      <h3 class="sec-title sec-title--sub">一人で練習していたコーチの話。</h3>
+      <div class="story">
+        <p>渡辺大晴コーチが、一人でウォータージャンプの練習をしていました。自分の動きを確かめたくて、iPadの標準カメラを回しっぱなしにして撮っていました。</p>
+        <p>そこで連続モードを使ってみました。端末を置いたまま、アプリが動きを見つけて演技ごとに区切り、一本終わるたびに自動で再生しました。</p>
+        <p>操作した回数はゼロです。跳んで、降りて、画面を見て、また跳ぶ。<b>それだけで練習が回りました。</b></p>
+        <p>渡辺コーチは、その日のうちにこう書いていました。</p>
+        <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
+        <p>作った機能が、実際の現場でこう使われました。</p>
+        <p class="story-note"><b>連続モードは現在も改善を続けています。</b>安定してご案内できる状態になったら、このページでお知らせします。</p>
+      </div>
     </div>
   </section>
 
