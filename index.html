@@ -703,6 +703,55 @@
     .tl-card{padding:24px 22px 22px;}
   }
 
+  /* ---------- FrameReplay mini hero ----------
+     専用ページ（frame-replay.html）のファーストビューを小さく切り取った見せ方。
+     ★ 色はこのブロックの中だけで完結させる。MIC共通の赤（--accent）は使わない。
+       FROM THE FIELD の見出し・本文は MIC の文脈なので赤のまま。
+     ★ 将来 モーグルゲーム・MIC豆知識 が並んでも壊れないよう、
+       .tl-grid（flex・中央寄せ・折り返し）の中の1枚として置いている。 */
+  .fr-mini{
+    --fr-line:#24303C; --fr-lite:#5DD7FE; --fr-brand:#2EA6E2;
+    --fr-body:#C3CCD6; --fr-muted:#8A95A1;
+    flex:1 1 100%; max-width:560px; width:100%;
+    display:block; text-decoration:none; color:#F6F8FA;
+    border-radius:24px; overflow:hidden; border:1px solid var(--fr-line);
+    background:
+      radial-gradient(circle at 20% 6%, rgba(93,215,254,.18), transparent 58%),
+      linear-gradient(165deg,#0E2A3E,#0B1016 76%);
+    transition:border-color .2s, transform .3s cubic-bezier(.34,1.3,.64,1);
+  }
+  .fr-mini:hover{border-color:rgba(46,166,226,.55); transform:translateY(-4px);}
+  .fr-mini-inner{display:flex;flex-direction:column;padding:30px 26px 24px;}
+  .fr-mini-eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--fr-lite);}
+  /* 専用ページと同じ3行固定。ただし1段小さい */
+  .fr-mini-title{font-size:clamp(26px,7.6vw,36px);font-weight:800;letter-spacing:-.03em;
+    line-height:1.2;margin:12px 0 14px;color:#fff;}
+  .fr-mini-title span{display:block;}
+  .fr-mini-lead{font-size:13px;line-height:1.85;color:var(--fr-muted);
+    margin:0 0 20px;max-width:22em;}
+  .fr-mini-media{margin:0 0 20px;}
+  .fr-mini-media img{display:block;margin:0 auto;width:100%;height:auto;max-width:238px;
+    border-radius:12px;border:1px solid var(--fr-line);background:#000;}
+  .fr-mini-foot{display:flex;align-items:center;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--fr-line);}
+  .fr-mini-status{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--fr-muted);}
+  .fr-mini-cta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
+    color:var(--fr-lite);}
+  .fr-mini-cta svg{width:15px;height:15px;stroke:var(--fr-lite);stroke-width:2.2;fill:none;
+    stroke-linecap:round;stroke-linejoin:round;}
+  /* PC・タブレットは左にコピー、右に実画面。専用ページのヒーローと同じ並び */
+  @media (min-width:760px){
+    .fr-mini{max-width:900px;}
+    .fr-mini-inner{display:grid;grid-template-columns:1fr 260px;grid-template-rows:auto auto;
+      column-gap:44px;row-gap:0;padding:44px 44px 38px;}
+    .fr-mini-copy{grid-column:1;grid-row:1;}
+    .fr-mini-media{grid-column:2;grid-row:1 / span 2;align-self:center;margin:0;}
+    .fr-mini-foot{grid-column:1;grid-row:2;}
+    .fr-mini-title{font-size:42px;}
+    .fr-mini-media img{max-width:260px;}
+  }
+
   .calendar{
     background:#101012;
     padding:17vh 6vw;
@@ -2818,21 +2867,27 @@
     <div class="eyebrow reveal">From the Field</div>
     <h2 class="reveal delay-1">現場で必要だったから、<br>自分たちで作りました。</h2>
     <p class="reveal delay-2">MICのコーチは、選手を指導するだけでなく、現場で足りない道具を自分たちで作っています。</p>
-    <p class="reveal delay-2">FrameReplayは、その一つです。撮った動きをその場で見返し、前の一本と並べて比べる。コーチと選手が同じ画面を見ながら話すための、iPhone / iPadアプリです。</p>
-    <p class="tl-sub reveal delay-3">モーグルだけの道具ではありません。いまはウォータージャンプやトランポリンの練習でも使っています。</p>
   </div>
 
   <div class="tl-grid">
-    <a class="tl-card reveal-scale" href="frame-replay.html">
-      <div class="tl-card-label">iPhone / iPad App</div>
-      <div class="tl-card-title">FrameReplay</div>
-      <div class="tl-card-lead">撮る。見る。比べる。</div>
-      <div class="tl-card-desc">撮った動きをその場で確かめるためのアプリ。</div>
-      <div class="tl-card-foot">
-        <span class="tl-card-status">公開準備中</span>
-        <span class="tl-card-cta">詳しく見る
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </span>
+    <a class="fr-mini reveal-scale" href="frame-replay.html">
+      <div class="fr-mini-inner">
+        <div class="fr-mini-copy">
+          <div class="fr-mini-eyebrow">FrameReplay</div>
+          <h3 class="fr-mini-title"><span>撮る。</span><span>見る。</span><span>比べる。</span></h3>
+          <p class="fr-mini-lead">スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。</p>
+        </div>
+        <div class="fr-mini-media">
+          <img src="assets/framereplay/fr-top-compare.jpg" width="620" height="760"
+               loading="lazy" decoding="async"
+               alt="FrameReplayの2本比較画面。2本の映像を左右に並べて見比べられる。">
+        </div>
+        <div class="fr-mini-foot">
+          <span class="fr-mini-status">公開準備中</span>
+          <span class="fr-mini-cta">詳しく見る
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
       </div>
     </a>
   </div>
