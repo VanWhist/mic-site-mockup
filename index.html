@@ -739,16 +739,16 @@
   /* 公開後。入手できる状態は青（MIC共通の赤は使わない） */
   .fr-mini-status{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--fr-lite);}
   .fr-mini-status::before{content:'\25CF';font-size:8px;margin-right:6px;vertical-align:1px;}
-  .fr-mini-actions{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%;}
+  .fr-mini-actions{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%;flex-wrap:wrap;}
   /* 主CTA＝App Store。白文字のコントラストを確保するため #0177C6 より暗い側だけを使う */
-  .fr-mini-store{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  .fr-mini-store{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;
     font-size:14px;font-weight:800;line-height:1.4;color:#fff;text-decoration:none;
     border-radius:999px;padding:13px 20px;background:linear-gradient(135deg,#0177C6,#015E9E);
     border:1px solid rgba(93,215,254,.42);position:relative;z-index:2;transition:filter .2s;}
   .fr-mini-store:hover{filter:brightness(1.12);}
   /* 副CTA。::after でカード全面を覆い、カードのどこを押しても専用ページへ飛ぶ。
      主CTA（.fr-mini-store）は z-index:2 でこの上に出しているので競合しない。 */
-  .fr-mini-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  .fr-mini-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;
     font-size:14px;font-weight:800;color:var(--fr-lite);text-decoration:none;
     border-radius:999px;padding:12px 18px;border:1px solid rgba(46,166,226,.5);}
   .fr-mini-cta::after{content:'';position:absolute;inset:0;z-index:1;}
