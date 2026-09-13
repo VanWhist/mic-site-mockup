@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FrameReplay｜MIC Mogul Improvement Community</title>
-<meta name="description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。現在、App Storeでの公開に向けて準備を進めています。">
+<meta name="description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。App Storeで公開中です。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MIC — Mogul Improvement Community">
 <meta property="og:title" content="FrameReplay｜MIC Mogul Improvement Community">
-<meta property="og:description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。現在、App Storeでの公開に向けて準備を進めています。">
+<meta property="og:description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。MICの現場で生まれました。App Storeで公開中です。">
 <meta property="og:url" content="https://mogul-mic.com/frame-replay.html">
 <link rel="canonical" href="https://mogul-mic.com/frame-replay.html">
 <!-- FrameReplay 専用のOGP画像（2026-09-12差し替え） -->
@@ -89,6 +89,54 @@
   .fr-hero-media{margin:22px 0 0;}
   .fr-status{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.08em;
     color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;}
+  /* 公開後。入手できる状態は青で示す（赤＝開発中・注意 とはっきり分ける） */
+  .fr-status--live{color:var(--brand-lite);border-color:rgba(46,166,226,.55);
+    background:rgba(46,166,226,.12);}
+  .fr-status--live::before{content:'\25CF';color:var(--brand-lite);font-size:8px;
+    margin-right:6px;vertical-align:1px;}
+
+  /* ---------- CTA ----------
+     ★ 文字色は白。面は var(--brand) では白文字のコントラストが2.7で足りないため、
+       --brand-deep 側（#0177C6＝4.7）から下に暗くするグラデーションだけを使う。 */
+  .cta-row{display:flex;flex-direction:column;gap:10px;margin:18px 0 0;}
+  .cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-size:14.5px;font-weight:800;line-height:1.4;text-align:center;text-decoration:none;
+    border-radius:999px;padding:14px 20px;transition:filter .2s,border-color .2s;}
+  .cta--primary{color:#fff;background:linear-gradient(135deg,#0177C6,#015E9E);
+    border:1px solid rgba(93,215,254,.42);}
+  .cta--primary:hover{filter:brightness(1.12);}
+  .cta--ghost{color:var(--brand-lite);background:transparent;border:1px solid rgba(46,166,226,.5);}
+  .cta--ghost:hover{border-color:var(--brand-lite);}
+  @media (min-width:480px){
+    .cta-row{flex-direction:row;flex-wrap:wrap;}
+    .cta{flex:0 1 auto;}
+  }
+
+  /* ---------- 公開版で使える、という補足 ----------
+     「改善中」を「まだ使えない」と読ませないための一文。青＝使える。 */
+  .avail-note{font-size:12.5px;line-height:1.85;color:var(--muted);margin:0 0 20px;
+    padding:12px 14px;border-left:2px solid var(--brand);border-radius:0 8px 8px 0;
+    background:rgba(46,166,226,.07);}
+  .avail-note b{color:var(--body);font-weight:700;}
+
+  /* ---------- MultiCam（公開版に入っていない開発中機能） ----------
+     「改善中」（公開版で使える）より一段強い赤。上辺の赤い罫線＋塗りのバッジで、
+     同じ赤でも段階が違うことを見た目で分ける。 */
+  .mc{border-radius:18px;padding:24px 22px;background:var(--surface-2);
+    border:1px solid var(--line);border-top:2px solid rgba(255,59,48,.85);}
+  .mc-dev{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.08em;
+    color:#fff;background:rgba(255,59,48,.16);border:1px solid rgba(255,59,48,.68);
+    border-radius:5px;padding:3px 9px;}
+  .mc-dev::before{content:'\25CF';color:var(--alert);font-size:8px;margin-right:5px;vertical-align:1px;}
+  .mc-b{font-size:13.5px;line-height:1.95;color:var(--body);margin:14px 0 0;}
+  .mc-b b{color:#fff;font-weight:800;}
+  .mc-h{font-size:14px;font-weight:800;line-height:1.6;color:var(--fg);
+    margin:24px 0 10px;padding-top:18px;border-top:1px solid var(--line);}
+  .mc-list,.mc-steps{margin:0;padding-left:1.25em;}
+  .mc-list li,.mc-steps li{font-size:13.5px;line-height:1.9;color:var(--body);margin:0 0 6px;}
+  .mc-list li:last-child,.mc-steps li:last-child{margin-bottom:0;}
+  .mc-note{font-size:12.5px;line-height:1.85;color:var(--muted);margin:12px 0 0;}
+  .mc-note b{color:var(--body);font-weight:700;}
 
   /* ---------- 本文 ---------- */
   .wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:44px 6vw 80px;}
@@ -402,7 +450,12 @@
     <div class="fr-eyebrow">FrameReplay</div>
     <h1 class="fr-title"><span>撮る。</span><span>見る。</span><span>比べる。</span></h1>
     <p class="fr-lead">スポーツの現場で、撮った動きをその場で確かめるための iPhone / iPad アプリ。</p>
-    <p style="margin:0;"><span class="fr-status">公開準備中</span></p>
+    <p style="margin:0;"><span class="fr-status fr-status--live">App Storeで公開中</span></p>
+    <!-- ★ App Store のバッジ画像は使わない（現段階はテキストCTAのみ）。
+         URL は App Store の実URL（2026-09-13 取得）。 -->
+    <div class="cta-row">
+      <a class="cta cta--primary" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Storeでダウンロード</a>
+    </div>
     <!-- ★ 画像を入れる場所（1/4）：ヒーロー。
          2本比較の画面。Build 124 相当の iPhone の画面。iPad の素材は使わない。
          素材が届いたら、この枠を <img> に差し替える。 -->
@@ -532,6 +585,9 @@
     <div class="sec-label sec-label--alert">In progress</div>
     <h2 class="sec-title">現場で使いながら、いま育てている機能。</h2>
     <p class="sec-body">すでに使える機能ですが、実際の練習で使いながら、より安定して使えるよう改善を続けています。</p>
+    <!-- ★ 「改善中」を「まだ使えない」と読ませないための補足。
+         この下の MultiCam（公開版に入っていない）とは意味が違う。 -->
+    <p class="avail-note">この2つは、<b>App Storeで公開中のFrameReplayでそのまま使えます。</b>「改善中」は、使いながら安定性を上げている最中という意味です。</p>
 
     <div class="feats inprog">
 
@@ -563,7 +619,7 @@
         <p>渡辺コーチは、その日のうちにこう書いていました。</p>
         <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
         <p>作った機能が、実際の現場でこう使われました。</p>
-        <p class="story-note"><b>連続モードは現在も改善を続けています。</b>安定してご案内できる状態になったら、このページでお知らせします。</p>
+        <p class="story-note"><b>連続モードはApp Store公開版で使えます。</b>いまも現場で使いながら改善を続けているので、変わったところはこのページで更新します。</p>
       </div>
     </div>
   </section>
@@ -594,16 +650,65 @@
   <div class="divider"></div>
 
   <!-- ===== 入手 =====
-       ★ 公開前の文。公開後の文は実装していない。
-       ★ App Store のバッジ・リンクは審査が通るまで置かない。
-         リンク先がない状態で置くと、入手できると誤認させる。 -->
+       ★ 公開後の文（2026-09-13差し替え）。
+       ★ App Store のバッジ画像は使わない。テキストCTAのみ。
+       ★ 価格・Pro には触れない。 -->
   <section class="fr-sec" id="get">
     <div class="sec-label">Availability</div>
     <div class="get">
-      <p class="get-t">公開準備中です。</p>
-      <p>現在、App Storeでの公開に向けて準備を進めています。</p>
-      <p>公開したら、MICの<b>公式LINE</b>と<b>Instagram</b>でお知らせします。</p>
-      <p class="get-spec">対応：iPhone / iPad</p>
+      <p class="get-t">App Storeで公開中です。</p>
+      <p>FrameReplayは、<b>どなたでもApp Storeからダウンロードできます。</b></p>
+      <p>このページで紹介している機能は、<b>「改善中」としているリプレイ・連続モードも含めて、すべて公開版に入っています。</b></p>
+      <div class="cta-row">
+        <a class="cta cta--primary" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Storeでダウンロード</a>
+      </div>
+      <p class="get-spec">対応：iPhone / iPad（iOS / iPadOS 17.0以降）</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== MultiCam 先行テスター =====
+       ★ #get の直後に置く。公開版（#get）との違いを、読み飛ばしても分かるようにする。
+       ★ 「未公開」「テスト中」はFrameReplay本体を指す言葉として使わない。
+         ここで開発中なのは MultiCam だけ。
+       ★ LINEを先に置くのは、テスト版の配布と更新連絡が続くため。理由を本文に書く。
+       ★ 価格・Pro・「無料だから」には触れない。 -->
+  <section class="fr-sec" id="multicam">
+    <div class="sec-label sec-label--alert">In development</div>
+    <h2 class="sec-title">MultiCam ― 複数台で同じ一本を撮る機能を、現場で試しています。</h2>
+
+    <div class="mc">
+      <p style="margin:0;"><span class="mc-dev">開発中</span></p>
+      <p class="mc-b"><b>MultiCamは、App Storeで公開中のFrameReplayには入っていません。</b>いま作っている途中の機能で、実際の練習で使ってもらいながら形を決めています。</p>
+      <p class="mc-b">やろうとしていることは1つです。<b>複数台のiPhoneで同じ一本を別の角度から撮り、コーチの手元の端末に自動で集める。</b>踏切と着地、正面と横。同じ試技を、角度を変えてまとめて見返せる状態を作ります。</p>
+      <p class="mc-b">映像は<b>同じローカルWi-Fi内の端末間で転送します。</b>MultiCamが映像を外部サーバーへアップロードする仕組みはありません。</p>
+
+      <!-- ★ 台数・機材を応募の必須条件として固定しない（2026-09-13 城さん判断）。
+           最低構成が未確定であること、および「ルーターを持っていない現場が多い」こと自体が
+           製品設計上の情報なので、条件で落とさず環境を聞く形にする。 -->
+      <h3 class="mc-h">試せる構成かどうかは、こちらで確認します</h3>
+      <p class="mc-b">MultiCamは複数台のiPhoneを使う機能ですが、<b>最低何台あれば成立するかは、まだ決めていません。</b>いま試しながら決めている最中です。</p>
+      <p class="mc-b">お持ちのiPhone / iPadの台数や機種、ふだんの練習環境を申請フォームで教えてください。<b>試せる構成か確認したうえでご案内します。</b></p>
+      <p class="mc-note">競技はモーグルに限りません。映像で動きを確かめる練習であれば、種目は問いません。</p>
+
+      <h3 class="mc-h">試してもらうまでの流れ</h3>
+      <ol class="mc-steps">
+        <li>MICの公式LINEを登録する</li>
+        <li>LINEで「MultiCam」と送ると、申請フォームが届く</li>
+        <li>お持ちの端末と練習環境を書いて送る</li>
+        <li>試せる構成か確認して、TestFlight（Appleのテスト配布）の案内を個別に送る</li>
+        <li>練習で使って、気づいたことを返す</li>
+      </ol>
+
+      <!-- ★ CTAは公式LINEの1つだけ（2026-09-13 城さん判断）。
+           フォームへの直リンクを置くと「なぜLINEを経由するのか」の説明と矛盾する。
+           導線は Web / Instagram → 公式LINE → 「MultiCam」と送信 → 申請フォーム に統一。 -->
+      <div class="cta-row">
+        <a class="cta cta--primary" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">公式LINEで案内を受け取る</a>
+      </div>
+      <p class="mc-note">テスト版の配布や更新、不具合などの連絡を継続してお届けするため、先行テストの窓口はMIC公式LINEにまとめています。</p>
+      <p class="mc-note">FrameReplay本体は、この申請とは関係なくApp Storeから使えます。</p>
     </div>
   </section>
 

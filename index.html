@@ -720,6 +720,7 @@
       linear-gradient(165deg,#0E2A3E,#0B1016 76%);
     transition:border-color .2s, transform .3s cubic-bezier(.34,1.3,.64,1);
   }
+  .fr-mini{position:relative;}
   .fr-mini:hover{border-color:rgba(46,166,226,.55); transform:translateY(-4px);}
   .fr-mini-inner{display:flex;flex-direction:column;padding:30px 26px 24px;}
   .fr-mini-eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;
@@ -733,13 +734,29 @@
   .fr-mini-media{margin:0 0 20px;}
   .fr-mini-media img{display:block;margin:0 auto;width:100%;height:auto;max-width:238px;
     border-radius:12px;border:1px solid var(--fr-line);background:#000;}
-  .fr-mini-foot{display:flex;align-items:center;justify-content:space-between;
-    gap:10px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--fr-line);}
-  .fr-mini-status{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--fr-muted);}
-  .fr-mini-cta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;
-    color:var(--fr-lite);}
+  .fr-mini-foot{display:flex;flex-direction:column;align-items:flex-start;
+    gap:14px;padding-top:16px;border-top:1px solid var(--fr-line);}
+  /* 公開後。入手できる状態は青（MIC共通の赤は使わない） */
+  .fr-mini-status{font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--fr-lite);}
+  .fr-mini-status::before{content:'\25CF';font-size:8px;margin-right:6px;vertical-align:1px;}
+  .fr-mini-actions{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%;}
+  /* 主CTA＝App Store。白文字のコントラストを確保するため #0177C6 より暗い側だけを使う */
+  .fr-mini-store{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-size:14px;font-weight:800;line-height:1.4;color:#fff;text-decoration:none;
+    border-radius:999px;padding:13px 20px;background:linear-gradient(135deg,#0177C6,#015E9E);
+    border:1px solid rgba(93,215,254,.42);position:relative;z-index:2;transition:filter .2s;}
+  .fr-mini-store:hover{filter:brightness(1.12);}
+  /* 副CTA。::after でカード全面を覆い、カードのどこを押しても専用ページへ飛ぶ。
+     主CTA（.fr-mini-store）は z-index:2 でこの上に出しているので競合しない。 */
+  .fr-mini-cta{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    font-size:14px;font-weight:800;color:var(--fr-lite);text-decoration:none;
+    border-radius:999px;padding:12px 18px;border:1px solid rgba(46,166,226,.5);}
+  .fr-mini-cta::after{content:'';position:absolute;inset:0;z-index:1;}
   .fr-mini-cta svg{width:15px;height:15px;stroke:var(--fr-lite);stroke-width:2.2;fill:none;
     stroke-linecap:round;stroke-linejoin:round;}
+  @media (min-width:480px){
+    .fr-mini-actions{flex-direction:row;align-items:center;width:auto;}
+  }
   /* PC・タブレットは左にコピー、右に実画面。専用ページのヒーローと同じ並び */
   @media (min-width:760px){
     .fr-mini{max-width:900px;}
@@ -747,7 +764,8 @@
       column-gap:44px;row-gap:0;padding:44px 44px 38px;}
     .fr-mini-copy{grid-column:1;grid-row:1;}
     .fr-mini-media{grid-column:2;grid-row:1 / span 2;align-self:center;margin:0;}
-    .fr-mini-foot{grid-column:1;grid-row:2;}
+    .fr-mini-foot{grid-column:1;grid-row:2;flex-direction:row;align-items:center;
+      justify-content:space-between;flex-wrap:wrap;}
     .fr-mini-title{font-size:42px;}
     .fr-mini-media img{max-width:260px;}
   }
@@ -2870,7 +2888,10 @@
   </div>
 
   <div class="tl-grid">
-    <a class="fr-mini reveal-scale" href="frame-replay.html">
+    <!-- ★ 公開後（2026-09-13）：主CTA＝App Store、副CTA＝詳しく見る。
+         a の入れ子を作らないため、外枠は div にして .fr-mini-cta の ::after で
+         カード全面を専用ページへのリンクにしている。 -->
+    <div class="fr-mini reveal-scale">
       <div class="fr-mini-inner">
         <div class="fr-mini-copy">
           <div class="fr-mini-eyebrow">FrameReplay</div>
@@ -2883,13 +2904,16 @@
                alt="FrameReplayの2本比較画面。2本の映像を左右に並べて見比べられる。">
         </div>
         <div class="fr-mini-foot">
-          <span class="fr-mini-status">公開準備中</span>
-          <span class="fr-mini-cta">詳しく見る
-            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </span>
+          <span class="fr-mini-status">App Storeで公開中</span>
+          <div class="fr-mini-actions">
+            <a class="fr-mini-store" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Storeでダウンロード</a>
+            <a class="fr-mini-cta" href="frame-replay.html">詳しく見る
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
         </div>
       </div>
-    </a>
+    </div>
   </div>
 </section>
 
