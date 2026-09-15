@@ -445,6 +445,9 @@
   .ek-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px -14px rgba(255,90,60,.9);}
   .ek-cta.ek-ghost{background:transparent;border:1px solid rgba(255,255,255,.3);}
   .ek-cta.ek-ghost:hover{border-color:var(--fg);box-shadow:none;}
+  .ek-cta-note{ display:block; font-size:.78em; font-weight:600; opacity:.9; margin-top:2px; }
+  /* .ek-cta は横並びの inline-flex なので、.ek-cta--stacked を付けたボタンだけ縦積みにして注記を2行目へ回す */
+  .ek-cta--stacked{flex-direction:column;gap:0;}
   .ek-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
   .ek-deadline{font-size:13px;color:var(--muted);}
   .ek-deadline b{color:var(--fg);font-size:15px;}
@@ -580,7 +583,7 @@
       <div class="nav-foot">
         <a class="nav-cta" href="inquiry.html">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          公式LINEで問い合わせる
+          申し込み・お問い合わせ
         </a>
         <div class="nav-foot-note">MIC — Mogul Improvement Community</div>
       </div>
@@ -704,9 +707,13 @@
     </div>
     <p class="ek-p"><span class="ek-muted">STEP 2 を飛ばすと、こちらから個別にご連絡できません。当日の天候による中止・時間変更のご案内もお送りできないため、お手数ですが必ず送信してください。</span></p>
     <div class="ek-cta-row">
-      <a class="ek-cta" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">公式LINEを友だち追加する</a>
+      <a class="ek-cta ek-cta--stacked" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">
+        LINEで申し込む
+        <span class="ek-cta-note">初回・1枠分のみ 1,000円OFF</span>
+      </a>
       <span class="ek-deadline">申込締切 <b>各開催日の3日前</b></span>
     </div>
+    <p class="ek-p" style="margin-top:12px;"><span class="ek-muted">友だち追加 →「申込希望」と送信 → 申込フォームが届きます</span></p>
     <div class="ek-qna">
       こんなご相談も、そのままLINEにどうぞ。<br>
       <span>この技ならレベルが合うのか</span>
