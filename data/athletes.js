@@ -223,7 +223,7 @@ window.AP_ATHLETES = [
     {
       id:'suzuki-kae',
       name:'鈴木佳英', sajId:5002440,
-      intro:'',
+      intro:'今年の目標はジュニオリ入賞！そして、A級を目指します。世界で活躍できる選手になるよう頑張っています。',
       photos:['assets/athletes/suzuki-kae-37c1f2b2.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
