@@ -446,8 +446,8 @@
   .ek-cta.ek-ghost{background:transparent;border:1px solid rgba(255,255,255,.3);}
   .ek-cta.ek-ghost:hover{border-color:var(--fg);box-shadow:none;}
   .ek-cta-note{ display:block; font-size:.78em; font-weight:600; opacity:.9; margin-top:2px; }
-  /* .ek-cta は横並びの inline-flex なので、注記付きのボタンだけ縦積みにして注記を2行目へ回す */
-  .ek-cta:has(> .ek-cta-note){flex-direction:column;gap:0;}
+  /* .ek-cta は横並びの inline-flex なので、.ek-cta--stacked を付けたボタンだけ縦積みにして注記を2行目へ回す */
+  .ek-cta--stacked{flex-direction:column;gap:0;}
   .ek-cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
   .ek-deadline{font-size:13px;color:var(--muted);}
   .ek-deadline b{color:var(--fg);font-size:15px;}
@@ -707,7 +707,7 @@
     </div>
     <p class="ek-p"><span class="ek-muted">STEP 2 を飛ばすと、こちらから個別にご連絡できません。当日の天候による中止・時間変更のご案内もお送りできないため、お手数ですが必ず送信してください。</span></p>
     <div class="ek-cta-row">
-      <a class="ek-cta" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">
+      <a class="ek-cta ek-cta--stacked" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">
         LINEで申し込む
         <span class="ek-cta-note">初回・1枠分のみ 1,000円OFF</span>
       </a>
