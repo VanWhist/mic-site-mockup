@@ -184,7 +184,7 @@ window.AP_ATHLETES = [
       id:'hayashi-ryoma',
       name:'林遼真', sajId:5001654,
       intro:'怪我しない転び方習得します。',
-      photos:['assets/athletes/hayashi-ryoma-3bc998ac.jpg'],
+      photos:[],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
