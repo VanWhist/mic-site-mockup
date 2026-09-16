@@ -183,8 +183,8 @@ window.AP_ATHLETES = [
     {
       id:'hayashi-ryoma',
       name:'林遼真', sajId:5001654,
-      intro:'怪我しない転び方習得します。',
-      photos:[],
+      intro:'会場が沸くダイナミックな滑りで全戦表彰台を狙います！',
+      photos:['assets/athletes/hayashi-ryoma-e63ba082.jpg','assets/athletes/hayashi-ryoma-6248dd7b.jpg','assets/athletes/hayashi-ryoma-f96556d3.jpg'],
       hasKarte:false, vision:null, goal:null, video:null,
       tracked:true,
       results:[
