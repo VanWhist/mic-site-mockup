@@ -1,38 +1,37 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>FrameReplay ― 撮ってすぐ、コマ送りで見返す</title>
-<meta name="description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確認・比較する iPhone / iPad アプリ。本体は無料。">
+<title>FrameReplay ― Instant frame-by-frame review</title>
+<meta name="description" content="Record. Review. Compare. An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot. Free to download.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FrameReplay">
-<meta property="og:title" content="FrameReplay ― 撮ってすぐ、コマ送りで見返す">
-<meta property="og:description" content="撮る。見る。比べる。スポーツの現場で、撮った動きをその場で確認・比較する iPhone / iPad アプリ。本体は無料。">
-<meta property="og:url" content="https://mogul-mic.com/frame-replay.html">
+<meta property="og:title" content="FrameReplay ― Instant frame-by-frame review">
+<meta property="og:description" content="Record. Review. Compare. An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot. Free to download.">
+<meta property="og:url" content="https://mogul-mic.com/en/frame-replay.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:locale" content="ja_JP">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://mogul-mic.com/frame-replay.html">
+<link rel="canonical" href="https://mogul-mic.com/en/frame-replay.html">
 <link rel="alternate" hreflang="ja" href="https://mogul-mic.com/frame-replay.html">
 <link rel="alternate" hreflang="en" href="https://mogul-mic.com/en/frame-replay.html">
 <link rel="alternate" hreflang="x-default" href="https://mogul-mic.com/frame-replay.html">
-<!-- favicon は当面 MIC のものを流用（2026-09-21 城さん判断）。
-     正式な App Icon が届いたら、そこから作り直して差し替える。 -->
+<!-- favicon is borrowed for now (decision 2026-09-21). Replace once the real App Icon lands. -->
 <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
 <style>
   /* ============================================================
-     FrameReplay 製品ページ（日本語版）
-     ・単体のスポーツテック製品ページ。MIC の共通ナビ・フッターは載せない。
-     ・英語版 /en/frame-replay.html と CSS・構造は完全に同一。
-       直すときは必ず両方そろえること。
-     ・画像・スクリプトのパスはすべてルート相対。英語版は階層が1つ深いので、
-       相対パスにすると壊れる。日英で同じ書き方にして差を作らない。
+     FrameReplay product page (English)
+     ・Standalone product page. No shared site navigation or footer.
+     ・CSS and structure are IDENTICAL to /frame-replay.html.
+       When you change one, change both.
+     ・All asset and script paths are root-relative. This file lives one
+       level deeper, so relative paths would break.
      ============================================================ */
   :root{
     --bg:#0B1016;
@@ -42,14 +41,10 @@
     --fg:#F6F8FA;
     --body:#C3CCD6;
     --muted:#8A95A1;
-    /* ---- FrameReplay ブランド（アプリアイコンからの実測値）----
-       MIC サイトの水色（#3FB6D8）とは別トークン。ここは独立した製品ページ。 */
     --brand-lite:#5DD7FE;
     --brand:#2EA6E2;
     --brand-deep:#0177C6;
-    /* Future レイヤー（MultiCam）だけトーンを変えるための色。ブランドのシアンと混ぜない。 */
     --future:#E8B45A;
-    /* 上部バーの高さぶん。アンカーで飛んだとき見出しがバーの裏に隠れないようにする。 */
     --bar:58px;
     --maxw:1120px;
   }
@@ -58,8 +53,6 @@
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
     -webkit-font-smoothing:antialiased;
-    /* overflow-x:hidden はスクロールの入れ物を作って position:sticky を殺す。
-       clip なら横スクロールは同じく止めつつ sticky が生きる。 */
     overflow-x:hidden;overflow-x:clip;}
   body::before{
     content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
@@ -69,13 +62,9 @@
   a{color:inherit;}
   img{max-width:100%;}
 
-  /* ---------- アンカーの alias ----------
-     旧ページの id を空要素として残し、過去に貼られたリンクの飛び先を保つ。
-     同じ id を2箇所に置かないこと（HTML として不正になる）。 */
   .fr-anchor-alias{display:block;height:0;scroll-margin-top:var(--bar);}
   [id]{scroll-margin-top:var(--bar);}
 
-  /* ---------- 上部バー ---------- */
   .fr-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;
     padding:0 clamp(16px,5vw,40px);height:var(--bar);
     background:rgba(11,16,22,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
@@ -89,7 +78,6 @@
   .fr-barnav a{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:none;
     padding:7px 11px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
   .fr-barnav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
-  /* 言語切替。国旗は使わない（英語＝アメリカではないため）。 */
   .fr-lang{flex:0 0 auto;display:flex;align-items:center;gap:1px;margin-left:4px;
     border:1px solid var(--line);border-radius:999px;padding:2px;background:rgba(255,255,255,.03);}
   .fr-lang span,.fr-lang a{font-size:11.5px;font-weight:800;letter-spacing:.04em;
@@ -101,7 +89,6 @@
   .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;
     padding:0 clamp(16px,5vw,40px);}
 
-  /* ---------- 共通の見出し ---------- */
   .sec{padding:clamp(52px,8vw,88px) 0;}
   .sec-label{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
     color:var(--brand-lite);margin-bottom:12px;}
@@ -109,14 +96,11 @@
   .sec-p{margin:0 0 8px;font-size:clamp(14px,1.6vw,15.5px);line-height:1.95;color:var(--body);}
   .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);}
 
-  /* ---------- PRO バッジ ----------
-     App Store のスクリーンショットに焼き込まれている PRO 表現に寄せる。小さなアクセント。 */
   .pro-badge{display:inline-flex;align-items:center;vertical-align:middle;
     font-size:10px;font-weight:900;letter-spacing:.1em;line-height:1;
     padding:4px 7px;border-radius:5px;color:#04212F;
     background:linear-gradient(135deg,var(--brand-lite),var(--brand));}
 
-  /* ---------- CTA ---------- */
   .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
   .cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;
     min-height:52px;padding:14px 26px;border-radius:999px;
@@ -129,7 +113,6 @@
     .cta{flex:0 1 auto;}
   }
 
-  /* ---------- ヒーロー ---------- */
   .hero{position:relative;overflow:hidden;
     background:
       radial-gradient(circle at 20% 6%, rgba(93,215,254,.20), transparent 58%),
@@ -140,23 +123,19 @@
   .hero-eyebrow{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-lite);}
   .hero-h1{margin:14px 0 0;font-size:clamp(34px,8vw,60px);line-height:1.14;font-weight:900;letter-spacing:.005em;}
   .hero-h1 span{display:inline-block;}
-  /* App Store のサブタイトルを一字一句そのまま。書き換えない。 */
   .hero-sub{margin:14px 0 0;font-size:clamp(15px,2.4vw,19px);font-weight:700;color:var(--brand-lite);line-height:1.6;}
   .hero-lead{margin:14px 0 0;font-size:clamp(14px,1.7vw,16px);line-height:1.95;color:var(--body);max-width:36em;}
-  /* 出自バッジ。MIC の固有名詞は出さない（§12）。 */
   .origin{display:inline-flex;align-items:center;gap:9px;margin-top:22px;
     padding:9px 16px 9px 12px;border-radius:999px;
     border:1px solid rgba(93,215,254,.28);background:rgba(93,215,254,.07);
     font-size:12.5px;font-weight:700;color:var(--brand-lite);line-height:1.5;}
   .origin svg{flex:0 0 auto;width:20px;height:20px;}
-  /* 実機画面。あとから短いループ動画に差し替えられるよう、必ずこの入れ物で包む。 */
   .shot-wrap{position:relative;margin:0;border-radius:20px;overflow:hidden;
     border:1px solid var(--line);background:var(--surface-2);
     box-shadow:0 26px 60px rgba(0,0,0,.5);}
   .shot-wrap img,.shot-wrap video{display:block;width:100%;height:auto;}
-  /* 添え書きを画像の下に置くので、その分の高さをあらかじめ空けておく。 */
+  /* Reserve room below the shot for the handwritten note. */
   .hero-media{position:relative;justify-self:center;width:100%;max-width:340px;margin-bottom:64px;}
-  /* 手書き風の添え書き（SVG）。Web フォントは読み込まない。画像には重ねない。 */
   .note-hand{position:absolute;right:0;bottom:-62px;width:min(226px,82%);pointer-events:none;}
   .note-hand svg{display:block;width:100%;height:auto;}
   @media (min-width:900px){
@@ -164,7 +143,6 @@
     .hero-media{max-width:360px;justify-self:end;}
   }
 
-  /* ---------- 3つの価値 ---------- */
   .values{display:grid;gap:14px;}
   .value{padding:22px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);}
   .value svg{width:26px;height:26px;color:var(--brand-lite);}
@@ -172,8 +150,6 @@
   .value-d{margin:0;font-size:13.5px;line-height:1.85;color:var(--body);}
   @media (min-width:760px){.values{grid-template-columns:repeat(3,1fr);gap:18px;}}
 
-  /* ---------- 使い方の流れ ----------
-     このループの短さが製品の本質。情報を足して流れを止めないこと。 */
   .steps{display:grid;gap:12px;counter-reset:step;}
   .step{position:relative;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
     padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);}
@@ -192,7 +168,6 @@
   }
   @media (min-width:1000px){.steps{grid-template-columns:repeat(6,1fr);}}
 
-  /* ---------- 主な機能（大カード2枚）---------- */
   .feats{display:grid;gap:18px;}
   .feat{border-radius:20px;padding:clamp(22px,3vw,30px);
     background:var(--surface);border:1px solid var(--line);}
@@ -203,17 +178,15 @@
   .feat-note{margin:12px 0 0;font-size:12.5px;color:var(--muted);}
   @media (min-width:900px){
     .feat{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3vw,34px);align-items:center;}
-    .feat > .shot-wrap{grid-row:span 4;}
-    .feat--flip > .shot-wrap{order:-1;}
+    .feat > .shot-wrap,.feat > .ph{grid-row:span 4;}
+    .feat--flip > .shot-wrap,.feat--flip > .ph{order:-1;}
   }
 
-  /* ---------- 採点はしません ---------- */
   .notblock{margin:0;padding:clamp(26px,4vw,36px);border-radius:18px;
     border:1px solid rgba(93,215,254,.22);background:rgba(93,215,254,.05);}
   .notblock p{margin:0;font-size:clamp(15px,2.2vw,19px);line-height:1.85;font-weight:700;}
   .notblock p + p{margin-top:10px;font-size:clamp(13.5px,1.7vw,15.5px);font-weight:400;color:var(--body);}
 
-  /* ---------- 小型グリッド（Pro / 無料）---------- */
   .mini{display:grid;gap:12px;}
   .mini-item{padding:16px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);}
   .mini-item svg{width:22px;height:22px;color:var(--brand-lite);}
@@ -221,21 +194,16 @@
   .mini-d{margin:6px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);}
   @media (min-width:600px){.mini{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:980px){.mini{grid-template-columns:repeat(4,1fr);}}
-  /* 無料機能は数が多いので、Pro より1段細かく割る。
-     視覚的に Pro と混ざらないよう、面の色と枠を弱くする。 */
   .mini--free .mini-item{background:var(--surface-2);border-color:rgba(255,255,255,.07);}
   .mini--free .mini-item svg{color:var(--muted);}
   @media (min-width:600px){.mini--free{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:860px){.mini--free{grid-template-columns:repeat(3,1fr);}}
   @media (min-width:1080px){.mini--free{grid-template-columns:repeat(4,1fr);}}
 
-  /* 既存ユーザーへの案内。青＝使える。文言は現行ページのまま。 */
   .avail{margin:0 0 22px;padding:14px 16px;border-radius:12px;
     border:1px solid rgba(46,166,226,.34);background:rgba(46,166,226,.09);
     font-size:13.5px;line-height:1.85;color:var(--body);}
 
-  /* ---------- 現場で使われた話 ----------
-     掲載の同意を取得済み（2026-09-21）。独立セクションにはせず、Pro の直後に小さく置く。 */
   .fieldnote{margin-top:22px;padding:20px 20px;border-radius:16px;
     background:var(--surface-2);border:1px solid var(--line);
     border-left:3px solid var(--brand);}
@@ -245,8 +213,6 @@
     font-weight:700;color:var(--fg);}
   .fieldnote cite{display:block;margin-top:8px;font-size:12.5px;font-style:normal;color:var(--muted);}
 
-  /* ---------- MultiCam（Future）----------
-     ここだけトーンを変える。ブランドのシアンを使わない。 */
   .future{border-radius:20px;padding:clamp(24px,4vw,36px);
     background:repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 12px,transparent 12px 24px),var(--surface-2);
     border:1px dashed rgba(232,180,90,.34);}
@@ -258,7 +224,6 @@
   .future-fig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
   .future-note{margin:16px 0 0;font-size:12.5px;line-height:1.8;color:var(--muted);}
 
-  /* ---------- 活用シーン ---------- */
   .cases{display:grid;gap:14px;}
   .case-ph{aspect-ratio:4/3;border-radius:14px;display:flex;align-items:center;justify-content:center;
     background:var(--surface-2);border:1px dashed rgba(255,255,255,.16);
@@ -267,7 +232,6 @@
   @media (min-width:640px){.cases{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:960px){.cases{grid-template-columns:repeat(5,1fr);gap:16px;}}
 
-  /* ---------- FAQ ---------- */
   .faq{display:grid;gap:10px;}
   .faq details{border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden;}
   .faq summary{list-style:none;cursor:pointer;padding:17px 46px 17px 18px;position:relative;
@@ -279,7 +243,6 @@
   .faq details[open] summary::after{transform:translateY(-30%) rotate(-135deg);}
   .faq-a{margin:0;padding:0 18px 18px;font-size:13.5px;line-height:1.95;color:var(--body);}
 
-  /* ---------- 最終CTA ---------- */
   .get{text-align:center;border-radius:22px;padding:clamp(30px,5vw,48px) clamp(20px,4vw,40px);
     background:radial-gradient(circle at 50% 0%, rgba(46,166,226,.18), transparent 62%),var(--surface);
     border:1px solid var(--line);}
@@ -291,7 +254,6 @@
   .get-price{margin:18px 0 0;font-size:13.5px;line-height:1.9;color:var(--body);}
   .get-spec{margin:10px 0 0;font-size:12.5px;color:var(--muted);}
 
-  /* ---------- フッター ---------- */
   .fr-foot{border-top:1px solid rgba(255,255,255,.08);margin-top:clamp(40px,7vw,72px);
     padding:34px clamp(16px,5vw,40px) calc(34px + env(safe-area-inset-bottom));}
   .fr-foot-in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 26px;
@@ -303,18 +265,15 @@
   .fr-foot-links a:hover{color:var(--fg);}
   .fr-foot-copy{width:100%;font-size:12px;color:#5C6773;}
 
-  /* ---------- 画像が届くまでの枠 ---------- */
   .ph{display:flex;align-items:center;justify-content:center;text-align:center;
     background:var(--surface-2);border:1px dashed rgba(255,255,255,.16);border-radius:14px;
     font-size:10.5px;letter-spacing:.07em;color:#54606C;padding:12px;line-height:1.6;}
   .ph--shot{aspect-ratio:9/16;}
   .ph--thumb{aspect-ratio:16/10;}
 
-  /* ---------- スクロールインの演出（ごく軽く）---------- */
   .rv{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;}
   .rv.in{opacity:1;transform:none;}
 
-  /* ---------- 狭い幅 ---------- */
   @media (max-width:380px){
     .fr-barnav a{font-size:11.5px;padding:6px 8px;}
     .hero-h1{font-size:31px;}
@@ -332,7 +291,6 @@
 </head>
 <body>
 
-<!-- アイコンのスプライト。同じ形を何度も書かないためだけのもの。表示はしない。 -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <g id="i-capture" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
@@ -397,19 +355,18 @@
 
 <div class="fr-bar">
   <a class="fr-wordmark" href="#top">Frame<span>Replay</span></a>
-  <nav class="fr-barnav" aria-label="ページ内">
-    <a href="#features">機能</a>
-    <a href="#how-it-works">使い方</a>
-    <a href="#use-cases">活用シーン</a>
-    <a href="#faq">よくある質問</a>
+  <nav class="fr-barnav" aria-label="On this page">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#use-cases">Use cases</a>
+    <a href="#faq">FAQ</a>
   </nav>
   <div class="fr-lang" role="group" aria-label="Language">
-    <span class="fr-lang-current" aria-current="true">JP</span>
-    <a class="fr-lang-alt" href="/en/frame-replay.html" hreflang="en" data-lang-switch>EN</a>
+    <a class="fr-lang-alt" href="/frame-replay.html" hreflang="ja" data-lang-switch>JP</a>
+    <span class="fr-lang-current" aria-current="true">EN</span>
   </div>
 </div>
 
-<!-- 旧 #mic（MICとFrameReplay）の着地先。セクション自体は廃止した（§12）。 -->
 <span id="mic" class="fr-anchor-alias" aria-hidden="true"></span>
 
 <!-- ===== HERO ===== -->
@@ -417,12 +374,13 @@
   <div class="hero-in">
     <div>
       <div class="hero-eyebrow">FrameReplay</div>
-      <h1 class="hero-h1"><span>撮る。</span><span>見る。</span><span>比べる。</span></h1>
-      <!-- App Store のサブタイトルを一字一句そのまま。ここは書き換えない。 -->
-      <p class="hero-sub">撮ってすぐ、コマ送りで見返す</p>
-      <p class="hero-lead">スポーツの現場で、撮った動きをその場で確認・比較する iPhone / iPad アプリ。</p>
+      <h1 class="hero-h1"><span>Record.</span> <span>Review.</span> <span>Compare.</span></h1>
+      <!-- App Store subtitle, word for word. Do not rewrite. -->
+      <p class="hero-sub">Instant frame-by-frame review</p>
+      <p class="hero-lead">An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot.</p>
       <div class="cta-row">
-        <a class="cta" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Store でダウンロード</a>
+        <!-- ★ No /jp/ here. A region-free App Store URL resolves to the visitor's own store. -->
+        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
       </div>
       <p style="margin:0;">
         <span class="origin">
@@ -431,30 +389,25 @@
             <path d="M15.8 3.4c2.6 1.4 3.8 4.3 3.3 7.2-.5 2.9-2.6 5.4-5.3 6.6"></path>
             <path d="M9.6 20.3h4.8"></path>
           </svg>
-          現場のコーチが、自分の現場のために作りました
+          Built by a coach, for the field
         </span>
       </p>
     </div>
     <div class="hero-media">
-      <!-- 静止画で成立させつつ、あとから短いループ動画へ差し替えられるよう .shot-wrap で包んでいる。
-           video に替えるときは poster を必ず付けること。 -->
-      <figure class="shot-wrap">
-        <img src="/assets/framereplay/fr-hero-compare.jpg"
-             width="620" height="1126" loading="eager" decoding="async"
-             alt="FrameReplay の2本比較画面。2本の映像を左右に並べ、下の「同時再生」で同時に再生する。">
-      </figure>
-      <!-- 手書き風の添え書き（SVG）。Web フォントは読み込まない。 -->
+      <!-- Pending asset (Jo-san): English-UI screenshot of the side-by-side compare screen.
+           The app ships a full English UI, so a Japanese-UI screenshot must not be used here. -->
+      <div class="ph ph--shot">[ REAL APP SCREENSHOT ]<br>English UI</div>
       <div class="note-hand" aria-hidden="true">
         <svg viewBox="0 0 240 92" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14 66c10-13 26-19 42-18" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
           <path d="M52 41c-2 3.6-1.2 6 2.4 7.2" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
           <path d="M56 48.4c-3.8.9-5.9 2.6-6.4 5.2" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
           <text x="66" y="40" fill="#5DD7FE" font-size="15" font-weight="700"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif"
-                transform="rotate(-4 66 40)" opacity=".95">同じ一本を</text>
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif"
+                transform="rotate(-4 66 40)" opacity=".95">Compare takes</text>
           <text x="66" y="62" fill="#5DD7FE" font-size="15" font-weight="700"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif"
-                transform="rotate(-4 66 62)" opacity=".95">並べて見られる</text>
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif"
+                transform="rotate(-4 66 62)" opacity=".95">side by side</text>
         </svg>
       </div>
     </div>
@@ -463,70 +416,69 @@
 
 <div class="wrap">
 
-  <!-- ===== 3つの価値 ===== -->
+  <!-- ===== Three values ===== -->
   <span id="field" class="fr-anchor-alias" aria-hidden="true"></span>
   <section class="sec" id="values">
     <div class="values">
       <div class="value rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-capture"></use></svg>
-        <p class="value-t">すぐ撮って確認</p>
-        <p class="value-d">練習の流れを止めません。</p>
+        <p class="value-t">Capture and check</p>
+        <p class="value-d">Keep the practice flowing.</p>
       </div>
       <div class="value rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-frame"></use></svg>
-        <p class="value-t">細かく見られる</p>
-        <p class="value-d">1コマ送り・スロー再生。</p>
+        <p class="value-t">See the details</p>
+        <p class="value-d">Frame-by-frame and slow motion.</p>
       </div>
       <div class="value rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-compare"></use></svg>
-        <p class="value-t">前の演技と比べる</p>
-        <p class="value-d">成長や違いがその場で分かります。</p>
+        <p class="value-t">Compare two takes</p>
+        <p class="value-d">See your progress on the spot.</p>
       </div>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== 使い方の流れ =====
-       旧 #record #instant #frame-by-frame #slow の着地先。 -->
+  <!-- ===== How it works ===== -->
   <span id="record" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="instant" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="frame-by-frame" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="slow" class="fr-anchor-alias" aria-hidden="true"></span>
   <section class="sec" id="how-it-works">
     <div class="sec-label">How it works</div>
-    <h2 class="sec-h">撮って、見て、比べて、また撮る。</h2>
-    <p class="sec-p">この短いくり返しが、練習の中で回り続けます。</p>
+    <h2 class="sec-h">Record, review, compare, record again.</h2>
+    <p class="sec-p">A short loop that keeps running through the whole session.</p>
     <div class="steps" style="margin-top:26px;">
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">撮る</p><p class="step-d">演技を撮影</p></div>
-        <!-- 素材待ち（城さん手配）：使い方6ステップのサムネイル（日本語UI） -->
+        <div><p class="step-t">Record</p><p class="step-d">Capture your run</p></div>
+        <!-- Pending asset (Jo-san): six step thumbnails, English UI -->
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">すぐ見る</p><p class="step-d">その場で再生</p></div>
+        <div><p class="step-t">Watch</p><p class="step-d">Review right away</p></div>
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">1コマで止める</p><p class="step-d">気になる瞬間を確認</p></div>
+        <div><p class="step-t">Step frame by frame</p><p class="step-d">Check key moments</p></div>
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">比較する <span class="pro-badge">PRO</span></p><p class="step-d">前の演技と並べる</p></div>
+        <div><p class="step-t">Compare <span class="pro-badge">PRO</span></p><p class="step-d">Side by side</p></div>
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">線・角度を描く <span class="pro-badge">PRO</span></p><p class="step-d">動きを詳しく見る</p></div>
+        <div><p class="step-t">Add lines &amp; angles <span class="pro-badge">PRO</span></p><p class="step-d">Analyze your movement</p></div>
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">また撮る</p><p class="step-d">次の1本へ</p></div>
+        <div><p class="step-t">Record again</p><p class="step-d">Next take</p></div>
         <div class="step-shot ph ph--thumb">[ REAL APP SCREENSHOT ]</div>
       </div>
     </div>
@@ -534,189 +486,178 @@
 
   <div class="divider"></div>
 
-  <!-- ===== 主な機能（大カード2枚）===== -->
+  <!-- ===== Key features ===== -->
   <section class="sec" id="features">
     <div class="sec-label">Key features</div>
-    <h2 class="sec-h">見比べて、伝えるための機能。</h2>
+    <h2 class="sec-h">Built for comparing, and for explaining.</h2>
     <div class="feats" style="margin-top:26px;">
 
       <article class="feat rv" id="comparison">
         <div>
           <div class="feat-no">FEATURE 01</div>
-          <h3 class="feat-h">2本比較・重ねる <span class="pro-badge">PRO</span></h3>
-          <p class="feat-b">前の動きと今回の動きを並べて、または重ねて比較。わずかな違いもすぐ確認できます。</p>
-          <p class="feat-note">買う前に3回まで試せます。</p>
+          <h3 class="feat-h">Compare &amp; Overlay <span class="pro-badge">PRO</span></h3>
+          <p class="feat-b">Compare two takes side by side, play in sync, or overlay.</p>
+          <p class="feat-note">Try it three times before you buy.</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-overlay.jpg"
-               width="620" height="912" loading="lazy" decoding="async"
-               alt="2本の映像を重ねて表示している画面。上下に重なった映像の濃さをスライダーで調整できる。">
-        </figure>
+        <!-- Pending asset (Jo-san): English-UI screenshot -->
+        <div class="ph ph--shot">[ REAL APP SCREENSHOT ]<br>English UI</div>
       </article>
 
       <article class="feat feat--flip rv" id="drawing">
         <div>
           <div class="feat-no">FEATURE 02</div>
-          <h3 class="feat-h">線と角度 <span class="pro-badge">PRO</span></h3>
-          <p class="feat-b">映像に線や角度を描いて、フォームのチェックができます。感覚だけでなく、視覚的に動きを分析できます。</p>
-          <p class="feat-note">買う前に3回まで試せます。</p>
+          <h3 class="feat-h">Lines &amp; Angles <span class="pro-badge">PRO</span></h3>
+          <p class="feat-b">Draw lines and show angles to analyze your movement.</p>
+          <p class="feat-note">Try it three times before you buy.</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-drawing.jpg"
-               width="620" height="972" loading="lazy" decoding="async"
-               alt="映像に赤い線を引き、角度が表示されている画面。">
-        </figure>
+        <div class="ph ph--shot">[ REAL APP SCREENSHOT ]<br>English UI</div>
       </article>
 
     </div>
   </section>
 
-  <!-- ===== 採点はしません =====
-       機能説明ではなく製品思想。FAQ には畳まない。 -->
+  <!-- ===== No scores ===== -->
   <section id="not" style="padding:0 0 clamp(52px,8vw,88px);">
     <div class="notblock rv">
-      <p>採点はしません。自動判定もしません。</p>
-      <p>FrameReplay は、人が映像を見て判断するための道具です。</p>
+      <p>No scores. No automatic judgment.</p>
+      <p>FrameReplay is a tool for people to watch and decide for themselves.</p>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== More in Pro =====
-       旧 #replay #continuous #processed-export #flashair の着地先。 -->
+  <!-- ===== More in Pro ===== -->
   <span id="replay" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="continuous" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="processed-export" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="flashair" class="fr-anchor-alias" aria-hidden="true"></span>
   <section class="sec" id="pro">
     <div class="sec-label">More in Pro</div>
-    <h2 class="sec-h">Pro で開く、6つの機能。</h2>
-    <p class="sec-p">上の2つとあわせて6つ。<b>買い切り ¥6,000</b>で、月々の支払いはありません。</p>
-    <!-- 文言は現行ページのまま。日付が入っているので誤解が生じない。 -->
-    <p class="avail"><b>2026年9月21日より前に、App StoreからFrameReplayを入れていた方は、Proの機能をそのまま無料で使えます。</b>買い直しも申請も要りません。アプリの設定画面の一番上に、その旨が出ます。</p>
+    <h2 class="sec-h">Six features unlock with Pro.</h2>
+    <p class="sec-p">These four, plus the two above. <b>A one-time purchase</b> — there is no subscription and no recurring payment.</p>
+    <p class="avail"><b>If you installed FrameReplay from the App Store before September 21, 2026, the Pro features stay free for you.</b> No repurchase and no application needed. A note appears at the top of the app's settings screen.</p>
 
     <div class="mini">
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
-        <p class="mini-t">リプレイ <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">録画ボタンを押さなくても、少し前の動きを見返せます。</p>
+        <p class="mini-t">Replay while recording <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Look back at what just happened without pressing record.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
-        <p class="mini-t">連続モード <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">端末を置いておくだけ。動きを見つけて演技ごとに区切り、一本終わるたびに再生します。</p>
+        <p class="mini-t">Continuous mode <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Set the device down. It finds the movement, splits each take, and plays it back.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
-        <p class="mini-t">加工して書き出す <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">見ている速さのまま保存できます。比較した2本は、並べたまま1本の動画として保存できます。</p>
+        <p class="mini-t">Export with edits <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Save at the speed you are watching, or save a compared pair as one video.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-card"></use></svg>
-        <p class="mini-t">カードから受け取る <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">FlashAir（無線のSDカード）を入れたビデオカメラが必要です。カードを抜き差しせず、撮った順に届きます。</p>
+        <p class="mini-t">Import from an SD card <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Requires a FlashAir Wi-Fi SD card and a video camera. Clips arrive in the order they were shot.</p>
       </div>
     </div>
 
-    <!-- ===== 現場で使われた話 =====
-         渡辺大晴コーチ本人から掲載の同意を取得済み（2026-09-21）。
-         本文は現行ページの短縮。書き足さない。 -->
+    <!-- ===== Field note =====
+         Published with the coach's consent (confirmed 2026-09-21).
+         Translated from the Japanese page. Do not add anything. -->
     <div class="fieldnote rv" id="continuous-story">
       <div class="fieldnote-label">In the field</div>
-      <p>一人でウォータージャンプの練習をしていた渡辺大晴コーチが、連続モードを試しました。端末を置いたまま、操作した回数はゼロ。跳んで、降りて、画面を見て、また跳ぶ。それだけで練習が回りました。</p>
-      <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
-      <cite>― 渡辺大晴コーチ</cite>
+      <p>Coach Watanabe was training alone at a water jump. He set his device down, turned on continuous mode, and never touched it again. Jump, land, check the screen, jump again.</p>
+      <blockquote>"No need to leave the camera running — it detects each jump on its own. Being able to compare takes made it genuinely useful."</blockquote>
+      <cite>― Coach Watanabe (translated from Japanese)</cite>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== そのほかにも（無料）=====
-       旧 #import #export #favorites #customize の着地先。
-       撮ったままの書き出しは無料なので #export もここへ。 -->
+  <!-- ===== Included for free ===== -->
   <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
   <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
   <section class="sec" id="other-features">
     <div class="sec-label">Included for free</div>
-    <h2 class="sec-h">そのほかにも。</h2>
-    <p class="sec-p">ここに並ぶものは、すべて無料で使えます。</p>
+    <h2 class="sec-h">And more.</h2>
+    <p class="sec-p">Everything listed here is free to use.</p>
     <div class="mini mini--free" style="margin-top:24px;">
-      <!-- ★ 「240fps 対応」「4K 対応」と無条件に書かない。端末が出せる組み合わせだけが提示される。 -->
+      <!-- ★ Never claim "240 fps" or "4K" without the qualifier. The app only offers
+           the combinations the device can actually produce. -->
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
-        <p class="mini-t">高フレームレート撮影</p>
-        <p class="mini-d">端末が対応している範囲で 30〜240fps</p>
+        <p class="mini-t">High frame rate</p>
+        <p class="mini-d">30–240 fps, depending on your device</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
-        <p class="mini-t">スロー再生</p>
+        <p class="mini-t">Slow motion</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
-        <p class="mini-t">区間ループ</p>
+        <p class="mini-t">Loop a section</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
-        <p class="mini-t">滞空時間</p>
+        <p class="mini-t">Air time</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flip"></use></svg>
-        <p class="mini-t">左右反転</p>
+        <p class="mini-t">Flip left/right</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zoom"></use></svg>
-        <p class="mini-t">ピンチ拡大</p>
+        <p class="mini-t">Pinch to zoom</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-photos"></use></svg>
-        <p class="mini-t">写真アプリから読み込む</p>
+        <p class="mini-t">Import from Photos</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
-        <p class="mini-t">書き出し</p>
-        <p class="mini-d">撮ったまま保存・共有</p>
+        <p class="mini-t">Export</p>
+        <p class="mini-d">Save &amp; share as recorded</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
-        <p class="mini-t">動画一覧</p>
-        <p class="mini-d">選手タグ・絞り込み</p>
+        <p class="mini-t">Video library</p>
+        <p class="mini-d">Athlete tags &amp; filters</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"></use></svg>
-        <p class="mini-t">お気に入り・お手本</p>
+        <p class="mini-t">Favorites &amp; reference take</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"></use></svg>
-        <p class="mini-t">ボタン配置のカスタマイズ</p>
+        <p class="mini-t">Customizable controls</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lang"></use></svg>
-        <p class="mini-t">日本語・英語切替</p>
+        <p class="mini-t">Japanese / English</p>
       </div>
-      <!-- ★ Apple Watch は必ずグリッドの最後。watchOS 26.2 は相当に新しく、
-           他と同列に並べると「入れればすぐ使える」と読まれる。機種名は書かない。 -->
+      <!-- ★ Apple Watch stays last. watchOS 26.2 is very new; listing it alongside the
+           others reads as "works out of the box". Do not name any watch model. -->
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-watch"></use></svg>
-        <p class="mini-t">Apple Watch から録画開始 ※</p>
-        <p class="mini-d">※ Apple Watch からの録画開始には、watchOS 26.2 以上の Apple Watch が必要です。</p>
+        <p class="mini-t">Start recording from Apple Watch *</p>
+        <p class="mini-d">* Starting a recording from Apple Watch requires an Apple Watch running watchOS 26.2 or later.</p>
       </div>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== MultiCam（Future）=====
-       App Store 版には入っていない。公開済みのように書かない。CTA は置かない。 -->
+  <!-- ===== MultiCam (Future) =====
+       Not in the App Store build. Never describe it as shipped. No CTA. -->
   <section class="sec" id="multicam">
     <div class="future rv">
       <div class="sec-label">Future</div>
-      <p style="margin:0 0 14px;"><span class="dev-badge">開発中</span></p>
+      <p style="margin:0 0 14px;"><span class="dev-badge">In development</span></p>
       <h2 class="sec-h">MultiCam</h2>
-      <p class="sec-p">複数台の iPhone で同じ一本を別の角度から撮り、コーチの端末に自動で集める機能を開発中です。</p>
+      <p class="sec-p">Capture the same take from multiple iPhones and automatically gather them on your device.</p>
       <div class="future-fig">
-        <svg viewBox="0 0 520 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="複数台の iPhone から、コーチの端末へ映像が集まる図。">
+        <svg viewBox="0 0 520 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: footage from several iPhones gathering on the coach's device.">
           <g stroke="#E8B45A" stroke-width="1.6" opacity=".9">
             <rect x="24" y="20" width="44" height="74" rx="8"/>
             <rect x="24" y="106" width="44" height="74" rx="8"/>
@@ -735,77 +676,78 @@
             <path d="M348 64h82M348 80h60M348 96h82M348 112h48"/>
           </g>
           <text x="389" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif">コーチの端末</text>
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Coach's device</text>
           <text x="96" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif">複数台の iPhone</text>
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Multiple iPhones</text>
         </svg>
       </div>
-      <p class="future-note">※ 画面は開発中のイメージです。MultiCam は開発中で、App Store 版には含まれません。</p>
+      <p class="future-note">Concept image. MultiCam is in development and not included in the App Store version.</p>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== 活用シーン =====
-       TODO: 実写の写真が未確定。届くまで枠のまま。AI生成のスポーツ写真は入れない。 -->
+  <!-- ===== Use cases =====
+       TODO: real photography not decided yet. Keep the frames until it lands.
+       Do not drop in AI-generated sports photos. -->
   <section class="sec" id="use-cases">
     <div class="sec-label">Use cases</div>
-    <h2 class="sec-h">映像で動きを確かめる練習なら、競技を問いません。</h2>
+    <h2 class="sec-h">Any sport where you check movement on video.</h2>
     <div class="cases" style="margin-top:26px;">
-      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">スキー・モーグル</p></div>
-      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">体操・トランポリン</p></div>
-      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">水泳</p></div>
-      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">トレーナー・理学療法</p></div>
-      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">ほかのスポーツにも</p></div>
+      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">Skiing / Moguls</p></div>
+      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">Gymnastics / Trampoline</p></div>
+      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">Swimming</p></div>
+      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">Trainers / Physio</p></div>
+      <div class="rv"><div class="case-ph">[ PHOTO ]</div><p class="case-t">And more</p></div>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== よくある質問 ===== -->
+  <!-- ===== FAQ ===== -->
   <section class="sec" id="faq">
     <div class="sec-label">FAQ</div>
-    <h2 class="sec-h">よくある質問</h2>
+    <h2 class="sec-h">Frequently asked questions</h2>
     <div class="faq" style="margin-top:24px;">
-      <details id="faq-1"><summary>無料で何が使えますか？</summary>
-        <p class="faq-a">撮影、1コマ送り、スロー再生、区間ループ、滞空時間、左右反転、拡大、写真アプリからの読み込み、撮ったままの書き出し、動画一覧、お気に入り・お手本、UIカスタマイズ、日英切替が無料でお使いいただけます。購入しなくても、撮影とコマ送りでの確認はそのまま使えます。</p>
+      <details id="faq-1"><summary>What can I use for free?</summary>
+        <p class="faq-a">Recording, frame-by-frame stepping, slow motion, section loops, air time, flip, zoom, importing from Photos, exporting as recorded, the video library, favorites and reference takes, customizable controls, and Japanese / English switching are all free. Recording and frame-by-frame review stay free.</p>
       </details>
-      <details id="faq-2"><summary>FrameReplay Pro には何が含まれますか？</summary>
-        <p class="faq-a">2本比較、線と角度、リプレイ、連続モード、加工して書き出す、カードから受け取る（FlashAir）の6つです。</p>
+      <details id="faq-2"><summary>What's included in FrameReplay Pro?</summary>
+        <p class="faq-a">Six features: compare two takes, lines &amp; angles, replay while recording, continuous mode, export with edits, and importing from an SD card (FlashAir).</p>
       </details>
-      <details id="faq-3"><summary>Pro はサブスクリプションですか？</summary>
-        <p class="faq-a">いいえ。買い切りです。月々の支払いはありません。一度買えば、そのまま使い続けられます。</p>
+      <details id="faq-3"><summary>Is Pro a subscription?</summary>
+        <p class="faq-a">No. It is a one-time purchase. There is no subscription and no recurring payment.</p>
       </details>
-      <!-- ★ Q4 は公開中のプライバシーポリシー（最終更新 2026年9月18日）の本文から起こしたもの。言い換えないこと。 -->
-      <details id="faq-4"><summary>動画はサーバーへアップロードされますか？</summary>
-        <p class="faq-a">いいえ。動画はお使いの端末の中だけに保存されます。当方のサーバーはありません。アプリがインターネットにつながるのは、App内課金のために Apple と通信するときだけです。</p>
+      <!-- ★ Q4 is taken from the published privacy policy (last updated 2026-09-18). Do not paraphrase. -->
+      <details id="faq-4"><summary>Are my videos uploaded to a server?</summary>
+        <p class="faq-a">No. Your videos are stored on your device only. There is no server belonging to us. The only connection the app makes to the internet is to Apple, for the in-app purchase.</p>
       </details>
-      <details id="faq-5"><summary>AI が選手を分析・採点しますか？</summary>
-        <p class="faq-a">しません。FrameReplay は採点も自動判定もしません。人が映像を見て判断するための道具です。</p>
+      <details id="faq-5"><summary>Does AI analyze or score athletes?</summary>
+        <p class="faq-a">No. FrameReplay does not score or judge anything automatically. It is a tool for people to watch and decide for themselves.</p>
       </details>
-      <details id="faq-6"><summary>対応端末・iOS は？</summary>
-        <p class="faq-a">iPhone と iPad（iOS 17.0 以上）に対応しています。Apple Watch から録画を始める機能だけ、watchOS 26.2 以上が必要です。</p>
+      <details id="faq-6"><summary>Which devices and iOS versions are supported?</summary>
+        <p class="faq-a">iPhone and iPad running iOS 17.0 or later. Starting a recording from Apple Watch requires watchOS 26.2 or later.</p>
       </details>
-      <details id="faq-7"><summary>MultiCam は今使えますか？</summary>
-        <p class="faq-a">まだ使えません。MultiCam は開発中で、App Store 版には含まれていません。</p>
+      <details id="faq-7"><summary>Is MultiCam available now?</summary>
+        <p class="faq-a">Not yet. MultiCam is in development and not included in the App Store version.</p>
       </details>
     </div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- ===== 最終CTA ===== -->
+  <!-- ===== Final CTA ===== -->
   <section class="sec" id="get">
     <div class="get rv">
-      <!-- 素材待ち（城さん手配）：正式な App Icon。MIC の favicon は流用しない。 -->
+      <!-- Pending asset (Jo-san): the real App Icon. Do not reuse the site favicon. -->
       <div class="get-icon">[ APP ICON ]</div>
       <p class="get-h">FrameReplay</p>
       <div class="cta-row">
-        <a class="cta" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Store でダウンロード</a>
+        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
       </div>
-      <!-- ★ ロケールを混ぜない。日本語ページは ¥6,000 のみ。 -->
-      <p class="get-price">本体は無料。2本比較・重ねる・線と角度などは FrameReplay Pro（買い切り ¥6,000）です。</p>
-      <p class="get-spec">対応：iPhone / iPad（iOS 17.0 以上）</p>
+      <!-- ★ Do not mix locales. The English page shows $59.99 in the US only. -->
+      <p class="get-price">Free to download. Compare, overlay, and lines &amp; angles are part of FrameReplay Pro (one-time purchase, $59.99 in the US).</p>
+      <p class="get-spec">iPhone / iPad, iOS 17.0 or later</p>
     </div>
   </section>
 
@@ -815,9 +757,8 @@
   <div class="fr-foot-in">
     <div class="fr-foot-mark">Frame<span>Replay</span></div>
     <nav class="fr-foot-links">
-      <a href="https://vanwhist.github.io/apps/framereplay/privacy/" target="_blank" rel="noopener">プライバシーポリシー</a>
-      <a href="https://vanwhist.github.io/apps/framereplay/support/" target="_blank" rel="noopener">サポート</a>
-      <!-- 戻り道を1本だけ残す。ラベルはドメイン表記のまま（固有名詞は使わない）。 -->
+      <a href="https://vanwhist.github.io/apps/framereplay/privacy/" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://vanwhist.github.io/apps/framereplay/support/" target="_blank" rel="noopener">Support</a>
       <a href="/">mogul-mic.com</a>
     </nav>
     <div class="fr-foot-copy">© 2026 Yuta Jo</div>
@@ -825,8 +766,8 @@
 </footer>
 
 <script>
-  /* 言語切替：いま見ているアンカーを引き継ぐ。
-     JS が動かなくても href だけで切替は成立する（hash が付かないだけ）。 */
+  /* Language switch: carry the current anchor across.
+     Without JS the plain href still works; it just drops the hash. */
   (function(){
     var a = document.querySelector('[data-lang-switch]');
     if (!a) return;
@@ -836,7 +777,6 @@
     });
   })();
 
-  /* スクロールイン。prefers-reduced-motion のときは何もしない（CSS 側で無効化済み）。 */
   (function(){
     if (!('IntersectionObserver' in window)) {
       document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
@@ -848,7 +788,7 @@
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
   })();
 </script>
-<!-- ★ 計測。ルート相対で書くこと。英語版は階層が1つ深いので相対パスだと壊れる。 -->
+<!-- ★ Analytics. Root-relative on purpose: this file sits one level deeper. -->
 <script src="/assets/js/mic-analytics.js" defer></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "267adc99d15146b38cc2356821ce739d"}'></script>
 </body>

@@ -176,7 +176,10 @@
           name = 'cta_tel';
         } else if (u.hostname && u.hostname !== location.hostname) {
           detail = u.hostname;
-          if (/(^|\.)line\.me$|(^|\.)lin\.ee$/.test(u.hostname))            { name = 'cta_line'; }
+          // App Store は専用イベントで数える。cta_other に混ざると、
+          // ダウンロード導線が何件押されたか分からなくなるため（2026-09-21 追加）。
+          if (/(^|\.)apps\.apple\.com$/.test(u.hostname))                   { name = 'cta_appstore'; }
+          else if (/(^|\.)line\.me$|(^|\.)lin\.ee$/.test(u.hostname))       { name = 'cta_line'; }
           else if (/(^|\.)docs\.google\.com$|(^|\.)forms\.gle$/.test(u.hostname)) { name = 'cta_form'; }
           else if (/(^|\.)instagram\.com$/.test(u.hostname))                { name = 'cta_instagram'; }
           else if (/(^|\.)youtube\.com$|(^|\.)youtu\.be$/.test(u.hostname)) { name = 'cta_youtube'; }
