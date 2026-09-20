@@ -72,7 +72,7 @@
   /* ---------- アンカー ----------
      機能ごとに個別の id を持たせ、Instagram から直接その位置へ飛べるようにしている。
      バーは sticky なので、scroll-margin-top を入れないと見出しが裏に隠れる。 */
-  .fr-hero[id],.fr-sec[id],.feat[id],.more-item[id],.inprog-story[id]{scroll-margin-top:var(--bar);}
+  .fr-hero[id],.fr-sec[id],.feat[id],.more-item[id],.pro-story[id]{scroll-margin-top:var(--bar);}
 
   /* ---------- hero ---------- */
   .fr-hero{position:relative;padding:56px 6vw 48px;overflow:hidden;
@@ -112,16 +112,17 @@
     .cta{flex:0 1 auto;}
   }
 
-  /* ---------- 公開版で使える、という補足 ----------
-     「改善中」を「まだ使えない」と読ませないための一文。青＝使える。 */
+  /* ---------- 補足の一文 ----------
+     1.1 からは「1.0 から使っている方は Pro が無料」を置く場所。青＝使える。 */
   .avail-note{font-size:12.5px;line-height:1.85;color:var(--muted);margin:0 0 20px;
     padding:12px 14px;border-left:2px solid var(--brand);border-radius:0 8px 8px 0;
     background:rgba(46,166,226,.07);}
   .avail-note b{color:var(--body);font-weight:700;}
 
   /* ---------- MultiCam（公開版に入っていない開発中機能） ----------
-     「改善中」（公開版で使える）より一段強い赤。上辺の赤い罫線＋塗りのバッジで、
-     同じ赤でも段階が違うことを見た目で分ける。 */
+     このページで赤を使うのはここだけ。上辺の赤い罫線＋塗りのバッジで、
+     「公開版に入っていない」ことを他の節とはっきり分ける。
+     ★ Pro（青のバッジ）は買えば使える機能。赤と混ぜないこと。 */
   .mc{border-radius:18px;padding:24px 22px;background:var(--surface-2);
     border:1px solid var(--line);border-top:2px solid rgba(255,59,48,.85);}
   .mc-dev{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.08em;
@@ -184,12 +185,13 @@
     background:var(--surface);border:1px solid var(--line);}
   .feat-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
     font-size:16px;font-weight:800;line-height:1.5;margin:0 0 9px;}
-  /* 「開発中」は目立たせない。事実として機能名の右に置くだけ */
-  /* 赤は「意味のある赤」。面では使わず、点と文字だけに使う */
-  .feat-dev{flex:0 0 auto;font-size:10.5px;font-weight:700;letter-spacing:.08em;
-    color:var(--body);background:transparent;border:1px solid rgba(255,59,48,.42);
+  /* ★ .feat-dev（赤い「改善中」バッジ）は 1.1 で使わなくなったので消した。
+       リプレイと連続モードが Pro の正式な機能になり、札を出す理由がなくなったため。 */
+  /* Pro は「買わないと使えない」を事実として置くだけ。赤（意味のある赤＝注意）は使わず、
+     アプリのブランド色で示す。あおらない。 */
+  .feat-pro{flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.10em;
+    color:var(--brand-lite);background:transparent;border:1px solid rgba(46,166,226,.55);
     border-radius:5px;padding:2px 8px;}
-  .feat-dev::before{content:'\25CF';color:var(--alert);font-size:8px;margin-right:5px;vertical-align:1px;}
   .feat-b{font-size:13.5px;line-height:1.95;color:var(--body);margin:0;}
   .feat-b + .feat-b{margin-top:8px;}
   .feat-b b{color:#fff;font-weight:800;}
@@ -206,10 +208,12 @@
   .more-t{font-size:14px;font-weight:800;line-height:1.6;color:var(--fg);margin:0 0 4px;}
   .more-d{font-size:12.5px;line-height:1.85;color:var(--muted);margin:0;}
 
-  /* ---------- 改善中の機能 ----------
-     完成機能より一段沈める。カード面を本文背景より暗くして「奥」に置く。 */
-  .inprog .feat{background:var(--surface-2);}
-  .inprog-story{margin-top:36px;}
+  /* ---------- Pro ----------
+     1.1 で有料化した機能。沈めない（買ってもらう機能を奥に置かない）。
+     ★ 旧 .inprog / .inprog-story を置き換えたもの。#continuous-story の id は維持。 */
+  .pro-story{margin-top:36px;}
+  .pro-price{font-size:13.5px;line-height:1.95;color:var(--body);margin:0 0 6px;}
+  .pro-price b{color:#fff;font-weight:800;}
 
   /* ---------- 実例 ---------- */
   .story{border-radius:18px;padding:22px 22px;
@@ -504,6 +508,9 @@
   <section class="fr-sec" id="features">
     <div class="sec-label">What it does</div>
     <h2 class="sec-title">できること</h2>
+    <!-- ★ 1.1（2026-09-21）から、ここに並ぶものと「そのほかにも」は無料。
+         比較・描画・リプレイ・連続モードなどは #pro へ移した。 -->
+    <p class="sec-body">ここに並ぶ4つと、下の「そのほかにも」は<b>無料で使えます。</b></p>
 
     <div class="feats">
 
@@ -527,29 +534,6 @@
         <p class="feat-b">速度を落として、動きの順番を追えます。</p>
       </article>
 
-      <article class="feat feat--wide" id="comparison">
-        <h3 class="feat-h">2本比較</h3>
-        <p class="feat-b">2本を並べて同時に再生できます。前回と今回、選手と手本。<b>並べて初めて分かることがあります。</b></p>
-        <p class="feat-b">並べ方は3つ。<b>左右、上下、重ねる。</b>重ねるときは上の映像を指で動かして位置と大きさを合わせ、濃さを変えられます。</p>
-        <!-- ★ 画像を入れる場所（2/4）：2本比較。Build 124 相当の iPhone の画面。ヒーローとは別カット。 -->
-        <div class="shot-wrap">
-          <img class="shot" src="assets/framereplay/fr-overlay.jpg"
-               width="620" height="912" loading="lazy" decoding="async"
-               alt="2本の映像を重ねて表示している画面。上下に重なった映像の濃さをスライダーで調整できる。">
-        </div>
-      </article>
-
-      <article class="feat feat--wide" id="drawing">
-        <h3 class="feat-h">描画</h3>
-        <p class="feat-b">1本の映像を見ながら、画面に線を引いて伝えられます。言葉で足りないところを、絵で補えます。</p>
-        <!-- ★ 画像を入れる場所（3/4）：描画。線や印を書き込んでいる Build 124 相当の iPhone の画面。 -->
-        <div class="shot-wrap">
-          <img class="shot" src="assets/framereplay/fr-drawing.jpg"
-               width="620" height="972" loading="lazy" decoding="async"
-               alt="映像に赤い線を引き、角度46°が表示されている描画画面。">
-        </div>
-      </article>
-
     </div>
 
     <!-- ===== そのほかにも =====
@@ -563,7 +547,9 @@
       </div>
       <div class="more-item" id="export">
         <p class="more-t">書き出し</p>
-        <p class="more-d">見た映像を写真アプリに保存したり、ほかのアプリで共有したりできます。比較した2本は、並べたまま1本の動画として保存できます。</p>
+        <!-- ★ 1.1 から、加工しての書き出し（スローのまま保存・2画面を1本に）は Pro（#processed-export）。
+             ここに残すのは、撮ったままの保存と共有だけ。 -->
+        <p class="more-d">見た映像を写真アプリに保存したり、ほかのアプリで共有したりできます。</p>
       </div>
       <div class="more-item" id="favorites">
         <p class="more-t">お気に入り／お手本</p>
@@ -578,29 +564,56 @@
 
   <div class="divider"></div>
 
-  <!-- ===== 改善中の機能 =====
-       完成機能と混ぜない。カード面を一段暗くして「奥」に置き、赤はバッジの●と枠線だけに使う。
-       ★ #replay #continuous #continuous-story の id は従来どおり。 -->
-  <section class="fr-sec" id="inprogress">
-    <div class="sec-label sec-label--alert">In progress</div>
-    <h2 class="sec-title">現場で使いながら、いま育てている機能。</h2>
-    <p class="sec-body">すでに使える機能ですが、実際の練習で使いながら、より安定して使えるよう改善を続けています。</p>
-    <!-- ★ 「改善中」を「まだ使えない」と読ませないための補足。
-         この下の MultiCam（公開版に入っていない）とは意味が違う。 -->
-    <p class="avail-note">この2つは、<b>App Storeで公開中のFrameReplayでそのまま使えます。</b>「改善中」は、使いながら安定性を上げている最中という意味です。</p>
+  <!-- ===== Pro =====
+       1.1（2026-09-21）で有料化した機能をここへ集めた。旧「In progress」の節を置き換えたもの。
+       ★ #comparison #drawing #replay #continuous #continuous-story の id は従来どおり。
+         Instagram の過去リンクの飛び先を変えないこと。
+       ★ あおらない。買わせる文句は置かず、何が開くかと値段だけ書く。
+       ★ 「改善中」の札はやめた。リプレイと連続モードは公開版で普通に使える機能になった。 -->
+  <section class="fr-sec" id="pro">
+    <div class="sec-label">Pro</div>
+    <h2 class="sec-title">見比べて、伝えるための機能。</h2>
+    <p class="sec-body">下の6つは <b>Pro（買い切り ¥6,000）</b>で開きます。<b>月々の支払いはありません。</b>一度買えば、そのまま使い続けられます。</p>
+    <!-- ★ 優遇の条件は「1.1 の公開より前に App Store から入れたこと」。
+         TestFlight で入れた方は対象外だが、ここには書かない（一般の読み手が混乱する）。 -->
+    <p class="avail-note"><b>2026年9月21日より前に、App StoreからFrameReplayを入れていた方は、Proの機能をそのまま無料で使えます。</b>買い直しも申請も要りません。アプリの設定画面の一番上に、その旨が出ます。</p>
 
-    <div class="feats inprog">
+    <div class="feats">
+
+      <article class="feat feat--wide" id="comparison">
+        <h3 class="feat-h">2本比較 <span class="feat-pro">PRO</span></h3>
+        <p class="feat-b">2本を並べて同時に再生できます。前回と今回、選手と手本。<b>並べて初めて分かることがあります。</b></p>
+        <p class="feat-b">並べ方は3つ。<b>左右、上下、重ねる。</b>重ねるときは上の映像を指で動かして位置と大きさを合わせ、濃さを変えられます。</p>
+        <!-- ★ 画像を入れる場所（2/4）：2本比較。Build 124 相当の iPhone の画面。ヒーローとは別カット。 -->
+        <div class="shot-wrap">
+          <img class="shot" src="assets/framereplay/fr-overlay.jpg"
+               width="620" height="912" loading="lazy" decoding="async"
+               alt="2本の映像を重ねて表示している画面。上下に重なった映像の濃さをスライダーで調整できる。">
+        </div>
+        <p class="feat-note">買う前に3回まで試せます。</p>
+      </article>
+
+      <article class="feat feat--wide" id="drawing">
+        <h3 class="feat-h">描画 <span class="feat-pro">PRO</span></h3>
+        <p class="feat-b">1本の映像を見ながら、画面に線を引いて伝えられます。言葉で足りないところを、絵で補えます。</p>
+        <!-- ★ 画像を入れる場所（3/4）：描画。線や印を書き込んでいる Build 124 相当の iPhone の画面。 -->
+        <div class="shot-wrap">
+          <img class="shot" src="assets/framereplay/fr-drawing.jpg"
+               width="620" height="972" loading="lazy" decoding="async"
+               alt="映像に赤い線を引き、角度46°が表示されている描画画面。">
+        </div>
+        <p class="feat-note">買う前に3回まで試せます。</p>
+      </article>
 
       <article class="feat feat--wide" id="replay">
-        <h3 class="feat-h">リプレイ <span class="feat-dev">改善中</span></h3>
+        <h3 class="feat-h">リプレイ <span class="feat-pro">PRO</span></h3>
         <p class="feat-b">録画ボタンを押さなくても、少し前の動きを見返せます。設定した秒数だけ遅れた映像が流れているので、跳んだ直後に画面を見れば、いまの一本が映っています。大会など、次々に人が跳ぶ場面でも、自分の一本だけを見返せます。</p>
         <p class="feat-b">画面に触れれば止まり、前後を探せます。<b>残したい一本だけ「残す」で保存します。残さなかった分は、リプレイを抜けると消えます。</b></p>
       </article>
 
       <article class="feat feat--wide" id="continuous">
-        <h3 class="feat-h">連続モード <span class="feat-dev">改善中</span></h3>
+        <h3 class="feat-h">連続モード <span class="feat-pro">PRO</span></h3>
         <p class="feat-b">端末を置いておくだけ。動きを見つけて演技ごとに区切り、一本終わるたびに再生します。<b>誰も操作しなくていい。</b></p>
-        <p class="feat-b">台が複数ある場所でも、端末は1台だけ。跳ぶ台は3つまで、台ごとに分けて記録します。</p>
         <!-- ★ 画像を入れる場所（4/4）：連続モード。ここだけアプリ画面ではなく「現場写真」。
              端末を置いて撮っている場面。iPad が写っていても可（UI紹介素材とは別扱い）。
              素材が未提供のため要素を置かない。届いたら他の3枚と同じ .shot-wrap / .shot で入れる。 -->
@@ -608,8 +621,21 @@
 
     </div>
 
+    <!-- ★ 無料側（#features）の「そのほかにも」と同じ語にしないこと。読み手が取り違える。 -->
+    <p class="more-head">そのほかに、Proで開くもの</p>
+    <div class="more">
+      <div class="more-item" id="processed-export">
+        <p class="more-t">加工して書き出す <span class="feat-pro">PRO</span></p>
+        <p class="more-d">見ている速さのまま保存できます。比較した2本は、並べたまま1本の動画として保存できます。撮ったままの保存と共有は、無料のままです。</p>
+      </div>
+      <div class="more-item" id="flashair">
+        <p class="more-t">カードから受け取る <span class="feat-pro">PRO</span></p>
+        <p class="more-d">FlashAir（無線のSDカード）を入れたビデオカメラから、撮った動画をそのままアプリへ受け取れます。カードを抜き差しせず、撮った順に届きます。</p>
+      </div>
+    </div>
+
     <!-- 実例は連続モードの直下に置く。独立セクションから移動（id は維持） -->
-    <div class="inprog-story" id="continuous-story">
+    <div class="pro-story" id="continuous-story">
       <div class="sec-label">In the field</div>
       <h3 class="sec-title sec-title--sub">一人で練習していたコーチの話。</h3>
       <div class="story">
@@ -619,7 +645,7 @@
         <p>渡辺コーチは、その日のうちにこう書いていました。</p>
         <blockquote>「動画を撮りっぱなしにする必要もなく自動で検知して撮影。別の動画と比較もできて、便利なアプリでした」</blockquote>
         <p>作った機能が、実際の現場でこう使われました。</p>
-        <p class="story-note"><b>連続モードはApp Store公開版で使えます。</b>いまも現場で使いながら改善を続けているので、変わったところはこのページで更新します。</p>
+        <p class="story-note"><b>連続モードはProで使えます。</b>変わったところは、このページで更新します。</p>
       </div>
     </div>
   </section>
@@ -650,15 +676,16 @@
   <div class="divider"></div>
 
   <!-- ===== 入手 =====
-       ★ 公開後の文（2026-09-13差し替え）。
+       ★ 公開後の文（2026-09-13差し替え／2026-09-21に1.1のProを反映）。
        ★ App Store のバッジ画像は使わない。テキストCTAのみ。
-       ★ 価格・Pro には触れない。 -->
+       ★ 値段を書くのはここと #pro の2か所だけ。直すときは両方そろえる。 -->
   <section class="fr-sec" id="get">
     <div class="sec-label">Availability</div>
     <div class="get">
       <p class="get-t">App Storeで公開中です。</p>
-      <p>FrameReplayは、<b>どなたでもApp Storeからダウンロードできます。</b></p>
-      <p>このページで紹介している機能は、<b>「改善中」としているリプレイ・連続モードも含めて、すべて公開版に入っています。</b></p>
+      <p>FrameReplayは、<b>どなたでもApp Storeから無料でダウンロードできます。</b></p>
+      <p class="pro-price">撮る・撮影後すぐ見る・1コマ送り・スロー再生と、写真アプリからの読み込み・保存と共有・お気に入り／お手本・UIカスタマイズは<b>無料で使えます。</b></p>
+      <p class="pro-price">2本比較・描画・リプレイ・連続モード・加工しての書き出し・カードから受け取るは、<a href="#pro"><b>Pro（買い切り ¥6,000）</b></a>で開きます。<b>2026年9月21日より前にApp Storeから入れていた方は、そのまま無料で使えます。</b></p>
       <div class="cta-row">
         <a class="cta cta--primary" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Storeでダウンロード</a>
       </div>
