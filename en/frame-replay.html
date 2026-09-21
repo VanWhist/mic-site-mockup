@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>FrameReplay ― Instant frame-by-frame review</title>
+<meta name="description" content="Record. Review. Compare. An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot. Free to download.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FrameReplay">
+<meta property="og:title" content="FrameReplay ― Instant frame-by-frame review">
+<meta property="og:description" content="Record. Review. Compare. An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot. Free to download.">
+<meta property="og:url" content="https://mogul-mic.com/en/frame-replay.html">
+<meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mogul-mic.com/en/frame-replay.html">
+<link rel="alternate" hreflang="ja" href="https://mogul-mic.com/frame-replay.html">
+<link rel="alternate" hreflang="en" href="https://mogul-mic.com/en/frame-replay.html">
+<link rel="alternate" hreflang="x-default" href="https://mogul-mic.com/frame-replay.html">
+<!-- favicon comes from the real App Store icon. Do not reuse the site favicon. -->
+<link rel="icon" href="/assets/framereplay/fr-icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/framereplay/fr-icon-180.png">
+<style>
+  /* ============================================================
+     FrameReplay product page (English)
+     ・Standalone product page. No shared site navigation or footer.
+     ・CSS and structure are IDENTICAL to /frame-replay.html.
+       When you change one, change both.
+     ・All asset and script paths are root-relative. This file lives one
+       level deeper, so relative paths would break.
+     ============================================================ */
+  :root{
+    --bg:#0B1016;
+    --surface:#111923;
+    --surface-2:#0E141C;
+    --line:#24303C;
+    --fg:#F6F8FA;
+    --body:#C3CCD6;
+    --muted:#8A95A1;
+    --brand-lite:#5DD7FE;
+    --brand:#2EA6E2;
+    --brand-deep:#0177C6;
+    --future:#E8B45A;
+    --bar:58px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;overflow-x:clip;}
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(46,166,226,.12), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+  a{color:inherit;}
+  img{max-width:100%;}
+
+  .fr-anchor-alias{display:block;height:0;scroll-margin-top:var(--bar);}
+  [id]{scroll-margin-top:var(--bar);}
+
+  .fr-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;
+    padding:0 clamp(16px,5vw,40px);height:var(--bar);
+    background:rgba(11,16,22,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .fr-wordmark{flex:0 0 auto;font-weight:800;font-size:15px;letter-spacing:.01em;
+    color:#fff;text-decoration:none;}
+  .fr-wordmark span{color:var(--brand-lite);}
+  .fr-barnav{flex:1 1 auto;min-width:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;
+    justify-content:flex-end;}
+  .fr-barnav::-webkit-scrollbar{display:none;}
+  .fr-barnav a{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:7px 11px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .fr-barnav a:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .fr-lang{flex:0 0 auto;display:flex;align-items:center;gap:1px;margin-left:4px;
+    border:1px solid var(--line);border-radius:999px;padding:2px;background:rgba(255,255,255,.03);}
+  .fr-lang span,.fr-lang a{font-size:11.5px;font-weight:800;letter-spacing:.04em;
+    padding:4px 9px;border-radius:999px;text-decoration:none;line-height:1;}
+  .fr-lang .fr-lang-current{background:var(--brand-deep);color:#fff;}
+  .fr-lang .fr-lang-alt{color:var(--muted);}
+  .fr-lang .fr-lang-alt:hover{color:var(--fg);background:rgba(255,255,255,.07);}
+
+  .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;
+    padding:0 clamp(16px,5vw,40px);}
+
+  .sec{padding:clamp(52px,8vw,88px) 0;}
+  .sec-label{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--brand-lite);margin-bottom:12px;}
+  .sec-h{margin:0 0 14px;font-size:clamp(23px,4.6vw,34px);line-height:1.34;font-weight:800;letter-spacing:.01em;}
+  .sec-p{margin:0 0 8px;font-size:clamp(14px,1.6vw,15.5px);line-height:1.95;color:var(--body);}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);}
+
+  .pro-badge{display:inline-flex;align-items:center;vertical-align:middle;
+    font-size:10px;font-weight:900;letter-spacing:.1em;line-height:1;
+    padding:4px 7px;border-radius:5px;color:#04212F;
+    background:linear-gradient(135deg,var(--brand-lite),var(--brand));}
+
+  .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+  .cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:52px;padding:14px 26px;border-radius:999px;
+    font-size:15px;font-weight:800;text-decoration:none;letter-spacing:.01em;
+    background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;
+    box-shadow:0 10px 26px rgba(1,119,198,.34);transition:transform .18s,box-shadow .18s;}
+  .cta:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(1,119,198,.42);}
+  @media (min-width:480px){
+    .cta-row{flex-direction:row;flex-wrap:wrap;align-items:center;}
+    .cta{flex:0 1 auto;}
+  }
+
+  .hero{position:relative;overflow:hidden;
+    background:
+      radial-gradient(circle at 20% 6%, rgba(93,215,254,.20), transparent 58%),
+      radial-gradient(circle at 88% 30%, rgba(1,119,198,.22), transparent 58%);}
+  .hero-in{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;
+    padding:clamp(40px,6vw,72px) clamp(16px,5vw,40px) clamp(44px,6vw,72px);
+    display:grid;gap:clamp(26px,4vw,48px);align-items:center;}
+  .hero-eyebrow{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-lite);}
+  .hero-h1{margin:14px 0 0;font-size:clamp(34px,8vw,60px);line-height:1.14;font-weight:900;letter-spacing:.005em;}
+  .hero-h1 span{display:inline-block;}
+  .hero-sub{margin:14px 0 0;font-size:clamp(15px,2.4vw,19px);font-weight:700;color:var(--brand-lite);line-height:1.6;}
+  .hero-lead{margin:14px 0 0;font-size:clamp(14px,1.7vw,16px);line-height:1.95;color:var(--body);max-width:36em;}
+  .origin{display:inline-flex;align-items:center;gap:9px;margin-top:22px;
+    padding:9px 16px 9px 12px;border-radius:999px;
+    border:1px solid rgba(93,215,254,.28);background:rgba(93,215,254,.07);
+    font-size:12.5px;font-weight:700;color:var(--brand-lite);line-height:1.5;}
+  .origin svg{flex:0 0 auto;width:20px;height:20px;}
+  .shot-wrap{position:relative;margin:0;border-radius:20px;overflow:hidden;
+    border:1px solid var(--line);background:var(--surface-2);
+    box-shadow:0 26px 60px rgba(0,0,0,.5);}
+  .shot-wrap img,.shot-wrap video{display:block;width:100%;height:auto;}
+  /* Reserve room below the shot for the handwritten note. */
+  .hero-media{position:relative;justify-self:center;width:100%;max-width:340px;margin-bottom:64px;}
+  .note-hand{position:absolute;right:0;bottom:-62px;width:min(226px,82%);pointer-events:none;}
+  .note-hand svg{display:block;width:100%;height:auto;}
+  @media (min-width:900px){
+    .hero-in{grid-template-columns:1.08fr .92fr;}
+    .hero-media{max-width:360px;justify-self:end;}
+  }
+
+  .values{display:grid;gap:14px;}
+  .value{padding:22px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);}
+  .value svg{width:26px;height:26px;color:var(--brand-lite);}
+  .value-t{margin:13px 0 6px;font-size:16.5px;font-weight:800;}
+  .value-d{margin:0;font-size:13.5px;line-height:1.85;color:var(--body);}
+  @media (min-width:760px){.values{grid-template-columns:repeat(3,1fr);gap:18px;}}
+
+  .steps{display:grid;gap:12px;counter-reset:step;}
+  .step{position:relative;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;
+    padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);}
+  .step-n{counter-increment:step;display:flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:50%;flex:0 0 auto;
+    background:rgba(93,215,254,.12);border:1px solid rgba(93,215,254,.3);
+    font-size:12.5px;font-weight:900;color:var(--brand-lite);}
+  .step-n::before{content:counter(step);}
+  .step-t{margin:0;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .step-d{margin:3px 0 0;font-size:13px;line-height:1.7;color:var(--muted);}
+  /* サムネイルは高さで頭打ちにする。縦長のスクショで流れが間延びしないように。 */
+  .step-shot{grid-column:1 / -1;margin-top:8px;}
+  img.step-shot{display:block;width:auto;max-width:100%;max-height:240px;margin:8px auto 0;
+    border-radius:10px;border:1px solid var(--line);background:var(--surface-2);}
+  @media (min-width:760px){
+    .steps{grid-template-columns:repeat(3,1fr);gap:16px;}
+    .step{display:block;padding:18px;}
+    .step-n{margin-bottom:12px;}
+  }
+  @media (min-width:1000px){.steps{grid-template-columns:repeat(6,1fr);}}
+
+  .feats{display:grid;gap:18px;}
+  .feat{border-radius:20px;padding:clamp(22px,3vw,30px);
+    background:var(--surface);border:1px solid var(--line);}
+  .feat-no{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--muted);}
+  .feat-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin:10px 0 10px;font-size:clamp(19px,2.8vw,25px);font-weight:800;}
+  .feat-b{margin:0 0 14px;font-size:14.5px;line-height:1.95;color:var(--body);}
+  .feat-note{margin:12px 0 0;font-size:12.5px;color:var(--muted);}
+  @media (min-width:900px){
+    .feat{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,3vw,34px);align-items:center;}
+    .feat > .shot-wrap{grid-row:span 4;}
+    .feat--flip > .shot-wrap{order:-1;}
+  }
+
+  .notblock{margin:0;padding:clamp(26px,4vw,36px);border-radius:18px;
+    border:1px solid rgba(93,215,254,.22);background:rgba(93,215,254,.05);}
+  .notblock p{margin:0;font-size:clamp(15px,2.2vw,19px);line-height:1.85;font-weight:700;}
+  .notblock p + p{margin-top:10px;font-size:clamp(13.5px,1.7vw,15.5px);font-weight:400;color:var(--body);}
+
+  .mini{display:grid;gap:12px;}
+  .mini-item{padding:16px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);}
+  .mini-item svg{width:22px;height:22px;color:var(--brand-lite);}
+  .mini-t{margin:10px 0 0;font-size:14.5px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .mini-d{margin:6px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);}
+  @media (min-width:600px){.mini{grid-template-columns:repeat(2,1fr);}}
+  @media (min-width:980px){.mini{grid-template-columns:repeat(4,1fr);}}
+  .mini--free .mini-item{background:var(--surface-2);border-color:rgba(255,255,255,.07);}
+  .mini--free .mini-item svg{color:var(--muted);}
+  @media (min-width:600px){.mini--free{grid-template-columns:repeat(2,1fr);}}
+  @media (min-width:860px){.mini--free{grid-template-columns:repeat(3,1fr);}}
+  @media (min-width:1080px){.mini--free{grid-template-columns:repeat(4,1fr);}}
+
+  .avail{margin:0 0 22px;padding:14px 16px;border-radius:12px;
+    border:1px solid rgba(46,166,226,.34);background:rgba(46,166,226,.09);
+    font-size:13.5px;line-height:1.85;color:var(--body);}
+
+  .fieldnote{margin-top:22px;padding:20px 20px;border-radius:16px;
+    background:var(--surface-2);border:1px solid var(--line);
+    border-left:3px solid var(--brand);}
+  .fieldnote-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+  .fieldnote p{margin:10px 0 0;font-size:13.5px;line-height:1.9;color:var(--body);}
+  .fieldnote blockquote{margin:12px 0 0;padding:0;font-size:14.5px;line-height:1.9;
+    font-weight:700;color:var(--fg);}
+  .fieldnote cite{display:block;margin-top:8px;font-size:12.5px;font-style:normal;color:var(--muted);}
+  .fieldnote-shot{margin-top:16px;border-radius:12px;}
+
+  .future{border-radius:20px;padding:clamp(24px,4vw,36px);
+    background:repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 12px,transparent 12px 24px),var(--surface-2);
+    border:1px dashed rgba(232,180,90,.34);}
+  .future .sec-label{color:var(--future);}
+  .dev-badge{display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 11px;border-radius:999px;
+    color:var(--future);border:1px solid rgba(232,180,90,.42);background:rgba(232,180,90,.1);}
+  .future-fig{margin:22px 0 0;border-radius:14px;padding:18px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.06);}
+  .future-fig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
+  .future-note{margin:16px 0 0;font-size:12.5px;line-height:1.8;color:var(--muted);}
+
+
+  .faq{display:grid;gap:10px;}
+  .faq details{border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden;}
+  .faq summary{list-style:none;cursor:pointer;padding:17px 46px 17px 18px;position:relative;
+    font-size:14.5px;font-weight:700;line-height:1.7;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:'';position:absolute;right:20px;top:50%;width:9px;height:9px;
+    border-right:2px solid var(--brand-lite);border-bottom:2px solid var(--brand-lite);
+    transform:translateY(-70%) rotate(45deg);transition:transform .2s;}
+  .faq details[open] summary::after{transform:translateY(-30%) rotate(-135deg);}
+  .faq-a{margin:0;padding:0 18px 18px;font-size:13.5px;line-height:1.95;color:var(--body);}
+
+  .get{text-align:center;border-radius:22px;padding:clamp(30px,5vw,48px) clamp(20px,4vw,40px);
+    background:radial-gradient(circle at 50% 0%, rgba(46,166,226,.18), transparent 62%),var(--surface);
+    border:1px solid var(--line);}
+  /* App Store の実アイコン。角丸は iOS の見た目に寄せて CSS で付ける。 */
+  .get-icon{display:block;width:88px;height:88px;margin:0 auto;border-radius:20px;
+    box-shadow:0 10px 26px rgba(0,0,0,.45);}
+  .get-h{margin:18px 0 0;font-size:clamp(24px,4vw,32px);font-weight:900;letter-spacing:.01em;}
+  .get .cta-row{justify-content:center;}
+  .get-price{margin:18px 0 0;font-size:13.5px;line-height:1.9;color:var(--body);}
+  .get-spec{margin:10px 0 0;font-size:12.5px;color:var(--muted);}
+
+  .fr-foot{border-top:1px solid rgba(255,255,255,.08);margin-top:clamp(40px,7vw,72px);
+    padding:34px clamp(16px,5vw,40px) calc(34px + env(safe-area-inset-bottom));}
+  .fr-foot-in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 26px;
+    align-items:center;justify-content:space-between;}
+  .fr-foot-mark{font-weight:800;font-size:15px;}
+  .fr-foot-mark span{color:var(--brand-lite);}
+  .fr-foot-links{display:flex;flex-wrap:wrap;gap:8px 20px;}
+  .fr-foot-links a{font-size:13px;color:var(--muted);text-decoration:none;}
+  .fr-foot-links a:hover{color:var(--fg);}
+  .fr-foot-copy{width:100%;font-size:12px;color:#5C6773;}
+
+
+  .rv{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;}
+  .rv.in{opacity:1;transform:none;}
+
+  @media (max-width:380px){
+    .fr-barnav a{font-size:11.5px;padding:6px 8px;}
+    .hero-h1{font-size:31px;}
+    .note-hand{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .rv{opacity:1;transform:none;transition:none;}
+    .cta{transition:none;}
+    .cta:hover{transform:none;}
+    .faq summary::after{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="i-capture" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="6" width="19" height="13" rx="3"></rect><circle cx="12" cy="12.5" r="3.4"></circle><path d="M8.5 6l1.4-2.2h4.2L15.5 6"></path>
+    </g>
+    <g id="i-frame" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="M8 5v14M16 5v14"></path>
+    </g>
+    <g id="i-compare" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="5" width="8" height="14" rx="2"></rect><rect x="13.5" y="5" width="8" height="14" rx="2"></rect>
+    </g>
+    <g id="i-angle" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 19h16M4 19L15 6"></path><path d="M9.5 19a7 7 0 0 0 1.6-4.3"></path>
+    </g>
+    <g id="i-replay" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 4v4h-4"></path>
+    </g>
+    <g id="i-loop" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="7" width="18" height="10" rx="2.5"></rect><path d="M8 4.5v5M16 14.5v5"></path>
+    </g>
+    <g id="i-export" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 15V3m0 0L8.2 6.8M12 3l3.8 3.8"></path><path d="M4 14v4.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V14"></path>
+    </g>
+    <g id="i-card" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 3h10l4 4v14H5z"></path><path d="M8.5 3v4M12 3v4M15.5 3v4"></path>
+    </g>
+    <g id="i-slow" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 1.8"></path>
+    </g>
+    <g id="i-air" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 19h18"></path><path d="M6 15.5c2.6-7.5 9.4-7.5 12 0"></path>
+    </g>
+    <g id="i-flip" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v18"></path><path d="M9 7L4.5 12 9 17zM15 7l4.5 5-4.5 5z"></path>
+    </g>
+    <g id="i-zoom" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.3 15.3L21 21M8 10.5h5M10.5 8v5"></path>
+    </g>
+    <g id="i-photos" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="M3 16l4.5-4.5 4 4 3-3L21 17"></path>
+    </g>
+    <g id="i-library" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2.5"></rect><path d="M3 9h18M9 9v11"></path>
+    </g>
+    <g id="i-star" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 9.7l5.4-.8z"></path>
+    </g>
+    <g id="i-sliders" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 21V14M5 10V3M12 21v-9M12 8V3M19 21v-5M19 12V3"></path><path d="M2.5 14h5M9.5 12h5M16.5 16h5"></path>
+    </g>
+    <g id="i-lang" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12h17M12 3.5c2.4 2.6 2.4 14.4 0 17M12 3.5c-2.4 2.6-2.4 14.4 0 17"></path>
+    </g>
+    <g id="i-watch" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="7" y="6.5" width="10" height="11" rx="3"></rect><path d="M9.5 6.5L10 3h4l.5 3.5M9.5 17.5L10 21h4l.5-3.5"></path>
+    </g>
+    <g id="i-fps" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="6" width="18" height="12" rx="2.5"></rect><path d="M7 6v12M11 6v12M15 6v12"></path>
+    </g>
+    <g id="i-ski" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 18.5c2.6 1.6 5.2 1.6 7.8 0s5.2-1.6 7.8 0"></path><path d="M7.6 15.5l5.6-9M10.5 20l7-11.6"></path><circle cx="16.8" cy="4.6" r="1.7"></circle>
+    </g>
+    <g id="i-tramp" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="16.5" rx="8.5" ry="3.2"></ellipse><path d="M4.6 18.8L3 21.5M19.4 18.8L21 21.5"></path><path d="M12 3.5c-2 2.4-2 4.8 0 7.2 2-2.4 2-4.8 0-7.2z"></path>
+    </g>
+    <g id="i-swim" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 18c1.8-1.5 3.4-1.5 5.2 0s3.4 1.5 5.2 0 3.4-1.5 5.2 0M3 21c1.8-1.5 3.4-1.5 5.2 0"></path><path d="M6.5 14.5l5-4.2 4.6 3"></path><circle cx="17.6" cy="6.4" r="1.9"></circle>
+    </g>
+    <g id="i-physio" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8.5 21v-4.4l-2.2-2a3 3 0 0 1-.9-2.2V9"></path><path d="M15.5 21v-5l2-2.2V9"></path><circle cx="12" cy="4.4" r="2"></circle><path d="M8.4 9.2l3.6-2 3.6 2"></path>
+    </g>
+    <g id="i-more" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="8.5"></circle><path d="M8 12h8M12 8v8"></path>
+    </g>
+  </defs>
+</svg>
+
+<div class="fr-bar">
+  <a class="fr-wordmark" href="#top">Frame<span>Replay</span></a>
+  <nav class="fr-barnav" aria-label="On this page">
+    <a href="#features">Features</a>
+    <a href="#how-it-works">How it works</a>
+    <a href="#use-cases">Use cases</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="fr-lang" role="group" aria-label="Language">
+    <a class="fr-lang-alt" href="/frame-replay.html" hreflang="ja" data-lang-switch>JP</a>
+    <span class="fr-lang-current" aria-current="true">EN</span>
+  </div>
+</div>
+
+<span id="mic" class="fr-anchor-alias" aria-hidden="true"></span>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="top">
+  <div class="hero-in">
+    <div>
+      <div class="hero-eyebrow">FrameReplay</div>
+      <h1 class="hero-h1"><span>Record.</span> <span>Review.</span> <span>Compare.</span></h1>
+      <!-- App Store subtitle, word for word. Do not rewrite. -->
+      <p class="hero-sub">Instant frame-by-frame review</p>
+      <p class="hero-lead">An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot.</p>
+      <div class="cta-row">
+        <!-- ★ No /jp/ here. A region-free App Store URL resolves to the visitor's own store. -->
+        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
+      </div>
+      <p style="margin:0;">
+        <span class="origin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8.2 3.4c-2.6 1.4-3.8 4.3-3.3 7.2.5 2.9 2.6 5.4 5.3 6.6"></path>
+            <path d="M15.8 3.4c2.6 1.4 3.8 4.3 3.3 7.2-.5 2.9-2.6 5.4-5.3 6.6"></path>
+            <path d="M9.6 20.3h4.8"></path>
+          </svg>
+          Built by a coach, for the field
+        </span>
+      </p>
+    </div>
+    <div class="hero-media">
+      <figure class="shot-wrap">
+        <img src="/assets/framereplay/fr-hero-compare-en.webp"
+             width="720" height="1558" loading="eager" decoding="async" fetchpriority="high"
+             alt="The FrameReplay compare screen, two takes side by side with a play-in-sync button.">
+      </figure>
+      <div class="note-hand" aria-hidden="true">
+        <svg viewBox="0 0 240 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 66c10-13 26-19 42-18" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
+          <path d="M52 41c-2 3.6-1.2 6 2.4 7.2" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
+          <path d="M56 48.4c-3.8.9-5.9 2.6-6.4 5.2" stroke="#5DD7FE" stroke-width="2.1" stroke-linecap="round" opacity=".85"/>
+          <!-- The lettering is outlined glyph paths, not a text element: a text element would be
+               rendered with whatever font the device happens to have.
+               Typeface: Caveat (SIL OFL 1.1), which explicitly permits outlining. -->
+          <path d="M70.2 41.1Q69.9 41 69.6 40.8Q69.3 40.7 69 40.4Q68.7 40.2 68.6 39.7Q68.4 39.1 68.3 38.6Q68.2 38 68.2 37.3Q68.2 36.3 68.4 35.6Q68.5 34.8 68.8 34Q68.9 34 69 33.7Q69.1 33.4 69.2 33.1Q69.4 32.7 69.5 32.6Q69.6 32.2 69.9 31.7Q70.3 31.1 70.6 30.6Q71.2 29.8 71.6 29.3Q71.9 28.8 72.3 28.5Q72.6 28.1 73 27.8Q73.4 27.5 74.1 27.1Q74.5 26.8 75.1 26.7Q75.6 26.7 76 27Q76.5 27.2 76.7 27.7Q76.9 28.1 76.9 28.7Q76.9 29.2 76.7 29.9Q76.5 30.5 76.2 31.1Q75.9 31.6 75.5 32Q75.3 32.2 75.1 32.2Q74.9 32.1 74.6 31.9Q74.4 31.5 74.4 31.5Q74.4 31.4 74.5 31.4Q74.6 31.3 74.8 30.9Q75 30.6 75.2 30.2Q75.4 29.8 75.4 29.6Q75.6 28.8 75.7 28.4Q75.7 28.1 75.5 27.9Q75.5 27.9 75.3 27.9Q75.2 27.9 74.8 28.1Q74.4 28.3 73.7 28.9Q72.9 29.6 72.3 30.4Q71.6 31.5 71 32.3Q70.5 33.1 70.2 33.9Q70.2 34 70.1 34.2Q70 34.4 70 34.4Q70 34.5 70 34.8Q69.9 35.1 69.8 35.3Q69.6 36.2 69.5 37.2Q69.5 38.1 69.6 38.9Q69.8 39.6 70.1 39.9Q70.3 40.1 70.8 40Q71.2 40 71.8 39.7Q72.3 39.5 72.9 39.3Q73.4 39.1 73.8 38.8Q74.2 38.6 74.4 38.4Q74.5 38.3 74.8 38.2Q75 38.1 75.2 38.1Q75.5 38 75.5 38Q75.5 38 75.5 38.2Q75.5 38.4 75.2 38.8Q74.9 39.1 74.5 39.4Q74.3 39.5 74.1 39.7Q73.8 39.9 73.5 40Q73.1 40.3 72.5 40.6Q71.9 40.9 71.3 41Q70.7 41.2 70.2 41.1ZM78.5 39.7Q78.2 39.7 78.1 39.6Q78 39.5 77.7 39.3Q77.4 38.9 77.2 38.6Q77.1 38.2 77.1 37.9Q77.2 37.7 77.2 37.6Q77.2 37.4 77.2 37.4Q77.1 37.3 77.1 37.3Q77.1 37.3 77.2 37.2Q77.3 37.2 77.3 37Q77.2 36.8 77.4 36.3Q77.6 35.8 77.9 35.3Q78 35.1 78.2 34.8Q78.5 34.5 78.8 34.2Q79 33.8 79.3 33.6Q79.8 33.2 80.1 33Q80.5 32.8 80.9 32.7Q81.4 32.6 81.5 32.6Q81.7 32.6 82 33Q82.4 33.2 82.6 33.4Q82.8 33.7 82.9 34.2Q83 34.8 82.8 35.6Q82.7 36.3 81.9 37.4Q81.4 38.1 81 38.5Q80.6 38.8 80 39.1Q79.6 39.4 79.3 39.5Q78.9 39.7 78.5 39.7ZM80.4 37.6Q80.8 37.1 81.1 36.6Q81.4 36.2 81.7 35.5Q81.7 35.2 81.8 34.9Q81.8 34.6 81.7 34.3Q81.7 34 81.6 34Q81.4 33.9 81 33.9Q80.7 34 80.3 34.3Q79.7 34.8 79.3 35.5Q78.8 36.3 78.4 37.3Q78.1 38 78.3 38.4Q78.4 38.8 79 38.7Q79.5 38.5 80.4 37.6ZM92.8 39.2Q92.7 39.1 92.5 39Q92.3 38.8 92.2 38.4Q92.1 38.1 92.1 37.4Q92.1 36.8 92.1 36.5Q92.1 36.1 92 36.1Q91.8 36.1 91.4 36.4Q90.9 36.7 90.4 37.3Q89.8 37.8 89.2 38.4Q89 38.6 88.8 38.8Q88.6 39 88.5 39Q88.3 39.1 88.1 38.9L87.8 38.7Q87.7 38.6 87.7 38.5Q87.7 38.4 87.7 38.3L88.2 37Q88.5 36.3 88.6 36Q88.7 35.6 88.7 35.5Q88.7 35.5 88.7 35.5Q88.5 35.5 88.2 35.7Q87.9 35.8 87.8 36Q87.7 36 87.6 36.2Q87.4 36.3 87.2 36.5Q87 36.7 86.6 37.1Q86.2 37.5 85.9 37.9Q85.6 38.1 85.4 38.4Q85.1 38.7 84.9 38.9Q84.8 39.2 84.7 39.2Q84.5 39.2 84.3 39Q84.1 38.9 84 38.6Q83.8 38.2 84 37.7Q84.1 37.1 84.3 36.1Q84.4 35.8 84.4 35.7Q84.4 35.5 84.5 35.4Q84.5 35.2 84.7 34.9Q84.8 34.6 85.1 34Q85.2 33.6 85.2 33.4Q85.2 33.3 85.2 33.2Q85.2 33 85.4 32.8Q85.5 32.7 85.6 32.6Q85.8 32.6 85.9 32.6Q86.1 32.7 86.3 32.8Q86.5 33 86.5 33.3Q86.5 33.6 86.4 33.8Q86.4 33.9 86.3 34.1L86.1 34.6Q86 34.8 85.9 35.2Q85.7 35.7 85.6 36Q85.5 36.3 85.5 36.4Q85.5 36.5 85.6 36.4Q85.7 36.3 85.9 36.1Q86.1 35.9 86.3 35.8Q86.7 35.4 87.2 35Q87.7 34.7 88.2 34.4Q88.7 34.2 88.9 34.1Q89.2 34.1 89.4 34.2Q89.5 34.3 89.8 34.6Q89.9 34.8 90 35Q90 35.2 89.9 35.4Q89.9 35.5 89.8 35.8Q89.7 36.1 89.6 36.4Q89.6 36.6 89.6 36.6Q89.6 36.6 89.8 36.4Q90 36.2 90.3 36Q90.6 35.8 90.7 35.7Q91.4 35.1 92 34.9Q92.6 34.8 92.9 35.3Q93.2 35.6 93.2 35.8Q93.2 36.1 93.2 36.7Q93.2 36.9 93.2 37.3Q93.2 37.6 93.3 37.9Q93.3 38.2 93.3 38.3Q93.4 38.3 93.6 38.4Q93.7 38.4 94 38.5Q94.3 38.5 94.4 38.7Q94.4 38.9 94.1 39.1Q93.8 39.3 93.5 39.3Q93.1 39.3 92.8 39.2ZM94.2 44.4Q94.1 44.4 94 44.4Q93.9 44.4 93.8 44.2Q93.7 44.1 93.7 43.9Q93.7 43.7 93.8 43.2Q93.9 42.9 93.9 42.6Q94 42.2 94 42.1Q94 42 94.1 41.8Q94.1 41.6 94.1 41.5Q94.2 41.3 94.3 41Q94.3 40.8 94.3 40.5Q94.3 40.3 94.5 40.1Q94.5 40 94.6 39.7Q94.7 39.5 94.7 39.4Q94.7 39.1 94.9 38.4Q95.2 37.8 95.5 36.9Q95.8 36 96 35.2Q96.3 34.3 96.6 33.7Q96.8 33.2 96.9 32.8Q97 32.4 97 32.2Q97 32.1 97 32.1Q97.1 32 97.2 31.9Q97.4 31.7 97.5 31.8Q97.7 31.8 97.9 32Q98.1 32.2 98.1 32.4Q98.2 32.6 98.1 33Q98.1 33.3 98 33.5Q97.9 33.7 97.8 33.8Q97.8 34 97.8 33.9Q98.6 33.6 99.2 33.5Q99.8 33.5 100.3 33.8Q100.7 34 100.9 34.4Q101.1 34.9 101.1 35.4Q101.1 35.7 101 36Q100.9 36.3 100.8 36.6Q100.6 36.8 100.5 36.9Q100.4 36.9 100.3 37.1Q100.3 37.2 100.2 37.3Q100 37.5 99.7 37.8Q99.3 38 99 38.2Q98.7 38.3 98.5 38.3Q98.5 38.3 98.5 38.3Q98.4 38.3 98.4 38.4Q98.4 38.4 98.1 38.5Q97.8 38.7 97.4 38.8Q97 38.9 96.7 38.9Q96.3 38.9 96.1 38.7Q96 38.8 96 38.8Q96 38.9 96 39Q96 39.1 95.9 39.4Q95.8 39.7 95.7 40Q95.5 40.3 95.4 40.3Q95.4 40.3 95.4 40.4Q95.4 40.4 95.4 40.5Q95.4 40.5 95.4 40.8Q95.4 41 95.3 41.2Q95.3 41.3 95.3 41.6Q95.2 41.9 95.1 42.1Q95.1 42.3 95.1 42.5Q95 42.8 94.9 42.8Q94.8 42.8 94.8 43Q94.8 43.2 94.8 43.3Q94.8 43.8 94.6 44.1Q94.4 44.4 94.2 44.4ZM96.6 37.9Q96.7 37.9 97.2 37.7Q97.7 37.6 98.2 37.4Q98.7 37.2 99 37Q99.5 36.5 99.8 35.9Q100 35.4 99.7 34.8Q99.6 34.6 99.2 34.6Q98.7 34.7 98.3 34.9Q97.8 35.2 97.3 35.6Q97.1 35.9 96.9 36.2Q96.7 36.6 96.6 37Q96.5 37.3 96.4 37.6Q96.4 37.9 96.6 37.9ZM102.5 39.3Q102.4 39.1 102.3 39.1Q102.2 39 102.2 38.9Q102.2 38.8 102.1 38.7Q102.1 38.6 102.1 38.6Q102 38.4 102.1 38Q102.2 37.6 102.5 37Q102.7 36.4 103.1 35.7Q103.3 35.5 103.4 35.3Q103.6 35 103.7 34.9Q103.7 34.9 103.7 34.8Q103.8 34.7 103.8 34.7V34.6Q103.8 34.5 104 34.3Q104.2 34.1 104.5 33.8Q104.8 33.5 105.1 33.2Q105.4 33 105.5 32.8Q106 32.6 106.4 32.5Q106.8 32.5 107.1 32.7Q107.2 32.8 107.3 32.9Q107.5 33 107.7 33.2Q107.8 33.4 108 33.5L108.8 34.2L108.4 35.2Q108.2 35.9 108.3 36.5Q108.4 37.1 108.7 37.5Q108.8 37.8 109.1 38Q109.4 38.1 109.6 38.2Q109.8 38.2 109.9 38.3Q110.1 38.4 110.1 38.6Q110.1 38.8 110 38.9Q109.9 39 109.7 39.1Q109.1 39.2 108.5 38.8Q108 38.4 107.5 37.5Q107.4 37.4 107.3 37Q107.2 36.7 107.1 36.6Q107.1 36.7 106.9 37Q106.6 37.3 106.5 37.4Q105.1 38.8 104.1 39.2Q103.1 39.7 102.5 39.3ZM103.2 38.2Q103.2 38.3 103.6 38.2Q104 38 104.5 37.7Q105.2 37.1 105.8 36.4Q106.5 35.7 106.9 35.1L107.3 34.4Q107.1 34 106.9 33.8Q106.7 33.7 106.5 33.7Q106.3 33.7 105.8 34.1Q105.3 34.6 104.7 35.4Q104.2 36.2 103.7 37.1Q103.5 37.5 103.3 37.8Q103.2 38.2 103.2 38.2ZM111.2 39.3Q111 39.2 111 39Q110.9 38.9 111 38.5Q111 38 111.1 37.6Q111.2 37.1 111.4 36.6Q111.4 36.4 111.6 35.8Q111.8 35.2 112 34.6Q112.3 33.9 112.6 33.3Q112.9 32.7 113.1 32.4Q113.2 32.3 113.4 32.3Q113.7 32.3 113.8 32.5Q114 32.7 113.9 33.1Q113.7 33.5 113.3 34.5Q113.1 35 112.9 35.3Q112.8 35.5 112.8 35.6Q112.9 35.6 113 35.5Q113.1 35.3 113.4 35Q113.8 34.8 114.1 34.5Q114.5 34.2 114.8 34Q115.1 33.8 115.2 33.7Q115.4 33.6 115.6 33.6Q115.8 33.5 115.8 33.4Q116.3 33.2 116.8 33.3Q117.2 33.4 117.3 33.6Q117.4 33.8 117.5 33.9Q117.6 34 117.6 34Q117.7 34 117.7 34Q117.7 34.1 117.7 34.1Q117.7 34.2 117.5 34.2Q117.3 34.3 117 34.3Q116.7 34.3 116.5 34.4Q116.3 34.5 116 34.6Q115.3 35 114.6 35.4Q114 35.8 113.3 36.5Q113.2 36.7 113.1 36.9Q112.9 37.1 112.8 37.3Q112.7 37.4 112.6 37.8Q112.5 38.1 112.4 38.4Q112.3 38.7 112.3 38.8Q112.3 38.8 112.3 39Q112.2 39.1 112.1 39.3Q111.8 39.6 111.7 39.6Q111.5 39.6 111.2 39.3ZM121.3 39.3Q120.9 39.7 120.4 39.7Q119.8 39.8 119.3 39.6Q118.8 39.3 118.5 38.9Q118.1 38.4 118 37.9Q117.9 37.3 118 36.4Q118.1 35.7 118.5 34.9Q118.9 34.1 119.6 33.5Q120.2 32.9 120.8 32.7Q121.1 32.5 121.3 32.5Q121.5 32.5 121.9 32.6Q122.4 32.6 122.6 32.7Q122.8 32.8 122.9 33Q123.2 33.3 123.3 33.6Q123.4 33.9 123.4 34.2Q123.3 34.6 122.9 35.2Q122.4 35.8 121.6 36.2Q121.1 36.4 120.6 36.3Q120.1 36.3 119.8 36.1Q119.4 35.9 119.3 36.1Q119.2 36.3 119.1 37.1Q119 37.9 119.2 38.2Q119.4 38.5 119.7 38.6Q120.1 38.7 120.3 38.7Q120.6 38.7 120.9 38.5Q121.2 38.3 121.3 38.3Q121.4 38.3 121.4 38.2Q121.5 38.2 121.7 38Q121.8 37.9 121.9 37.8Q121.9 37.7 122 37.7Q122.1 37.7 122.2 37.8Q122.3 37.9 122.4 37.9Q122.6 37.9 122.5 38.2Q122.4 38.4 122 38.7Q121.7 39 121.3 39.3ZM121.3 35.2Q121.5 35.1 121.7 34.9Q122 34.7 122.1 34.5Q122.3 34.3 122.3 34.1Q122.3 33.8 122 33.7Q121.8 33.5 121.3 33.6Q121.1 33.7 120.8 33.9Q120.5 34.1 120.3 34.4Q120 34.7 119.9 34.9Q119.7 35.1 119.8 35.1Q119.8 35.2 120.1 35.3Q120.4 35.3 120.7 35.3Q121.1 35.3 121.3 35.2ZM130.5 39.9Q130.3 39.8 130 39.6Q129.8 39.5 129.6 39.2Q129.5 39 129.4 38.8Q129.4 38.7 129.4 38.7Q129.3 38.6 129.3 38.6Q129.2 38.6 129.2 38.1Q129.2 37.6 129.3 37.1Q129.3 36.5 129.4 36.2Q129.5 35.9 129.7 35.3Q129.9 34.8 130 34.4L130.6 33.2L129.8 33Q129.6 33 129.6 32.9Q129.5 32.7 129.5 32.7Q129.5 32.5 129.6 32.3Q129.8 32.1 129.9 32.1Q130 32.1 130.3 32.1Q130.5 32.1 130.8 32.1Q131 32 131.1 32Q131.2 32 131.2 31.9Q131.3 31.8 131.4 31.7Q131.5 31.5 131.5 31.3Q131.6 31.1 131.8 30.9Q131.9 30.6 132 30.5Q132.1 30.3 132.3 30Q132.4 29.8 132.5 29.6Q132.6 29.5 132.8 29.3Q132.9 29.2 133.1 29.2Q133.3 29.2 133.6 29.4Q133.8 29.6 133.8 29.7Q133.8 29.8 133.6 30.1Q133.5 30.4 133.3 30.8Q133.1 31.1 132.9 31.4Q132.6 31.8 132.8 31.9Q133 32 133.9 31.8Q134.4 31.7 134.7 31.9Q134.9 32 135 32.4Q135 32.8 134.9 32.9Q134.7 33 134 33Q133.5 33.1 133.2 33.1Q132.8 33.1 132.7 33.1Q132.4 33.1 132.4 33.1Q132.3 33.1 132.1 33.2Q132 33.2 131.9 33.3Q131.8 33.4 131.8 33.5Q131.7 33.6 131.5 34Q131.4 34.3 131.1 34.7Q130.9 35.5 130.7 36.3Q130.5 37.1 130.3 37.9Q130.3 38.4 130.4 38.5Q130.5 38.7 130.9 38.8Q131.1 38.8 131.6 38.8Q132 38.7 132.3 38.7Q132.5 38.6 132.8 38.4Q133 38.3 133.2 38.2Q133.4 38.1 133.5 38Q133.7 37.9 133.7 37.9Q133.8 37.8 133.9 37.8Q134.1 37.9 134.1 38.1Q134.1 38.3 134 38.6Q133.9 38.8 133.3 39.2Q132.4 39.7 131.7 39.9Q131 40 130.5 39.9ZM135.5 39.3Q135.4 39.1 135.3 39.1Q135.2 39 135.2 38.9Q135.2 38.8 135.2 38.7Q135.2 38.6 135.1 38.6Q135 38.4 135.1 38Q135.2 37.6 135.5 37Q135.8 36.4 136.2 35.7Q136.3 35.5 136.5 35.3Q136.6 35 136.7 34.9Q136.7 34.9 136.8 34.8Q136.8 34.7 136.9 34.7V34.6Q136.9 34.5 137.1 34.3Q137.3 34.1 137.5 33.8Q137.8 33.5 138.1 33.2Q138.4 33 138.6 32.8Q139 32.6 139.4 32.5Q139.9 32.5 140.2 32.7Q140.3 32.8 140.4 32.9Q140.5 33 140.7 33.2Q140.9 33.4 141.1 33.5L141.8 34.2L141.5 35.2Q141.2 35.9 141.3 36.5Q141.5 37.1 141.7 37.5Q141.8 37.8 142.1 38Q142.4 38.1 142.7 38.2Q142.8 38.2 143 38.3Q143.1 38.4 143.1 38.6Q143.1 38.8 143 38.9Q143 39 142.8 39.1Q142.1 39.2 141.6 38.8Q141 38.4 140.5 37.5Q140.5 37.4 140.3 37Q140.2 36.7 140.2 36.6Q140.1 36.7 139.9 37Q139.7 37.3 139.6 37.4Q138.2 38.8 137.2 39.2Q136.2 39.7 135.5 39.3ZM136.2 38.2Q136.2 38.3 136.6 38.2Q137.1 38 137.5 37.7Q138.2 37.1 138.9 36.4Q139.6 35.7 140 35.1L140.4 34.4Q140.2 34 140 33.8Q139.7 33.7 139.6 33.7Q139.3 33.7 138.8 34.1Q138.3 34.6 137.8 35.4Q137.2 36.2 136.7 37.1Q136.5 37.5 136.4 37.8Q136.2 38.2 136.2 38.2ZM144.1 39.9Q144 39.8 143.8 39.7Q143.6 39.5 143.5 39.2Q143.4 39 143.4 38.8Q143.5 38.5 143.6 38Q143.8 37.5 144 36.8Q144.2 36.5 144.3 36.3Q144.4 36 144.4 35.7Q144.6 35.4 144.8 34.9Q145 34.4 145.2 33.9Q145.4 33.4 145.6 33Q145.9 32.5 146 32.1Q146.2 31.6 146.4 31.2Q146.6 30.7 146.8 30.2Q147 29.7 147.3 29.1Q147.5 28.5 147.7 28.1Q147.9 27.6 147.9 27.4Q147.9 27.3 148 27.2Q148.1 27.1 148.2 27.1Q148.2 27 148.3 27Q148.4 27 148.5 27Q148.5 27 148.8 27.3Q149 27.6 149 27.8Q149 28.1 148.7 29Q148.4 29.9 147.8 31Q147.2 32.4 146.8 33.3Q146.4 34.2 146.2 34.7Q146 35.2 146.1 35.2Q146.1 35.2 146.4 35.1Q146.6 35 146.9 34.7Q147.2 34.6 147.4 34.4Q147.7 34.3 147.9 34.1Q148.1 33.9 148.3 33.9Q148.5 33.7 148.8 33.6Q149 33.4 149.1 33.4Q149.4 33.2 149.6 33.3Q149.8 33.3 149.9 33.6Q150.2 33.8 150 34Q149.9 34.2 149.4 34.5Q149 34.8 148.4 35.1Q147.8 35.5 147.4 35.7Q146.9 36 146.9 36.1Q146.9 36.1 147 36.4Q147.2 36.6 147.4 36.9Q147.5 37.2 147.7 37.5Q147.9 37.7 147.9 37.8Q148.1 38.4 148.5 38.7Q149 39 149.4 38.8Q149.8 38.6 150 38.7Q150.2 38.7 150.3 38.9Q150.3 39.1 150.3 39.2Q150.3 39.2 150 39.5Q149.7 39.8 149.3 39.9Q148.9 40 148.6 39.9Q148.3 39.9 147.9 39.5Q147.5 39.1 146.7 38.1Q146.7 38 146.6 37.8Q146.5 37.7 146.4 37.6Q146.4 37.4 146.2 37.2Q146.1 37 146.1 37Q146.1 37 146.1 36.9Q146 36.8 145.9 36.6Q145.6 36.5 145.5 36.7Q145.3 37 145.2 37.2Q145.1 37.4 144.9 37.9Q144.8 38.4 144.7 38.8Q144.6 39.2 144.6 39.4Q144.6 39.7 144.5 39.8Q144.4 39.9 144.1 39.9ZM154.5 39.3Q154 39.7 153.5 39.7Q153 39.8 152.5 39.6Q152 39.3 151.6 38.9Q151.3 38.4 151.2 37.9Q151.1 37.3 151.2 36.4Q151.2 35.7 151.7 34.9Q152.1 34.1 152.7 33.5Q153.3 32.9 153.9 32.7Q154.2 32.5 154.4 32.5Q154.6 32.5 155.1 32.6Q155.5 32.6 155.7 32.7Q156 32.8 156.1 33Q156.4 33.3 156.5 33.6Q156.6 33.9 156.6 34.2Q156.5 34.6 156 35.2Q155.5 35.8 154.7 36.2Q154.3 36.4 153.8 36.3Q153.3 36.3 152.9 36.1Q152.6 35.9 152.4 36.1Q152.3 36.3 152.2 37.1Q152.2 37.9 152.3 38.2Q152.5 38.5 152.9 38.6Q153.3 38.7 153.5 38.7Q153.7 38.7 154 38.5Q154.4 38.3 154.4 38.3Q154.5 38.3 154.6 38.2Q154.6 38.2 154.8 38Q154.9 37.9 155 37.8Q155.1 37.7 155.2 37.7Q155.3 37.7 155.4 37.8Q155.4 37.9 155.5 37.9Q155.7 37.9 155.6 38.2Q155.5 38.4 155.2 38.7Q154.9 39 154.5 39.3ZM154.4 35.2Q154.6 35.1 154.9 34.9Q155.1 34.7 155.3 34.5Q155.4 34.3 155.4 34.1Q155.4 33.8 155.2 33.7Q154.9 33.5 154.4 33.6Q154.2 33.7 153.9 33.9Q153.7 34.1 153.4 34.4Q153.2 34.7 153 34.9Q152.9 35.1 152.9 35.1Q153 35.2 153.3 35.3Q153.5 35.3 153.9 35.3Q154.2 35.3 154.4 35.2ZM158.5 40.1Q158.2 39.9 157.8 39.7Q157.5 39.4 157.4 39.2Q157.4 39 157.5 39Q157.5 38.9 157.8 38.9Q158.1 38.9 158.7 39Q159 39 159.3 39Q159.7 38.9 160 38.8Q160.3 38.8 160.3 38.7Q160.4 38.7 160.4 38.6Q160.3 38.5 160.2 38.4Q160.1 38.4 160 38.4Q160 38.3 159.9 38.3Q159.9 38.2 159.7 38.1Q159.5 38 159.3 37.9Q158.9 37.5 158.6 37.2Q158.3 37 158.3 36.9Q158.3 36.8 158.3 36.8Q158.3 36.8 158.3 36.8Q158.2 36.8 158 36.4Q157.9 36 157.9 35.7Q157.9 35.4 158 35.1Q158.1 34.7 158.4 34.3Q158.6 33.9 158.9 33.7Q159.2 33.4 159.7 33Q160.3 32.6 160.8 32.3Q161.3 32 161.6 31.9Q162 31.8 162.3 31.8Q162.6 31.8 162.8 31.9Q163 32 163.2 32.2Q163.4 32.4 163.5 32.5Q163.6 32.7 163.7 32.9Q163.7 33.1 163.6 33.4Q163.6 33.7 163.5 33.9Q163.4 34.1 163.3 34.1Q163.3 34.1 163.3 34.1Q163.2 34.1 163.2 34.2Q163.2 34.4 162.9 34.7Q162.5 34.9 162.3 35Q162 35 161.9 34.8Q161.9 34.7 161.9 34.6Q161.8 34.6 161.8 34.6Q161.8 34.6 161.7 34.5Q161.6 34.4 161.6 34.3Q161.6 34.2 161.7 34.2Q161.8 34.1 161.8 34.1Q161.9 34.1 162 33.9Q162.2 33.6 162.3 33.4Q162.4 33.1 162.4 33Q162.4 32.9 162.4 32.9Q162.4 32.9 162.2 32.9Q161.9 33 161.6 33.2Q161.2 33.4 160.8 33.6Q160.5 33.7 160.3 33.9Q160.2 34 160.2 34.1Q160.2 34.1 160.1 34.1Q160.1 34 160 34.2Q159.9 34.3 159.7 34.6Q159.5 34.8 159.3 35.1Q159.2 35.3 159.1 35.4Q159.1 35.5 159 35.6Q159 35.8 159 36Q158.9 36.2 159 36.3Q159.1 36.4 159.4 36.7Q160.1 37.2 160.5 37.5Q160.9 37.8 161.1 38Q161.3 38.3 161.3 38.4Q161.6 39 161.5 39.3Q161.4 39.6 160.8 39.9Q160.7 40 160.2 40Q159.8 40.1 159.3 40.1Q158.8 40.1 158.5 40.1Z" fill="#5DD7FE" opacity=".95" transform="rotate(-4 66 40)"/>
+          <path d="M69.1 62.1Q68.8 61.9 68.4 61.7Q68.1 61.4 68 61.2Q68 61 68.1 61Q68.1 60.9 68.4 60.9Q68.7 60.9 69.3 61Q69.6 61 69.9 61Q70.3 60.9 70.6 60.8Q70.9 60.8 70.9 60.7Q71 60.7 71 60.6Q70.9 60.5 70.8 60.4Q70.7 60.4 70.6 60.4Q70.5 60.3 70.5 60.3Q70.5 60.2 70.3 60.1Q70.1 60 69.9 59.9Q69.5 59.5 69.2 59.2Q68.8 59 68.9 58.9Q68.9 58.8 68.9 58.8Q68.9 58.8 68.9 58.8Q68.8 58.8 68.6 58.4Q68.5 58 68.5 57.7Q68.5 57.4 68.6 57.1Q68.7 56.7 69 56.3Q69.2 55.9 69.5 55.7Q69.8 55.4 70.3 55Q70.9 54.6 71.4 54.3Q71.9 54 72.2 53.9Q72.6 53.8 72.9 53.8Q73.2 53.8 73.4 53.9Q73.6 54 73.8 54.2Q74 54.4 74.1 54.5Q74.2 54.7 74.2 54.9Q74.2 55.1 74.2 55.4Q74.2 55.7 74.1 55.9Q74 56.1 73.9 56.1Q73.9 56.1 73.8 56.1Q73.8 56.1 73.8 56.2Q73.8 56.4 73.5 56.7Q73.1 56.9 72.9 57Q72.6 57 72.5 56.8Q72.5 56.7 72.5 56.6Q72.4 56.6 72.4 56.6Q72.4 56.6 72.3 56.5Q72.2 56.4 72.2 56.3Q72.2 56.2 72.3 56.2Q72.4 56.1 72.4 56.1Q72.5 56.1 72.6 55.9Q72.8 55.6 72.9 55.4Q73 55.1 73 55Q73 54.9 73 54.9Q73 54.9 72.8 54.9Q72.5 55 72.1 55.2Q71.8 55.4 71.4 55.6Q71.1 55.7 70.9 55.9Q70.8 56 70.8 56.1Q70.8 56.1 70.7 56.1Q70.7 56 70.6 56.2Q70.5 56.3 70.3 56.6Q70.1 56.8 69.9 57.1Q69.8 57.3 69.7 57.4Q69.6 57.5 69.6 57.6Q69.5 57.8 69.5 58Q69.5 58.2 69.6 58.3Q69.7 58.4 70 58.7Q70.7 59.2 71.1 59.5Q71.5 59.8 71.7 60Q71.8 60.3 71.9 60.4Q72.2 61 72.1 61.3Q72 61.6 71.4 61.9Q71.2 62 70.8 62Q70.3 62.1 69.9 62.1Q69.4 62.1 69.1 62.1ZM74.8 61.4Q74.7 61.2 74.6 61Q74.5 60.8 74.5 60.5Q74.6 60.3 74.6 60.1Q74.6 60 74.7 59.9Q74.7 59.8 74.7 59.7Q74.7 59.6 74.8 59.4Q74.8 59.3 74.9 59.1Q75 58.8 75.2 58.3Q75.3 57.9 75.5 57.5Q75.6 57 75.7 56.7Q75.8 56.4 75.8 56.3Q75.8 56.1 76.1 56.1Q76.4 56 76.5 56.1Q76.6 56.1 76.8 56.4Q76.9 56.6 76.9 56.9Q76.9 57.2 76.6 57.7Q76.6 57.8 76.5 58.1Q76.4 58.4 76.3 58.7Q76.2 58.8 76.1 59.1Q76 59.4 75.9 59.6Q75.9 59.7 75.9 59.9Q75.8 60.1 75.8 60.3Q75.7 60.5 75.6 60.7Q75.4 61.5 75.3 61.6Q75.1 61.7 74.8 61.4ZM76.7 53.5Q76.6 53.4 76.5 53.2Q76.5 53 76.4 52.8Q76.4 52.7 76.5 52.7Q76.6 52.6 76.8 52.3Q77.1 52 77 51.8Q77 51.7 77.1 51.6Q77.1 51.6 77.2 51.5Q77.4 51.4 77.7 51.5Q77.9 51.6 78.1 51.9Q78.3 52.3 78.2 52.5Q78.1 52.8 77.8 53.2Q77.5 53.6 77.2 53.6Q77 53.7 76.7 53.5ZM83.4 62.4Q83.1 62.4 82.9 62.3Q82.8 62.2 82.7 61.9Q82.5 61.5 82.5 61Q82.4 60.4 82.4 60L82.5 59.6L81.7 60.2Q81.1 60.8 80.4 61Q79.8 61.3 79.4 61.3Q79.1 61.3 78.9 61.1Q78.7 61 78.5 60.8Q78.4 60.7 78.3 60.5Q78.2 60.2 78.2 59.7Q78.3 59.3 78.5 58.7Q78.6 58.2 78.9 57.6Q79.2 57.1 79.6 56.7Q80.2 55.7 81 55.5Q81.7 55.3 82.4 55.7Q82.9 55.9 83.1 55.9Q83.2 55.9 83.3 55.4Q83.4 55.1 83.4 54.8Q83.5 54.5 83.7 53.9Q84.2 52.5 84.5 51.6Q84.9 50.8 85.2 50.2Q85.4 49.7 85.5 49.6Q85.7 49.5 85.9 49.5Q86.1 49.5 86.2 49.7Q86.4 49.8 86.5 50.1Q86.6 50.3 86.6 50.4Q86.6 50.5 86.5 50.7Q86.2 51.2 85.9 52Q85.5 52.8 85.2 53.7Q84.8 54.6 84.5 55.5Q84.3 56.4 84.1 57.1Q83.9 57.5 83.9 58.2Q83.8 58.8 83.7 59.5Q83.6 60.2 83.6 60.7Q83.6 61.3 83.7 61.4Q83.8 61.8 83.8 62Q83.8 62.2 83.7 62.3Q83.6 62.4 83.4 62.4ZM80.1 60.2Q80.3 60.1 80.6 60Q80.9 59.8 81.2 59.6Q81.7 59.2 82.2 58.8Q82.6 58.4 82.7 57.7Q82.8 57.3 82.7 57.1Q82.6 56.9 82.3 56.7Q82.1 56.5 81.7 56.5Q81.3 56.6 80.9 56.9Q80.4 57.4 80 58.1Q79.5 58.8 79.3 59.9Q79.3 60.1 79.4 60.2Q79.6 60.3 80.1 60.2ZM89.3 61.3Q88.9 61.7 88.4 61.7Q87.9 61.8 87.4 61.6Q86.8 61.3 86.5 60.9Q86.2 60.4 86.1 59.9Q86 59.3 86.1 58.4Q86.1 57.7 86.6 56.9Q87 56.1 87.6 55.5Q88.2 54.9 88.8 54.7Q89.1 54.5 89.3 54.5Q89.5 54.5 89.9 54.6Q90.4 54.6 90.6 54.7Q90.8 54.8 91 55Q91.3 55.3 91.4 55.6Q91.5 55.9 91.5 56.2Q91.4 56.6 90.9 57.2Q90.4 57.8 89.6 58.2Q89.2 58.4 88.7 58.3Q88.2 58.3 87.8 58.1Q87.5 57.9 87.3 58.1Q87.2 58.3 87.1 59.1Q87 59.9 87.2 60.2Q87.4 60.5 87.8 60.6Q88.2 60.7 88.4 60.7Q88.6 60.7 88.9 60.5Q89.2 60.3 89.3 60.3Q89.4 60.3 89.4 60.2Q89.5 60.2 89.7 60Q89.8 59.9 89.9 59.8Q90 59.7 90.1 59.7Q90.2 59.7 90.3 59.8Q90.3 59.9 90.4 59.9Q90.6 59.9 90.5 60.2Q90.4 60.4 90.1 60.7Q89.8 61 89.3 61.3ZM89.3 57.2Q89.5 57.1 89.8 56.9Q90 56.7 90.2 56.5Q90.3 56.3 90.3 56.1Q90.3 55.8 90.1 55.7Q89.8 55.5 89.3 55.6Q89.1 55.7 88.8 55.9Q88.6 56.1 88.3 56.4Q88.1 56.7 87.9 56.9Q87.8 57.1 87.8 57.1Q87.9 57.2 88.2 57.3Q88.4 57.3 88.8 57.3Q89.1 57.3 89.3 57.2ZM99.1 61.7Q98.7 61.6 98.7 61.6Q98.6 61.5 98.4 61.3Q98.3 61.1 98.3 61Q98.2 60.9 98.3 60.8Q98.4 60.8 98.4 60.8Q98.5 60.8 98.5 60.7Q98.5 60.7 98.6 60.7Q98.7 60.6 98.7 60.7Q99.1 60.7 99.7 60.4Q100.3 60.1 100.9 59.7Q101.6 59.2 102.3 58.6Q102.8 57.9 103 57.6Q103.2 57.2 103.3 56.9Q103.3 56.7 103.2 56.5Q103.1 56.4 102.6 56.4Q102.2 56.4 101.5 56.8Q100.7 57.3 100.2 57.8Q99.7 58.2 99.3 58.8Q99.1 59 99 59.3Q98.8 59.5 98.7 59.7Q98.6 59.9 98.6 59.9Q98.6 60 98.4 60.1Q98.2 60.2 98 60.2Q97.9 60.2 97.8 60.1Q97.7 60 97.6 59.8Q97.5 59.7 97.5 59.7Q97.4 59.6 97.4 59.5Q97.4 59.4 97.4 59.2Q97.5 58.9 97.6 58.4Q97.8 57.8 97.9 57.3Q98.1 56.8 98.2 56.4Q98.3 56 98.4 55.9Q98.4 55.9 98.5 55.8Q98.5 55.6 98.5 55.4Q98.6 55.1 98.7 54.9Q98.8 54.8 98.8 54.7Q98.8 54.6 99 54.2Q99.2 53.8 99.4 53.1Q99.4 53.1 99.5 52.8Q99.7 52.4 99.9 52Q100 51.6 100.3 51.1Q100.5 50.6 100.6 50.2Q100.8 49.9 101 49.6Q101.1 49.3 101.2 49.3Q101.3 49.3 101.5 49.3Q101.6 49.3 101.8 49.4Q101.9 49.5 102 49.6Q102.1 49.7 102.1 49.8Q102.1 49.9 102 50.1Q101.9 50.3 101.7 50.8Q101.5 51.3 101.1 52.2Q100.5 53.3 100.2 54.2Q99.8 55.2 99.6 55.9Q99.3 56.6 99.2 57.1L99.1 57.5L99.5 57Q99.8 56.8 100.2 56.5Q100.5 56.2 100.8 56Q101 55.8 101.2 55.7Q101.5 55.6 101.7 55.5Q102 55.4 102.1 55.4Q102.2 55.4 102.4 55.3Q102.6 55.3 103 55.3Q103.4 55.3 103.7 55.5Q103.9 55.7 104.2 56.1Q104.4 56.5 104.4 57Q104.3 57.5 104 58Q103.9 58.1 103.8 58.2Q103.8 58.3 103.8 58.4Q103.7 58.5 103.4 58.9Q103.1 59.4 102.7 59.7Q102.4 60.1 101.9 60.5Q101.4 60.8 100.9 61.1Q100.4 61.4 100 61.5Q99.9 61.5 99.6 61.6Q99.3 61.6 99.1 61.7ZM105 65.9Q104.6 66 104 65.9Q103.5 65.8 103 65.6Q102.6 65.3 102.6 65Q102.5 64.9 102.6 64.8Q102.7 64.6 102.8 64.6Q103 64.5 103.1 64.7Q103.2 64.7 103.6 64.9Q104 65 104.6 64.9Q105 64.8 105.4 64.4Q105.9 64 106.2 63.6Q106.3 63.4 106.7 62.8Q107 62.2 107.4 61.4Q107.8 60.7 108.1 60.1Q108.2 59.9 108.3 59.7Q108.3 59.5 108.5 59.4Q108.6 59.1 108.7 58.9Q108.7 58.7 108.8 58.6Q108.8 58.5 108.9 58.3Q109.1 58 109.2 57.7Q109.3 57.4 109.5 56.8Q109.7 56.2 109.9 55.9Q110.1 55.4 110.3 55.2Q110.4 54.9 110.6 54.8Q110.8 54.7 110.9 54.7Q110.9 54.7 111.1 54.8Q111.4 55 111.4 55.3Q111.5 55.5 111.4 55.8Q111.3 56.1 111 56.7Q110.8 57.1 110.6 57.5Q110.5 57.9 110.4 58Q110.3 58.3 110.1 58.5Q110 58.8 109.9 59.1Q109.6 59.8 109.3 60.3Q109.1 60.8 108.9 61.2Q108.7 61.6 108.5 62.2Q108 62.9 107.6 63.6Q107.2 64.2 106.7 64.8Q106.5 64.9 106.2 65.2Q105.9 65.4 105.6 65.6Q105.3 65.8 105 65.9ZM107.7 61.2Q107.4 61.2 107.1 60.8Q106.8 60.5 106.7 60.2Q106.5 59.8 106.5 59.7Q106.5 59.6 106.5 59.5Q106.5 59.5 106.5 59.5Q106.4 59.5 106.3 59.2Q106.2 58.9 106.2 58.4Q106.2 57.9 106.2 57.4Q106.2 56.9 106.2 56.4Q106.3 56.1 106.3 55.7Q106.3 55.3 106.3 55.1Q106.3 54.7 106.3 54.6Q106.4 54.5 106.5 54.5Q107 54.2 107.2 54.8Q107.4 55.3 107.3 56.7Q107.3 57.5 107.3 58.2Q107.4 59 107.5 59.6Q107.7 60.2 108.1 60.4Q108.2 60.5 108.2 60.6Q108.2 60.8 108.1 60.9Q108 61 107.9 61.1Q107.8 61.2 107.7 61.2ZM118 62.1Q117.6 61.9 117.3 61.7Q117 61.4 116.9 61.2Q116.9 61 116.9 61Q117 60.9 117.3 60.9Q117.6 60.9 118.2 61Q118.4 61 118.8 61Q119.1 60.9 119.4 60.8Q119.7 60.8 119.8 60.7Q119.9 60.7 119.8 60.6Q119.8 60.5 119.7 60.4Q119.6 60.4 119.5 60.4Q119.4 60.3 119.3 60.3Q119.3 60.2 119.1 60.1Q119 60 118.8 59.9Q118.3 59.5 118 59.2Q117.7 59 117.8 58.9Q117.8 58.8 117.8 58.8Q117.8 58.8 117.8 58.8Q117.7 58.8 117.5 58.4Q117.3 58 117.3 57.7Q117.3 57.4 117.5 57.1Q117.6 56.7 117.8 56.3Q118.1 55.9 118.3 55.7Q118.7 55.4 119.2 55Q119.7 54.6 120.2 54.3Q120.8 54 121.1 53.9Q121.5 53.8 121.8 53.8Q122.1 53.8 122.3 53.9Q122.5 54 122.7 54.2Q122.8 54.4 122.9 54.5Q123.1 54.7 123.1 54.9Q123.1 55.1 123.1 55.4Q123 55.7 123 55.9Q122.9 56.1 122.8 56.1Q122.8 56.1 122.7 56.1Q122.7 56.1 122.7 56.2Q122.7 56.4 122.4 56.7Q122 56.9 121.7 57Q121.5 57 121.4 56.8Q121.3 56.7 121.3 56.6Q121.3 56.6 121.2 56.6Q121.2 56.6 121.2 56.5Q121.1 56.4 121.1 56.3Q121.1 56.2 121.2 56.2Q121.2 56.1 121.2 56.1Q121.3 56.1 121.5 55.9Q121.6 55.6 121.8 55.4Q121.9 55.1 121.9 55Q121.9 54.9 121.9 54.9Q121.8 54.9 121.7 54.9Q121.4 55 121 55.2Q120.6 55.4 120.3 55.6Q119.9 55.7 119.8 55.9Q119.7 56 119.7 56.1Q119.7 56.1 119.6 56.1Q119.6 56 119.5 56.2Q119.3 56.3 119.1 56.6Q119 56.8 118.8 57.1Q118.6 57.3 118.6 57.4Q118.5 57.5 118.5 57.6Q118.4 57.8 118.4 58Q118.3 58.2 118.4 58.3Q118.5 58.4 118.9 58.7Q119.5 59.2 119.9 59.5Q120.3 59.8 120.5 60Q120.7 60.3 120.8 60.4Q121.1 61 121 61.3Q120.8 61.6 120.3 61.9Q120.1 62 119.7 62Q119.2 62.1 118.7 62.1Q118.3 62.1 118 62.1ZM123.7 61.4Q123.5 61.2 123.5 61Q123.4 60.8 123.4 60.5Q123.4 60.3 123.5 60.1Q123.5 60 123.6 59.9Q123.6 59.8 123.6 59.7Q123.6 59.6 123.6 59.4Q123.7 59.3 123.7 59.1Q123.9 58.8 124 58.3Q124.2 57.9 124.3 57.5Q124.5 57 124.6 56.7Q124.7 56.4 124.7 56.3Q124.7 56.1 125 56.1Q125.2 56 125.3 56.1Q125.5 56.1 125.7 56.4Q125.8 56.6 125.8 56.9Q125.7 57.2 125.5 57.7Q125.4 57.8 125.3 58.1Q125.2 58.4 125.2 58.7Q125.1 58.8 125 59.1Q124.9 59.4 124.8 59.6Q124.8 59.7 124.7 59.9Q124.7 60.1 124.6 60.3Q124.6 60.5 124.5 60.7Q124.3 61.5 124.2 61.6Q124 61.7 123.7 61.4ZM125.6 53.5Q125.5 53.4 125.4 53.2Q125.3 53 125.3 52.8Q125.3 52.7 125.3 52.7Q125.5 52.6 125.7 52.3Q125.9 52 125.9 51.8Q125.9 51.7 125.9 51.6Q126 51.6 126.1 51.5Q126.3 51.4 126.5 51.5Q126.8 51.6 127 51.9Q127.1 52.3 127.1 52.5Q127 52.8 126.6 53.2Q126.3 53.6 126.1 53.6Q125.8 53.7 125.6 53.5ZM132.2 62.4Q132 62.4 131.8 62.3Q131.6 62.2 131.6 61.9Q131.4 61.5 131.3 61Q131.3 60.4 131.3 60L131.3 59.6L130.6 60.2Q129.9 60.8 129.3 61Q128.7 61.3 128.2 61.3Q128 61.3 127.8 61.1Q127.6 61 127.4 60.8Q127.2 60.7 127.2 60.5Q127 60.2 127.1 59.7Q127.1 59.3 127.3 58.7Q127.5 58.2 127.8 57.6Q128.1 57.1 128.4 56.7Q129.1 55.7 129.8 55.5Q130.6 55.3 131.3 55.7Q131.8 55.9 131.9 55.9Q132 55.9 132.1 55.4Q132.2 55.1 132.3 54.8Q132.4 54.5 132.6 53.9Q133 52.5 133.4 51.6Q133.8 50.8 134.1 50.2Q134.3 49.7 134.4 49.6Q134.6 49.5 134.7 49.5Q134.9 49.5 135.1 49.7Q135.3 49.8 135.4 50.1Q135.5 50.3 135.4 50.4Q135.4 50.5 135.3 50.7Q135.1 51.2 134.7 52Q134.4 52.8 134 53.7Q133.7 54.6 133.4 55.5Q133.1 56.4 132.9 57.1Q132.8 57.5 132.7 58.2Q132.6 58.8 132.6 59.5Q132.5 60.2 132.5 60.7Q132.5 61.3 132.5 61.4Q132.7 61.8 132.6 62Q132.6 62.2 132.5 62.3Q132.4 62.4 132.2 62.4ZM128.9 60.2Q129.2 60.1 129.5 60Q129.7 59.8 130 59.6Q130.6 59.2 131 58.8Q131.5 58.4 131.6 57.7Q131.6 57.3 131.5 57.1Q131.4 56.9 131.2 56.7Q131 56.5 130.6 56.5Q130.2 56.6 129.7 56.9Q129.3 57.4 128.8 58.1Q128.4 58.8 128.2 59.9Q128.1 60.1 128.3 60.2Q128.4 60.3 128.9 60.2ZM138.2 61.3Q137.8 61.7 137.3 61.7Q136.7 61.8 136.2 61.6Q135.7 61.3 135.4 60.9Q135 60.4 135 59.9Q134.9 59.3 134.9 58.4Q135 57.7 135.4 56.9Q135.8 56.1 136.5 55.5Q137.1 54.9 137.7 54.7Q138 54.5 138.2 54.5Q138.4 54.5 138.8 54.6Q139.3 54.6 139.5 54.7Q139.7 54.8 139.8 55Q140.1 55.3 140.2 55.6Q140.3 55.9 140.3 56.2Q140.3 56.6 139.8 57.2Q139.3 57.8 138.5 58.2Q138 58.4 137.5 58.3Q137 58.3 136.7 58.1Q136.3 57.9 136.2 58.1Q136.1 58.3 136 59.1Q135.9 59.9 136.1 60.2Q136.3 60.5 136.6 60.6Q137 60.7 137.2 60.7Q137.5 60.7 137.8 60.5Q138.1 60.3 138.2 60.3Q138.3 60.3 138.3 60.2Q138.4 60.2 138.6 60Q138.7 59.9 138.8 59.8Q138.9 59.7 138.9 59.7Q139 59.7 139.1 59.8Q139.2 59.9 139.3 59.9Q139.5 59.9 139.4 60.2Q139.3 60.4 138.9 60.7Q138.6 61 138.2 61.3ZM138.2 57.2Q138.4 57.1 138.6 56.9Q138.9 56.7 139 56.5Q139.2 56.3 139.2 56.1Q139.2 55.8 138.9 55.7Q138.7 55.5 138.2 55.6Q138 55.7 137.7 55.9Q137.4 56.1 137.2 56.4Q136.9 56.7 136.8 56.9Q136.6 57.1 136.7 57.1Q136.7 57.2 137 57.3Q137.3 57.3 137.6 57.3Q138 57.3 138.2 57.2Z" fill="#5DD7FE" opacity=".95" transform="rotate(-4 66 62)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== Three values ===== -->
+  <span id="field" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="values">
+    <div class="values">
+      <div class="value rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-capture"></use></svg>
+        <p class="value-t">Capture and check</p>
+        <p class="value-d">Keep the practice flowing.</p>
+      </div>
+      <div class="value rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-frame"></use></svg>
+        <p class="value-t">See the details</p>
+        <p class="value-d">Frame-by-frame and slow motion.</p>
+      </div>
+      <div class="value rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-compare"></use></svg>
+        <p class="value-t">Compare two takes</p>
+        <p class="value-d">See your progress on the spot.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== How it works ===== -->
+  <span id="record" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="instant" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="frame-by-frame" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="slow" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="how-it-works">
+    <div class="sec-label">How it works</div>
+    <h2 class="sec-h">Record, review, compare, record again.</h2>
+    <p class="sec-p">A short loop that keeps running through the whole session.</p>
+    <div class="steps" style="margin-top:26px;">
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Record</p><p class="step-d">Capture your run</p></div>
+        <!-- Pending asset (Jo-san): six step thumbnails, English UI -->
+        <img class="step-shot" src="/assets/framereplay/fr-step1-record-en.webp"
+             width="400" height="870" loading="lazy" decoding="async" alt="The capture screen, ready to record.">
+      </div>
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Watch</p><p class="step-d">Review right away</p></div>
+        <img class="step-shot" src="/assets/framereplay/fr-step2-airtime-en.webp"
+             width="400" height="865" loading="lazy" decoding="async" alt="Playback with air time shown in seconds and frames.">
+      </div>
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Step frame by frame</p><p class="step-d">Check key moments</p></div>
+        <img class="step-shot" src="/assets/framereplay/fr-step3-framestep-en.webp"
+             width="400" height="870" loading="lazy" decoding="async" alt="Frame-by-frame stepping, one frame at a time.">
+      </div>
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Compare <span class="pro-badge">PRO</span></p><p class="step-d">Side by side</p></div>
+        <img class="step-shot" src="/assets/framereplay/fr-step4-compare-en.webp"
+             width="400" height="865" loading="lazy" decoding="async" alt="Two takes side by side for comparison.">
+      </div>
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Add lines &amp; angles <span class="pro-badge">PRO</span></p><p class="step-d">Analyze your movement</p></div>
+        <img class="step-shot" src="/assets/framereplay/fr-step5-angle-en.webp"
+             width="400" height="865" loading="lazy" decoding="async" alt="A line drawn on the video with the angle shown.">
+      </div>
+      <div class="step rv">
+        <div class="step-n" aria-hidden="true"></div>
+        <div><p class="step-t">Record again</p><p class="step-d">Next take</p></div>
+        <img class="step-shot" src="/assets/framereplay/fr-step6-library-en.webp"
+             width="480" height="538" loading="lazy" decoding="async" alt="The video library, filtered by athlete tag.">
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== Key features ===== -->
+  <section class="sec" id="features">
+    <div class="sec-label">Key features</div>
+    <h2 class="sec-h">Built for comparing, and for explaining.</h2>
+    <div class="feats" style="margin-top:26px;">
+
+      <article class="feat rv" id="comparison">
+        <div>
+          <div class="feat-no">FEATURE 01</div>
+          <h3 class="feat-h">Compare &amp; Overlay <span class="pro-badge">PRO</span></h3>
+          <p class="feat-b">Compare two takes side by side, play in sync, or overlay.</p>
+          <p class="feat-note">Try it three times before you buy.</p>
+        </div>
+        <figure class="shot-wrap">
+          <img src="/assets/framereplay/fr-feat-overlay-en.webp"
+               width="1040" height="780" loading="lazy" decoding="async"
+               alt="Two takes overlaid, with a slider controlling how strongly the top one shows.">
+        </figure>
+      </article>
+
+      <article class="feat feat--flip rv" id="drawing">
+        <div>
+          <div class="feat-no">FEATURE 02</div>
+          <h3 class="feat-h">Lines &amp; Angles <span class="pro-badge">PRO</span></h3>
+          <p class="feat-b">Draw lines and show angles to analyze your movement.</p>
+          <p class="feat-note">Try it three times before you buy.</p>
+        </div>
+        <figure class="shot-wrap">
+          <img src="/assets/framereplay/fr-feat-angle-en.webp"
+               width="1040" height="780" loading="lazy" decoding="async"
+               alt="A line drawn over the video with the measured angle shown.">
+        </figure>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== No scores ===== -->
+  <section id="not" style="padding:0 0 clamp(52px,8vw,88px);">
+    <div class="notblock rv">
+      <p>No scores. No automatic judgment.</p>
+      <p>FrameReplay is a tool for people to watch and decide for themselves.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== More in Pro ===== -->
+  <span id="replay" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="continuous" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="processed-export" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="flashair" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="pro">
+    <div class="sec-label">More in Pro</div>
+    <h2 class="sec-h">Six features unlock with Pro.</h2>
+    <p class="sec-p">These four, plus the two above. <b>A one-time purchase</b> — there is no subscription and no recurring payment.</p>
+    <p class="avail"><b>If you installed FrameReplay from the App Store before 21 September 2026, Pro is already on for you.</b> There is nothing to buy again and nothing to apply for &mdash; you will see a note at the top of the app's settings screen.</p>
+
+    <div class="mini">
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
+        <p class="mini-t">Replay while recording <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Look back at what just happened without pressing record.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
+        <p class="mini-t">Continuous mode <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Set the device down. It finds the movement, splits each take, and plays it back.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
+        <p class="mini-t">Export with edits <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Save at the speed you are watching, or save a compared pair as one video.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-card"></use></svg>
+        <p class="mini-t">Import from an SD card <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Requires a FlashAir Wi-Fi SD card and a video camera. Clips arrive in the order they were shot.</p>
+      </div>
+    </div>
+
+    <!-- ===== Field note =====
+         Published with the coach's consent (confirmed 2026-09-21).
+         Translated from the Japanese page. Do not add anything. -->
+    <div class="fieldnote rv" id="continuous-story">
+      <div class="fieldnote-label">In the field</div>
+      <p>Coach Taisei Watanabe was training alone at a water jump. He set his device down, turned on continuous mode, and never touched it again. Jump, land, check the screen, jump again.</p>
+      <blockquote>"No need to leave the camera running — it detects each jump on its own. Being able to compare takes made it genuinely useful."</blockquote>
+      <cite>― Coach Taisei Watanabe (translated from Japanese)</cite>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== Included for free ===== -->
+  <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+  <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="other-features">
+    <div class="sec-label">Included for free</div>
+    <h2 class="sec-h">And more.</h2>
+    <p class="sec-p">Everything listed here is free to use.</p>
+    <div class="mini mini--free" style="margin-top:24px;">
+      <!-- ★ Never claim "240 fps" or "4K" without the qualifier. The app only offers
+           the combinations the device can actually produce. -->
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
+        <p class="mini-t">High frame rate</p>
+        <p class="mini-d">30–240 fps, depending on your device</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
+        <p class="mini-t">Slow motion</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
+        <p class="mini-t">Loop a section</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
+        <p class="mini-t">Air time</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flip"></use></svg>
+        <p class="mini-t">Flip left/right</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zoom"></use></svg>
+        <p class="mini-t">Pinch to zoom</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-photos"></use></svg>
+        <p class="mini-t">Import from Photos</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
+        <p class="mini-t">Export</p>
+        <p class="mini-d">Save &amp; share as recorded</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
+        <p class="mini-t">Video library</p>
+        <p class="mini-d">Athlete tags &amp; filters</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"></use></svg>
+        <p class="mini-t">Favorites &amp; reference take</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"></use></svg>
+        <p class="mini-t">Customizable controls</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lang"></use></svg>
+        <p class="mini-t">Japanese / English</p>
+      </div>
+      <!-- ★ Apple Watch stays last. watchOS 26.2 is very new; listing it alongside the
+           others reads as "works out of the box". Do not name any watch model. -->
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-watch"></use></svg>
+        <p class="mini-t">Start recording from Apple Watch *</p>
+        <p class="mini-d">* Starting a recording from Apple Watch requires an Apple Watch running watchOS 26.2 or later.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== MultiCam (Future) =====
+       Not in the App Store build. Never describe it as shipped. No CTA. -->
+  <section class="sec" id="multicam">
+    <div class="future rv">
+      <div class="sec-label">Future</div>
+      <p style="margin:0 0 14px;"><span class="dev-badge">In development</span></p>
+      <h2 class="sec-h">MultiCam</h2>
+      <p class="sec-p">Capture the same take from multiple iPhones and automatically gather them on your device.</p>
+      <div class="future-fig">
+        <svg viewBox="0 0 520 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: footage from several iPhones gathering on the coach's device.">
+          <g stroke="#E8B45A" stroke-width="1.6" opacity=".9">
+            <rect x="24" y="20" width="44" height="74" rx="8"/>
+            <rect x="24" y="106" width="44" height="74" rx="8"/>
+            <rect x="120" y="63" width="44" height="74" rx="8"/>
+          </g>
+          <g stroke="#8A95A1" stroke-width="1.2" opacity=".75">
+            <path d="M38 34h16M38 42h10M38 120h16M38 128h10M134 77h16M134 85h10"/>
+          </g>
+          <g stroke="#E8B45A" stroke-width="1.5" stroke-dasharray="5 6" opacity=".75">
+            <path d="M72 57C150 57 210 74 300 92"/>
+            <path d="M72 143C150 143 210 118 300 98"/>
+            <path d="M168 100C214 100 256 96 300 95"/>
+          </g>
+          <g stroke="#5DD7FE" stroke-width="1.8">
+            <rect x="330" y="34" width="118" height="122" rx="12"/>
+            <path d="M348 64h82M348 80h60M348 96h82M348 112h48"/>
+          </g>
+          <text x="389" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Coach's device</text>
+          <text x="96" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
+                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Multiple iPhones</text>
+        </svg>
+      </div>
+      <p class="future-note">Concept image. MultiCam is in development and not included in the App Store version.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== Use cases ===== -->
+  <section class="sec" id="use-cases">
+    <div class="sec-label">Use cases</div>
+    <h2 class="sec-h">Any sport where you check movement on video.</h2>
+    <div class="mini mini--free" style="margin-top:26px;">
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-ski"></use></svg>
+        <p class="mini-t">Skiing / Moguls</p>
+        <p class="mini-d">Film a run and review it before the next one.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tramp"></use></svg>
+        <p class="mini-t">Gymnastics / Trampoline</p>
+        <p class="mini-d">Step through the entry and exit of a rotation.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-swim"></use></svg>
+        <p class="mini-t">Swimming</p>
+        <p class="mini-d">Draw a line on the start or the entry angle.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-physio"></use></svg>
+        <p class="mini-t">Trainers / Physio</p>
+        <p class="mini-d">Put today next to last time and talk it through.</p>
+      </div>
+      <div class="mini-item rv">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-more"></use></svg>
+        <p class="mini-t">And more</p>
+        <p class="mini-d">Any sport where you check movement on video.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== FAQ ===== -->
+  <section class="sec" id="faq">
+    <div class="sec-label">FAQ</div>
+    <h2 class="sec-h">Frequently asked questions</h2>
+    <div class="faq" style="margin-top:24px;">
+      <details id="faq-1"><summary>What can I use for free?</summary>
+        <p class="faq-a">Recording, frame-by-frame stepping, slow motion, section loops, air time, flip, zoom, importing from Photos, exporting as recorded, the video library, favorites and reference takes, customizable controls, and Japanese / English switching are all free. Recording and frame-by-frame review stay free.</p>
+      </details>
+      <details id="faq-2"><summary>What's included in FrameReplay Pro?</summary>
+        <p class="faq-a">Six features: compare two takes, lines &amp; angles, replay while recording, continuous mode, export with edits, and importing from an SD card (FlashAir).</p>
+      </details>
+      <details id="faq-3"><summary>Is Pro a subscription?</summary>
+        <p class="faq-a">No. It is a one-time purchase. There is no subscription and no recurring payment.</p>
+      </details>
+      <!-- ★ Q4 is taken from the published privacy policy (last updated 2026-09-18). Do not paraphrase. -->
+      <details id="faq-4"><summary>Are my videos uploaded to a server?</summary>
+        <p class="faq-a">No. Your videos are stored on your device only. There is no server belonging to us. The only connection the app makes to the internet is to Apple, for the in-app purchase.</p>
+      </details>
+      <details id="faq-5"><summary>Does AI analyze or score athletes?</summary>
+        <p class="faq-a">No. FrameReplay does not score or judge anything automatically. It is a tool for people to watch and decide for themselves.</p>
+      </details>
+      <details id="faq-6"><summary>Which devices and iOS versions are supported?</summary>
+        <p class="faq-a">iPhone and iPad running iOS 17.0 or later. Starting a recording from Apple Watch requires watchOS 26.2 or later.</p>
+      </details>
+      <details id="faq-7"><summary>Is MultiCam available now?</summary>
+        <p class="faq-a">Not yet. MultiCam is in development and not included in the App Store version.</p>
+      </details>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ===== Final CTA ===== -->
+  <section class="sec" id="get">
+    <div class="get rv">
+      <img class="get-icon" src="/assets/framereplay/fr-appicon.webp"
+           width="256" height="256" loading="lazy" decoding="async" alt="The FrameReplay app icon">
+      <p class="get-h">FrameReplay</p>
+      <div class="cta-row">
+        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
+      </div>
+      <!-- ★ Do not mix locales. The English page shows $59.99 in the US only. -->
+      <p class="get-price">Free to download. Compare, overlay, and lines &amp; angles are part of FrameReplay Pro (one-time purchase, $59.99 in the US).</p>
+      <p class="get-spec">iPhone / iPad, iOS 17.0 or later</p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="fr-foot">
+  <div class="fr-foot-in">
+    <div class="fr-foot-mark">Frame<span>Replay</span></div>
+    <nav class="fr-foot-links">
+      <a href="https://vanwhist.github.io/apps/framereplay/privacy/" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://vanwhist.github.io/apps/framereplay/support/" target="_blank" rel="noopener">Support</a>
+      <a href="/">mogul-mic.com</a>
+    </nav>
+    <div class="fr-foot-copy">© 2026 Yuta Jo</div>
+  </div>
+</footer>
+
+<script>
+  /* Language switch: carry the current anchor across.
+     Without JS the plain href still works; it just drops the hash. */
+  (function(){
+    var a = document.querySelector('[data-lang-switch]');
+    if (!a) return;
+    var base = a.getAttribute('href').split('#')[0];
+    a.addEventListener('click', function(){
+      a.setAttribute('href', location.hash ? base + location.hash : base);
+    });
+  })();
+
+  (function(){
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  })();
+</script>
+<!-- ★ Analytics. Root-relative on purpose: this file sits one level deeper. -->
+<script src="/assets/js/mic-analytics.js" defer></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "267adc99d15146b38cc2356821ce739d"}'></script>
+</body>
+</html>
