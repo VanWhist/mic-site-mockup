@@ -386,7 +386,7 @@
       <p class="hero-lead">An iPhone / iPad app for coaches and athletes to capture, review, and compare on the spot.</p>
       <div class="cta-row">
         <!-- ★ No /jp/ here. A region-free App Store URL resolves to the visitor's own store. -->
-        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
+        <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_lp&amp;mt=8" target="_blank" rel="noopener">Download on the App Store</a>
       </div>
       <p style="margin:0;">
         <span class="origin">
@@ -781,7 +781,7 @@
            width="256" height="256" loading="lazy" decoding="async" alt="The FrameReplay app icon">
       <p class="get-h">FrameReplay</p>
       <div class="cta-row">
-        <a class="cta" href="https://apps.apple.com/app/id6805541932" target="_blank" rel="noopener">Download on the App Store</a>
+        <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_lp&amp;mt=8" target="_blank" rel="noopener">Download on the App Store</a>
       </div>
       <!-- ★ Do not mix locales. The English page shows $59.99 in the US only. -->
       <p class="get-price">Free to download. Compare, overlay, and lines &amp; angles are part of FrameReplay Pro (one-time purchase, $59.99 in the US).</p>
@@ -824,6 +824,29 @@
       es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  })();
+
+  /* App Store campaign tracking (Apple's pt / ct).
+     Visitors arriving from an ad get ct swapped. This only rewrites links on
+     the page; nothing is sent anywhere (FrameReplay collects no data). */
+  (function(){
+    /* utm_campaign value (lower-case) -> campaign name in App Store Connect.
+       Add one line per campaign. Unknown values and a missing utm_campaign
+       leave the ct that is written in the HTML untouched. */
+    var CAMPAIGNS = {
+      'us01': 'US-01'   // US Instagram ad test (2026-09)
+    };
+    if (!window.URL || !window.URLSearchParams) return;
+    var q = new URLSearchParams(location.search).get('utm_campaign');
+    if (!q) return;
+    var ct = CAMPAIGNS[q.trim().toLowerCase()];
+    if (!ct) return;
+    var links = document.querySelectorAll('a[href*="apps.apple.com"]');
+    Array.prototype.forEach.call(links, function(a){
+      var u = new URL(a.href);
+      u.searchParams.set('ct', ct);
+      a.href = u.toString();
+    });
   })();
 </script>
 <!-- ★ Analytics. Root-relative on purpose: this file sits one level deeper. -->
