@@ -426,7 +426,7 @@
       <p class="hero-sub">撮ってすぐ、コマ送りで見返す</p>
       <p class="hero-lead">スポーツの現場で、撮った動きをその場で確認・比較する iPhone / iPad アプリ。</p>
       <div class="cta-row">
-        <a class="cta" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Store でダウンロード</a>
+        <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=PT_PENDING&amp;ct=jp_lp&amp;mt=8" target="_blank" rel="noopener">App Store でダウンロード</a>
       </div>
       <p style="margin:0;">
         <span class="origin">
@@ -834,7 +834,7 @@
            width="256" height="256" loading="lazy" decoding="async" alt="FrameReplay のアプリアイコン">
       <p class="get-h">FrameReplay</p>
       <div class="cta-row">
-        <a class="cta" href="https://apps.apple.com/jp/app/framereplay-sports-video/id6805541932" target="_blank" rel="noopener">App Store でダウンロード</a>
+        <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=PT_PENDING&amp;ct=jp_lp&amp;mt=8" target="_blank" rel="noopener">App Store でダウンロード</a>
       </div>
       <!-- ★ ロケールを混ぜない。日本語ページは ¥6,000 のみ。 -->
       <p class="get-price">本体は無料。2本比較・重ねる・線と角度などは FrameReplay Pro（買い切り ¥6,000）です。</p>
@@ -879,6 +879,29 @@
       es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  })();
+
+  /* App Store のキャンペーン計測（Apple の pt / ct）。
+     広告から来た人だけ ct を差し替える。ページ内のリンクを書き換えるだけで、
+     どこにもデータを送らない（FrameReplay の「データを集めない」方針のため）。 */
+  (function(){
+    /* utm_campaign の値（小文字） → App Store Connect 側のキャンペーン名。
+       増やすときはここに1行足すだけ。
+       対応表に無い値と utm_campaign 無しのときは、HTML に書いた ct のまま。 */
+    var CAMPAIGNS = {
+      'us01': 'US-01'   // 米国向け Instagram 広告テスト（2026-09）
+    };
+    if (!window.URL || !window.URLSearchParams) return;
+    var q = new URLSearchParams(location.search).get('utm_campaign');
+    if (!q) return;
+    var ct = CAMPAIGNS[q.trim().toLowerCase()];
+    if (!ct) return;
+    var links = document.querySelectorAll('a[href*="apps.apple.com"]');
+    Array.prototype.forEach.call(links, function(a){
+      var u = new URL(a.href);
+      u.searchParams.set('ct', ct);
+      a.href = u.toString();
+    });
   })();
 </script>
 <!-- ★ 計測。ルート相対で書くこと。英語版は階層が1つ深いので相対パスだと壊れる。 -->
