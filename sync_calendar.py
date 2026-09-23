@@ -16,7 +16,7 @@ Google Calendar (list_events) の生データ(JSON) -> サイト用 calendar-dat
         "id", "date"(YYYY-MM-DD), "startTime"(HH:MM), "endTime"(HH:MM),
         "meetingTime"(HH:MM|null), "title", "venue", "rawSummary",
         "price"(int|null), "priceLabel"(str), "capacity"(int|null), "capacityLabel"(str),
-        "note"(str), "applyMethod"(str)
+        "note"(str), "applyMethod"(str), "deadlineLabel"(str|None)
       }, ...
     ],
     "venues": ["O-air", "S-air", "O-air+トランポリン施設", ...]   // 実データから動的に抽出
@@ -40,9 +40,13 @@ def parse_price(desc):
 
 def parse_capacity(desc):
     m = re.search(r'(\d+)\s*名(?:受付中|様)', desc)
-    if not m:
-        return None, None
-    return int(m.group(1)), m.group(0).replace('です', '').strip()
+    if m:
+        return int(m.group(1)), m.group(0).replace('です', '').strip()
+    # 募集が終わった回は人数の記載が消え、代わりに終了の一文が入る。
+    # ここを拾わないとカードの人数欄が「-」になり、まだ受付中に見えてしまう。
+    if re.search(r'受付(?:は)?終了', desc):
+        return 0, '受付終了'
+    return None, None
 
 def parse_meeting_time(desc):
     m = re.search(r'(\d{1,2})\s*時(?:(\d{1,2})\s*分)?\s*集合', desc)
@@ -51,6 +55,13 @@ def parse_meeting_time(desc):
     hh = int(m.group(1))
     mm = int(m.group(2)) if m.group(2) else 0
     return f'{hh:02d}:{mm:02d}'
+
+def parse_deadline(desc):
+    # 「申込締切は10月7日(水)です。」から「10月7日(水)」を取り出す
+    m = re.search(r'申込締切は\s*(.+?)\s*です', desc)
+    if not m:
+        return None
+    return m.group(1).strip()
 
 def parse_apply_method(desc):
     if 'LINE' in desc or 'LINE' in desc:
@@ -104,6 +115,7 @@ def convert(raw, source_calendar_id):
         capacity, capacity_label = parse_capacity(desc)
         meeting_time = parse_meeting_time(desc)
         apply_method = parse_apply_method(desc)
+        deadline_label = parse_deadline(desc)
         note = build_note(desc)
 
         if venue and venue not in venues:
@@ -123,6 +135,7 @@ def convert(raw, source_calendar_id):
             'capacity': capacity,
             'capacityLabel': capacity_label,
             'applyMethod': apply_method,
+            'deadlineLabel': deadline_label,
             'note': note,
         })
 
