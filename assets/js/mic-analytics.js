@@ -9,6 +9,9 @@
   'use strict';
   try {
     if (navigator.webdriver) { return; }
+    // ローカルでの表示確認は送らない。自動ブラウザは webdriver=false のことがあり、
+    // 確認アクセスが本番の記録に混ざっていたため（2026-09-24 追加）。
+    if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) { return; }
 
     // 読み込み元の <script> 要素。data-scroll-depth などのページごとの指定を読むため
     var me = document.currentScript || document.querySelector('script[src*="mic-analytics.js"]');
