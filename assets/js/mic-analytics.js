@@ -10,6 +10,9 @@
   try {
     if (navigator.webdriver) { return; }
 
+    // 読み込み元の <script> 要素。data-scroll-depth などのページごとの指定を読むため
+    var me = document.currentScript || document.querySelector('script[src*="mic-analytics.js"]');
+
     var API = 'https://script.google.com/macros/s/AKfycbwIcx4poYMx4xx9LqFLpkMC98B5UfPr03YnRmTVQM39-4ZUFvoZgUrb3U8hjVd2Zu49lQ/exec';
 
     var K_OFF     = 'mic_analytics_off';
@@ -154,6 +157,50 @@
       });
     }
 
+    /* ---- スクロール深度（<script data-scroll-depth> のページだけ） ---- */
+    // 25 / 50 / 75 / 100% に到達したら、1ページ表示につき各段階1回だけ送る（2026-09-24 追加）。
+    // scroll のたびには計算しない。200ms に1回までにまとめ、100% を送ったら監視をやめる。
+    // 到達率 =（スクロール量 + 画面の高さ）÷ ページの高さ。一気に飛んだときは通過した段階をすべて送る。
+    if (me && me.hasAttribute('data-scroll-depth')) {
+      var DEPTHS = [25, 50, 75, 100];
+      var depthSent = {};
+      var depthTimer = null;
+
+      var checkDepth = function () {
+        depthTimer = null;
+        var doc   = document.documentElement;
+        var total = Math.max(doc.scrollHeight, document.body ? document.body.scrollHeight : 0);
+        if (!total) { return; }
+        var seen = (window.pageYOffset || doc.scrollTop || 0) + window.innerHeight;
+        var pct  = (total - seen <= 2) ? 100 : Math.floor(seen / total * 100);
+        for (var i = 0; i < DEPTHS.length; i++) {
+          var d = DEPTHS[i];
+          if (pct >= d && !depthSent[d]) {
+            depthSent[d] = true;
+            send({ a: 'ev', p: location.pathname.slice(0, 200), v: sid, e: 'scroll_depth', ed: String(d) });
+          }
+        }
+        if (depthSent[100]) {
+          window.removeEventListener('scroll', onDepthScroll);
+          window.removeEventListener('resize', onDepthScroll);
+        }
+      };
+      var onDepthScroll = function () {
+        if (!depthTimer) { depthTimer = setTimeout(checkDepth, 200); }
+      };
+
+      try {
+        window.addEventListener('scroll', onDepthScroll, { passive: true });
+        window.addEventListener('resize', onDepthScroll, { passive: true });
+      } catch (e) {
+        window.addEventListener('scroll', onDepthScroll);
+        window.addEventListener('resize', onDepthScroll);
+      }
+      // アンカー付きURLで途中から開いた場合や、ページが短い場合に備えて、読み込み後に1回測る
+      if (document.readyState === 'complete') { onDepthScroll(); }
+      else { window.addEventListener('load', onDepthScroll); }
+    }
+
     /* ---- 外部リンク（CTA）のクリック ------------------------------- */
     document.addEventListener('click', function (ev) {
       try {
@@ -175,7 +222,9 @@
         } else if (u.protocol === 'tel:') {
           name = 'cta_tel';
         } else if (u.hostname && u.hostname !== location.hostname) {
-          detail = u.hostname;
+          // ボタンの位置（data-cta-pos）があれば、ホスト名の代わりに詳細へ入れる（2026-09-24 追加）。
+          // 同じリンク先のボタンが1ページに複数あるとき、どれが押されたかを分けるため。
+          detail = a.getAttribute('data-cta-pos') || u.hostname;
           // App Store は専用イベントで数える。cta_other に混ざると、
           // ダウンロード導線が何件押されたか分からなくなるため（2026-09-21 追加）。
           if (/(^|\.)apps\.apple\.com$/.test(u.hostname))                   { name = 'cta_appstore'; }
