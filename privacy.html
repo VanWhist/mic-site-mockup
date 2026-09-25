@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>申し込み・お問い合わせ | MIC — Mogul Improvement Community</title>
-<meta name="description" content="MICへのレッスンのお申し込み・ご質問は、すべて公式LINEで承っています。友だち追加後、お名前をメッセージで送ってください。通常1〜2営業日以内にご連絡します。">
+<title>プライバシーポリシー｜MIC Mogul Improvement Community</title>
+<meta name="description" content="MIC（Mogul Improvement Community）のプライバシーポリシーです。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MIC — Mogul Improvement Community">
-<meta property="og:title" content="申し込み・お問い合わせ | MIC — Mogul Improvement Community">
-<meta property="og:description" content="MICへのレッスンのお申し込み・ご質問は、すべて公式LINEで承っています。友だち追加後、お名前をメッセージで送ってください。通常1〜2営業日以内にご連絡します。">
-<meta property="og:url" content="https://mogul-mic.com/inquiry.html">
-<link rel="canonical" href="https://mogul-mic.com/inquiry.html">
+<meta property="og:title" content="プライバシーポリシー｜MIC Mogul Improvement Community">
+<meta property="og:description" content="MIC（Mogul Improvement Community）のプライバシーポリシーです。">
+<meta property="og:url" content="https://mogul-mic.com/privacy.html">
+<link rel="canonical" href="https://mogul-mic.com/privacy.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -86,7 +86,8 @@
   }
   .contact-hero .eyebrow{display:flex;justify-content:center;}
   .contact-hero h1{
-    font-size:clamp(34px,6vw,64px);
+    /* 「プライバシーポリシー」は10文字あり、元の 34〜64px だと 375px でも 1280px でも最後の「ー」だけ折り返すため、上下限を下げている */
+    font-size:clamp(28px,6vw,52px);
     font-weight:800;letter-spacing:-.02em;line-height:1.15;
     margin-bottom:24px;
   }
@@ -95,42 +96,14 @@
     max-width:520px;margin:0 auto;
   }
 
-  /* ---------- LINE contact card ---------- */
-  .contact-line{
-    padding:6vh 6vw 18vh;
-    display:flex;justify-content:center;
-  }
-  .line-card{
-    background:#101012;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:28px;
-    padding:6vh 6vw;
-    max-width:480px;
-    width:100%;
-    text-align:center;
-  }
-  .line-btn{
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    background:var(--line-green);color:#fff;
-    font-size:16px;font-weight:700;letter-spacing:.02em;
-    padding:18px 28px;border-radius:100px;
-    transition:transform .3s ease, box-shadow .3s ease;
-    box-shadow:0 16px 40px -16px rgba(6,199,85,.5);
-  }
-  .line-btn:hover{transform:translateY(-2px);}
-  .line-btn svg{flex:0 0 auto;}
-  .line-qr{margin-top:36px;}
-  .line-qr img{
-    width:140px;height:140px;margin:0 auto;
-    border-radius:12px;background:#fff;padding:10px;
-  }
-  .qr-caption{margin-top:14px;font-size:12px;color:var(--muted);}
-  .line-note{
-    margin-top:36px;padding-top:32px;
-    border-top:1px solid rgba(255,255,255,.08);
-    font-size:13px;line-height:2;color:var(--muted);
-    text-align:left;
-  }
+  /* ---------- 本文（プライバシーポリシー） ----------
+     文面は確定稿をそのまま入れている。直すときは PR で城さんの確認を取ること。 */
+  .policy{max-width:760px;margin:0 auto;padding:0 6vw 16vh;color:#d3d3d8;font-size:15px;line-height:1.95;}
+  .policy h2{font-size:18px;font-weight:800;color:var(--fg);line-height:1.5;margin:48px 0 12px;}
+  .policy p{margin-bottom:12px;}
+  .policy ul{margin-bottom:12px;padding-left:1.3em;}
+  .policy li{margin-bottom:6px;}
+  .policy a{color:var(--fg);text-decoration:underline;text-underline-offset:3px;word-break:break-all;}
 
   /* ---------- 全ページ共通フッター ----------
      どのページから入ってきた人も、サイト全体へ戻れるようにするためのもの。
@@ -334,7 +307,7 @@
     <a href="full-calendar.html">カレンダー</a>
     <a href="news.html" class="only-wide">お知らせ</a>
     <a href="community.html" class="only-wide">コミュニティ</a>
-    <a href="inquiry.html" class="current">お問い合わせ</a>
+    <a href="inquiry.html">お問い合わせ</a>
   </nav>
 </div>
 <!-- バーの外に出してある。メニューを開いている間はバーごと消えるので、
@@ -367,28 +340,53 @@
 
 
 <section class="contact-hero">
-  <div class="eyebrow reveal">Contact</div>
-  <h1 class="reveal delay-1">申し込み・お問い合わせ</h1>
-  <p class="reveal delay-2">レッスンへのお申し込み・ご質問は、すべて公式LINEアカウントで承っています。お気軽にお問い合わせください。</p>
+  <div class="eyebrow reveal">Privacy Policy</div>
+  <h1 class="reveal delay-1">プライバシーポリシー</h1>
 </section>
 
-<section class="contact-line">
-  <div class="line-card reveal-scale">
-    <a href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" class="line-btn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 5.94 2 10.8c0 4.36 3.58 8.01 8.42 8.71.33.07.78.22.89.5.1.26.07.66.03.92l-.14.87c-.04.26-.2 1 .88.55 1.07-.46 5.79-3.41 7.9-5.84C21.44 14.5 22 12.72 22 10.8 22 5.94 17.52 2 12 2z" fill="#fff"/>
-      </svg>
-      <span><span style="display:inline-block">LINEで申し込み・</span><span style="display:inline-block">相談</span></span>
-    </a>
-    <div class="line-qr">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEiAQAAAAB1xeIbAAAB5ElEQVR4nO2aQYrjMBBFX40FvZShD9BHsW82V7OOkgMMWEuDzO+FZDuBhhkGHDuxtAiW9SAfUfqqVMXE30f49Q8QVKpSL0RFK6OPDoI5CC0sb91Rui5BNZKkYj7dOJv9HoFOkjQep+saVAlvwHpAA5APRH+orvem3P3EJwhfP9y+Z1X/RlQ0k24O65/1jZemctyXUPfJgZ9smQqIx+i6CjXnhAbih6zPHw6CmZm1x+l6d8qV8M5jMoUWEyTubf+s6l+bQhoblcQGoBsbgU95AWik4azqX5vKBg8U0zd8DnkRegz8eIiuK1BI45rQ00iDT3maF/KpOKv616YWa/EJDT6tnqPV7uve70U5YDYRP2TdzSGYTESXit3Ez0N0XYG685xc1ckm4x+eatzvQuXfVtaNLYb/4+iGyQSzE8wGuHRe9a9N3aeS2+UqSZv917jfh1oyGZ+g05LiDHmt3Lp17/ehFpdfavV3Vq+x7v3e1Na3ohHd7aGSr1vtW+1JbX2r2QhfkxHa1Xh8OkzXNaitb7WMuZQwQ+3XPokqnmPZfZTOous9qcee4WTgU07tRWyP03UdSsox3giiK0+hbfRAPV/X+1Nb32o9BdGMTpPV/4jsSD32rdZuVX5XCpznVV+pSv0f9Q0GAhsSx9jmswAAAABJRU5ErkJggg==" alt="MIC公式LINEアカウント QRコード">
-      <div class="qr-caption">スマートフォンのカメラで読み取ってください</div>
-    </div>
-    <div class="line-note">
-      公式アカウントを友だち登録し、お名前をメッセージとして送信してください。<br><br>
-      お申し込み日より通常1〜2営業日以内に、担当より折り返しご連絡いたします。連絡がない場合、お手数ですが再度ご連絡くださいますようお願いいたします。
-    </div>
-  </div>
+<section class="policy">
+  <p>MIC（Mogul Improvement Community。以下「MIC」）は、ウェブサイト（https://mogul-mic.com/）とレッスン等の運営で取り扱う個人情報について、次のとおり定めます。</p>
+  <h2>1. 取得する情報</h2>
+  <ul>
+    <li>お申し込み・お問い合わせ：申込者（保護者）の氏名・電話番号・メールアドレス、参加者の氏名・ふりがな・年齢または学年・所属クラブ・競技経験や技の習熟度・ご相談内容など。コーチ派遣のお見積りでは、団体名・ご担当者名・連絡先・希望日・会場・人数など。</li>
+    <li>公式LINE：LINEの表示名、メッセージ、お送りいただいた動画・写真。</li>
+    <li>ウェブサイトの利用状況：閲覧したページ、参照元、広告キャンペーン情報、端末の種類、言語設定、サイト内での操作など。氏名などとは結び付けず、Cookieによる継続的な利用者の識別は行っていません。</li>
+  </ul>
+  <h2>2. 利用目的</h2>
+  <ul>
+    <li>レッスン・サービスの受付、参加者の確認、料金のご案内</li>
+    <li>天候による中止・時間変更など、当日の連絡</li>
+    <li>安全な指導のための配慮</li>
+    <li>お問い合わせへの回答</li>
+    <li>ウェブサイトや告知の改善、利用状況の統計的な把握</li>
+    <li>個別に同意をいただいた場合の、写真・動画・選手紹介のウェブサイトやSNSへの掲載</li>
+  </ul>
+  <h2>3. 健康・怪我などの情報</h2>
+  <p>既往歴や現在の怪我など健康に関する情報は、ご記入いただく場合に限り、ご本人（未成年の場合は保護者）の同意をいただいたうえでお預かりし、安全な指導のためだけに使います。ご記入は任意です。</p>
+  <h2>4. 未成年の方について</h2>
+  <p>未成年の参加者のお申し込みは、保護者の方が行うか、保護者の同意のうえで行ってください。</p>
+  <h2>5. 第三者への提供</h2>
+  <p>法令に基づく場合を除き、ご本人の同意なく第三者に提供しません。<br>レッスン会場の施設など、運営のために共有が必要な場合は、必要最小限の情報に限ります。</p>
+  <h2>6. 外部サービスの利用</h2>
+  <p>MICは、次の外部サービスを使って情報を受け付け・保管しています。</p>
+  <ul>
+    <li>Google（Googleフォーム、Googleスプレッドシート、Google Apps Script）：お申し込み内容・利用状況の記録の保管</li>
+    <li>LINEヤフー（LINE公式アカウント）：ご連絡・お申し込みの受付</li>
+    <li>Cloudflare（Cloudflare Web Analytics）：ウェブサイトの利用状況の統計</li>
+    <li>PayPay（PayPay株式会社）：オンラインサポートのお支払い（お支払いに使う口座やカードの情報はMICでは保有しません）</li>
+  </ul>
+  <p>GoogleとCloudflareは米国の事業者です。これらのサービスでは、日本国外のサーバで情報が取り扱われる場合があり、保管される国を特定できないことがあります。MICは、事業者の所在国の個人情報保護制度と各サービスのデータの取り扱いを確認したうえで、必要な安全管理措置を講じます。詳しくはお問い合わせください。</p>
+  <h2>7. 安全管理と開示などのご請求</h2>
+  <p>取り扱う者を運営スタッフに限るなど、適切な安全管理を行います。<br>ご自身の情報の開示・訂正・利用停止・削除をご希望の場合は、下記の窓口までご連絡ください。ご本人確認のうえ対応します。</p>
+  <h2>8. 運営者・お問い合わせ・改定</h2>
+  <ul>
+    <li>運営者：MIC（Mogul Improvement Community）</li>
+    <li>代表：城 勇太</li>
+    <li>所在地：お問い合わせいただいた場合、遅滞なくお知らせします</li>
+    <li>お問い合わせ：MIC公式LINE（<a href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">https://lin.ee/Q6XCwYg</a>）、メール（<a href="mailto:mogul.mic@gmail.com">mogul.mic@gmail.com</a>）</li>
+  </ul>
+  <p>このポリシーは必要に応じて改定し、このページでお知らせします。</p>
+  <p>制定日：2026年9月25日</p>
 </section>
 
 <footer class="site-footer">
@@ -416,7 +414,7 @@
         <div class="sf-col-head">参加する</div>
         <a href="full-calendar.html">レッスンカレンダー</a>
         <a href="community.html">コミュニティ・活動拠点</a>
-        <a href="inquiry.html" class="sf-current">申し込み・お問い合わせ</a>
+        <a href="inquiry.html">申し込み・お問い合わせ</a>
       </div>
       <div class="sf-col">
         <div class="sf-col-head">フォローする</div>
