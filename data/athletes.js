@@ -103,8 +103,8 @@ window.AP_ATHLETES = [
       hasKarte:false, vision:null, goal:null,
       // 動画は送信画面から届いたものを YouTube 限定公開にして載せる（tools/video_tool.py）。
       // 2026/09/08 まで載せていた動画はテスト用だったため、2026/09/27 に削除した。
-      video:null,
-      videoAspect:null,  // '9:16'（縦）か '16:9'（横）。省略時は横とみなす
+      video:'https://youtu.be/owcULD8ScTo',
+      videoAspect:'9:16',  // '9:16'（縦）か '16:9'（横）。省略時は横とみなす
       tracked:true,
       results:[
         {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
