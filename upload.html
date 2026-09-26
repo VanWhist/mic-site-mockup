@@ -191,6 +191,26 @@
   .panel .results div span.mark{display:inline-block;width:1.4em;}
   .panel .results .ng{color:var(--ng);}
 
+  /* ---------- 動画（2026/09/26〜） ----------
+     写真・紹介文とは別の欄・別のボタンにしてある。動画は1本ずつ数分かけて送るもので、
+     写真と同じボタンにまとめると、写真の送信まで待たせることになるため。 */
+  .vsec{margin-top:44px;padding-top:30px;border-top:1px solid var(--line);}
+  .vsec .choices{flex-direction:column;}
+  .vsec .choice span{text-align:left;padding:13px 15px;}
+  .vsec .choice span small{display:block;font-size:12.5px;color:var(--muted);font-weight:400;margin-top:2px;}
+  .vinfo{display:grid;grid-template-columns:5.5em 1fr;gap:2px 10px;margin-top:12px;font-size:13.5px;}
+  .vinfo dt{color:var(--muted);}
+  .vinfo dd{margin:0;word-break:break-all;}
+  .vstats{font-size:13px;color:var(--muted);margin-top:6px;text-align:center;}
+  .vdone{margin-top:16px;padding:15px;border-radius:12px;font-size:14px;line-height:1.7;
+    background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.4);}
+  button.sub2{
+    width:100%;padding:14px;border-radius:14px;margin-top:12px;
+    background:#1b1b1e;border:1px solid var(--line);color:var(--fg);
+    font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;
+  }
+  button.sub2:disabled{color:#6b6b70;cursor:not-allowed;}
+
   [hidden]{display:none !important;}
 </style>
 </head>
@@ -229,7 +249,7 @@
 
   <main id="main" hidden>
     <h1 id="title">写真と紹介文の送信</h1>
-    <p class="lead">サイトの選手紹介に使う写真と紹介文を送っていただけます。どちらか一方だけでも送れます。</p>
+    <p class="lead">サイトの選手紹介に使う写真と紹介文を送っていただけます。どちらか一方だけでも送れます。<span id="leadVideo" hidden><br>動画は、ページの下の「動画を送る」から送れます。</span></p>
 
     <section>
       <h2>いま載っている写真</h2>
@@ -314,6 +334,63 @@
       <button type="button" class="submit" id="submit" disabled>送信する</button>
       <div class="bar" id="bar"><i id="barFill"></i></div>
       <div class="barlabel" id="barLabel"></div>
+    </section>
+
+    <!-- ★ 動画（2026/09/26〜）。写真・紹介文の送信とは独立している。
+         動画本体はサーバー（Apps Script）を通さず、ブラウザから Google ドライブへ直接送る。
+         「あなたは？」は上の欄の選択を使う。 -->
+    <section class="vsec" id="videoSection" hidden>
+      <h2>動画を送る</h2>
+      <p class="hint">1回に1本ずつ送れます。<strong>60秒以内・1080p（フルHD）をおすすめします。</strong>250MBまで送れます。<br>
+      大きな動画は送るのに数分かかります。Wi-Fi のある場所での送信をおすすめします。</p>
+
+      <div class="field">
+        <span class="q">動画の使いみち<span class="req">必須</span></span>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="vuse" value="profile"><span>プロフィール用<small>サイトの選手紹介に載る動画（1人1本。新しいものと差し替わります）</small></span></label>
+          <label class="choice"><input type="radio" name="vuse" value="sns"><span>SNS素材用<small>MIC の Instagram・YouTube の投稿の素材に使います</small></span></label>
+          <label class="choice"><input type="radio" name="vuse" value="both"><span>両方</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="q">動画を選ぶ<span class="req">必須</span></span>
+        <label class="picker">
+          <input type="file" id="vpicker" accept="video/*">
+          <div class="big">動画を選ぶ</div>
+          <div class="sub" id="vpickerSub">タップして端末の動画から選んでください</div>
+        </label>
+        <dl class="vinfo" id="vinfo" hidden></dl>
+        <video id="vprobe" muted playsinline preload="metadata" hidden></video>
+        <div class="notice" id="vresumeHint"></div>
+        <div class="notice" id="vfileNotice"></div>
+      </div>
+
+      <div class="field">
+        <label class="check" id="vconsentSiteRow" hidden>
+          <input type="checkbox" id="vconsentSite">
+          <span>選んだ動画が MIC の公式サイトに掲載されること、掲載のため YouTube に限定公開でアップロードされることに同意します。限定公開の動画は、URL を知っている人なら誰でも見られます。</span>
+        </label>
+        <label class="check" id="vconsentSnsRow" hidden>
+          <input type="checkbox" id="vconsentSns">
+          <span>選んだ動画を、MIC の Instagram・YouTube の投稿の素材として使うことに同意します。</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="vconsentRights">
+          <span>この動画を送る権利があり、映っている他の人や音楽についても掲載に問題がないことを確認しました。</span>
+        </label>
+        <p class="hint">選手が未成年の場合は、保護者の方が送るか、保護者の同意を得て送ってください。</p>
+      </div>
+
+      <div class="notice info show" id="vkeepOpen">送信が終わるまで、この画面を開いたままにしてください。途中で画面を閉じたりロックしたりした場合は、この画面に戻ると続きから送信します。</div>
+      <div class="notice" id="verror"></div>
+
+      <button type="button" class="submit" id="vsubmit" disabled>動画を送信する</button>
+      <button type="button" class="sub2" id="vresume" hidden>続きから送信する</button>
+      <div class="bar" id="vbar"><i id="vbarFill"></i></div>
+      <div class="barlabel" id="vbarLabel"></div>
+      <div class="vstats" id="vstats"></div>
+      <div class="vdone" id="vdone" hidden></div>
     </section>
 
     <div class="foot">
@@ -808,6 +885,329 @@
     });
   });
 
+  // ---- 動画（2026/09/26〜） ----
+  //
+  // 動画本体は Apps Script を通さない。video_start で受け取った session URI（Drive の
+  // resumable upload）へ、ブラウザから 8MiB ずつ直接送る。試作（2026/09/26）で iPhone 実機の合格を確認済み。
+  //
+  // ★ 再開位置は手元の記録ではなく、必ず Drive に問い合わせて決める（bytes */合計）。
+  //   試作では、ページが把握していたより先まで Drive が受け取っていた。
+  // ★ iPhone では、画面を切り替える・ロックすると数秒で送信が止まる（ウェブでは裏で送れない）。
+  //   対策は「送信中は画面を消さない（Wake Lock）＋戻ったら自動で続きから＋注意書き」（城さん決定）。
+  // ★ session URI は画面・計測・ログに出さない。読み込み直した後の再開のため、
+  //   このタブの sessionStorage にだけ置き、完了・失効で消す。
+  var VIDEO_MAX_BYTES = 250 * 1024 * 1024;   // ★ MIC-Upload-API の MAX_VIDEO_BYTES と同じ値
+  var VIDEO_CHUNK = 8 * 1024 * 1024;         // 最終チャンク以外は 256KiB の倍数（Drive の決まり）
+  var VIDEO_MAX_RETRY = 20;
+  var SS_VIDEO = 'micVideoUpload';
+
+  ['vpicker','vpickerSub','vinfo','vprobe','vresumeHint','vfileNotice','vconsentSiteRow','vconsentSite',
+   'vconsentSnsRow','vconsentSns','vconsentRights','verror','vsubmit','vresume','vbar','vbarFill','vbarLabel',
+   'vstats','vdone'
+  ].forEach(function(id){ el[id] = document.getElementById(id); });
+
+  var vid = {file: null, duration: 0, width: 0, height: 0,
+             session: '', rowId: '', total: 0, offset: 0,
+             sending: false, putOk: false, retry: 0, startedAt: 0, startOffset: 0, wakeLock: null};
+  var vsaved = null;
+  try { vsaved = JSON.parse(sessionStorage.getItem(SS_VIDEO) || 'null'); } catch (e) {}
+
+  var VIDEO_ERRORS = {
+    too_large:         '250MBを超えているため送れません。短く切るか、画質を下げて撮り直してください',
+    bad_type:          'この形式の動画には対応していません',
+    limit_daily_video: '本日の動画（SNS素材）の送信上限（5本）に達しました。明日以降にお試しください',
+    profile_pending:   'プロフィール用の動画は、いまコーチが確認中のものがあります。確認が終わってから送ってください',
+    verify_failed:     '届いた動画を確認できませんでした。お手数ですが、もう一度送ってください',
+    withdrawn:         '現在、掲載を停止しているため受け付けられません',
+    invalid:           'リンクが無効です',
+    expired:           'リンクの有効期限が切れています',
+    inactive:          'リンクが停止されています',
+    busy:              '混み合っています。少し時間をおいてお試しください',
+    server_error:      'うまく処理できませんでした。少し時間をおいてお試しください'
+  };
+
+  function vuse(){
+    var c = document.querySelector('input[name="vuse"]:checked');
+    return c ? c.value : '';
+  }
+  function vForSite(){ var u = vuse(); return u === 'profile' || u === 'both'; }
+  function vForSns(){ var u = vuse(); return u === 'sns' || u === 'both'; }
+
+  function vnotice(node, msg){
+    node.textContent = msg || '';
+    node.classList.toggle('show', !!msg);
+  }
+
+  function vSameAsSaved(f){
+    return !!(vsaved && f && vsaved.name === f.name && vsaved.size === f.size && vsaved.lastModified === f.lastModified);
+  }
+
+  function vrefresh(){
+    el.vconsentSiteRow.hidden = !vForSite();
+    el.vconsentSnsRow.hidden = !vForSns();
+    var f = vid.file;
+    var ok = who() !== '' && vuse() !== '' && !!f && f.size <= VIDEO_MAX_BYTES
+      && el.vconsentRights.checked
+      && (!vForSite() || el.vconsentSite.checked)
+      && (!vForSns() || el.vconsentSns.checked)
+      && !vid.sending;
+    el.vsubmit.disabled = !ok;
+    // 読み込み直した後、同じ動画を選び直したときだけ「続きから」を出す
+    el.vresume.hidden = !(vSameAsSaved(f) && !vid.sending);
+    el.vresume.disabled = !(who() !== '' && !vid.sending);
+    if (f && who() === '') vnotice(el.vfileNotice, '上の「あなたは？」で、選手本人か保護者かを選んでください。');
+    else if (f && f.size > VIDEO_MAX_BYTES) vnotice(el.vfileNotice, VIDEO_ERRORS.too_large);
+    else vnotice(el.vfileNotice, '');
+  }
+
+  if (vsaved) {
+    vnotice(el.vresumeHint, '前回の動画の送信が途中です（' + vsaved.name + '・' + fmtSize(vsaved.size)
+      + '）。同じ動画を選び直すと、続きから送れます。');
+  }
+
+  function vAddInfo(k, val){
+    var dt = document.createElement('dt'); dt.textContent = k;
+    var dd = document.createElement('dd'); dd.textContent = val;
+    el.vinfo.appendChild(dt); el.vinfo.appendChild(dd);
+  }
+
+  el.vpicker.addEventListener('change', function(e){
+    var f = e.target.files && e.target.files[0];
+    e.target.value = '';   // 同じ動画を選び直せるようにする
+    if (!f || vid.sending) return;
+    vid.file = f; vid.duration = 0; vid.width = 0; vid.height = 0;
+    el.vdone.hidden = true;
+    vnotice(el.verror, '');
+    el.vinfo.innerHTML = '';
+    el.vinfo.hidden = false;
+    // ★ ファイル名は当てにしない。iPhone の写真アプリから選ぶと一時的な名前になることがある
+    vAddInfo('サイズ', fmtSize(f.size));
+    el.vpickerSub.textContent = '選択中：' + f.name;
+    // 長さと縦横は <video> で読む（再エンコードはしない）。読めなくても送信はできる
+    var url = URL.createObjectURL(f);
+    el.vprobe.onloadedmetadata = function(){
+      vid.duration = el.vprobe.duration || 0;
+      vid.width = el.vprobe.videoWidth || 0;
+      vid.height = el.vprobe.videoHeight || 0;
+      if (vid.duration) vAddInfo('長さ', Math.round(vid.duration) + '秒');
+      if (vid.width) vAddInfo('向き', vid.height > vid.width ? '縦' : '横');
+      URL.revokeObjectURL(url);
+    };
+    el.vprobe.onerror = function(){ URL.revokeObjectURL(url); };
+    el.vprobe.src = url;
+    vrefresh();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="vuse"]'), function(r){
+    r.addEventListener('change', vrefresh);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="who"]'), function(r){
+    r.addEventListener('change', vrefresh);
+  });
+  [el.vconsentSite, el.vconsentSns, el.vconsentRights].forEach(function(c){ c.addEventListener('change', vrefresh); });
+
+  // ---- 画面を消さない（Wake Lock）。使えない端末では何もしない ----
+  function vLock(){
+    if (!('wakeLock' in navigator) || vid.wakeLock) return;
+    navigator.wakeLock.request('screen').then(function(l){
+      vid.wakeLock = l;
+      l.addEventListener('release', function(){ vid.wakeLock = null; });
+    }).catch(function(){});
+  }
+  function vUnlock(){
+    if (vid.wakeLock) { try { vid.wakeLock.release(); } catch (e) {} vid.wakeLock = null; }
+  }
+  // 画面に戻ったら取り直す（切り替えると OS に外される）
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible' && vid.sending) vLock();
+  });
+
+  function vSave(){
+    try {
+      sessionStorage.setItem(SS_VIDEO, JSON.stringify({session: vid.session, rowId: vid.rowId,
+        name: vid.file.name, size: vid.file.size, lastModified: vid.file.lastModified}));
+    } catch (e) {}
+  }
+  function vClearSaved(){
+    try { sessionStorage.removeItem(SS_VIDEO); } catch (e) {}
+    vsaved = null;
+    vnotice(el.vresumeHint, '');
+  }
+
+  function vBegin(){
+    vid.sending = true; vid.putOk = false; vid.retry = 0;
+    vnotice(el.verror, '');
+    el.vdone.hidden = true;
+    el.vbar.classList.add('show');
+    el.vbarLabel.classList.add('show');
+    el.vpicker.disabled = true;
+    vLock();
+    vrefresh();
+  }
+  function vEnd(){
+    vid.sending = false;
+    el.vpicker.disabled = false;
+    vUnlock();
+    vrefresh();
+  }
+
+  function vProgress(pos){
+    vid.offset = pos;
+    var pct = vid.total ? Math.floor(pos / vid.total * 100) : 0;
+    el.vbarFill.style.width = pct + '%';
+    el.vbarLabel.textContent = '送信中 ' + pct + '%（' + fmtSize(pos) + ' / ' + fmtSize(vid.total) + '）';
+    var sec = (Date.now() - vid.startedAt) / 1000;
+    var rate = sec > 3 ? (pos - vid.startOffset) / sec : 0;
+    if (rate > 0 && pos < vid.total) {
+      var left = Math.ceil((vid.total - pos) / rate / 60);
+      el.vstats.textContent = left <= 1 ? 'あと1分ほどです' : 'あと約' + left + '分';
+    } else {
+      el.vstats.textContent = '';
+    }
+  }
+
+  function vFail(msg){
+    vnotice(el.verror, msg);
+    el.vbarLabel.textContent = '';
+    el.vstats.textContent = '';
+    vEnd();
+  }
+
+  // ---- 送信を始める ----
+  el.vsubmit.addEventListener('click', function(){
+    if (vid.sending || el.vsubmit.disabled) return;
+    var f = vid.file;
+    vBegin();
+    el.vbarLabel.textContent = '送信の準備をしています…';
+    callApi({
+      action: 'video_start', t: token, uploaded_by: who(), requested_use: vuse(),
+      name: f.name, size: f.size, type: f.type || '',
+      duration: vid.duration, width: vid.width, height: vid.height,
+      consent_upload: vForSite() && el.vconsentSite.checked,
+      consent_copyright: el.vconsentRights.checked,
+      consent_sns: vForSns() && el.vconsentSns.checked,
+      message: el.message.value.trim()
+    }).then(function(res){
+      if (!res || !res.ok) { vFail(VIDEO_ERRORS[res && res.reason] || '送信を始められませんでした'); return; }
+      vid.session = res.session; vid.rowId = res.row_id;
+      vid.total = f.size; vid.startedAt = Date.now(); vid.startOffset = 0;
+      vSave();
+      vProgress(0);
+      return vUploadFrom(0);
+    }).catch(function(err){
+      vFail('送信を始められませんでした。通信環境をご確認ください（' + err.message + '）');
+    });
+  });
+
+  // ---- 読み込み直した後の再開 ----
+  el.vresume.addEventListener('click', function(){
+    if (vid.sending || !vSameAsSaved(vid.file)) return;
+    vid.session = vsaved.session; vid.rowId = vsaved.rowId; vid.total = vsaved.size;
+    vBegin();
+    vid.putOk = true;   // 前回すでに送れていた
+    vid.startedAt = Date.now(); vid.startOffset = 0;
+    vQueryAndContinue();
+  });
+
+  function vUploadFrom(pos){
+    if (pos >= vid.total) return vQueryAndContinue();
+    var end = Math.min(pos + VIDEO_CHUNK, vid.total);
+    vProgress(pos);
+    return fetch(vid.session, {
+      method: 'PUT',
+      headers: {'Content-Range': 'bytes ' + pos + '-' + (end - 1) + '/' + vid.total},
+      body: vid.file.slice(pos, end)
+    }).then(function(res){
+      vid.putOk = true;
+      vid.retry = 0;
+      if (res.status === 308) {
+        var next = vNextFromRange(res.headers.get('Range'));
+        return vUploadFrom(next === null ? end : next);
+      }
+      if (res.status === 200 || res.status === 201) return res.json().then(vFinish);
+      if (res.status === 404 || res.status === 410) { vExpired(); return; }
+      throw new Error('送信先が ' + res.status + ' を返しました');
+    }).catch(vOnError);
+  }
+
+  // 再開位置は Drive に問い合わせて決める
+  function vQueryAndContinue(){
+    return fetch(vid.session, {method: 'PUT', headers: {'Content-Range': 'bytes */' + vid.total}})
+      .then(function(res){
+        vid.retry = 0;
+        if (res.status === 308) {
+          var next = vNextFromRange(res.headers.get('Range'));
+          return vUploadFrom(next === null ? 0 : next);
+        }
+        if (res.status === 200 || res.status === 201) return res.json().then(vFinish);
+        if (res.status === 404 || res.status === 410) { vExpired(); return; }
+        throw new Error('送信先が ' + res.status + ' を返しました');
+      }).catch(vOnError);
+  }
+
+  // 通信が切れた・画面を離れて止まった場合。TypeError は通信断と CORS の区別が付かない
+  function vOnError(err){
+    if (!vid.sending) return;
+    if (err instanceof TypeError) {
+      // 一度も送れていないなら、通信環境の問題か設定の問題。繰り返さずに知らせる
+      if (!vid.putOk) {
+        vFail('送信を始められませんでした。通信環境をご確認のうえ、「続きから送信する」を押してください。');
+        el.vresume.hidden = false;
+        vsaved = {session: vid.session, rowId: vid.rowId, name: vid.file.name,
+                  size: vid.file.size, lastModified: vid.file.lastModified};
+        vrefresh();
+        return;
+      }
+      if (vid.retry < VIDEO_MAX_RETRY) {
+        vid.retry++;
+        el.vbarLabel.textContent = '通信が切れました。続きから送信します…（' + vid.retry + '回目）';
+        return new Promise(function(r){ setTimeout(r, vid.retry < 3 ? 3000 : 6000); }).then(vQueryAndContinue);
+      }
+      vsaved = {session: vid.session, rowId: vid.rowId, name: vid.file.name,
+                size: vid.file.size, lastModified: vid.file.lastModified};
+      vFail('通信がつながりません。電波のよい場所で「続きから送信する」を押してください。');
+      return;
+    }
+    vFail('送信できませんでした（' + (err && err.message ? err.message : err) + '）');
+  }
+
+  function vNextFromRange(range){
+    var m = /bytes=0-(\d+)/.exec(range || '');
+    return m ? Number(m[1]) + 1 : null;
+  }
+
+  function vExpired(){
+    vClearSaved();
+    vFail('時間が経ったため、この送信は続けられません。お手数ですが、最初から送り直してください。');
+  }
+
+  function vFinish(meta){
+    vProgress(vid.total);
+    el.vbarLabel.textContent = '届いた動画を確認しています…';
+    el.vstats.textContent = '';
+    return callApi({action: 'video_finish', t: token, row_id: vid.rowId, fileId: meta && meta.id})
+      .then(function(res){
+        if (!res || !res.ok) { vClearSaved(); vFail(VIDEO_ERRORS[res && res.reason] || VIDEO_ERRORS.verify_failed); return; }
+        vClearSaved();
+        el.vbarLabel.textContent = '';
+        el.vbar.classList.remove('show');
+        el.vdone.hidden = false;
+        el.vdone.textContent = res.status === 'pending'
+          ? '動画を受け付けました。コーチが確認してからサイトに反映されます。'
+          : '動画を受け付けました。MIC の Instagram・YouTube の素材として使わせていただきます。';
+        vid.file = null;
+        el.vinfo.hidden = true;
+        // ★ 同意は1本ごとに確かめてもらう。次の動画のために外しておく
+        [el.vconsentSite, el.vconsentSns, el.vconsentRights].forEach(function(c){ c.checked = false; });
+        el.vpickerSub.textContent = 'ほかの動画も送るときは、タップして選んでください';
+        vEnd();
+      }).catch(function(err){
+        // 動画は Drive に届いている。台帳の更新は1日1回の片付けでも行われる
+        vClearSaved();
+        vFail('動画は届きましたが、受付の確認で通信が切れました。念のためコーチにお知らせください（' + err.message + '）');
+      });
+  }
+
   // ---- 起動 ----
   if (!token) { fail('invalid'); return; }
 
@@ -867,6 +1267,10 @@
       fail('limit_daily');
       return;
     }
+
+    // 動画の欄は、受付側で開いている選手にだけ出す（全員に開く前に、テスト用の選手だけで確かめるため）
+    document.getElementById('videoSection').hidden = !res.video_enabled;
+    document.getElementById('leadVideo').hidden = !res.video_enabled;
 
     show(el.main);
     refresh();
