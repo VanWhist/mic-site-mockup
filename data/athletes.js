@@ -101,10 +101,9 @@ window.AP_ATHLETES = [
       intro:'モーグルを初めてから全国に友達がいっぱいできました！もっと上手くなって大会では入賞を狙います！',
       photos:['assets/athletes/aruga-mutsuhito-08c84026.jpg'],
       hasKarte:false, vision:null, goal:null,
-      // 動画は送信画面から届いたものを YouTube 限定公開にして載せる（tools/video_tool.py）。
-      // 2026/09/08 まで載せていた動画はテスト用だったため、2026/09/27 に削除した。
-      video:null,
-      videoAspect:null,  // '9:16'（縦）か '16:9'（横）。省略時は横とみなす
+      // 2026/09/27 に 3/8 はくのり里見大会 第2戦（決勝2位）のランを掲載
+      video:'https://youtu.be/owcULD8ScTo',
+      videoAspect:'9:16',  // '9:16'（縦）か '16:9'（横）。省略時は横とみなす
       tracked:true,
       results:[
         {d:'2024-03-09',rank:6,disc:'MO',cat:'SAJ B級未満',ev:'2024森下仁丹 大阪府ジュニアモーグル大会'},
