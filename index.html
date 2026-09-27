@@ -1442,6 +1442,10 @@
      Chrome の実測では 370px まで重なる。iPhone は文字幅が少し違うので余裕を見て 389px まで
      （360px の Android と 375px の iPhone SE を含め、390px 以上の iPhone は含めない）。 */
   @media (max-width:389px){ .mic-wrap{row-gap:96px;} }
+  /* 8社になり（鍼灸院志を追加）、スマホの2列では CSBA が最後の段の右の列に来る。右の列はキャプションの
+     幅が狭く、CSBA の長い紹介文の行数が増えて「Communityを見る」ボタンに重なる（実測 -12〜-32px。
+     Chrome では 400px まで重なる）。iPhone の文字幅の違いを見込み、429px 以下だけ下の余白を広げる。 */
+  @media (max-width:429px){ .mic-wrap{padding-bottom:138px;} }
 
   .mic-item{cursor:pointer;transform:none;
     transition:transform .35s cubic-bezier(.22,.61,.24,1);}
@@ -3351,7 +3355,7 @@
   </div>
 
   <div class="cm-stats">
-    <div class="cm-stat reveal"><div class="num">7</div><div class="lbl">支援・連携先</div></div>
+    <div class="cm-stat reveal"><div class="num">8</div><div class="lbl">支援・連携先</div></div>
     <div class="cm-stat reveal delay-1"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
@@ -3389,6 +3393,7 @@
     {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         role:"CLUB", logo:"assets/community/equipe-fsc-logo.png"},
     {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", role:"MEDICAL", logo:"assets/community/shimada-hospital.png", boost:true},
     {name:"ATHER",            tag:"コンディショニングジム・広島（東広島）", note:"MIC選手のトレーニング指導で連携しています", role:"CONDITIONING", logo:"assets/community/ather-logo.png"},
+    {name:"鍼灸院志（こころ）", tag:"鍼灸院・広島（安佐北区）", note:"MIC選手の身体のケアで連携しています", role:"MEDICAL", logo:"assets/community/shinkyu-cocoro-logo.png", boost:true},
     {name:"CSBA",             tag:"スポーツ専門学校・カナダ（ウィスラー）", note:"MIC出身の選手もモーグル留学したスポーツ専門学校です。海外での挑戦の選択肢を広げる形で連携しています。", role:"ACADEMY", logo:"assets/community/csba-emblem.png", boost:true}
   ];
 
