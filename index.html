@@ -1437,6 +1437,11 @@
   /* 2026/09 Community v2：padding-bottom を 78→98（PCは 92→104）に広げた。
      最後の段に来る CSBA の紹介文が長く（スマホで3行）、広げないとキャプションが
      すぐ下の「Communityを見る」ボタンに重なる（実測 -10px）。 */
+  /* 狭い幅では右の列のキャプションの幅が狭まり（320px で 136px）、紹介文が1行増える。
+     その分だけ段の間を広げる（広げないと次の段のロゴに重なる。実測 -11px）。
+     Chrome の実測では 370px まで重なる。iPhone は文字幅が少し違うので余裕を見て 389px まで
+     （360px の Android と 375px の iPhone SE を含め、390px 以上の iPhone は含めない）。 */
+  @media (max-width:389px){ .mic-wrap{row-gap:96px;} }
 
   .mic-item{cursor:pointer;transform:none;
     transition:transform .35s cubic-bezier(.22,.61,.24,1);}
@@ -3480,7 +3485,10 @@
   function place() {
     var el = items[active];
     if (!el) return;
-    var capW = Math.min(238, wrap.clientWidth);
+    /* キャプションはロゴの左端にそろえ、幅はロゴの左端から枠の右端までに収める。
+       以前は幅 238px を保つために左へずらしていて、右側の列のロゴでは文言がロゴから
+       左に寄って見えた。ロゴの幅より狭くはしない（レイアウト確定前の保険）。 */
+    var capW = Math.min(238, wrap.clientWidth, Math.max(wrap.clientWidth - el.offsetLeft, el.offsetWidth));
     var plate = el.querySelector('.mic-plate');
     cap.style.width = capW + 'px';
     cap.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - capW)) + 'px';
