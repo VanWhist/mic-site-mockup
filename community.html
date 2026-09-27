@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>コミュニティ｜MIC Mogul Improvement Community</title>
-<meta name="description" content="MICを支えるパートナーと活動拠点のご紹介。協賛・提携のご案内もこちらから。">
+<meta name="description" content="一人の選手を、人・専門性・場所がつながって支える。MICのCommunityと、全国9か所の活動拠点のご紹介です。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MIC — Mogul Improvement Community">
 <meta property="og:title" content="コミュニティ｜MIC Mogul Improvement Community">
-<meta property="og:description" content="MICを支えるパートナーと活動拠点のご紹介。協賛・提携のご案内もこちらから。">
+<meta property="og:description" content="一人の選手を、人・専門性・場所がつながって支える。MICのCommunityと、全国9か所の活動拠点のご紹介です。">
 <meta property="og:url" content="https://mogul-mic.com/community.html">
 <link rel="canonical" href="https://mogul-mic.com/community.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-default.jpg">
@@ -122,8 +122,12 @@
   /* 折り返しレイアウト。row-gap がキャプション用の予約領域を兼ねる */
   .mic-wrap{
     position:relative;display:flex;flex-wrap:wrap;
-    column-gap:10px;row-gap:118px;padding-bottom:116px;
+    column-gap:10px;row-gap:136px;padding-bottom:152px;
   }
+  /* 2026/09 Community v2：キャプションに役割（EQUIPMENT など）の行を足したぶん、
+     row-gap を 118→136、padding-bottom を 116→152 に広げた（PCも同様）。
+     padding-bottom は最後の段に来る CSBA の紹介文（3行）とリンク2つが収まる高さ。
+     広げないと、キャプションが次の段のロゴに重なる（実測 -3〜-7px、CSBA は -25px）。 */
 
   .mic-item{cursor:pointer;transform:none;
     transition:transform .35s cubic-bezier(.22,.61,.24,1);}
@@ -195,7 +199,7 @@
   .mic-links:empty{display:none;}
 
   @media (min-width:768px){
-    .mic-wrap{column-gap:14px;row-gap:130px;padding-bottom:126px;}
+    .mic-wrap{column-gap:14px;row-gap:148px;padding-bottom:156px;}
     .mic-plate{padding:14px 16px;border-radius:10px;min-height:74px;}
     .mic-word{height:44px;font-size:14px;}
     .mic-tag{font-size:11px;}
@@ -558,6 +562,75 @@
       transition-duration:.01ms !important;transition-delay:0ms !important;
     }
   }
+
+  /* ===================== Community v2（2026/09） ===================== */
+  /* 見出しを p/h2 で書いた節（02）も、div で書いた節（01）と同じ高さにそろえる。
+     p と h2 の既定の余白が残っていて、02 だけ見出しが 24px 高くなっていた。 */
+  .sec-head .sec-num,.sec-head .sec-title{margin-bottom:0;}
+  .sec-head p.sec-num{margin-top:0;}
+  .sec-sub{font-size:15px;font-weight:700;line-height:1.6;letter-spacing:.01em;color:#e2e2e6;margin:14px 0 0;}
+  .sec-sub + .sec-desc{margin-top:8px;}
+  /* 旧アンカー（#c1＝パートナー、#c2＝拠点）。外部から来たリンクが切れないよう残している */
+  .anchor-legacy{display:block;height:0;scroll-margin-top:76px;}
+  /* 日本語は語の途中でも改行されるため、文節ごとに inline-block で包んで折り返し位置を決める。
+     span 間に空白を入れないこと（index.html の .cm-head p span と同じ考え方）。 */
+  .brand-list span,.subcopy span{display:inline-block;}
+  /* 役割見出しは「英語｜日本語」。折り返すなら ｜ の後で、日本語の途中では割らない。
+     .gtitle span は件数の書式なので、日本語側は em で包んでいる。 */
+  .gtitle .gjp{font-style:normal;white-space:nowrap;}
+  .gtitle{flex-wrap:wrap;row-gap:2px;}
+
+  /* ---------- COMMUNITY 01：本文 ---------- */
+  .about-body{margin:14px 0 26px;}
+  .about-body p{font-size:13.5px;line-height:1.95;color:#d3d3d8;margin:0 0 12px;}
+  /* クラス名を .lead にしないこと。活動拠点の地図が .lead（引き出し線）を使っており、
+     登場アニメーション前は opacity:0 になるため、本文まで消える（実際に消えた）。 */
+  .about-body p.about-lead{font-size:15px;font-weight:700;color:var(--fg);}
+  .about-body p{text-wrap:pretty;}
+  .cmap-jp span,.cmap-ex span{display:inline-block;}
+
+  /* ---------- COMMUNITY 01：Community図 ----------
+     狭い幅：ATHLETE の下に 2列×3段のタイル（線なし）。円形図は縮めない。
+     広い幅：JS が .is-wide を付け、ATHLETE を中心に6要素を六角形の頂点へ置いて線で結ぶ。
+     文字はどちらの形でも 11px 以上。要素と中心は不透明にしてあり、線はその下を通る。 */
+  .cmap{position:relative;margin:0 0 6px;}
+  .cmap-lines{display:none;}
+  .cmap-core{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    max-width:220px;margin:0 auto 12px;padding:14px 12px;border-radius:999px;text-align:center;
+    background:linear-gradient(155deg, rgba(255,90,60,.24), rgba(255,90,60,.08)), #0f0f11;
+    border:1px solid rgba(255,90,60,.45);}
+  .cmap-core .cmap-en{color:var(--accent);}
+  .cmap-core .cmap-jp{font-size:16px;font-weight:800;color:var(--fg);}
+  .cmap-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .cmap-slot{min-width:0;}
+  .cmap-node{display:flex;flex-direction:column;gap:5px;height:100%;padding:13px 12px;border-radius:14px;
+    background:#121215;border:1px solid rgba(255,255,255,.12);text-decoration:none;color:inherit;
+    transition:border-color .2s;}
+  a.cmap-node:hover{border-color:rgba(255,90,60,.45);}
+  .cmap-en{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;line-height:1.35;color:var(--muted);}
+  .cmap-jp{display:block;font-size:12.5px;font-weight:700;line-height:1.55;color:var(--fg);}
+  .cmap-ex{display:block;font-size:11px;line-height:1.6;color:var(--muted);margin-top:auto;}
+  a.cmap-node .cmap-ex{color:var(--accent);}
+  .cmap.is-wide .cmap-lines{display:block;position:absolute;left:0;top:0;pointer-events:none;overflow:visible;}
+  .cmap.is-wide .cmap-lines line{stroke:rgba(255,255,255,.15);stroke-width:1;}
+  .cmap.is-wide .cmap-core{position:absolute;z-index:1;margin:0;padding:0;border-radius:50%;max-width:none;}
+  .cmap.is-wide .cmap-list{display:block;}
+  .cmap.is-wide .cmap-slot{position:absolute;z-index:1;}
+  .cmap.is-wide .cmap-node{height:auto;}
+
+  /* ---------- COMMUNITY 04：JOIN ----------
+     既存の .recruit-block / .recruit-cta を流用。hidden の③とは別の要素。
+     本文の幅が 400px 以上で2列（図が六角形になる幅と同じ）。 */
+  .join{container-type:inline-size;}
+  .join-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px;}
+  @container (min-width:400px){ .join-grid{grid-template-columns:1fr 1fr;} }
+  .join-card{display:flex;flex-direction:column;padding:24px 18px;}
+  .join-card .recruit-title{font-size:16px;line-height:1.55;margin:8px 0 18px;}
+  .join-card .recruit-cta{margin-top:auto;font-size:14px;padding:14px 12px;}
+
+  /* ---------- COMMUNITY 03：役割（キャプションの名前の上） ---------- */
+  .mic-cap-role{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--mic-sub);margin-bottom:3px;}
+  .mic-cap-role:empty{display:none;}
 </style>
 <script>document.documentElement.className='js';</script>
 </head>
@@ -610,25 +683,35 @@
 <div class="wrap">
   <div class="eyebrow">MIC Community</div>
   <div class="headline">ひとりで、<br>戦っているわけじゃない。</div>
-  <div class="brand-list">企業。チーム。施設。地域。</div>
-  <div class="subcopy">すべての仲間とともに、未来の選手を育てています。</div>
+  <div class="brand-list"><span>選手、コーチ、家族、</span><span>チーム、施設、医療、企業。</span></div>
+  <div class="subcopy"><span>さまざまな人と環境が</span><span>つながりながら、</span><span>選手の挑戦を支えています。</span></div>
 
   <div class="cat-stats">
-    <div class="cat-stat"><div class="num">5</div><div class="lbl">パートナー</div></div>
+    <div class="cat-stat"><div class="num">6</div><div class="lbl">支援・連携先</div></div>
     <div class="cat-stat"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
   <div class="quicknav-label">このページの内容</div>
   <div class="quicklist">
-    <a class="qrow" href="#c1">
-      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
-      <div class="qtext"><div class="qtitle">MICを支えるパートナー</div><div class="qmeta">用品店・県連盟・チーム・クラブ・医療機関</div></div>
-      <div class="qcount">5件</div>
+    <a class="qrow" href="#about">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><circle cx="5" cy="5" r="2"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="M9.9 9.9L6.4 6.4M14.1 9.9l3.5-3.5M9.9 14.1l-3.5 3.5M14.1 14.1l3.5 3.5"></path></svg></div>
+      <div class="qtext"><div class="qtitle">MIC Communityとは</div><div class="qmeta">選手を中心に、人・専門性・場所がつながる</div></div>
+      <div class="qcount">→</div>
     </a>
-    <a class="qrow" href="#c2">
+    <a class="qrow" href="#bases">
       <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
-      <div class="qtext"><div class="qtitle">活動拠点</div><div class="qmeta">雪上・ウォータージャンプ・トランポリン・メディカル</div></div>
+      <div class="qtext"><div class="qtitle">活動拠点</div><div class="qmeta">雪上・ウォータージャンプ・トランポリン・フィジカル</div></div>
       <div class="qcount">9拠点</div>
+    </a>
+    <a class="qrow" href="#network">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div class="qtext"><div class="qtitle">MIC NETWORK</div><div class="qmeta">用品・競技団体・チーム・クラブ・医療・スポーツ専門学校</div></div>
+      <div class="qcount">6件</div>
+    </a>
+    <a class="qrow" href="#join">
+      <div class="qicon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg></div>
+      <div class="qtext"><div class="qtitle">参加する・つながる</div><div class="qmeta">選手・保護者の方／クラブ・チーム・施設の方</div></div>
+      <div class="qcount">→</div>
     </a>
     <!-- 準備中のため一時的に非表示。公開するときは hidden を消す（2026/09/07） -->
     <a class="qrow" href="#c3" hidden>
@@ -640,259 +723,106 @@
 
   <div class="divider"></div>
 
-  <!-- ① MICを支えるパートナー -->
-  <div class="sec" id="c1">
+  <!-- COMMUNITY 01｜WHAT IS MIC COMMUNITY? -->
+  <div class="sec" id="about">
     <div class="sec-head">
-      <div class="sec-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div class="sec-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><circle cx="5" cy="5" r="2"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="M9.9 9.9L6.4 6.4M14.1 9.9l3.5-3.5M9.9 14.1l-3.5 3.5M14.1 14.1l3.5 3.5"></path></svg></div>
       <div>
         <div class="sec-num">COMMUNITY 01</div>
-        <div class="sec-title">MICを支えるパートナー</div>
+        <h2 class="sec-title">一人の選手を、Communityで支える。</h2>
       </div>
     </div>
-    <div class="sec-desc">用品店から県連盟・チームまで、さまざまな形でMICの活動を支えてくださっている皆さまです。</div>
+    <div class="about-body">
+      <p class="about-lead">MICの「C」は、Community。</p>
+      <p>私たちが考えるCommunityは、同じチームに所属する人だけを意味するものではありません。選手を中心に、コーチ、家族、チーム、施設、医療、用具、企業など、それぞれの立場と専門性を持つ人たちがつながる。</p>
+      <p>一人ではつくれない成長環境を、みんなでつくっていく。それがMICの考えるMogul Improvement Communityです。</p>
+    </div>
 
-    <div class="mic-partners">
-      <div class="mic-head">
-        <span class="dot"></span>
-        <span class="label">SUPPORTED BY</span>
-        <span class="rule"></span>
-        <span class="count" id="mic-count"></span>
-      </div>
-      <div class="mic-wrap" id="mic-wrap">
-        <div class="mic-ind" id="mic-ind"></div>
-        <div class="mic-cap" id="mic-cap">
-          <div class="mic-cap-name" id="mic-cap-name"></div>
-          <div class="mic-cap-note" id="mic-cap-note"></div>
-          <div class="mic-links" id="mic-cap-links"></div>
-        </div>
-      </div>
+    <div class="cmap" id="cmap">
+      <svg class="cmap-lines" aria-hidden="true"></svg>
+      <p class="cmap-core"><span class="cmap-en">ATHLETE</span><span class="cmap-jp">選手</span></p>
+      <ol class="cmap-list" aria-label="選手を中心につながる6つの要素">
+        <li class="cmap-slot"><a class="cmap-node" href="index.html#coaches"><span class="cmap-en">COACHES</span><span class="cmap-jp"><span>技術と成長への</span><span>道筋をつくる</span></span><span class="cmap-ex">MICのコーチ陣&nbsp;→</span></a></li>
+        <li class="cmap-slot"><div class="cmap-node"><span class="cmap-en">FAMILY</span><span class="cmap-jp"><span>日々の挑戦を</span><span>最も近くで支える</span></span><span class="cmap-ex">保護者の皆さま</span></div></li>
+        <li class="cmap-slot"><a class="cmap-node" href="#network"><span class="cmap-en">TEAMS &amp; ORGANIZATIONS</span><span class="cmap-jp"><span>地域や所属を越えて</span><span>可能性を広げる</span></span><span class="cmap-ex"><span>Tr-J・EQUIPE F.S.C・</span><span>広島県スキー連盟・</span><span>CSBA&nbsp;→</span></span></a></li>
+        <li class="cmap-slot"><a class="cmap-node" href="#bases"><span class="cmap-en">TRAINING BASES</span><span class="cmap-jp"><span>必要な練習環境を</span><span>つなぐ</span></span><span class="cmap-ex">全国9拠点&nbsp;→</span></a></li>
+        <li class="cmap-slot"><a class="cmap-node" href="#network"><span class="cmap-en">MEDICAL &amp; CONDITIONING</span><span class="cmap-jp"><span>身体づくりと</span><span>競技継続を支える</span></span><span class="cmap-ex"><span>運動器ケア しまだ病院・</span><span>Eudynamics ヴィゴラス&nbsp;→</span></span></a></li>
+        <li class="cmap-slot"><a class="cmap-node" href="#network"><span class="cmap-en">EQUIPMENT &amp; SUPPORT</span><span class="cmap-jp"><span>用具や専門性で</span><span>挑戦を支える</span></span><span class="cmap-ex">SNOW BASE 98&nbsp;→</span></a></li>
+      </ol>
     </div>
 
 <script>
-(function () {
-  /* パートナーはここに追記するだけ。順番＝表示順。ロゴが無い先は logo:null で文字組みになります。
-     links は種類（site / instagram / facebook）とURLの組。無ければ省略可。
-     トップページ（index.html）と同じ実装。片方を直したらもう片方も直すこと。 */
-  var ICONS = {
-    site: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>',
-    instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>',
-    facebook: '<svg class="solid" viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z"></path></svg>'
-  };
-  var LABELS = { site:'公式サイト', instagram:'Instagram', facebook:'Facebook' };
-
-  var PARTNERS = [
-    {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", logo:"assets/community/snowbase98.png",
-     links:[{type:"instagram", url:"https://www.instagram.com/snowbase98"},
-            {type:"facebook",  url:"https://www.facebook.com/people/SNOW-BASE-98/61562297623040/"}]},
-    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true,
-     links:[{type:"site", url:"https://ski-hiroshima.org/competition/freestyle"}]},
-    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             logo:"assets/community/trj-logo.png", dark:true, boost:true,
-     links:[{type:"site", url:"https://www.mogulteam-trj-nagano.com/"}]},
-    {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         logo:"assets/community/equipe-fsc-logo.png",
-     links:[{type:"instagram", url:"https://www.instagram.com/equipe_f.s.c._"}]},
-    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", logo:"assets/community/shimada-hospital.png", boost:true,
-     links:[{type:"site", url:"https://www.heartful-health.or.jp/shimadahp/"}]}
-  ];
-
-  var wrap  = document.getElementById('mic-wrap');
-  var ind   = document.getElementById('mic-ind');
-  var cap   = document.getElementById('mic-cap');
-  var capNm = document.getElementById('mic-cap-name');
-  var capNt = document.getElementById('mic-cap-note');
-  var capLk = document.getElementById('mic-cap-links');
-  if (!wrap) return;
-
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var items = [], active = -1;
-
-  document.getElementById('mic-count').textContent = PARTNERS.length + ' PARTNERS';
-
-  PARTNERS.forEach(function (p, i) {
-    var item = document.createElement('div');
-    item.className = 'mic-item';
-    item.style.setProperty('--d', (i * 80) + 'ms');
-
-    var plate = document.createElement('div');
-    plate.className = 'mic-plate' + (p.dark ? ' is-dark' : '');
-
-    if (p.logo) {
-      var img = document.createElement('img');
-      img.alt = p.name;
-      img.decoding = 'async';
-      img.addEventListener('load', function () {
-        item.dataset.ratio = img.naturalWidth / img.naturalHeight; /* 実寸から比率を取得 */
-        sizeOne(item, p);
-        place();
-      });
-      img.src = p.logo;
-      plate.appendChild(img);
-    } else {
-      var w = document.createElement('span');
-      w.className = 'mic-word';
-      w.textContent = p.name;
-      plate.appendChild(w);
-    }
-
-    var tag = document.createElement('div');
-    tag.className = 'mic-tag';
-    tag.textContent = p.tag;
-
-    item.appendChild(plate);
-    item.appendChild(tag);
-    item.addEventListener('click', function () { hold(); setActive(i); });
-    item.addEventListener('mouseenter', function () { hold(); setActive(i); });
-    wrap.appendChild(item);
-    items.push(item);
-  });
-
-  /* プレートは幅を固定。ロゴは比率を保ったまま中央に収める（レターボックス）。
-     boost:true の先だけ、幅は揃えたまま高さを増やして表示を大きくする
-     （SNOW BASE 98 / EQUIPE のような横長ロゴは幅で頭打ちのため高さを増やしても変わらず、
-     広島・Tr-J・しまだ病院のような正方形寄りのロゴだけが実際に大きくなる）。 */
-  function box() {
-    var cw = wrap.clientWidth;
-    if (cw > 700) return {w: 180, h: 74};
-    /* プレートの左右余白ぶんを引いて、行の半分に収まる幅にする */
-    return {w: Math.max(104, Math.min(156, Math.floor(cw / 2) - 5)), h: 56};
+/* Community図の配置。
+   広い幅（図の横幅 400px 以上）では、中央の ATHLETE を囲んで6要素を六角形の頂点に置き、
+   中心から細い線で結ぶ。狭い幅では円形図を縮めず、CSS の2列×3段タイルのまま（線なし）。
+   6要素は li の順（COACHES, FAMILY, TEAMS, BASES, MEDICAL, EQUIPMENT）に、
+   上・右上・右下・下・左下・左上 へ時計回りに置く。
+   要素の高さは文言の折り返しで変わるため、実際の高さを測ってから重ならない位置を決める。
+   アニメーションはしない。 */
+(function(){
+  var box=document.getElementById('cmap');
+  if(!box) return;
+  var core=box.querySelector('.cmap-core');
+  var slots=[].slice.call(box.querySelectorAll('.cmap-slot'));
+  var svg=box.querySelector('.cmap-lines');
+  var WIDE=400, GAP=14, lastW=-1;
+  function clear(){
+    box.classList.remove('is-wide');
+    box.style.height='';
+    [core].concat(slots).forEach(function(el){ el.style.left=el.style.top=el.style.width=el.style.height=''; });
+    svg.innerHTML='';
   }
-  function sizeOne(item, p) {
-    var plate = item.querySelector('.mic-plate');
-    var b = box();
-    var boostH = (p && p.boost) ? Math.round(b.h * 1.35) : b.h;
-    plate.style.width = b.w + 'px';
-    plate.style.height = boostH + 'px';
-    var img = item.querySelector('img');
-    var r = parseFloat(item.dataset.ratio);
-    if (!img || !r) return;
-    var desktop = wrap.clientWidth > 700;
-    var padX = desktop ? 16 : 12, padY = desktop ? 14 : 11;
-    var innerW = b.w - padX * 2, innerH = boostH - padY * 2;
-    var w = innerH * r, h = innerH;
-    if (w > innerW) { w = innerW; h = w / r; }
-    img.width = Math.round(w);
-    img.height = Math.round(h);
-  }
-  function sizeAll() { items.forEach(function (item, i) { sizeOne(item, PARTNERS[i]); }); }
-
-  /* リンクのチップ。キャプション内なので、アクティブな1社ぶんだけ出る */
-  function renderLinks(p) {
-    capLk.textContent = '';
-    (p.links || []).forEach(function (l) {
-      var a = document.createElement('a');
-      a.className = 'chip';
-      a.href = l.url;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.title = LABELS[l.type] || '';
-      a.setAttribute('aria-label', p.name + ' の' + (LABELS[l.type] || 'リンク'));
-      a.innerHTML = ICONS[l.type] || ICONS.site;
-      capLk.appendChild(a);
+  function layout(force){
+    var W=box.clientWidth;
+    if(W===lastW && !force) return;
+    lastW=W;
+    if(W<WIDE){ clear(); return; }
+    box.classList.add('is-wide');
+    var nw=Math.floor(W*0.315), C=Math.round(Math.min(118, W*0.25));
+    slots.forEach(function(s){ s.style.width=nw+'px'; });
+    core.style.width=core.style.height=C+'px';
+    var h=slots.map(function(s){ return s.offsetHeight; });
+    var hU=Math.max(h[1],h[5]), hL=Math.max(h[2],h[4]);
+    /* R：中心から上下の要素までの距離。左右の要素は ±R/2 の高さに置く（正六角形の比）。
+       上下の要素と中心の円、左右の上段と下段が、それぞれ GAP 以上離れる最小の R を取る。 */
+    var R=Math.max(h[0]/2+GAP+C/2, h[3]/2+GAP+C/2, (hU+hL)/2+GAP);
+    var cy=Math.max(h[0]/2+R, R/2+hU/2), cx=W/2, xl=nw/2, xr=W-nw/2;
+    var pos=[[cx,cy-R],[xr,cy-R/2],[xr,cy+R/2],[cx,cy+R],[xl,cy+R/2],[xl,cy-R/2]];
+    var H=Math.ceil(Math.max(cy+R+h[3]/2, cy+R/2+hL/2));
+    box.style.height=H+'px';
+    core.style.left=Math.round(cx-C/2)+'px';
+    core.style.top=Math.round(cy-C/2)+'px';
+    var lines='';
+    slots.forEach(function(s,i){
+      s.style.left=Math.round(pos[i][0]-nw/2)+'px';
+      s.style.top=Math.round(pos[i][1]-h[i]/2)+'px';
+      lines+='<line x1="'+cx+'" y1="'+cy+'" x2="'+pos[i][0]+'" y2="'+pos[i][1]+'"/>';
     });
+    svg.setAttribute('width',W); svg.setAttribute('height',H);
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.innerHTML=lines;
   }
-
-  function setActive(i) {
-    if (i === active || !items[i]) return;
-    if (items[active]) items[active].classList.remove('is-active');
-    active = i;
-    items[i].classList.add('is-active');
-    capNm.textContent = PARTNERS[i].name;
-    capNt.textContent = PARTNERS[i].note;
-    renderLinks(PARTNERS[i]);
-    place();
-  }
-
-  /* キャプションとインジケーターを、アクティブなロゴの直下へ */
-  function place() {
-    var el = items[active];
-    if (!el) return;
-    var capW = Math.min(238, wrap.clientWidth);
-    var plate = el.querySelector('.mic-plate');
-    cap.style.width = capW + 'px';
-    cap.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - capW)) + 'px';
-    cap.style.top = (el.offsetTop + el.offsetHeight + 12) + 'px';
-    /* 念のため枠内にクランプする。レイアウト確定前は offsetWidth が
-       wrap より大きくなることがあり、そのまま入れると横にはみ出す。 */
-    var indW = Math.min(el.offsetWidth, wrap.clientWidth);
-    ind.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - indW)) + 'px';
-    ind.style.width = indW + 'px';
-    ind.style.top = (el.offsetTop + plate.offsetHeight - 5) + 'px';
-    cap.classList.add('is-on');
-    ind.classList.add('is-on');
-    if (!wrap.classList.contains('is-placed')) {
-      requestAnimationFrame(function () { wrap.classList.add('is-placed'); });
-    }
-  }
-
-  /* スクロールに追従して、順番に1社ずつアクティブにする。
-
-     「フォーカス線に縦方向で一番近いロゴ」を選ぶ方式にしないこと。
-     横に2枚並んだロゴは中心の高さが完全に同じになるため、どちらが近いかが
-     毎フレーム入れ替わり、スクロール中に左右をガタガタと往復する
-     （スマホ実機で確認済み。10px刻みのスクロールで8回往復した）。
-
-     代わりに、フォーカス線がロゴ群のどこを通っているかを 0〜1 の進捗に直し、
-     その進捗を社数で割って順番に割り当てる。同じスクロール位置なら必ず同じ
-     1社が選ばれるので、振動しない。 */
-  var ticking = false;
-  var holdUntil = 0;   /* タップ・ホバー直後は、スクロールで奪わない */
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(function () {
-      ticking = false;
-      if (Date.now() < holdUntil) return;
-      var wr = wrap.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      if (wr.bottom < 0 || wr.top > vh) return;
-      /* 末尾はキャプション用の余白なので、最後のロゴの下端までを対象にする */
-      var last = items[items.length - 1];
-      var span = Math.max(1, last.offsetTop + last.offsetHeight);
-      var t = (vh * 0.45 - wr.top) / span;
-      var idx = Math.floor(t * items.length);
-      setActive(Math.max(0, Math.min(items.length - 1, idx)));
-      place();
-    });
-  }
-  /* タップ／ホバーで選んだものが、わずかなスクロールで奪われないようにする。
-     コミュニティページでは、リンクを押そうとした瞬間に別の会社へ
-     切り替わってしまうのを防ぐ意味もある。 */
-  function hold() { holdUntil = Date.now() + 2500; }
-
-  window.addEventListener('scroll', onScroll, {passive: true});
-  window.addEventListener('resize', function () { sizeAll(); place(); });
-  if (window.ResizeObserver) new ResizeObserver(function () { sizeAll(); place(); }).observe(wrap);
-
-  setActive(0);
-  sizeAll();
-
-  if (reduced || !('IntersectionObserver' in window)) {
-    wrap.classList.add('is-in');
-  } else {
-    new IntersectionObserver(function (es, obs) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        wrap.classList.add('is-in');
-        obs.disconnect();
-        place();
-      });
-    }, {threshold: 0.15}).observe(wrap);
-  }
+  layout(true);
+  if(window.ResizeObserver) new ResizeObserver(function(){ layout(false); }).observe(box);
+  else addEventListener('resize', function(){ layout(false); });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){ layout(true); });
 })();
 </script>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ② 活動拠点 -->
-<div class="sec bases" id="c2">
+  <!-- COMMUNITY 02｜活動拠点 -->
+<div class="sec bases" id="bases">
+  <span class="anchor-legacy" id="c2" aria-hidden="true"></span>
   <div class="sec-head">
     <div class="sec-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></div>
     <div>
       <p class="sec-num">COMMUNITY 02</p>
-      <h2 class="sec-title">活動拠点</h2>
+      <h2 class="sec-title">一年を通して、上達できる環境を。</h2>
     </div>
   </div>
-  <p class="lede">北は宮城から南は大阪まで、4エリア9拠点。雪上・ウォータージャンプ・トランポリン・メディカルを、ひとつのネットワークとして運用しています。</p>
+  <p class="lede">雪上・ウォータージャンプ・トランポリン・フィジカルを、北は宮城から南は大阪まで4エリア9拠点で、ひとつのネットワークとして運用しています。</p>
 
   <div class="stage">
    <div class="stage-in">
@@ -993,57 +923,334 @@
   </div>
 
   <div class="groups">
-    <section class="group" data-area="shinetsu">
-      <p class="gtitle"><b>信越エリア（白馬）</b><span>3 FACILITIES</span></p>
+    <section class="group" data-role="snow">
+      <p class="gtitle"><b>SNOW｜<wbr><em class="gjp">雪上</em></b><span>1 FACILITY</span></p>
       <div class="cards">
-        <a class="card" href="https://www.happo-one.jp/" target="_blank" rel="noopener">
+        <a class="card" data-area="shinetsu" href="https://www.happo-one.jp/" target="_blank" rel="noopener">
           <h3>白馬八方尾根</h3><p>長野県白馬村</p><span class="badge">冬季の雪上トレーニング</span>
         </a>
-        <a class="card" href="https://hakuba-sanosaka-waterjump0.webnode.jp/" target="_blank" rel="noopener">
+      </div>
+    </section>
+
+    <section class="group" data-role="air">
+      <p class="gtitle"><b>AIR｜<wbr><em class="gjp">ウォータージャンプ</em></b><span>4 FACILITIES</span></p>
+      <div class="cards">
+        <a class="card" data-area="shinetsu" href="https://hakuba-sanosaka-waterjump0.webnode.jp/" target="_blank" rel="noopener">
           <h3>白馬さのさかウォータージャンプ</h3><p>長野県白馬村</p><span class="badge">SAJ指定トレーニング施設</span>
         </a>
-        <a class="card" href="https://hakuba-gentaro-gym.jimdosite.com/" target="_blank" rel="noopener">
-          <h3>源太郎ジム</h3><p>長野県白馬村</p><span class="badge">トランポリン練習施設</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="group" data-area="kansai">
-      <p class="gtitle"><b>関西エリア（大阪）</b><span>3 FACILITIES</span></p>
-      <div class="cards">
-        <a class="card" href="https://o-air.square.site/" target="_blank" rel="noopener">
+        <a class="card" data-area="kansai" href="https://o-air.square.site/" target="_blank" rel="noopener">
           <h3>WATER JUMP O-AIR</h3><p>大阪府大東市</p><span class="badge">ウォータージャンプ練習施設</span>
         </a>
-        <a class="card" href="https://abenojr80.com/" target="_blank" rel="noopener">
-          <h3>アベノジュニアトランポリンクラブ</h3><p>大阪府八尾市天王寺屋</p><span class="badge">トランポリン練習施設</span>
+        <a class="card" data-area="kanto" href="http://waterjump.biz/s-air" target="_blank" rel="noopener">
+          <h3>WATER JUMP S-AIR</h3><p>埼玉県所沢市</p><span class="badge">ウォータージャンプ練習施設</span>
         </a>
-        <a class="card" href="https://www.heartful-health.or.jp/e-vigorous/" target="_blank" rel="noopener">
-          <h3>Eudynamics ヴィゴラス</h3><p>大阪府羽曳野市</p><span class="badge">トレーニング・メディカルサポート</span>
+        <a class="card" data-area="tohoku" href="https://www.ksp-wjm-totalsupportsport.com/wjm" target="_blank" rel="noopener">
+          <h3>ikuto ウォータージャンプ宮城</h3><p>宮城県柴田郡川崎町（旧川内小学校）</p><span class="badge">NTC競技別強化拠点（モーグル）</span>
         </a>
       </div>
     </section>
 
-    <section class="group" data-area="kanto">
-      <p class="gtitle"><b>関東エリア（埼玉）</b><span>2 FACILITIES</span></p>
+    <section class="group" data-role="trampoline">
+      <p class="gtitle"><b>TRAMPOLINE｜<wbr><em class="gjp">トランポリン</em></b><span>3 FACILITIES</span></p>
       <div class="cards">
-        <a class="card" href="http://waterjump.biz/s-air" target="_blank" rel="noopener">
-          <h3>WATER JUMP S-AIR</h3><p>埼玉県所沢市</p><span class="badge">ウォータージャンプ練習施設</span>
+        <a class="card" data-area="shinetsu" href="https://hakuba-gentaro-gym.jimdosite.com/" target="_blank" rel="noopener">
+          <h3>源太郎ジム</h3><p>長野県白馬村</p><span class="badge">トランポリン練習施設</span>
         </a>
-        <a class="card" href="https://jocks.jp/" target="_blank" rel="noopener">
+        <a class="card" data-area="kansai" href="https://abenojr80.com/" target="_blank" rel="noopener">
+          <h3>アベノジュニアトランポリンクラブ</h3><p>大阪府八尾市天王寺屋</p><span class="badge">トランポリン練習施設</span>
+        </a>
+        <a class="card" data-area="kanto" href="https://jocks.jp/" target="_blank" rel="noopener">
           <h3>PROSHOP JOCKS</h3><p>埼玉県所沢市</p><span class="badge">トランポリン練習施設</span>
         </a>
       </div>
     </section>
 
-    <section class="group" data-area="tohoku">
-      <p class="gtitle"><b>東北エリア（宮城）</b><span>1 FACILITY</span></p>
+    <section class="group" data-role="body">
+      <p class="gtitle"><b>BODY &amp; CONDITIONING｜<wbr><em class="gjp">フィジカル・コンディショニング</em></b><span>1 FACILITY</span></p>
       <div class="cards">
-        <a class="card" href="https://www.ksp-wjm-totalsupportsport.com/wjm" target="_blank" rel="noopener">
-          <h3>ikuto ウォータージャンプ宮城</h3><p>宮城県柴田郡川崎町（旧川内小学校）</p><span class="badge">NTC競技別強化拠点（モーグル）</span>
+        <a class="card" data-area="kansai" href="https://www.heartful-health.or.jp/e-vigorous/" target="_blank" rel="noopener">
+          <h3>Eudynamics ヴィゴラス</h3><p>大阪府羽曳野市</p><span class="badge">トレーニング・メディカルサポート</span>
         </a>
       </div>
     </section>
   </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- COMMUNITY 03｜MIC NETWORK -->
+  <div class="sec" id="network">
+    <span class="anchor-legacy" id="c1" aria-hidden="true"></span>
+    <div class="sec-head">
+      <div class="sec-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path></svg></div>
+      <div>
+        <div class="sec-num">COMMUNITY 03</div>
+        <h2 class="sec-title">MIC NETWORK</h2>
+      </div>
+    </div>
+    <p class="sec-sub">それぞれの専門性が、選手の力になる。</p>
+    <div class="sec-desc">用品店から県連盟・チームまで、さまざまな形でMICの活動を支えてくださっている皆さまです。</div>
+
+    <div class="mic-partners">
+      <div class="mic-head">
+        <span class="dot"></span>
+        <span class="label">MIC NETWORK</span>
+        <span class="rule"></span>
+        <span class="count" id="mic-count"></span>
+      </div>
+      <div class="mic-wrap" id="mic-wrap">
+        <div class="mic-ind" id="mic-ind"></div>
+        <div class="mic-cap" id="mic-cap">
+          <div class="mic-cap-role" id="mic-cap-role"></div>
+          <div class="mic-cap-name" id="mic-cap-name"></div>
+          <div class="mic-cap-note" id="mic-cap-note"></div>
+          <div class="mic-links" id="mic-cap-links"></div>
+        </div>
+      </div>
+    </div>
+
+<script>
+(function () {
+  /* パートナーはここに追記するだけ。順番＝表示順。ロゴが無い先は logo:null で文字組みになります。
+     links は種類（site / instagram / facebook）とURLの組。無ければ省略可。
+     トップページ（index.html）と同じ実装。片方を直したらもう片方も直すこと。 */
+  var ICONS = {
+    site: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"></path></svg>',
+    instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"></circle></svg>',
+    facebook: '<svg class="solid" viewBox="0 0 24 24"><path d="M13.5 22v-8.5h2.9l.44-3.4H13.5V7.94c0-.98.27-1.65 1.68-1.65h1.79V3.25A24 24 0 0 0 14.36 3C11.77 3 10 4.58 10 7.48v2.62H7.1v3.4H10V22z"></path></svg>'
+  };
+  var LABELS = { site:'公式サイト', instagram:'Instagram', facebook:'Facebook' };
+
+  var PARTNERS = [
+    {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", role:"EQUIPMENT", logo:"assets/community/snowbase98.png",
+     links:[{type:"instagram", url:"https://www.instagram.com/snowbase98"},
+            {type:"facebook",  url:"https://www.facebook.com/people/SNOW-BASE-98/61562297623040/"}]},
+    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       role:"FEDERATION", logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true,
+     links:[{type:"site", url:"https://ski-hiroshima.org/competition/freestyle"}]},
+    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             role:"TEAM", logo:"assets/community/trj-logo.png", dark:true, boost:true,
+     links:[{type:"site", url:"https://www.mogulteam-trj-nagano.com/"}]},
+    {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         role:"CLUB", logo:"assets/community/equipe-fsc-logo.png",
+     links:[{type:"instagram", url:"https://www.instagram.com/equipe_f.s.c._"}]},
+    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", role:"MEDICAL", logo:"assets/community/shimada-hospital.png", boost:true,
+     links:[{type:"site", url:"https://www.heartful-health.or.jp/shimadahp/"}]},
+    {name:"CSBA",             tag:"スポーツ専門学校・カナダ（ウィスラー）", note:"MIC出身の選手もモーグル留学したスポーツ専門学校です。海外での挑戦の選択肢を広げる形で連携しています。", role:"ACADEMY", logo:"assets/community/csba-logo.png",
+     links:[{type:"site", url:"https://www.canada-sports.net/"},
+            {type:"instagram", url:"https://www.instagram.com/csba_whistler/"}]}
+  ];
+
+  var wrap  = document.getElementById('mic-wrap');
+  var ind   = document.getElementById('mic-ind');
+  var cap   = document.getElementById('mic-cap');
+  var capRl = document.getElementById('mic-cap-role');
+  var capNm = document.getElementById('mic-cap-name');
+  var capNt = document.getElementById('mic-cap-note');
+  var capLk = document.getElementById('mic-cap-links');
+  if (!wrap) return;
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = [], active = -1;
+
+  document.getElementById('mic-count').textContent = String(PARTNERS.length);
+
+  PARTNERS.forEach(function (p, i) {
+    var item = document.createElement('div');
+    item.className = 'mic-item';
+    item.style.setProperty('--d', (i * 80) + 'ms');
+
+    var plate = document.createElement('div');
+    plate.className = 'mic-plate' + (p.dark ? ' is-dark' : '');
+
+    if (p.logo) {
+      var img = document.createElement('img');
+      img.alt = p.name;
+      img.decoding = 'async';
+      img.addEventListener('load', function () {
+        item.dataset.ratio = img.naturalWidth / img.naturalHeight; /* 実寸から比率を取得 */
+        sizeOne(item, p);
+        place();
+      });
+      img.src = p.logo;
+      plate.appendChild(img);
+    } else {
+      var w = document.createElement('span');
+      w.className = 'mic-word';
+      w.textContent = p.name;
+      plate.appendChild(w);
+    }
+
+    var tag = document.createElement('div');
+    tag.className = 'mic-tag';
+    tag.textContent = p.tag;
+
+    item.appendChild(plate);
+    item.appendChild(tag);
+    item.addEventListener('click', function () { hold(); setActive(i); });
+    item.addEventListener('mouseenter', function () { hold(); setActive(i); });
+    wrap.appendChild(item);
+    items.push(item);
+  });
+
+  /* プレートは幅を固定。ロゴは比率を保ったまま中央に収める（レターボックス）。
+     boost:true の先だけ、幅は揃えたまま高さを増やして表示を大きくする
+     （SNOW BASE 98 / EQUIPE のような横長ロゴは幅で頭打ちのため高さを増やしても変わらず、
+     広島・Tr-J・しまだ病院のような正方形寄りのロゴだけが実際に大きくなる）。 */
+  function box() {
+    var cw = wrap.clientWidth;
+    if (cw > 700) return {w: 180, h: 74};
+    /* プレートの左右余白ぶんを引いて、行の半分に収まる幅にする */
+    return {w: Math.max(104, Math.min(156, Math.floor(cw / 2) - 5)), h: 56};
+  }
+  function sizeOne(item, p) {
+    var plate = item.querySelector('.mic-plate');
+    var b = box();
+    var boostH = (p && p.boost) ? Math.round(b.h * 1.35) : b.h;
+    plate.style.width = b.w + 'px';
+    plate.style.height = boostH + 'px';
+    var img = item.querySelector('img');
+    var r = parseFloat(item.dataset.ratio);
+    if (!img || !r) return;
+    var desktop = wrap.clientWidth > 700;
+    var padX = desktop ? 16 : 12, padY = desktop ? 14 : 11;
+    var innerW = b.w - padX * 2, innerH = boostH - padY * 2;
+    var w = innerH * r, h = innerH;
+    if (w > innerW) { w = innerW; h = w / r; }
+    img.width = Math.round(w);
+    img.height = Math.round(h);
+  }
+  function sizeAll() { items.forEach(function (item, i) { sizeOne(item, PARTNERS[i]); }); }
+
+  /* リンクのチップ。キャプション内なので、アクティブな1社ぶんだけ出る */
+  function renderLinks(p) {
+    capLk.textContent = '';
+    (p.links || []).forEach(function (l) {
+      var a = document.createElement('a');
+      a.className = 'chip';
+      a.href = l.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.title = LABELS[l.type] || '';
+      a.setAttribute('aria-label', p.name + ' の' + (LABELS[l.type] || 'リンク'));
+      a.innerHTML = ICONS[l.type] || ICONS.site;
+      capLk.appendChild(a);
+    });
+  }
+
+  function setActive(i) {
+    if (i === active || !items[i]) return;
+    if (items[active]) items[active].classList.remove('is-active');
+    active = i;
+    items[i].classList.add('is-active');
+    capRl.textContent = PARTNERS[i].role || '';
+    capNm.textContent = PARTNERS[i].name;
+    capNt.textContent = PARTNERS[i].note;
+    renderLinks(PARTNERS[i]);
+    place();
+  }
+
+  /* キャプションとインジケーターを、アクティブなロゴの直下へ */
+  function place() {
+    var el = items[active];
+    if (!el) return;
+    var capW = Math.min(238, wrap.clientWidth);
+    var plate = el.querySelector('.mic-plate');
+    cap.style.width = capW + 'px';
+    cap.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - capW)) + 'px';
+    cap.style.top = (el.offsetTop + el.offsetHeight + 12) + 'px';
+    /* 念のため枠内にクランプする。レイアウト確定前は offsetWidth が
+       wrap より大きくなることがあり、そのまま入れると横にはみ出す。 */
+    var indW = Math.min(el.offsetWidth, wrap.clientWidth);
+    ind.style.left = Math.max(0, Math.min(el.offsetLeft, wrap.clientWidth - indW)) + 'px';
+    ind.style.width = indW + 'px';
+    ind.style.top = (el.offsetTop + plate.offsetHeight - 5) + 'px';
+    cap.classList.add('is-on');
+    ind.classList.add('is-on');
+    if (!wrap.classList.contains('is-placed')) {
+      requestAnimationFrame(function () { wrap.classList.add('is-placed'); });
+    }
+  }
+
+  /* スクロールに追従して、順番に1社ずつアクティブにする。
+
+     「フォーカス線に縦方向で一番近いロゴ」を選ぶ方式にしないこと。
+     横に2枚並んだロゴは中心の高さが完全に同じになるため、どちらが近いかが
+     毎フレーム入れ替わり、スクロール中に左右をガタガタと往復する
+     （スマホ実機で確認済み。10px刻みのスクロールで8回往復した）。
+
+     代わりに、フォーカス線がロゴ群のどこを通っているかを 0〜1 の進捗に直し、
+     その進捗を社数で割って順番に割り当てる。同じスクロール位置なら必ず同じ
+     1社が選ばれるので、振動しない。 */
+  var ticking = false;
+  var holdUntil = 0;   /* タップ・ホバー直後は、スクロールで奪わない */
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      if (Date.now() < holdUntil) return;
+      var wr = wrap.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (wr.bottom < 0 || wr.top > vh) return;
+      /* 末尾はキャプション用の余白なので、最後のロゴの下端までを対象にする */
+      var last = items[items.length - 1];
+      var span = Math.max(1, last.offsetTop + last.offsetHeight);
+      var t = (vh * 0.45 - wr.top) / span;
+      var idx = Math.floor(t * items.length);
+      setActive(Math.max(0, Math.min(items.length - 1, idx)));
+      place();
+    });
+  }
+  /* タップ／ホバーで選んだものが、わずかなスクロールで奪われないようにする。
+     コミュニティページでは、リンクを押そうとした瞬間に別の会社へ
+     切り替わってしまうのを防ぐ意味もある。 */
+  function hold() { holdUntil = Date.now() + 2500; }
+
+  window.addEventListener('scroll', onScroll, {passive: true});
+  window.addEventListener('resize', function () { sizeAll(); place(); });
+  if (window.ResizeObserver) new ResizeObserver(function () { sizeAll(); place(); }).observe(wrap);
+
+  setActive(0);
+  sizeAll();
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    wrap.classList.add('is-in');
+  } else {
+    new IntersectionObserver(function (es, obs) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        wrap.classList.add('is-in');
+        obs.disconnect();
+        place();
+      });
+    }, {threshold: 0.15}).observe(wrap);
+  }
+})();
+</script>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- COMMUNITY 04｜JOIN THE COMMUNITY
+       「協賛」「企業」の文言は入れない（協賛の案内は準備中。2026/09/27 城さん判断）。 -->
+  <div class="sec join" id="join">
+    <div class="sec-head">
+      <div class="sec-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg></div>
+      <div>
+        <div class="sec-num">COMMUNITY 04</div>
+        <h2 class="sec-title">あなたも、このCommunityの一員に。</h2>
+      </div>
+    </div>
+    <div class="join-grid">
+      <div class="recruit-block join-card">
+        <div class="recruit-eyebrow">MICに参加する</div>
+        <div class="recruit-title">選手・保護者の方へ</div>
+        <a class="recruit-cta" href="index.html#programs">プログラムを見る<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+      </div>
+      <div class="recruit-block join-card">
+        <div class="recruit-eyebrow">MICとつながる</div>
+        <div class="recruit-title">クラブ、チーム、施設、専門家の方へ</div>
+        <a class="recruit-cta" href="inquiry.html">連携について相談する<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></a>
+      </div>
+    </div>
   </div>
 
   <!-- ③ Become a Partner ／ 準備中のため一時的に非表示。公開するときは hidden を消す（2026/09/07）
@@ -1062,7 +1269,7 @@
     </div>
   </div>
 
-  <div class="foot-note">掲載内容は2026年8月時点のものです。パートナー・活動拠点の追加や変更がありましたらご連絡ください。</div>
+  <div class="foot-note">掲載内容は2026年9月時点のものです。パートナー・活動拠点の追加や変更がありましたらご連絡ください。</div>
 </div>
 
 <script>
@@ -1092,12 +1299,23 @@
 
   var groups=[].slice.call(sec.querySelectorAll('.group'));
   var areas=[].slice.call(sec.querySelectorAll('.area'));
-  var current=null;
-  function setActive(name){
-    if(name===current) return; current=name;
-    groups.forEach(function(g){g.classList.toggle('on',g.dataset.area===name)});
-    areas.forEach(function(a){a.classList.toggle('on',a.dataset.area===name)});
-    map.classList.toggle('dim',!!name);
+  /* グループは役割別（雪上・ウォータージャンプ・トランポリン・フィジカル）なので、
+     1グループが複数エリアにまたがる。グループ内の施設カードが持つ data-area を集め、
+     基準線に一番近いグループのエリアをすべて光らせる（例：トランポリン → 白馬・大阪・埼玉）。 */
+  var groupAreas=groups.map(function(g){
+    var list=[];
+    [].forEach.call(g.querySelectorAll('.card[data-area]'),function(c){
+      if(list.indexOf(c.dataset.area)<0) list.push(c.dataset.area);
+    });
+    return list;
+  });
+  var current;
+  function setActive(i){
+    if(i===current) return; current=i;
+    var on=i>=0?groupAreas[i]:[];
+    groups.forEach(function(g,k){g.classList.toggle('on',k===i)});
+    areas.forEach(function(a){a.classList.toggle('on',on.indexOf(a.dataset.area)>=0)});
+    map.classList.toggle('dim',i>=0);
   }
 
   /* ---- 地図の大きさを、スクロール位置から直接決める ----
@@ -1150,13 +1368,13 @@
   function pick(){
     ticking=false;
     layout();
-    var line=innerHeight*0.58, hit=null, best=1e9;
-    var atEnd=(scrollY+innerHeight)>=(document.documentElement.scrollHeight-6);
-    if(atEnd){ setActive(groups[groups.length-1].dataset.area); return; }
+    /* 活動拠点はページの最後の節ではなくなったため、「ページ末尾なら最後のグループ」の
+       特別扱いは外した（最後のグループも基準線まで普通に上がってくる）。 */
+    var line=innerHeight*0.58, hit=-1, best=1e9;
     if(groups[0].getBoundingClientRect().top<=line){
-      groups.forEach(function(g){
+      groups.forEach(function(g,i){
         var r=g.getBoundingClientRect(), c=(r.top+r.bottom)/2, d=Math.abs(c-line);
-        if(d<best){ best=d; hit=g.dataset.area; }
+        if(d<best){ best=d; hit=i; }
       });
     }
     setActive(hit);

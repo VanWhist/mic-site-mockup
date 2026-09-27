@@ -1428,8 +1428,11 @@
   /* 折り返しレイアウト。row-gap がキャプション用の予約領域を兼ねる */
   .mic-wrap{
     position:relative;display:flex;flex-wrap:wrap;
-    column-gap:10px;row-gap:80px;padding-bottom:78px;
+    column-gap:10px;row-gap:80px;padding-bottom:98px;
   }
+  /* 2026/09 Community v2：padding-bottom を 78→98（PCは 92→104）に広げた。
+     最後の段に来る CSBA の紹介文が長く（スマホで3行）、広げないとキャプションが
+     すぐ下の「Communityを見る」ボタンに重なる（実測 -10px）。 */
 
   .mic-item{cursor:pointer;transform:none;
     transition:transform .35s cubic-bezier(.22,.61,.24,1);}
@@ -1497,7 +1500,7 @@
   .mic-cap-note{font-size:11.5px;color:var(--mic-sub);line-height:1.7;margin-top:5px;text-wrap:pretty;}
 
   @media (min-width:768px){
-    .mic-wrap{column-gap:14px;row-gap:96px;padding-bottom:92px;}
+    .mic-wrap{column-gap:14px;row-gap:96px;padding-bottom:104px;}
     .mic-plate{padding:14px 16px;border-radius:10px;min-height:74px;}
     .mic-word{height:44px;font-size:14px;}
     .mic-tag{font-size:11px;}
@@ -3271,11 +3274,11 @@
   <div class="cm-head">
     <div class="eyebrow reveal">MIC Community</div>
     <h2 class="reveal delay-1">ひとりで、<br>戦っているわけじゃない。</h2>
-    <p class="reveal delay-2"><span>MICは、企業・団体・各地のトレーニング拠点と</span><span>ともに、選手が挑戦し続けられる環境を</span><span>つくっています。</span></p>
+    <p class="reveal delay-2"><span>選手、コーチ、家族、</span><span>チーム、施設、医療、企業。</span><br><span>さまざまな人と環境が</span><span>つながりながら、</span><span>選手の挑戦を支えています。</span></p>
   </div>
 
   <div class="cm-stats">
-    <div class="cm-stat reveal"><div class="num">5</div><div class="lbl">パートナー</div></div>
+    <div class="cm-stat reveal"><div class="num">6</div><div class="lbl">支援・連携先</div></div>
     <div class="cm-stat reveal delay-1"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
@@ -3283,7 +3286,7 @@
     <div class="mic-inner">
       <div class="mic-head reveal">
         <span class="dot"></span>
-        <span class="label">SUPPORTED BY</span>
+        <span class="label">MIC NETWORK</span>
         <span class="rule"></span>
         <span class="count" id="mic-count"></span>
       </div>
@@ -3298,18 +3301,21 @@
   </div>
 
   <div class="cm-cta-wrap reveal">
-    <a class="btn btn-ghost" href="community.html">コミュニティ・活動拠点を見る</a>
+    <a class="btn btn-ghost" href="community.html">Communityを見る</a>
   </div>
 
 <script>
 (function () {
-  /* パートナーはここに追記するだけ。順番＝表示順。ロゴが無い先は logo:null で文字組みになります。 */
+  /* パートナーはここに追記するだけ。順番＝表示順。ロゴが無い先は logo:null で文字組みになります。
+     role は community.html のキャプションに出す役割。トップでは表示しないが、
+     community.html と同じデータを持たせておく（片方を直したらもう片方も直すこと）。 */
   var PARTNERS = [
-    {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", logo:"assets/community/snowbase98.png"},
-    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true},
-    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             logo:"assets/community/trj-logo.png", dark:true, boost:true},
-    {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         logo:"assets/community/equipe-fsc-logo.png"},
-    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", logo:"assets/community/shimada-hospital.png", boost:true}
+    {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", role:"EQUIPMENT", logo:"assets/community/snowbase98.png"},
+    {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       role:"FEDERATION", logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true},
+    {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             role:"TEAM", logo:"assets/community/trj-logo.png", dark:true, boost:true},
+    {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         role:"CLUB", logo:"assets/community/equipe-fsc-logo.png"},
+    {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", role:"MEDICAL", logo:"assets/community/shimada-hospital.png", boost:true},
+    {name:"CSBA",             tag:"スポーツ専門学校・カナダ（ウィスラー）", note:"MIC出身の選手もモーグル留学したスポーツ専門学校です。海外での挑戦の選択肢を広げる形で連携しています。", role:"ACADEMY", logo:"assets/community/csba-logo.png"}
   ];
 
   var wrap  = document.getElementById('mic-wrap');
@@ -3322,7 +3328,7 @@
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var items = [], active = -1;
 
-  document.getElementById('mic-count').textContent = PARTNERS.length + ' PARTNERS';
+  document.getElementById('mic-count').textContent = String(PARTNERS.length);
 
   PARTNERS.forEach(function (p, i) {
     var item = document.createElement('div');
