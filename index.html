@@ -1365,6 +1365,10 @@
   .lc-meta{position:relative;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;}
   .lc-chip{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:#e4e4e8;background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 15px;}
+  /* display を指定したクラスは hidden 属性を打ち消すため、明示して隠す */
+  .lc-chip[hidden],.lc-apply[hidden]{display:none;}
+  .lc-apply{position:relative;display:inline-block;margin:-8px 0 22px;font-size:14px;font-weight:700;color:var(--accent);}
+  .lc-apply:hover{text-decoration:underline;}
   .lc-cta{position:relative;display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;
     border-radius:999px;padding:13px 26px;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
   .lc-cta svg{width:15px;height:15px;}
@@ -2939,6 +2943,7 @@
         <span class="lc-chip" id="lcCapacity">👥 -</span>
         <span class="lc-chip" id="lcDeadline" hidden>✍️ 申込締切 -</span>
       </div>
+      <a class="lc-apply" id="lcApply" href="#" hidden>詳細・お申し込み →</a>
       <div class="lc-scroller-wrap">
         <div class="lc-scroller-label">日付を選ぶ</div>
         <div class="lc-scroller" id="lcScroller"></div>
@@ -3106,6 +3111,40 @@
   var DATES = [];
   var DOWS = ['日','月','火','水','木','金','土'];
 
+  // ---- 予定ごとの申込ページ ----
+  // 予定の日付が month（'YYYY-MM'）の月で、かつタイトルに match を含むものだけ、
+  // カードに「詳細・お申し込み →」を出す。月を見るのは、別の月の同じ名前の予定に
+  // 前の月の申込ページを出さないため。
+  // 申込ページは月ごとに変わるので、次の月は対応表の1行を足す／直す。
+  // full-calendar.html と index.html の両方にある。片方を直したらもう片方も直すこと。
+  var APPLY_PAGES = [
+    { match: 'MIC一般レッスン', month: '2026-10', url: 'event-general-202610.html' }
+  ];
+  function applyPageFor(ev){
+    var title = (ev && ev.title) || '';
+    var month = ((ev && ev.date) || '').slice(0, 7);
+    for (var i = 0; i < APPLY_PAGES.length; i++){
+      var p = APPLY_PAGES[i];
+      if (month === p.month && title.indexOf(p.match) >= 0) return p.url;
+    }
+    return null;
+  }
+
+  // ---- 申込締切の引き継ぎ ----
+  // 公開API（Apps Script）の応答には deadlineLabel の項目が無い。そのまま描き直すと、
+  // 埋め込みデータで出していた締切が消えるため、同じ id の予定から締切を引き継ぐ。
+  // API に項目が来るようになったら API の値を使う（項目が無いときだけ補う）。
+  // id が一致しない予定は締切なしのまま（推測で作らない）。
+  function fillDeadlines(data, source){
+    var byId = {};
+    ((source && source.events) || []).forEach(function(ev){
+      if (ev.id && ev.deadlineLabel) byId[ev.id] = ev.deadlineLabel;
+    });
+    (data.events || []).forEach(function(ev){
+      if (!('deadlineLabel' in ev) && ev.id && byId[ev.id]) ev.deadlineLabel = byId[ev.id];
+    });
+  }
+
   function todayStr(){
     var d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -3140,6 +3179,7 @@
     var priceEl = document.getElementById('lcPrice');
     var capEl = document.getElementById('lcCapacity');
     var dlEl = document.getElementById('lcDeadline');
+    var applyEl = document.getElementById('lcApply');
     if (events.length > 0){
       var f = events[0];
       if (titleEl) titleEl.textContent = f.title + (events.length > 1 ? '　他' + (events.length-1) + '件' : '');
@@ -3151,12 +3191,19 @@
         if (f.deadlineLabel){ dlEl.textContent = '✍️ 申込締切 ' + f.deadlineLabel; dlEl.hidden = false; }
         else { dlEl.hidden = true; }
       }
+      // 申込ページがある予定だけリンクを出す（カードに出している1件目の予定で判定）
+      if (applyEl){
+        var applyUrl = applyPageFor(f);
+        if (applyUrl){ applyEl.href = applyUrl; applyEl.hidden = false; }
+        else { applyEl.hidden = true; }
+      }
     } else {
       if (titleEl) titleEl.textContent = 'この日の予定はありません';
       if (locEl) locEl.textContent = '📍 -';
       if (priceEl) priceEl.textContent = '💴 -';
       if (capEl) capEl.textContent = '👥 -';
       if (dlEl) dlEl.hidden = true;
+      if (applyEl) applyEl.hidden = true;
     }
     var activeCard = document.querySelector('.lc-date-card[data-iso="' + iso + '"]');
     // Only scroll the horizontal date strip into view for a user-initiated click.
@@ -3205,6 +3252,8 @@
     if (priceEl) priceEl.textContent = '💴 -';
     if (capEl) capEl.textContent = '👥 -';
     if (dlEl) dlEl.hidden = true;
+    var applyEl = document.getElementById('lcApply');
+    if (applyEl) applyEl.hidden = true;
     var qaEl = document.getElementById('qaNextLesson');
     if (qaEl) qaEl.textContent = '現在、予定はありません';
     var noteEl = document.getElementById('calendarNote');
@@ -3254,13 +3303,22 @@
     var inline = getInlineFallbackData();
     if (inline){ applyCalendarData(inline); painted = true; }
 
+    // 締切を補うための元データ。埋め込みが無ければ calendar-data.json から取る
+    var deadlineSource = inline ? Promise.resolve(inline)
+      : fetch('calendar-data.json', {cache:'no-cache'})
+          .then(function(res){ return res.ok ? res.json() : null; })
+          .catch(function(){ return null; });
+
     function tryFetch(url){
       return fetch(url, {cache:'no-cache'})
         .then(function(res){ if (!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
         .then(function(data){
           if (!data || data.error || !Array.isArray(data.events)) throw new Error('unexpected payload');
-          applyCalendarData(data);
-          painted = true;
+          return deadlineSource.then(function(source){
+            fillDeadlines(data, source);
+            applyCalendarData(data);
+            painted = true;
+          });
         });
     }
 
