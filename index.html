@@ -3112,16 +3112,20 @@
   var DOWS = ['日','月','火','水','木','金','土'];
 
   // ---- 予定ごとの申込ページ ----
-  // 予定のタイトルに match を含むものだけ、カードに「詳細・お申し込み →」を出す。
+  // 予定の日付が month（'YYYY-MM'）の月で、かつタイトルに match を含むものだけ、
+  // カードに「詳細・お申し込み →」を出す。月を見るのは、別の月の同じ名前の予定に
+  // 前の月の申込ページを出さないため。
   // 申込ページは月ごとに変わるので、次の月は対応表の1行を足す／直す。
   // full-calendar.html と index.html の両方にある。片方を直したらもう片方も直すこと。
   var APPLY_PAGES = [
-    { match: 'MIC一般レッスン', url: 'event-general-202610.html' }
+    { match: 'MIC一般レッスン', month: '2026-10', url: 'event-general-202610.html' }
   ];
   function applyPageFor(ev){
     var title = (ev && ev.title) || '';
+    var month = ((ev && ev.date) || '').slice(0, 7);
     for (var i = 0; i < APPLY_PAGES.length; i++){
-      if (title.indexOf(APPLY_PAGES[i].match) >= 0) return APPLY_PAGES[i].url;
+      var p = APPLY_PAGES[i];
+      if (month === p.month && title.indexOf(p.match) >= 0) return p.url;
     }
     return null;
   }
