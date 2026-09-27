@@ -149,6 +149,8 @@
   .t-tags{display:flex;flex-wrap:wrap;gap:8px;}
   .t-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#d8d8dc;
     background:rgba(255,255,255,.06);border-radius:999px;padding:5px 11px;}
+  .t-apply{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none;}
+  .t-apply:hover{text-decoration:underline;}
 
   .empty-state{text-align:center;color:var(--muted);font-size:13.5px;padding:38px 10px 20px;
     background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);border-radius:18px;}
@@ -453,10 +455,10 @@
 
   <a class="cal-cta" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-    LINEで申し込む
+    LINEで相談する
   </a>
 
-  <div class="foot-note">📍会場・💴料金・👥受付状況は各予定カードに表示しています。最新の空き状況・お申し込みは公式LINEでご確認ください。</div>
+  <div class="foot-note">📍会場・💴料金・👥受付状況は各予定カードに表示しています。お申し込みは各予定の「詳細・お申し込み」から。ご不明な点は公式LINEへどうぞ。</div>
 </div>
 
 <!-- CALENDAR_DATA_INLINE_START -->
@@ -471,6 +473,36 @@
   var EVENTS = {};       // { 'YYYY-MM-DD': [ {time, title, venue, priceLabel, capacityLabel, meetingTime}, ... ] }
   var ALL_DATES = [];
   var VENUES = [];       // 実データから動的に抽出した会場一覧
+
+  // ---- 予定ごとの申込ページ ----
+  // 予定のタイトルに match を含むものだけ、カードに「詳細・お申し込み →」を出す。
+  // 申込ページは月ごとに変わるので、次の月は対応表の1行を足す／直す。
+  // full-calendar.html と index.html の両方にある。片方を直したらもう片方も直すこと。
+  var APPLY_PAGES = [
+    { match: 'MIC一般レッスン', url: 'event-general-202610.html' }
+  ];
+  function applyPageFor(ev){
+    var title = (ev && ev.title) || '';
+    for (var i = 0; i < APPLY_PAGES.length; i++){
+      if (title.indexOf(APPLY_PAGES[i].match) >= 0) return APPLY_PAGES[i].url;
+    }
+    return null;
+  }
+
+  // ---- 申込締切の引き継ぎ ----
+  // 公開API（Apps Script）の応答には deadlineLabel の項目が無い。そのまま描き直すと、
+  // 埋め込みデータで出していた締切が消えるため、同じ id の予定から締切を引き継ぐ。
+  // API に項目が来るようになったら API の値を使う（項目が無いときだけ補う）。
+  // id が一致しない予定は締切なしのまま（推測で作らない）。
+  function fillDeadlines(data, source){
+    var byId = {};
+    ((source && source.events) || []).forEach(function(ev){
+      if (ev.id && ev.deadlineLabel) byId[ev.id] = ev.deadlineLabel;
+    });
+    (data.events || []).forEach(function(ev){
+      if (!('deadlineLabel' in ev) && ev.id && byId[ev.id]) ev.deadlineLabel = byId[ev.id];
+    });
+  }
 
   var DOWS = ['日','月','火','水','木','金','土'];
   var TODAY_STR = todayStr();
@@ -613,6 +645,7 @@
     }
     body.classList.remove('is-empty');
     body.innerHTML = events.map(function(ev){
+      var applyUrl = applyPageFor(ev);
       return '<div class="t-item">' +
         '<div class="t-card">' +
           '<div class="t-time">' + ev.time + '〜</div>' +
@@ -624,6 +657,7 @@
             (ev.deadlineLabel ? '<span class="t-tag">✍️ 申込締切 ' + ev.deadlineLabel + '</span>' : '') +
             (ev.meetingTime ? '<span class="t-tag">🕒 集合 ' + ev.meetingTime + '</span>' : '') +
           '</div>' +
+          (applyUrl ? '<a class="t-apply" href="' + applyUrl + '">詳細・お申し込み →</a>' : '') +
         '</div>' +
       '</div>';
     }).join('');
@@ -727,13 +761,22 @@
     var inline = getInlineFallbackData();
     if (inline){ applyCalendarData(inline); painted = true; }
 
+    // 締切を補うための元データ。埋め込みが無ければ calendar-data.json から取る
+    var deadlineSource = inline ? Promise.resolve(inline)
+      : fetch('calendar-data.json', {cache:'no-cache'})
+          .then(function(res){ return res.ok ? res.json() : null; })
+          .catch(function(){ return null; });
+
     function tryFetch(url){
       return fetch(url, {cache:'no-cache'})
         .then(function(res){ if (!res.ok) throw new Error(url + ' -> ' + res.status); return res.json(); })
         .then(function(data){
           if (!data || data.error || !Array.isArray(data.events)) throw new Error('unexpected payload');
-          applyCalendarData(data);
-          painted = true;
+          return deadlineSource.then(function(source){
+            fillDeadlines(data, source);
+            applyCalendarData(data);
+            painted = true;
+          });
         });
     }
 
