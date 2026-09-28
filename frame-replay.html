@@ -247,6 +247,30 @@
   @media (min-width:860px){.mini--free{grid-template-columns:repeat(3,1fr);}}
   @media (min-width:1080px){.mini--free{grid-template-columns:repeat(4,1fr);}}
 
+  /* ---------- 無料で、ここまでできる（場面ごと）----------
+     機能名の一覧ではなく、練習の場面ごとに見せる（文案 v1.1・2026-09-28 城さん決定）。
+     見た目は .mini-item（活用シーンと同じアイコンのカード）に合わせる。
+     写真は後から入る。各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
+     写真が届くまで画像の枠は置かない（空の枠を見せない）。
+     「Pro だとさらに」の機能名には、Pro の欄と同じ .pro-badge を付ける。 */
+  .scenes{display:grid;gap:12px;margin-top:26px;}
+  @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
+  @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
+  .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
+    background:var(--surface);border:1px solid var(--line);}
+  .scene > svg{width:22px;height:22px;color:var(--brand-lite);}
+  .scene-t{margin:10px 0 0;font-size:15.5px;font-weight:800;line-height:1.5;}
+  .scene-d{margin:8px 0 0;font-size:13.5px;line-height:1.85;color:var(--body);}
+  .scene-uses{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted);}
+  /* Pro の囲みは各カードの下端にそろえる（本文の長さが違っても横の並びで揃う） */
+  .scene-pro{margin-top:auto;padding-top:14px;}
+  .scene-pro-in{padding:12px 13px;border-radius:10px;
+    background:rgba(93,215,254,.05);border:1px solid rgba(93,215,254,.18);}
+  .scene-pro-h{margin:0;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);}
+  .scene-pro-t{margin:6px 0 0;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .scene-pro-d{margin:5px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);}
+  .scene-more{margin:18px 0 0;font-size:13px;line-height:1.85;color:var(--muted);}
+
   /* 既存ユーザーへの案内。青＝使える。文言は現行ページのまま。 */
   .avail{margin:0 0 22px;padding:14px 16px;border-radius:12px;
     border:1px solid rgba(46,166,226,.34);background:rgba(46,166,226,.09);
@@ -395,6 +419,9 @@
     <g id="i-watch" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <rect x="7" y="6.5" width="10" height="11" rx="3"></rect><path d="M9.5 6.5L10 3h4l.5 3.5M9.5 17.5L10 21h4l.5-3.5"></path>
     </g>
+    <g id="i-timer" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="13.5" r="7.5"></circle><path d="M12 13.5V9.5M10 2.8h4M12 2.8V6M18.3 7.2l1.4-1.4"></path>
+    </g>
     <g id="i-fps" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="6" width="18" height="12" rx="2.5"></rect><path d="M7 6v12M11 6v12M15 6v12"></path>
     </g>
@@ -484,6 +511,98 @@
 </header>
 
 <div class="wrap">
+
+  <!-- ===== 無料で、ここまでできる（文案 v1.1 §2・2026-09-28）=====
+       旧「そのほかにも。」（#other-features）の後継。無料機能を練習の場面ごとに見せる。
+       ★ 1.1.1（9f77e87）の実装と照合済み。
+         ・タイマー：押してから始めるまで すぐ／3／5／10／15／20／30秒、自動で止める 止めない／10／15／20／30／45秒。
+           自動で止める秒数は撮り始めてから数える → 「10秒後に撮り始めて10秒で止める」はそのまま成り立つ。
+         ・次に撮る選手：選んで撮ると動画に選手が付く。撮り続けても外れず、アプリを立ち上げ直すと外れる。
+         ・お手本：印を付けるのは無料。「比較」（Pro）を押すと、その選手のお手本が自動で横に並ぶ。
+       ★ 共有先のアプリ名はまだ出さない（1.1.2 の承認待ち）。承認後に場面6へ足す。
+       ★ 「240fps 対応」「4K 対応」と無条件に書かない。端末が出せる組み合わせだけが提示される。
+       旧 #other-features #import #export #favorites #customize の着地先もここ（英語版の言語切替で hash が来るため残す）。 -->
+  <span id="other-features" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="free">
+    <div class="sec-label">Free</div>
+    <h2 class="sec-h">無料で、ここまでできる。</h2>
+    <p class="sec-p">撮影の本数・画質・長さに制限はありません。透かしも入りません。</p>
+    <div class="scenes">
+      <article class="scene rv" data-shot="J1" id="free-solo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
+        <h3 class="scene-t">一人で自主練</h3>
+        <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。ウォータージャンプやトランポリンの自主練で、跳ぶたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
+        <p class="scene-uses">使う機能：押してから始めるまで／自動で止める／Apple Watch から録画開始（watchOS 26.2 以上）</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">連続モード <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">置いておくだけで、演技ごとに区切って残します。</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J2" id="free-capture">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
+        <h3 class="scene-t">撮り逃さない</h3>
+        <p class="scene-d">録画ボタンを押す少し前から残せます。端末が対応していれば、最大240fps・4Kで撮れます。</p>
+        <p class="scene-uses">使う機能：押す前から入れる／フレームレート（30〜240fps・端末による）／解像度（720p・1080p・4K）</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">リプレイ <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">録画ボタンを押さなくても、少し遅れて映像が流れ続けます。</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J3" id="free-review">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
+        <h3 class="scene-t">その場で細かく見る</h3>
+        <p class="scene-d">撮ったらすぐ再生。0.25倍・0.5倍のスローと1コマ送りで、踏み切りや着地の一瞬を止めて見られます。ピンチで拡大、左右反転もできます。</p>
+        <p class="scene-uses">使う機能：スロー再生／1コマ送り／ピンチ拡大／左右反転</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">線と角度 <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">映像に線や角度を描いて、フォームを確かめます（買う前に3回まで試せます）。</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J4" id="free-measure">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
+        <h3 class="scene-t">測る・くり返す</h3>
+        <p class="scene-d">1本ごとの滞空時間を測れます。見たい区間だけを切り取って、くり返し再生できます。</p>
+        <p class="scene-uses">使う機能：滞空時間／区間（開始・終了）とくり返し再生</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">2本比較・重ねる <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">前の1本と並べて、または重ねて比べます。「比較」を押すと、その選手のお手本が自動で横に並びます（買う前に3回まで試せます。試している間は、並べた動画の保存もできます）。</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J5" id="free-athletes">
+        <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
+        <h3 class="scene-t">選手ごとに残す</h3>
+        <p class="scene-d">撮る前に選手を選んでおくと、撮った動画にその選手が付きます（選んだ選手は、撮り続けても外れません）。選手ごとに絞り込め、お気に入りやお手本の印も付けられます。</p>
+        <p class="scene-uses">使う機能：名簿（次に撮る選手）／選手タグ・絞り込み／お気に入り・お手本／動画一覧</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">連続モード <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">名簿の順に名前が付きます。</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J6" id="free-share">
+        <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
+        <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
+        <h3 class="scene-t">選手に渡す</h3>
+        <p class="scene-d">撮ったままの動画を、写真アプリに保存したり、AirDrop などで共有したりできます。写真アプリの動画を読み込んで見ることもできます。</p>
+        <p class="scene-uses">使う機能：写真に保存／共有／写真から読み込む</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">Pro だとさらに</p>
+          <p class="scene-pro-t">スローのまま保存 <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">見ている速さのまま、写真アプリに保存できます。</p>
+        </div></div>
+      </article>
+    </div>
+    <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
+    <p class="scene-more">そのほか：利き手に合わせたボタン配置、ボタンの大きさ、画面のカスタマイズ、日本語・英語・中国語（簡体字）。</p>
+  </section>
+
+  <div class="divider"></div>
 
   <!-- ===== 3つの価値 ===== -->
   <span id="field" class="fr-anchor-alias" aria-hidden="true"></span>
@@ -632,12 +751,12 @@
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
         <p class="mini-t">連続モード <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">端末を置いておくだけ。動きを見つけて演技ごとに区切り、一本終わるたびに再生します。</p>
+        <p class="mini-d">端末を置いて「連続」を1回押すだけ。動きを見つけて演技ごとに区切って残します。トランポリンの設定では、一本終わるたびに再生します。</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <p class="mini-t">加工して書き出す <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">見ている速さのまま保存できます。比較した2本は、並べたまま1本の動画として保存できます。</p>
+        <p class="mini-d">見ている速さのまま、写真アプリに保存できます。</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-card"></use></svg>
@@ -659,82 +778,6 @@
              width="1200" height="552" loading="lazy" decoding="async"
              alt="連続モードで撮影している画面。端末を置いたまま、演技ごとに区切られる。">
       </figure>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- ===== そのほかにも（無料）=====
-       旧 #import #export #favorites #customize の着地先。
-       撮ったままの書き出しは無料なので #export もここへ。 -->
-  <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
-  <section class="sec" id="other-features">
-    <div class="sec-label">Included for free</div>
-    <h2 class="sec-h">そのほかにも。</h2>
-    <p class="sec-p">ここに並ぶものは、すべて無料で使えます。</p>
-    <div class="mini mini--free" style="margin-top:24px;">
-      <!-- ★ 「240fps 対応」「4K 対応」と無条件に書かない。端末が出せる組み合わせだけが提示される。 -->
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
-        <p class="mini-t">高フレームレート撮影</p>
-        <p class="mini-d">端末が対応している範囲で 30〜240fps</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
-        <p class="mini-t">スロー再生</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
-        <p class="mini-t">区間ループ</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
-        <p class="mini-t">滞空時間</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flip"></use></svg>
-        <p class="mini-t">左右反転</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zoom"></use></svg>
-        <p class="mini-t">ピンチ拡大</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-photos"></use></svg>
-        <p class="mini-t">写真アプリから読み込む</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
-        <p class="mini-t">書き出し</p>
-        <p class="mini-d">撮ったまま保存・共有</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
-        <p class="mini-t">動画一覧</p>
-        <p class="mini-d">選手タグ・絞り込み</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"></use></svg>
-        <p class="mini-t">お気に入り・お手本</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"></use></svg>
-        <p class="mini-t">ボタン配置のカスタマイズ</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lang"></use></svg>
-        <p class="mini-t">日本語・英語切替</p>
-      </div>
-      <!-- ★ Apple Watch は必ずグリッドの最後。watchOS 26.2 は相当に新しく、
-           他と同列に並べると「入れればすぐ使える」と読まれる。機種名は書かない。 -->
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-watch"></use></svg>
-        <p class="mini-t">Apple Watch から録画開始 ※</p>
-        <p class="mini-d">※ Apple Watch からの録画開始には、watchOS 26.2 以上の Apple Watch が必要です。</p>
-      </div>
     </div>
   </section>
 
@@ -820,7 +863,7 @@
     <h2 class="sec-h">よくある質問</h2>
     <div class="faq" style="margin-top:24px;">
       <details id="faq-1"><summary>無料で何が使えますか？</summary>
-        <p class="faq-a">撮影、1コマ送り、スロー再生、区間ループ、滞空時間、左右反転、拡大、写真アプリからの読み込み、撮ったままの書き出し、動画一覧、お気に入り・お手本、UIカスタマイズ、日英切替が無料でお使いいただけます。購入しなくても、撮影とコマ送りでの確認はそのまま使えます。</p>
+        <p class="faq-a">撮影（押してから始めるまでの待ち時間・自動で止める、押す前から入れる、端末が対応していれば最大240fps・4K）、Apple Watch からの録画開始、1コマ送り、スロー再生、区間ループ、滞空時間、左右反転、拡大、写真アプリからの読み込み、撮ったままの書き出し、動画一覧、名簿（選手ごとに残す）、お気に入り・お手本、UIカスタマイズ、日本語・英語・中国語（簡体字）の切替が無料でお使いいただけます。撮影の本数・画質に制限はなく、透かしも入りません。購入しなくても、撮影とコマ送りでの確認はそのまま使えます。</p>
       </details>
       <details id="faq-2"><summary>FrameReplay Pro には何が含まれますか？</summary>
         <p class="faq-a">2本比較、線と角度、リプレイ、連続モード、加工して書き出す、カードから受け取る（FlashAir）の6つです。</p>
