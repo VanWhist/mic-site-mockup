@@ -204,6 +204,31 @@
   @media (min-width:860px){.mini--free{grid-template-columns:repeat(3,1fr);}}
   @media (min-width:1080px){.mini--free{grid-template-columns:repeat(4,1fr);}}
 
+  /* ---------- What you can do for free (by scene) ----------
+     Free features shown by practice scene, not as a list of feature names
+     (same as the Japanese page, draft v1.1, decided by Jo-san 2026-09-28).
+     Cards follow .mini-item. Photos come later: data-shot (J1–J6) is the
+     screenshot number. Until the photos arrive, no image frame is shown.
+     Feature names under "With Pro" carry the same .pro-badge as the Pro section. */
+  .scenes{display:grid;gap:12px;margin-top:26px;}
+  @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
+  @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
+  .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
+    background:var(--surface);border:1px solid var(--line);}
+  .scene > svg{width:22px;height:22px;color:var(--brand-lite);}
+  .scene-t{margin:10px 0 0;font-size:15.5px;font-weight:800;line-height:1.5;}
+  .scene-d{margin:8px 0 0;font-size:13.5px;line-height:1.85;color:var(--body);}
+  .scene-uses{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted);}
+  /* The Pro box sits at the bottom of each card, so boxes line up across a row */
+  .scene-pro{margin-top:auto;padding-top:14px;}
+  .scene-pro-in{padding:12px 13px;border-radius:10px;
+    background:rgba(93,215,254,.05);border:1px solid rgba(93,215,254,.18);}
+  .scene-pro-h{margin:0;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);}
+  .scene-pro-t{margin:6px 0 0;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .scene-pro-d{margin:5px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);}
+  .scene-pro-d + .scene-pro-t{margin-top:12px;padding-top:12px;border-top:1px solid rgba(93,215,254,.12);}
+  .scene-more{margin:18px 0 0;font-size:13px;line-height:1.85;color:var(--muted);}
+
   .avail{margin:0 0 22px;padding:14px 16px;border-radius:12px;
     border:1px solid rgba(46,166,226,.34);background:rgba(46,166,226,.09);
     font-size:13.5px;line-height:1.85;color:var(--body);}
@@ -340,6 +365,9 @@
     <g id="i-watch" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <rect x="7" y="6.5" width="10" height="11" rx="3"></rect><path d="M9.5 6.5L10 3h4l.5 3.5M9.5 17.5L10 21h4l.5-3.5"></path>
     </g>
+    <g id="i-timer" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="13.5" r="7.5"></circle><path d="M12 13.5V9.5M10 2.8h4M12 2.8V6M18.3 7.2l1.4-1.4"></path>
+    </g>
     <g id="i-fps" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="6" width="18" height="12" rx="2.5"></rect><path d="M7 6v12M11 6v12M15 6v12"></path>
     </g>
@@ -425,6 +453,107 @@
 
 <div class="wrap">
 
+  <!-- ===== What you can do for free (draft v1.1 §2, 2026-09-28) =====
+       Replaces the old "Included for free" (#other-features). Same structure as the Japanese page (PR #110–#112).
+       ★ Checked against 1.1.1 (9f77e87), including the English UI names in Localization.swift.
+         ・Wait before starting: Right away/3/5/10/15/20/30 s. Stop automatically: Never/10/15/20/30/45 s,
+           counted from when filming starts → "start after 10 seconds and stop after 10 seconds" holds.
+         ・Next athlete: clips recorded while an athlete is picked get that tag. It stays on while you keep
+           recording and is cleared when the app restarts → do not write "stays until you change it".
+         ・Model run: marking is free. Tapping Compare (Pro) lines up that athlete's model run automatically.
+         ・Clip list: filter by athlete, select same athlete / same day, Save to Photos, Share… — all free.
+         ・Replay delay: Off/10/20/30 s (default 10). With Off it starts paused, so "keeps playing" applies
+           when a delay is chosen. Describe Replay only as playing behind live, never as moving backwards (Jo-san, 2026-09-28).
+         ・Import from FlashAir: received clips only appear in the list; no athlete is tagged automatically.
+       ★ Scene 1 is not tied to any sport.
+       ★ Do not name share-target apps yet (waiting for 1.1.2 approval). Add them to scene 6 after approval.
+       ★ Never claim "240 fps" or "4K" without the qualifier. The app only offers the combinations the
+         device can actually produce: keep "up to", "on supported devices", "depend on your device" (scene 2, FAQ).
+       Old #other-features #import #export #favorites #customize land here (the language switch passes the hash). -->
+  <span id="other-features" class="fr-anchor-alias" aria-hidden="true"></span>
+  <section class="sec" id="free">
+    <div class="sec-label">Free</div>
+    <h2 class="sec-h">What you can do for free.</h2>
+    <p class="sec-p">No limits on how many clips you shoot, how long, or at what quality. No watermark.</p>
+    <div class="scenes">
+      <article class="scene rv" data-shot="J1" id="free-solo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
+        <h3 class="scene-t">Train on your own</h3>
+        <p class="scene-d">Set a start delay and an auto-stop, then walk to your spot&mdash;for example, start recording after 10 seconds and stop after 10 seconds. Film a jump, a throw, a swing, a sprint, or a rehab exercise on your own, without walking back to the device each time. You can also start recording from Apple Watch.</p>
+        <p class="scene-uses">Uses: Wait before starting / Stop automatically / Start recording from your wrist (Apple Watch, watchOS 26.2 or later)</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Continuous mode <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Leave it running; each take becomes its own clip.</p>
+          <p class="scene-pro-t">Replay <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Plays the action back on a delay, without pressing record. Choose a 10, 20, or 30-second delay to match the time it takes you to walk back.</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J2" id="free-capture">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
+        <h3 class="scene-t">Never miss the moment</h3>
+        <p class="scene-d">Keep the seconds before you tap record. Shoot at up to 240 fps and up to 4K on supported devices (available combinations depend on your device).</p>
+        <p class="scene-uses">Uses: Pre-roll / Frame rate (30&ndash;240 fps, depends on your device) / Resolution (720p, 1080p, 4K)</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Replay <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Without pressing record, the action keeps playing back a few seconds behind.</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J3" id="free-review">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
+        <h3 class="scene-t">Review it on the spot</h3>
+        <p class="scene-d">Play it back right away. Slow it to 0.25&times; or 0.5&times;, step frame by frame, and stop on the takeoff or the landing. Pinch to zoom, or mirror the view.</p>
+        <p class="scene-uses">Uses: Playback speed / Frame step / Pinch to zoom / Mirror</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Lines and angles <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Draw lines and angles on the video to check form. (You can use it 3 times before buying.)</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J4" id="free-measure">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
+        <h3 class="scene-t">Measure and repeat</h3>
+        <p class="scene-d">Measure the flight time of each take. Mark just the part you want to see and play it on a loop.</p>
+        <p class="scene-uses">Uses: Flight time / Start and end, with loop playback</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Compare and overlay <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Put it side by side with the previous take, or overlay the two. Tap Compare and that athlete&rsquo;s model run lines up automatically. You can also pick another athlete&rsquo;s clip to compare against. (You can use it 3 times before buying, and save the side-by-side video during those uses.)</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J5" id="free-athletes">
+        <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
+        <h3 class="scene-t">Keep clips by athlete (tags)</h3>
+        <p class="scene-d">Pick the athlete before you record and every clip gets tagged&mdash;the selection stays on while you keep recording. Tag clips afterwards, or retag several at once. Filter by athlete to see only their clips, so there is no hunting for the one you want. Mark favorites and model runs.</p>
+        <p class="scene-uses">Uses: Roster (Next athlete) / Athlete tags (afterwards, in bulk) / Filter by athlete / Favorites and model runs / Clip list</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Import from FlashAir (Wi-Fi SD card) <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Clips from a video camera with a FlashAir card land in the list, ready to tag.</p>
+        </div></div>
+      </article>
+      <article class="scene rv" data-shot="J6" id="free-share">
+        <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
+        <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
+        <h3 class="scene-t">Hand clips to athletes</h3>
+        <p class="scene-d">Filter by athlete, select their clips&mdash;or everything from the same day&mdash;and save them to Photos or share them via AirDrop in one go. You can also import videos from Photos.</p>
+        <p class="scene-uses">Uses: Filter by athlete / Select in bulk (same athlete, same day) / Save to Photos / Share / Import from Photos</p>
+        <div class="scene-pro"><div class="scene-pro-in">
+          <p class="scene-pro-h">With Pro</p>
+          <p class="scene-pro-t">Save to Photos in slow motion <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">Saves at the speed you&rsquo;re watching.</p>
+        </div></div>
+      </article>
+    </div>
+    <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
+    <p class="scene-more">Also: left- or right-handed layout, button size, customizable screens, and English, Japanese, and Simplified Chinese.</p>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- ===== Three values ===== -->
   <span id="field" class="fr-anchor-alias" aria-hidden="true"></span>
   <section class="sec" id="values">
@@ -461,7 +590,7 @@
     <div class="steps" style="margin-top:26px;">
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">Record</p><p class="step-d">Capture your run</p></div>
+        <div><p class="step-t">Record</p><p class="step-d">Capture a take</p></div>
         <!-- Pending asset (Jo-san): six step thumbnails, English UI -->
         <img class="step-shot" src="/assets/framereplay/fr-step1-record-en.webp"
              width="400" height="870" loading="lazy" decoding="async" alt="The capture screen, ready to record.">
@@ -470,7 +599,7 @@
         <div class="step-n" aria-hidden="true"></div>
         <div><p class="step-t">Watch</p><p class="step-d">Review right away</p></div>
         <img class="step-shot" src="/assets/framereplay/fr-step2-airtime-en.webp"
-             width="400" height="865" loading="lazy" decoding="async" alt="Playback with air time shown in seconds and frames.">
+             width="400" height="865" loading="lazy" decoding="async" alt="Playback with flight time shown in seconds and frames.">
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
@@ -562,22 +691,22 @@
     <div class="mini">
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
-        <p class="mini-t">Replay while recording <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">Look back at what just happened without pressing record.</p>
+        <p class="mini-t">Replay <span class="pro-badge">PRO</span></p>
+        <p class="mini-d">Without pressing record, the action keeps playing back a few seconds behind.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
         <p class="mini-t">Continuous mode <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">Set the device down. It finds the movement, splits each take, and plays it back.</p>
+        <p class="mini-d">Set the device down and tap Auto once. It finds each take and saves it as its own clip. With the trampoline setting, each take plays back as soon as it ends.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <p class="mini-t">Export with edits <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">Save at the speed you are watching, or save a compared pair as one video.</p>
+        <p class="mini-d">Save to Photos at the speed you&rsquo;re watching.</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-card"></use></svg>
-        <p class="mini-t">Import from an SD card <span class="pro-badge">PRO</span></p>
+        <p class="mini-t">Import from FlashAir (Wi-Fi SD card) <span class="pro-badge">PRO</span></p>
         <p class="mini-d">Requires a FlashAir Wi-Fi SD card and a video camera. Clips arrive in the order they were shot.</p>
       </div>
     </div>
@@ -590,81 +719,6 @@
       <p>Coach Taisei Watanabe was training alone at a water jump. He set his device down, turned on continuous mode, and never touched it again. Jump, land, check the screen, jump again.</p>
       <blockquote>"No need to leave the camera running — it detects each jump on its own. Being able to compare takes made it genuinely useful."</blockquote>
       <cite>― Coach Taisei Watanabe (translated from Japanese)</cite>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <!-- ===== Included for free ===== -->
-  <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
-  <span id="customize" class="fr-anchor-alias" aria-hidden="true"></span>
-  <section class="sec" id="other-features">
-    <div class="sec-label">Included for free</div>
-    <h2 class="sec-h">And more.</h2>
-    <p class="sec-p">Everything listed here is free to use.</p>
-    <div class="mini mini--free" style="margin-top:24px;">
-      <!-- ★ Never claim "240 fps" or "4K" without the qualifier. The app only offers
-           the combinations the device can actually produce. -->
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
-        <p class="mini-t">High frame rate</p>
-        <p class="mini-d">30–240 fps, depending on your device</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
-        <p class="mini-t">Slow motion</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
-        <p class="mini-t">Loop a section</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
-        <p class="mini-t">Air time</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-flip"></use></svg>
-        <p class="mini-t">Flip left/right</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zoom"></use></svg>
-        <p class="mini-t">Pinch to zoom</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-photos"></use></svg>
-        <p class="mini-t">Import from Photos</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
-        <p class="mini-t">Export</p>
-        <p class="mini-d">Save &amp; share as recorded</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
-        <p class="mini-t">Video library</p>
-        <p class="mini-d">Athlete tags &amp; filters</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"></use></svg>
-        <p class="mini-t">Favorites &amp; reference take</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sliders"></use></svg>
-        <p class="mini-t">Customizable controls</p>
-      </div>
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lang"></use></svg>
-        <p class="mini-t">Japanese / English</p>
-      </div>
-      <!-- ★ Apple Watch stays last. watchOS 26.2 is very new; listing it alongside the
-           others reads as "works out of the box". Do not name any watch model. -->
-      <div class="mini-item rv">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-watch"></use></svg>
-        <p class="mini-t">Start recording from Apple Watch *</p>
-        <p class="mini-d">* Starting a recording from Apple Watch requires an Apple Watch running watchOS 26.2 or later.</p>
-      </div>
     </div>
   </section>
 
@@ -750,10 +804,10 @@
     <h2 class="sec-h">Frequently asked questions</h2>
     <div class="faq" style="margin-top:24px;">
       <details id="faq-1"><summary>What can I use for free?</summary>
-        <p class="faq-a">Recording, frame-by-frame stepping, slow motion, section loops, air time, flip, zoom, importing from Photos, exporting as recorded, the video library, favorites and reference takes, customizable controls, and Japanese / English switching are all free. Recording and frame-by-frame review stay free.</p>
+        <p class="faq-a">Recording (a start delay and auto-stop, pre-roll, and up to 240 fps / up to 4K on supported devices&mdash;available combinations depend on your device), starting a recording from Apple Watch (watchOS 26.2 or later), frame-by-frame stepping, slow motion, section loops, flight time, mirror, zoom, importing from Photos, exporting as recorded, the video library, the roster (keeping clips by athlete), favorites and model runs, customizable controls, and switching between English, Japanese, and Simplified Chinese are all free. No limits on clips or quality, and no watermark. Recording and frame-by-frame review stay free.</p>
       </details>
       <details id="faq-2"><summary>What's included in FrameReplay Pro?</summary>
-        <p class="faq-a">Six features: compare two takes, lines &amp; angles, replay while recording, continuous mode, export with edits, and importing from an SD card (FlashAir).</p>
+        <p class="faq-a">Six features: compare two takes, lines &amp; angles, Replay, continuous mode, export with edits, and Import from FlashAir (Wi-Fi SD card).</p>
       </details>
       <details id="faq-3"><summary>Is Pro a subscription?</summary>
         <p class="faq-a">No. It is a one-time purchase. There is no subscription and no recurring payment.</p>
@@ -786,7 +840,7 @@
         <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_lp&amp;mt=8" data-cta-pos="bottom" target="_blank" rel="noopener">Download on the App Store</a>
       </div>
       <!-- ★ Do not mix locales. The English page shows $59.99 in the US only. -->
-      <p class="get-price">Free to download. Compare, overlay, and lines &amp; angles are part of FrameReplay Pro (one-time purchase, $59.99 in the US).</p>
+      <p class="get-price">Free to download. Replay, Continuous mode, Compare, and more are part of FrameReplay Pro (one-time purchase, $59.99 in the US).</p>
       <p class="get-spec">iPhone / iPad, iOS 17.0 or later</p>
     </div>
   </section>
