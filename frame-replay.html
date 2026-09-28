@@ -519,6 +519,13 @@
            自動で止める秒数は撮り始めてから数える → 「10秒後に撮り始めて10秒で止める」はそのまま成り立つ。
          ・次に撮る選手：選んで撮ると動画に選手が付く。撮り続けても外れず、アプリを立ち上げ直すと外れる。
          ・お手本：印を付けるのは無料。「比較」（Pro）を押すと、その選手のお手本が自動で横に並ぶ。
+         ・選手タグ：確認画面の名前ボタンで付ける。一覧では複数選んでまとめて付け外しできる。
+         ・一覧：選手で絞り込み、「同じ選手」「同じ日」「すべて」で選び、写真へまとめて保存・まとめて共有。
+           ここまですべて無料（一覧に Pro の鍵は無い）。
+         ・比較画面：左右（重ねる表示でも）の動画をタップすると一覧が開き、選手で絞り込んで相手を選び直せる（比較は Pro・3回まで試せる）。
+         ・カードから受け取る：受け取った動画は一覧に並ぶだけで、選手は自動では付かない。
+           付けるのは確認画面の名前ボタンか、一覧でまとめて（受け取り元による制限は無い）。「自動で付く」と書かないこと。
+       ★ 場面1は競技を限定しない（2026-09-28 城さん：ウォータージャンプ・トランポリンだけに読まれないように）。
        ★ 共有先のアプリ名はまだ出さない（1.1.2 の承認待ち）。承認後に場面6へ足す。
        ★ 「240fps 対応」「4K 対応」と無条件に書かない。端末が出せる組み合わせだけが提示される。
          書くときは「端末が対応していれば」「最大」「組み合わせは端末による」を添える（場面2・FAQ）。
@@ -532,12 +539,12 @@
       <article class="scene rv" data-shot="J1" id="free-solo">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">一人で自主練</h3>
-        <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。ウォータージャンプやトランポリンの自主練で、跳ぶたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
+        <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。端末を置いて自分の位置へ移動すれば、跳ぶ・投げる・打つ・走るといった動きも、トレーニングやリハビリの動作も、一人で撮れます。撮るたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
         <p class="scene-uses">使う機能：押してから始めるまで／自動で止める／Apple Watch から録画開始（watchOS 26.2 以上）</p>
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">Pro だとさらに</p>
           <p class="scene-pro-t">連続モード <span class="pro-badge">PRO</span></p>
-          <p class="scene-pro-d">置いておくだけで、演技ごとに区切って残します。</p>
+          <p class="scene-pro-d">置いておくだけで、一本ごとに区切って残します。</p>
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
@@ -570,19 +577,19 @@
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">Pro だとさらに</p>
           <p class="scene-pro-t">2本比較・重ねる <span class="pro-badge">PRO</span></p>
-          <p class="scene-pro-d">前の1本と並べて、または重ねて比べます。「比較」を押すと、その選手のお手本が自動で横に並びます（買う前に3回まで試せます。試している間は、並べた動画の保存もできます）。</p>
+          <p class="scene-pro-d">前の1本と並べて、または重ねて比べます。「比較」を押すと、その選手のお手本が自動で横に並びます。参考にしたい選手を指定して、その選手の動画と比べることもできます（買う前に3回まで試せます。試している間は、並べた動画の保存もできます）。</p>
         </div></div>
       </article>
       <article class="scene rv" data-shot="J5" id="free-athletes">
         <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
-        <h3 class="scene-t">選手ごとに残す</h3>
-        <p class="scene-d">撮る前に選手を選んでおくと、撮った動画にその選手が付きます（選んだ選手は、撮り続けても外れません）。選手ごとに絞り込め、お気に入りやお手本の印も付けられます。</p>
-        <p class="scene-uses">使う機能：名簿（次に撮る選手）／選手タグ・絞り込み／お気に入り・お手本／動画一覧</p>
+        <h3 class="scene-t">選手ごとに残す（タグ付け）</h3>
+        <p class="scene-d">撮る前に選手を選んでおくと、撮った動画にその選手が付きます（選んだ選手は、撮り続けても外れません）。撮ったあとで付けたり、まとめて付け直したりもできます。見返すときは選手を指定するだけで、その選手の動画だけが並ぶので、探す手間がかかりません。お気に入りやお手本の印も付けられます。</p>
+        <p class="scene-uses">使う機能：名簿（次に撮る選手）／選手タグ（撮ったあと・まとめて）／選手で絞り込み／お気に入り・お手本／動画一覧</p>
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">Pro だとさらに</p>
-          <p class="scene-pro-t">連続モード <span class="pro-badge">PRO</span></p>
-          <p class="scene-pro-d">名簿の順に名前が付きます。</p>
+          <p class="scene-pro-t">カードから受け取る <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">FlashAir を入れたビデオカメラで撮った動画も、届いたら一覧に並び、同じように選手を付けて残せます。</p>
         </div></div>
       </article>
       <article class="scene rv" data-shot="J6" id="free-share">
@@ -590,8 +597,8 @@
         <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <h3 class="scene-t">選手に渡す</h3>
-        <p class="scene-d">撮ったままの動画を、写真アプリに保存したり、AirDrop などで共有したりできます。写真アプリの動画を読み込んで見ることもできます。</p>
-        <p class="scene-uses">使う機能：写真に保存／共有／写真から読み込む</p>
+        <p class="scene-d">選手を指定して絞り込めば、その選手の動画をまとめて選べます。そのまま写真アプリにまとめて保存したり、AirDrop などでまとめて選手に共有したりできます。同じ日のぶんだけを選ぶこともできます。写真アプリの動画を読み込んで見ることもできます。</p>
+        <p class="scene-uses">使う機能：選手で絞り込み／まとめて選ぶ（同じ選手・同じ日）／写真にまとめて保存／まとめて共有／写真から読み込む</p>
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">Pro だとさらに</p>
           <p class="scene-pro-t">スローのまま保存 <span class="pro-badge">PRO</span></p>
@@ -621,7 +628,7 @@
       </div>
       <div class="value rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-compare"></use></svg>
-        <p class="value-t">前の演技と比べる</p>
+        <p class="value-t">前の一本と比べる</p>
         <p class="value-d">成長や違いがその場で分かります。</p>
       </div>
     </div>
@@ -642,7 +649,7 @@
     <div class="steps" style="margin-top:26px;">
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">撮る</p><p class="step-d">演技を撮影</p></div>
+        <div><p class="step-t">撮る</p><p class="step-d">一本を撮影</p></div>
         <!-- 素材待ち（城さん手配）：使い方6ステップのサムネイル（日本語UI） -->
         <img class="step-shot" src="/assets/framereplay/fr-step1-record.webp"
              width="400" height="870" loading="lazy" decoding="async" alt="撮影画面。録画の準備ができた状態。">
@@ -661,7 +668,7 @@
       </div>
       <div class="step rv">
         <div class="step-n" aria-hidden="true"></div>
-        <div><p class="step-t">比較する <span class="pro-badge">PRO</span></p><p class="step-d">前の演技と並べる</p></div>
+        <div><p class="step-t">比較する <span class="pro-badge">PRO</span></p><p class="step-d">前の一本と並べる</p></div>
         <img class="step-shot" src="/assets/framereplay/fr-step4-compare.webp"
              width="400" height="865" loading="lazy" decoding="async" alt="2本を左右に並べて比較している画面。">
       </div>
@@ -752,7 +759,7 @@
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
         <p class="mini-t">連続モード <span class="pro-badge">PRO</span></p>
-        <p class="mini-d">端末を置いて「連続」を1回押すだけ。動きを見つけて演技ごとに区切って残します。トランポリンの設定では、一本終わるたびに再生します。</p>
+        <p class="mini-d">端末を置いて「連続」を1回押すだけ。動きを見つけて一本ごとに区切って残します。トランポリンの設定では、一本終わるたびに再生します。</p>
       </div>
       <div class="mini-item rv">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
@@ -777,7 +784,7 @@
       <figure class="shot-wrap fieldnote-shot">
         <img src="/assets/framereplay/fr-continuous.webp"
              width="1200" height="552" loading="lazy" decoding="async"
-             alt="連続モードで撮影している画面。端末を置いたまま、演技ごとに区切られる。">
+             alt="連続モードで撮影している画面。端末を置いたまま、一本ごとに区切られる。">
       </figure>
     </div>
   </section>
