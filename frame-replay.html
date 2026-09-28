@@ -269,6 +269,7 @@
   .scene-pro-h{margin:0;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);}
   .scene-pro-t{margin:6px 0 0;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .scene-pro-d{margin:5px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);}
+  .scene-pro-d + .scene-pro-t{margin-top:12px;padding-top:12px;border-top:1px solid rgba(93,215,254,.12);}
   .scene-more{margin:18px 0 0;font-size:13px;line-height:1.85;color:var(--muted);}
 
   /* 既存ユーザーへの案内。青＝使える。文言は現行ページのまま。 */
@@ -523,6 +524,8 @@
          ・一覧：選手で絞り込み、「同じ選手」「同じ日」「すべて」で選び、写真へまとめて保存・まとめて共有。
            ここまですべて無料（一覧に Pro の鍵は無い）。
          ・比較画面：左右（重ねる表示でも）の動画をタップすると一覧が開き、選手で絞り込んで相手を選び直せる（比較は Pro・3回まで試せる）。
+         ・リプレイの遅れ：切／10／20／30秒（初期値10秒）。「切」だと止まった状態から始まるので、「流れ続ける」は遅れを選んだとき。
+           リプレイの説明に「さかのぼる」「巻き戻す」「見返す」は使わない（2026-09-28 城さん）。場面1と場面2の両方に出す。
          ・カードから受け取る：受け取った動画は一覧に並ぶだけで、選手は自動では付かない。
            付けるのは確認画面の名前ボタンか、一覧でまとめて（受け取り元による制限は無い）。「自動で付く」と書かないこと。
        ★ 場面1は競技を限定しない（2026-09-28 城さん：ウォータージャンプ・トランポリンだけに読まれないように）。
@@ -545,6 +548,8 @@
           <p class="scene-pro-h">Pro だとさらに</p>
           <p class="scene-pro-t">連続モード <span class="pro-badge">PRO</span></p>
           <p class="scene-pro-d">置いておくだけで、一本ごとに区切って残します。</p>
+          <p class="scene-pro-t">リプレイ <span class="pro-badge">PRO</span></p>
+          <p class="scene-pro-d">録画ボタンを押さなくても、少し遅れて映像が流れ続けます。遅れは10・20・30秒から選べるので、戻ってくるまでの時間に合わせられます。</p>
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
