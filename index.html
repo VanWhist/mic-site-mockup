@@ -462,6 +462,12 @@
     color:var(--muted);font-size:15px;
   }
   .mvv-teaser strong{color:#fff;}
+  /* トップの紹介動画「MICとは」。押すまでは YouTube を読み込まず、サムネイルと再生ボタンだけ出す。
+     再生ボタンは選手ページの .ap-play-btn をそのまま使う（中央に置くため枠を relative にする） */
+  .mvv-video{margin-top:12vh;}
+  .mvv-video-frame{position:relative;max-width:960px;margin:0 auto;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;}
+  .mvv-video-frame img,.mvv-video-frame iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;}
+  .mvv-video-cap{text-align:center;color:var(--muted);font-size:13px;margin-top:14px;letter-spacing:.05em;}
 
   /* ---------- Stat stack (Apple "spec" callout pattern) ---------- */
   .stats{
@@ -1584,6 +1590,7 @@
     .cta{padding:13vh 6vw;}
     /* MVVカード下の一文は、区切り線からの間隔も詰める */
     .mvv-teaser{margin-top:6vh;padding-top:4vh;}
+    .mvv-video{margin-top:7vh;}
   }
 
   /* ---------- 期間限定の特集枠（トップ） ----------
@@ -1783,6 +1790,35 @@
       <p>雪上練習、大会引率、ウォータージャンプ、トランポリン。年間100日以上のプログラムで、選手一人ひとりの成長を全力で支えます。</p>
     </div>
   </div>
+
+  <div class="mvv-video reveal">
+    <div class="mvv-video-frame" id="mvvVideo" data-video-src="https://www.youtube-nocookie.com/embed/uINqgXp8BYQ?autoplay=1&amp;rel=0&amp;playsinline=1">
+      <img src="https://i.ytimg.com/vi/uINqgXp8BYQ/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" decoding="async">
+      <button type="button" class="ap-play-btn" aria-label="動画「MICとは」を再生"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    </div>
+    <p class="mvv-video-cap">MICとは（2分40秒）</p>
+  </div>
+  <script>
+  // 押したときに初めて YouTube の iframe に差し替える（選手ページの apVideoSource と同じ考え方）。
+  // youtube-nocookie を使い、押すまでは YouTube に何も読み込ませない。
+  // ★ allow に fullscreen を入れない。allowfullscreen と併記すると警告が出るため。
+  (function(){
+    var frame = document.getElementById('mvvVideo');
+    var btn = frame && frame.querySelector('button');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var f = document.createElement('iframe');
+      f.src = frame.getAttribute('data-video-src');
+      f.title = 'MICとは｜Mogul Improvement Community';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      f.setAttribute('frameborder', '0');
+      frame.innerHTML = '';
+      frame.appendChild(f);
+      f.focus();   // ボタンが消えるので、キーボード操作のフォーカスを動画へ移す
+    });
+  })();
+  </script>
 
   <div class="mvv-teaser reveal delay-3">
     <p><strong>選手育成コース・一般レッスン・オンラインサポート・コーチ派遣</strong>の4つのプログラムがあります。</p>
