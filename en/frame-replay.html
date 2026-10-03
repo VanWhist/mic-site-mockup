@@ -210,8 +210,11 @@
      Cards follow .mini-item. Photos come later: data-shot (J1–J6) is the
      screenshot number. Until the photos arrive, no image frame is shown.
      J1, J4 and J5 added 2026-10-03. J2, J3 and J6 are waiting for photos.
+     Until all photos are in, cards in a row are not stretched to the same height
+     (align-items:start, decided by Jo-san 2026-10-04). Once J2, J3 and J6 have
+     photos and all six are in, remove align-items:start so the heights line up again.
      Feature names under "With Pro" carry the same .pro-badge as the Pro section. */
-  .scenes{display:grid;gap:12px;margin-top:26px;}
+  .scenes{display:grid;gap:12px;margin-top:26px;align-items:start;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
