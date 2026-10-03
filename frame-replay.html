@@ -252,13 +252,18 @@
      見た目は .mini-item（活用シーンと同じアイコンのカード）に合わせる。
      写真は後から入る。各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
      写真が届くまで画像の枠は置かない（空の枠を見せない）。
+     J1・J4・J5 は 2026-10-03 に追加。J2・J3・J6 は撮影待ち。
+     写真がそろうまでは、同じ段のカードを高さで伸ばさない（align-items:start・2026-10-04 城さん判断）。
+     J2・J3・J6 の写真が入って6枚そろったら align-items:start を外して高さをそろえ直す。
      「Pro だとさらに」の機能名には、Pro の欄と同じ .pro-badge を付ける。 */
-  .scenes{display:grid;gap:12px;margin-top:26px;}
+  .scenes{display:grid;gap:12px;margin-top:26px;align-items:start;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
     background:var(--surface);border:1px solid var(--line);}
   .scene > svg{width:22px;height:22px;color:var(--brand-lite);}
+  .scene-shot{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 14px;
+    border-radius:12px;border:1px solid var(--line);background:var(--surface-2);}
   .scene-t{margin:10px 0 0;font-size:15.5px;font-weight:800;line-height:1.5;}
   .scene-d{margin:8px 0 0;font-size:13.5px;line-height:1.85;color:var(--body);}
   .scene-uses{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted);}
@@ -540,6 +545,8 @@
     <p class="sec-p">撮影の本数・画質・長さに制限はありません。透かしも入りません。</p>
     <div class="scenes">
       <article class="scene rv" data-shot="J1" id="free-solo">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-timer.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="撮影と保存の設定画面。押してから始めるまでの秒数と、自動で止めるまでの秒数を選べる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">一人で自主練</h3>
         <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。端末を置いて自分の位置へ移動すれば、跳ぶ・投げる・打つ・走るといった動きも、トレーニングやリハビリの動作も、一人で撮れます。撮るたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
@@ -575,6 +582,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J4" id="free-measure">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-loop.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="確認画面。開始・終了で区間を決め、0.25倍・0.5倍で見られる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
         <h3 class="scene-t">測る・くり返す</h3>
         <p class="scene-d">1本ごとの滞空時間を測れます。見たい区間だけを切り取って、くり返し再生できます。</p>
@@ -587,6 +596,8 @@
       </article>
       <article class="scene rv" data-shot="J5" id="free-athletes">
         <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-athlete.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="動画一覧を選手で絞り込んだ画面。選手Aの動画だけが並ぶ。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
         <h3 class="scene-t">選手ごとに残す（タグ付け）</h3>
         <p class="scene-d">撮る前に選手を選んでおくと、撮った動画にその選手が付きます（選んだ選手は、撮り続けても外れません）。撮ったあとで付けたり、まとめて付け直したりもできます。見返すときは選手を指定するだけで、その選手の動画だけが並ぶので、探す手間がかかりません。お気に入りやお手本の印も付けられます。</p>
@@ -757,6 +768,8 @@
 
     <div class="mini">
       <div class="mini-item rv">
+        <img class="scene-shot" src="/assets/framereplay/fr-pro-replay.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="リプレイの画面。少し遅れて映像が流れ続け、カメラへすぐ戻れる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
         <p class="mini-t">リプレイ <span class="pro-badge">PRO</span></p>
         <p class="mini-d">録画ボタンを押さなくても、少し遅れて映像が流れ続けます。</p>
