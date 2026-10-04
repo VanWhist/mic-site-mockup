@@ -207,14 +207,12 @@
   /* ---------- What you can do for free (by scene) ----------
      Free features shown by practice scene, not as a list of feature names
      (same as the Japanese page, draft v1.1, decided by Jo-san 2026-09-28).
-     Cards follow .mini-item. Photos come later: data-shot (J1–J6) is the
-     screenshot number. Until the photos arrive, no image frame is shown.
-     J1, J4 and J5 added 2026-10-03. J2, J3 and J6 are waiting for photos.
-     Until all photos are in, cards in a row are not stretched to the same height
-     (align-items:start, decided by Jo-san 2026-10-04). Once J2, J3 and J6 have
-     photos and all six are in, remove align-items:start so the heights line up again.
+     Cards follow .mini-item. data-shot (J1–J6) is the screenshot number.
+     All six scenes have photos (J1, J4 and J5 in PR #120 on 2026-10-04; J2, J3 and J6
+     in this PR on 2026-10-04). Card heights line up again (the temporary
+     align-items:start from PR #120 has been removed).
      Feature names under "With Pro" carry the same .pro-badge as the Pro section. */
-  .scenes{display:grid;gap:12px;margin-top:26px;align-items:start;}
+  .scenes{display:grid;gap:12px;margin-top:26px;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
@@ -498,6 +496,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-capture-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Camera screen with 240 fps selected from 30 to 240 fps.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
         <h3 class="scene-t">Never miss the moment</h3>
         <p class="scene-d">Keep the seconds before you tap record. Shoot at up to 240 fps and up to 4K on supported devices (available combinations depend on your device). Choose FrameReplay for Camera Control and record right from the Lock Screen (iPhone 16 and later; from Control Center on iOS 18 and later).</p>
@@ -509,6 +509,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J3" id="free-review">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-review-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Review screen paused mid-air at 0.25x, zoomed in with a pinch.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
         <h3 class="scene-t">Review it on the spot</h3>
         <p class="scene-d">Play it back right away. Slow it to 0.25&times; or 0.5&times;, step frame by frame, and stop on the takeoff or the landing. Pinch to zoom, or mirror the view.</p>
@@ -549,6 +551,8 @@
       <article class="scene rv" data-shot="J6" id="free-share">
         <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
         <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-share-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Clip library filtered to Athlete A with 4 clips selected, ready to share.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <h3 class="scene-t">Hand clips to athletes</h3>
         <p class="scene-d">Filter by athlete, select their clips&mdash;or everything from the same day&mdash;and save them to Photos or share them via AirDrop or LINE in one go. You can also import videos from Photos. On the review screen, talk while you play and draw &mdash; the video, lines and your voice become one clip you can send to the athlete.</p>

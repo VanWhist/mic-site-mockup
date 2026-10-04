@@ -250,13 +250,11 @@
   /* ---------- 無料で、ここまでできる（場面ごと）----------
      機能名の一覧ではなく、練習の場面ごとに見せる（文案 v1.1・2026-09-28 城さん決定）。
      見た目は .mini-item（活用シーンと同じアイコンのカード）に合わせる。
-     写真は後から入る。各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
-     写真が届くまで画像の枠は置かない（空の枠を見せない）。
-     J1・J4・J5 は 2026-10-03 に追加。J2・J3・J6 は撮影待ち。
-     写真がそろうまでは、同じ段のカードを高さで伸ばさない（align-items:start・2026-10-04 城さん判断）。
-     J2・J3・J6 の写真が入って6枚そろったら align-items:start を外して高さをそろえ直す。
+     各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
+     6場面とも写真入り（J1・J4・J5 は 2026-10-04 の PR #120、J2・J3・J6 は 2026-10-04 の今回の PR）。
+     高さは再びそろえている（PR #120 で一時的に入れた align-items:start は外した）。
      「Pro だとさらに」の機能名には、Pro の欄と同じ .pro-badge を付ける。 */
-  .scenes{display:grid;gap:12px;margin-top:26px;align-items:start;}
+  .scenes{display:grid;gap:12px;margin-top:26px;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
   @media (min-width:980px){.scenes{grid-template-columns:repeat(3,1fr);}}
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
@@ -565,6 +563,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-capture.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="撮影画面。フレームレートは30〜240fpsから選べ、ここでは240fpsを選んでいる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
         <h3 class="scene-t">撮り逃さない</h3>
         <p class="scene-d">録画ボタンを押す少し前から残せます。端末が対応していれば、最大240fps、最大4Kで撮れます（選べる組み合わせは端末によります）。カメラコントロールに FrameReplay を選んでおくと、ロック中でもロック画面の上ですぐ撮れます（iPhone 16 以降。コントロールセンターからは iOS 18 以降）。</p>
@@ -576,6 +576,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J3" id="free-review">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-review.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="確認画面。0.25倍のスローで空中の一瞬を止め、ピンチで拡大している。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
         <h3 class="scene-t">その場で細かく見る</h3>
         <p class="scene-d">撮ったらすぐ再生。0.25倍・0.5倍のスローと1コマ送りで、踏み切りや着地の一瞬を止めて見られます。ピンチで拡大、左右反転もできます。</p>
@@ -616,6 +618,8 @@
       <article class="scene rv" data-shot="J6" id="free-share">
         <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
         <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-share.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="動画一覧で選手Aに絞り込み、4本を選んだ画面。下の「共有」からまとめて送れる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <h3 class="scene-t">選手に渡す</h3>
         <p class="scene-d">選手を指定して絞り込めば、その選手の動画をまとめて選べます。そのまま写真アプリにまとめて保存したり、AirDrop や LINE でまとめて選手に送ったりできます。同じ日のぶんだけを選ぶこともできます。写真アプリの動画を読み込んで見ることもできます。確認画面で再生したり線を引いたりしながら話すと、映像と線と声が 1 本の動画になり、そのまま選手に送れます。</p>
