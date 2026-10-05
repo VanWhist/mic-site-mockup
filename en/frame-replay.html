@@ -207,8 +207,10 @@
   /* ---------- What you can do for free (by scene) ----------
      Free features shown by practice scene, not as a list of feature names
      (same as the Japanese page, draft v1.1, decided by Jo-san 2026-09-28).
-     Cards follow .mini-item. Photos come later: data-shot (J1–J6) is the
-     screenshot number. Until the photos arrive, no image frame is shown.
+     Cards follow .mini-item. data-shot (J1–J6) is the screenshot number.
+     All six scenes have photos (J1, J4 and J5 in PR #120 on 2026-10-04; J2, J3 and J6
+     in this PR on 2026-10-04). Card heights line up again (the temporary
+     align-items:start from PR #120 has been removed).
      Feature names under "With Pro" carry the same .pro-badge as the Pro section. */
   .scenes{display:grid;gap:12px;margin-top:26px;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
@@ -216,6 +218,8 @@
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
     background:var(--surface);border:1px solid var(--line);}
   .scene > svg{width:22px;height:22px;color:var(--brand-lite);}
+  .scene-shot{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 14px;
+    border-radius:12px;border:1px solid var(--line);background:var(--surface-2);}
   .scene-t{margin:10px 0 0;font-size:15.5px;font-weight:800;line-height:1.5;}
   .scene-d{margin:8px 0 0;font-size:13.5px;line-height:1.85;color:var(--body);}
   .scene-uses{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted);}
@@ -477,6 +481,8 @@
     <p class="sec-p">No limits on how many clips you shoot, how long, or at what quality. No watermark.</p>
     <div class="scenes">
       <article class="scene rv" data-shot="J1" id="free-solo">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-timer-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Recording settings: choose how long to wait before starting and when to stop automatically.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">Train on your own</h3>
         <p class="scene-d">Set a start delay and an auto-stop, then walk to your spot&mdash;for example, start recording after 10 seconds and stop after 10 seconds. Film a jump, a throw, a swing, a sprint, or a rehab exercise on your own, without walking back to the device each time. You can also start recording from Apple Watch.</p>
@@ -490,6 +496,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-capture-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Camera screen with 240 fps selected from 30 to 240 fps.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
         <h3 class="scene-t">Never miss the moment</h3>
         <p class="scene-d">Keep the seconds before you tap record. Shoot at up to 240 fps and up to 4K on supported devices (available combinations depend on your device). Choose FrameReplay for Camera Control and record right from the Lock Screen (iPhone 16 and later; from Control Center on iOS 18 and later).</p>
@@ -501,6 +509,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J3" id="free-review">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-review-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Review screen paused mid-air at 0.25x, zoomed in with a pinch.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
         <h3 class="scene-t">Review it on the spot</h3>
         <p class="scene-d">Play it back right away. Slow it to 0.25&times; or 0.5&times;, step frame by frame, and stop on the takeoff or the landing. Pinch to zoom, or mirror the view.</p>
@@ -512,6 +522,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J4" id="free-measure">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-loop-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Review screen with Start and End markers and 0.25x / 0.5x playback.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
         <h3 class="scene-t">Measure and repeat</h3>
         <p class="scene-d">Measure the flight time of each take. Mark just the part you want to see and play it on a loop.</p>
@@ -524,6 +536,8 @@
       </article>
       <article class="scene rv" data-shot="J5" id="free-athletes">
         <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-athlete-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Clip library filtered by athlete. Only Athlete A's clips are shown.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
         <h3 class="scene-t">Keep clips by athlete (tags)</h3>
         <p class="scene-d">Pick the athlete before you record and every clip gets tagged&mdash;the selection stays on while you keep recording. Tag clips afterwards, or retag several at once. Filter by athlete to see only their clips, so there is no hunting for the one you want. Mark favorites and model runs.</p>
@@ -537,6 +551,8 @@
       <article class="scene rv" data-shot="J6" id="free-share">
         <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
         <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-share-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Clip library filtered to Athlete A with 4 clips selected, ready to share.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <h3 class="scene-t">Hand clips to athletes</h3>
         <p class="scene-d">Filter by athlete, select their clips&mdash;or everything from the same day&mdash;and save them to Photos or share them via AirDrop or LINE in one go. You can also import videos from Photos. On the review screen, talk while you play and draw &mdash; the video, lines and your voice become one clip you can send to the athlete.</p>
@@ -690,6 +706,8 @@
 
     <div class="mini">
       <div class="mini-item rv">
+        <img class="scene-shot" src="/assets/framereplay/fr-pro-replay-en.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="Replay screen: the video keeps playing a few seconds behind, with a button back to the camera.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
         <p class="mini-t">Replay <span class="pro-badge">PRO</span></p>
         <p class="mini-d">Without pressing record, the action keeps playing back a few seconds behind.</p>
