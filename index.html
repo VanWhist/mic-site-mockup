@@ -80,6 +80,11 @@
   }
   .logo{font-weight:700;font-size:15px;letter-spacing:.14em;}
   nav ul{display:flex;gap:28px;list-style:none;font-size:13px;letter-spacing:.03em;}
+  /* 9項目（豆知識を追加）だと821〜1000pxで1文字ずつ折り返すので、この幅だけ間隔を詰める */
+  @media (min-width:821px) and (max-width:1000px){
+    nav ul{gap:18px;}
+    nav li{white-space:nowrap;}
+  }
   nav a{position:relative;opacity:.85;transition:opacity .2s;}
   nav a:hover{opacity:1;}
   /* PC：ホバーで下線が左から伸びる */
@@ -708,6 +713,13 @@
     .tools{padding:11vh 6vw 12vh;}
     .tl-card{padding:24px 22px 22px;}
   }
+  /* MIC豆知識：FrameReplay（.fr-mini）と同じ幅で、その下に並べる */
+  .tl-mame{flex:1 1 100%;max-width:560px;}
+  .tl-mame .tl-card-desc + .tl-card-desc{margin-top:10px;color:var(--muted);}
+  .tl-mame .tl-card-foot{justify-content:flex-start;margin-top:22px;}
+  .tl-mame .btn{text-align:center;}
+  @media (max-width:479px){ .tl-mame .btn{flex:1 1 100%;} }
+  @media (min-width:760px){ .tl-mame{max-width:900px;padding:36px 44px 32px;} }
 
   /* ---------- FrameReplay mini hero ----------
      専用ページ（frame-replay.html）のファーストビューを小さく切り取った見せ方。
@@ -1659,10 +1671,11 @@
         <li style="--i:1"><a href="#programs"><span class="nav-num">02</span><span class="nav-label"><span class="nav-jp">プログラム</span><span class="nav-en">Programs</span></span></a></li>
         <li style="--i:2"><a href="#athletes"><span class="nav-num">03</span><span class="nav-label"><span class="nav-jp">選手紹介</span><span class="nav-en">Athletes</span></span></a></li>
         <li style="--i:3"><a href="#coaches"><span class="nav-num">04</span><span class="nav-label"><span class="nav-jp">コーチ紹介</span><span class="nav-en">Coaches</span></span></a></li>
-        <li style="--i:4"><a href="#calendar"><span class="nav-num">05</span><span class="nav-label"><span class="nav-jp">カレンダー</span><span class="nav-en">Lesson Calendar</span></span></a></li>
-        <li style="--i:5"><a href="#news"><span class="nav-num">06</span><span class="nav-label"><span class="nav-jp">お知らせ</span><span class="nav-en">News</span></span></a></li>
-        <li style="--i:6"><a href="#community"><span class="nav-num">07</span><span class="nav-label"><span class="nav-jp">コミュニティ</span><span class="nav-en">Community</span></span></a></li>
-        <li style="--i:7"><a href="#cta"><span class="nav-num">08</span><span class="nav-label"><span class="nav-jp">お問い合わせ</span><span class="nav-en">Contact</span></span></a></li>
+        <li style="--i:4"><a href="mame/"><span class="nav-num">05</span><span class="nav-label"><span class="nav-jp">豆知識</span><span class="nav-en">Mame-Chishiki</span></span></a></li>
+        <li style="--i:5"><a href="#calendar"><span class="nav-num">06</span><span class="nav-label"><span class="nav-jp">カレンダー</span><span class="nav-en">Lesson Calendar</span></span></a></li>
+        <li style="--i:6"><a href="#news"><span class="nav-num">07</span><span class="nav-label"><span class="nav-jp">お知らせ</span><span class="nav-en">News</span></span></a></li>
+        <li style="--i:7"><a href="#community"><span class="nav-num">08</span><span class="nav-label"><span class="nav-jp">コミュニティ</span><span class="nav-en">Community</span></span></a></li>
+        <li style="--i:8"><a href="#cta"><span class="nav-num">09</span><span class="nav-label"><span class="nav-jp">お問い合わせ</span><span class="nav-en">Contact</span></span></a></li>
       </ul>
       <div class="nav-foot">
         <a class="nav-cta" href="inquiry.html">
@@ -2964,6 +2977,17 @@
             </a>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- MIC豆知識（2026-10-06 公開）。価格は mame/ の表記「月額680円（税込）」と一致させる -->
+    <div class="tl-card tl-mame reveal-scale">
+      <h3 class="tl-card-title">MIC豆知識</h3>
+      <p class="tl-card-desc">モーグルの技術や体の仕組みを、図と動く模型で解説する教材です。上手くなる方法を教えるのではなく、自分で理解し、動画や練習を見る力を育てます。</p>
+      <p class="tl-card-desc">No.1は無料で読めます。No.2以降は月額680円（税込）の購読でお読みいただけます。</p>
+      <div class="tl-card-foot">
+        <a class="btn btn-primary" href="mame/no1.html">No.1を無料で読む</a>
+        <a class="btn btn-ghost" href="mame/">豆知識のページへ</a>
       </div>
     </div>
   </div>
