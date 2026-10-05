@@ -811,14 +811,15 @@ requestAnimationFrame(frame);
 window.__no1={A:A,B:B,inertia:inertia,POSES:POSES};
 })();
 </script>
-<!-- MIC豆知識：購読への案内（2026-10-06 追加）。号の CSS の影響を受けないよう、style 属性だけで完結させている -->
-<div style="all:initial;display:block;box-sizing:border-box;width:100%;padding:48px 20px 56px;background:#0a0a0c;border-top:1px solid rgba(255,255,255,.12);text-align:center;">
+<!-- MIC豆知識：購読への案内（2026-10-06 追加）。号の CSS の影響を受けないよう、style 属性だけで完結させている。
+     色は号の配色変数（--card・--ink など）を参照するので、ライト／ダーク（prefers-color-scheme・data-theme）に合わせて切り替わる -->
+<div style="all:initial;display:block;box-sizing:border-box;width:100%;padding:44px 20px 52px;background:var(--card,#fff);border-top:1px solid var(--line,#dfe6f1);text-align:center;">
   <div style="all:initial;display:block;box-sizing:border-box;max-width:600px;margin:0 auto;">
-    <div style="all:initial;display:block;text-align:center;font:800 21px/1.5 'Hiragino Sans','Noto Sans JP',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#fff;letter-spacing:.01em;">続きは購読でお読みいただけます</div>
-    <p style="all:initial;display:block;text-align:center;margin:14px 0 26px;font:400 14.5px/1.9 'Hiragino Sans','Noto Sans JP',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#c9c9cf;">No.2以降（台を踏む・台に負けない・台のアール・スタートを下げる）は、月額680円（税込）の購読でお読みいただけます。</p>
+    <div style="all:initial;display:block;text-align:center;font:700 21px/1.5 'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,sans-serif;color:var(--ink,#14213d);letter-spacing:.01em;">続きは購読でお読みいただけます</div>
+    <p style="all:initial;display:block;text-align:center;margin:14px 0 26px;font:400 14.5px/1.9 'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,sans-serif;color:var(--ink2,#42506b);">No.2以降（台を踏む・台に負けない・台のアール・スタートを下げる）は、月額680円（税込）の購読でお読みいただけます。</p>
     <div style="all:initial;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
-      <a href="https://buy.stripe.com/9B6fZi9ei7pb2rS2I6fnO00" target="_blank" rel="noopener" style="all:initial;display:block;box-sizing:border-box;flex:1 1 220px;max-width:280px;padding:16px 24px;border-radius:100px;background:#ff5a3c;border:1px solid #ff5a3c;color:#fff;font:700 15px/1.4 'Hiragino Sans','Noto Sans JP',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-align:center;cursor:pointer;">購読を申し込む</a>
-      <a href="./" style="all:initial;display:block;box-sizing:border-box;flex:1 1 220px;max-width:280px;padding:16px 24px;border-radius:100px;background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;font:700 15px/1.4 'Hiragino Sans','Noto Sans JP',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-align:center;cursor:pointer;">MIC豆知識のページへ</a>
+      <a href="https://buy.stripe.com/9B6fZi9ei7pb2rS2I6fnO00" target="_blank" rel="noopener" style="all:initial;display:block;box-sizing:border-box;flex:1 1 220px;max-width:280px;padding:16px 24px;border-radius:100px;background:#ff5a3c;border:1px solid #ff5a3c;color:#fff;font:700 15px/1.4 'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,sans-serif;text-align:center;cursor:pointer;">購読を申し込む</a>
+      <a href="./" style="all:initial;display:block;box-sizing:border-box;flex:1 1 220px;max-width:280px;padding:16px 24px;border-radius:100px;background:transparent;border:1px solid var(--mut,#7d8ba1);color:var(--ink,#14213d);font:700 15px/1.4 'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Noto Sans JP',system-ui,sans-serif;text-align:center;cursor:pointer;">MIC豆知識のページへ</a>
     </div>
   </div>
 </div>
