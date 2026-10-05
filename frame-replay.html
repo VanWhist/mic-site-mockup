@@ -250,8 +250,9 @@
   /* ---------- 無料で、ここまでできる（場面ごと）----------
      機能名の一覧ではなく、練習の場面ごとに見せる（文案 v1.1・2026-09-28 城さん決定）。
      見た目は .mini-item（活用シーンと同じアイコンのカード）に合わせる。
-     写真は後から入る。各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
-     写真が届くまで画像の枠は置かない（空の枠を見せない）。
+     各場面の data-shot（J1〜J6）が文案 §4 の画面写真の番号。
+     6場面とも写真入り（J1・J4・J5 は 2026-10-04 の PR #120、J2・J3・J6 は 2026-10-04 の今回の PR）。
+     高さは再びそろえている（PR #120 で一時的に入れた align-items:start は外した）。
      「Pro だとさらに」の機能名には、Pro の欄と同じ .pro-badge を付ける。 */
   .scenes{display:grid;gap:12px;margin-top:26px;}
   @media (min-width:640px){.scenes{grid-template-columns:repeat(2,1fr);}}
@@ -259,6 +260,8 @@
   .scene{display:flex;flex-direction:column;padding:18px 18px 16px;border-radius:14px;
     background:var(--surface);border:1px solid var(--line);}
   .scene > svg{width:22px;height:22px;color:var(--brand-lite);}
+  .scene-shot{display:block;width:100%;max-width:320px;height:auto;margin:0 auto 14px;
+    border-radius:12px;border:1px solid var(--line);background:var(--surface-2);}
   .scene-t{margin:10px 0 0;font-size:15.5px;font-weight:800;line-height:1.5;}
   .scene-d{margin:8px 0 0;font-size:13.5px;line-height:1.85;color:var(--body);}
   .scene-uses{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted);}
@@ -289,18 +292,23 @@
   .fieldnote cite{display:block;margin-top:8px;font-size:12.5px;font-style:normal;color:var(--muted);}
   .fieldnote-shot{margin-top:16px;border-radius:12px;}
 
-  /* ---------- MultiCam（Future）----------
-     ここだけトーンを変える。ブランドのシアンを使わない。 */
-  .future{border-radius:20px;padding:clamp(24px,4vw,36px);
-    background:repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 12px,transparent 12px 24px),var(--surface-2);
-    border:1px dashed rgba(232,180,90,.34);}
-  .future .sec-label{color:var(--future);}
-  .dev-badge{display:inline-flex;align-items:center;gap:6px;
-    font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 11px;border-radius:999px;
-    color:var(--future);border:1px solid rgba(232,180,90,.42);background:rgba(232,180,90,.1);}
-  .future-fig{margin:22px 0 0;border-radius:14px;padding:18px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.06);}
-  .future-fig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
-  .future-note{margin:16px 0 0;font-size:12.5px;line-height:1.8;color:var(--muted);}
+  /* ---------- MultiCam（Pro に追加）----------
+     1.2 で使える機能になったので、ほかの欄と同じ通常の見た目（.feat と同じ面・枠）にする。
+     開発中用の点線の枠・将来用の色（.future・.dev-badge・.future-fig）は日本語ページでは使わない（2026-10-04）。
+     英語ページは英語表示の画面を撮るまで仮の図のままなので、en/frame-replay.html の .future は残している。
+     写真は縦長（3:4）なので最大 320px。PC では本文の右に並べる。 */
+  .mc{border-radius:20px;padding:clamp(24px,4vw,36px);
+    background:var(--surface);border:1px solid var(--line);}
+  .mc-shot{max-width:320px;margin:22px auto 0;}
+  @media (min-width:900px){
+    /* 文章（ラベル・見出し・本文）は写真の高さの中で上下中央に寄せる。上下の 1fr は余白。 */
+    .mc{display:grid;grid-template-columns:1fr minmax(0,320px);grid-template-rows:1fr auto auto auto 1fr;
+      column-gap:clamp(24px,4vw,48px);}
+    .mc > .sec-label{grid-column:1;grid-row:2;}
+    .mc > .sec-h{grid-column:1;grid-row:3;}
+    .mc > .sec-p{grid-column:1;grid-row:4;}
+    .mc > .mc-shot{grid-column:2;grid-row:1 / -1;margin:0;}
+  }
 
   /* ---------- 活用シーン ---------- */
 
@@ -540,6 +548,8 @@
     <p class="sec-p">撮影の本数・画質・長さに制限はありません。透かしも入りません。</p>
     <div class="scenes">
       <article class="scene rv" data-shot="J1" id="free-solo">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-timer.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="撮影と保存の設定画面。押してから始めるまでの秒数と、自動で止めるまでの秒数を選べる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">一人で自主練</h3>
         <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。端末を置いて自分の位置へ移動すれば、跳ぶ・投げる・打つ・走るといった動きも、トレーニングやリハビリの動作も、一人で撮れます。撮るたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
@@ -553,6 +563,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J2" id="free-capture">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-capture.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="撮影画面。フレームレートは30〜240fpsから選べ、ここでは240fpsを選んでいる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-fps"></use></svg>
         <h3 class="scene-t">撮り逃さない</h3>
         <p class="scene-d">録画ボタンを押す少し前から残せます。端末が対応していれば、最大240fps、最大4Kで撮れます（選べる組み合わせは端末によります）。カメラコントロールに FrameReplay を選んでおくと、ロック中でもロック画面の上ですぐ撮れます（iPhone 16 以降。コントロールセンターからは iOS 18 以降）。</p>
@@ -564,6 +576,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J3" id="free-review">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-review.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="確認画面。0.25倍のスローで空中の一瞬を止め、ピンチで拡大している。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-slow"></use></svg>
         <h3 class="scene-t">その場で細かく見る</h3>
         <p class="scene-d">撮ったらすぐ再生。0.25倍・0.5倍のスローと1コマ送りで、踏み切りや着地の一瞬を止めて見られます。ピンチで拡大、左右反転もできます。</p>
@@ -575,6 +589,8 @@
         </div></div>
       </article>
       <article class="scene rv" data-shot="J4" id="free-measure">
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-loop.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="確認画面。開始・終了で区間を決め、0.25倍・0.5倍で見られる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-air"></use></svg>
         <h3 class="scene-t">測る・くり返す</h3>
         <p class="scene-d">1本ごとの滞空時間を測れます。見たい区間だけを切り取って、くり返し再生できます。</p>
@@ -587,6 +603,8 @@
       </article>
       <article class="scene rv" data-shot="J5" id="free-athletes">
         <span id="favorites" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-athlete.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="動画一覧を選手で絞り込んだ画面。選手Aの動画だけが並ぶ。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-library"></use></svg>
         <h3 class="scene-t">選手ごとに残す（タグ付け）</h3>
         <p class="scene-d">撮る前に選手を選んでおくと、撮った動画にその選手が付きます（選んだ選手は、撮り続けても外れません）。撮ったあとで付けたり、まとめて付け直したりもできます。見返すときは選手を指定するだけで、その選手の動画だけが並ぶので、探す手間がかかりません。お気に入りやお手本の印も付けられます。</p>
@@ -600,6 +618,8 @@
       <article class="scene rv" data-shot="J6" id="free-share">
         <span id="import" class="fr-anchor-alias" aria-hidden="true"></span>
         <span id="export" class="fr-anchor-alias" aria-hidden="true"></span>
+        <img class="scene-shot" src="/assets/framereplay/fr-scene-share.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="動画一覧で選手Aに絞り込み、4本を選んだ画面。下の「共有」からまとめて送れる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-export"></use></svg>
         <h3 class="scene-t">選手に渡す</h3>
         <p class="scene-d">選手を指定して絞り込めば、その選手の動画をまとめて選べます。そのまま写真アプリにまとめて保存したり、AirDrop や LINE でまとめて選手に送ったりできます。同じ日のぶんだけを選ぶこともできます。写真アプリの動画を読み込んで見ることもできます。確認画面で再生したり線を引いたりしながら話すと、映像と線と声が 1 本の動画になり、そのまま選手に送れます。</p>
@@ -757,6 +777,8 @@
 
     <div class="mini">
       <div class="mini-item rv">
+        <img class="scene-shot" src="/assets/framereplay/fr-pro-replay.webp"
+             width="720" height="900" loading="lazy" decoding="async" alt="リプレイの画面。少し遅れて映像が流れ続け、カメラへすぐ戻れる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
         <p class="mini-t">リプレイ <span class="pro-badge">PRO</span></p>
         <p class="mini-d">録画ボタンを押さなくても、少し遅れて映像が流れ続けます。</p>
@@ -799,37 +821,18 @@
   <!-- ===== MultiCam（Pro に追加）=====
        1.2（2026-10-01 公開）で使える機能になった。Pro への追加の買い切り（¥4,000）。買うのは受け取る側の端末だけ。
        自動撮影（通過で全台が撮る）は 1.2 に入っていないので書かない（1.3）。
-       図は仮。城さんが撮った実際の画面に差し替える（2026-09-30 城さん判断）。 -->
+       図は仮。城さんが撮った実際の画面に差し替える（2026-09-30 城さん判断）。
+       日本語は 2026-10-04 に実際の画面写真へ差し替え。英語は英語表示の画面を撮影後に差し替える。 -->
   <section class="sec" id="multicam">
-    <div class="future rv">
+    <div class="mc rv">
       <div class="sec-label">Pro add-on</div>
       <h2 class="sec-h">MultiCam（Pro に追加・買い切り ¥4,000）</h2>
       <p class="sec-p">何台かの iPhone・iPad で同じ一本を同時に撮り、1台に集めます。正面・横・後ろを並べて見られ、撮った時刻でそろいます。買うのは映像を集めて見る端末だけで、カメラ役の端末は無料で参加できます。</p>
-      <div class="future-fig">
-        <svg viewBox="0 0 520 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="複数台の iPhone から、コーチの端末へ映像が集まる図。">
-          <g stroke="#E8B45A" stroke-width="1.6" opacity=".9">
-            <rect x="24" y="20" width="44" height="74" rx="8"/>
-            <rect x="24" y="106" width="44" height="74" rx="8"/>
-            <rect x="120" y="63" width="44" height="74" rx="8"/>
-          </g>
-          <g stroke="#8A95A1" stroke-width="1.2" opacity=".75">
-            <path d="M38 34h16M38 42h10M38 120h16M38 128h10M134 77h16M134 85h10"/>
-          </g>
-          <g stroke="#E8B45A" stroke-width="1.5" stroke-dasharray="5 6" opacity=".75">
-            <path d="M72 57C150 57 210 74 300 92"/>
-            <path d="M72 143C150 143 210 118 300 98"/>
-            <path d="M168 100C214 100 256 96 300 95"/>
-          </g>
-          <g stroke="#5DD7FE" stroke-width="1.8">
-            <rect x="330" y="34" width="118" height="122" rx="12"/>
-            <path d="M348 64h82M348 80h60M348 96h82M348 112h48"/>
-          </g>
-          <text x="389" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif">コーチの端末</text>
-          <text x="96" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif">複数台の iPhone</text>
-        </svg>
-      </div>
+      <figure class="shot-wrap mc-shot">
+        <img src="/assets/framereplay/fr-multicam-split.webp"
+             width="900" height="1200" loading="lazy" decoding="async"
+             alt="MultiCam の受け取る側の画面。正面と横の2台で撮った同じ一本が、撮った時刻をそろえて2分割で並ぶ。">
+      </figure>
     </div>
   </section>
 
