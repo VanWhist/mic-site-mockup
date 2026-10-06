@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>How to set up MultiCam | FrameReplay</title>
+<meta name="description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. What you need, four steps, and troubleshooting.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="FrameReplay">
+<meta property="og:title" content="How to set up MultiCam | FrameReplay">
+<meta property="og:description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. What you need, four steps, and troubleshooting.">
+<meta property="og:url" content="https://mogul-mic.com/en/frame-replay-multicam.html">
+<meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mogul-mic.com/en/frame-replay-multicam.html">
+<link rel="alternate" hreflang="ja" href="https://mogul-mic.com/frame-replay-multicam.html">
+<link rel="alternate" hreflang="en" href="https://mogul-mic.com/en/frame-replay-multicam.html">
+<link rel="alternate" hreflang="x-default" href="https://mogul-mic.com/frame-replay-multicam.html">
+<link rel="icon" href="/assets/framereplay/fr-icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/framereplay/fr-icon-180.png">
+<style>
+  /* ============================================================
+     FrameReplay MultiCam 使い方ガイド（日本語版・英語版で共通）
+     ・紹介ページ（/frame-replay.html）と同じ単体の製品ページの作り。MIC の共通ナビ・フッターは載せない。
+     ・英語版 /en/frame-replay-multicam.html と CSS・構造は完全に同一。直すときは必ず両方そろえること。
+     ・文章は「MultiCam使い方ガイド_内容確定案_v4.md」（2026-10-06 城さん了承）のまま。
+       自動で撮る機能（通過で全台が撮る）は書かない（1.3）。
+     ・端末の役割の色：見る端末＝ブランドの水色（--brand-lite）、カメラ端末＝黄土色（--future）。
+       図・手順の印・役割のカードで同じ色を使う。
+     ・画像のパスはルート相対（英語版は階層が1つ深いため）。
+     ============================================================ */
+  :root{
+    --bg:#0B1016;
+    --surface:#111923;
+    --surface-2:#0E141C;
+    --line:#24303C;
+    --fg:#F6F8FA;
+    --body:#C3CCD6;
+    --muted:#8A95A1;
+    --brand-lite:#5DD7FE;
+    --brand:#2EA6E2;
+    --brand-deep:#0177C6;
+    --future:#E8B45A;
+    /* 注意の囲みだけに使う。ブランドの色とは混ぜない。 */
+    --warn:#F08A66;
+    --bar:58px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;overflow-x:clip;}
+  body::before{
+    content:'';position:fixed;top:-15%;left:-20%;width:70%;height:45%;
+    background:radial-gradient(circle, rgba(46,166,226,.12), transparent 70%);
+    filter:blur(45px);pointer-events:none;z-index:0;
+  }
+  a{color:inherit;}
+  img{max-width:100%;}
+  [id]{scroll-margin-top:var(--bar);}
+
+  /* ---------- 上部バー（紹介ページと同じ） ---------- */
+  .fr-bar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;
+    padding:0 clamp(16px,5vw,40px);height:var(--bar);
+    background:rgba(11,16,22,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(255,255,255,.08);}
+  .fr-wordmark{flex:0 0 auto;font-weight:800;font-size:15px;letter-spacing:.01em;
+    color:#fff;text-decoration:none;}
+  .fr-wordmark span{color:var(--brand-lite);}
+  .fr-barnav{flex:1 1 auto;min-width:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+  .fr-barnav a:first-child{margin-left:auto;}
+  .fr-barnav::-webkit-scrollbar{display:none;}
+  .fr-barnav a,.fr-mic{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:none;
+    padding:7px 11px;border-radius:999px;white-space:nowrap;transition:color .2s,background .2s;}
+  .fr-barnav a:hover,.fr-mic:hover{color:var(--fg);background:rgba(255,255,255,.06);}
+  .fr-lang{flex:0 0 auto;display:flex;align-items:center;gap:1px;margin-left:4px;
+    border:1px solid var(--line);border-radius:999px;padding:2px;background:rgba(255,255,255,.03);}
+  .fr-lang span,.fr-lang a{font-size:11.5px;font-weight:800;letter-spacing:.04em;
+    padding:4px 9px;border-radius:999px;text-decoration:none;line-height:1;}
+  .fr-lang .fr-lang-current{background:var(--brand-deep);color:#fff;}
+  .fr-lang .fr-lang-alt{color:var(--muted);}
+  .fr-lang .fr-lang-alt:hover{color:var(--fg);background:rgba(255,255,255,.07);}
+  @media (max-width:625px){
+    :root{--bar:96px;}
+    .fr-bar{display:grid;grid-template-columns:auto 1fr auto auto;grid-template-rows:52px 44px;
+      column-gap:10px;row-gap:0;}
+    .fr-wordmark{grid-area:1 / 1;}
+    .fr-mic{grid-area:1 / 3;}
+    .fr-lang{grid-area:1 / 4;}
+    .fr-barnav{grid-area:2 / 1 / 3 / -1;}
+    .fr-barnav a:first-child{margin-left:0;}
+  }
+
+  /* ---------- 読む幅は1段（最大 760px） ---------- */
+  .wrap{position:relative;z-index:1;max-width:calc(760px + 2 * clamp(16px,5vw,40px));margin:0 auto;
+    padding:0 clamp(16px,5vw,40px);}
+
+  /* ---------- 冒頭 ---------- */
+  .g-hero{padding:clamp(36px,6vw,64px) 0 0;}
+  .g-eyebrow{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-lite);}
+  .g-h1{margin:14px 0 0;font-size:clamp(26px,5.6vw,40px);line-height:1.32;font-weight:900;letter-spacing:.005em;}
+  .g-h1 span{display:inline-block;}
+  .g-lead{margin:16px 0 0;font-size:clamp(14px,1.7vw,16px);line-height:1.95;color:var(--body);}
+
+  /* ---------- 4コマの流れ図 ---------- */
+  .flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:26px 0 12px;}
+  .flow figure{margin:0;padding:12px 10px;border-radius:14px;background:var(--surface);border:1px solid var(--line);
+    display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .flow svg{display:block;width:100%;height:auto;}
+  .flow figcaption{font-size:12.5px;line-height:1.65;color:var(--body);}
+  .flow .n{font-weight:900;color:var(--brand-lite);margin-right:6px;}
+  @media (max-width:560px){.flow{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  .flownote{margin:0;text-align:center;font-size:13.5px;line-height:1.8;color:var(--muted);}
+
+  /* ---------- 節・本文 ---------- */
+  .g-sec{padding:clamp(40px,6vw,60px) 0 0;}
+  .g-h2{margin:0 0 16px;font-size:clamp(20px,3.6vw,26px);line-height:1.4;font-weight:800;letter-spacing:.01em;}
+  .g-h3{margin:24px 0 8px;font-size:16px;line-height:1.55;font-weight:800;}
+  .g-list{margin:0;padding-left:1.25em;font-size:14.5px;line-height:1.9;color:var(--body);}
+  .g-list li{margin:4px 0;}
+  .g-list ul{margin:4px 0 0;padding-left:1.2em;}
+  .g-list b{color:var(--fg);}
+  .g-sub{margin:18px 0 6px;font-size:14px;font-weight:800;line-height:1.7;color:var(--fg);}
+  /* つながりの表示の ● は、アプリの表示と同じ色にする */
+  .dot{font-style:normal;}
+  .dot--blue{color:var(--brand-lite);} .dot--yellow{color:#F2C94C;} .dot--red{color:#FF5A4F;}
+
+  /* ---------- 端末の役割 ---------- */
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .role{padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top-width:3px;}
+  .role--view{border-top-color:var(--brand-lite);}
+  .role--cam{border-top-color:var(--future);}
+  .role-t{margin:0;font-size:16.5px;font-weight:800;}
+  .role--view .role-t{color:var(--brand-lite);}
+  .role--cam .role-t{color:var(--future);}
+  .role-app{margin:4px 0 8px;font-size:12.5px;color:var(--muted);}
+  .role-d{margin:0;font-size:14px;line-height:1.85;color:var(--body);}
+  @media (max-width:560px){.roles{grid-template-columns:1fr;}}
+
+  /* ---------- 手順 ---------- */
+  .g-step{margin-top:16px;padding:20px 20px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);}
+  .g-step-head{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;margin-bottom:12px;}
+  .g-step-n{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;
+    background:rgba(93,215,254,.12);border:1px solid rgba(93,215,254,.3);
+    font-size:14px;font-weight:900;color:var(--brand-lite);}
+  .g-step-t{margin:0;font-size:16.5px;line-height:1.5;font-weight:800;}
+  .role-tag{flex:0 0 auto;font-size:11.5px;font-weight:800;line-height:1;padding:5px 10px;border-radius:999px;}
+  .role-tag--view{color:var(--brand-lite);background:rgba(93,215,254,.1);border:1px solid rgba(93,215,254,.32);}
+  .role-tag--cam{color:var(--future);background:rgba(232,180,90,.1);border:1px solid rgba(232,180,90,.38);}
+
+  /* ---------- 画面写真 ----------
+     縦長なので幅いっぱいにしない。スマホ・PC とも最大 300px で中央に。
+     img の width・height は縦横比のため。CSS で height:auto にして縦に伸びないようにする。 */
+  .g-shot{margin:20px auto 0;max-width:300px;}
+  .g-shot img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);}
+  .g-shot figcaption{margin-top:9px;text-align:center;font-size:12.5px;line-height:1.7;color:var(--muted);}
+
+  /* ---------- 注意の囲み ---------- */
+  .g-warn{margin:16px 0 0;padding:14px 16px;border-radius:12px;
+    border:1px solid rgba(240,138,102,.36);border-left:3px solid var(--warn);background:rgba(240,138,102,.08);}
+  .g-warn p{margin:0;font-size:14px;line-height:1.85;color:var(--body);}
+  .g-warn p:first-child{font-weight:800;color:var(--warn);}
+
+  /* ---------- 困ったとき ---------- */
+  .g-table-wrap{border-radius:14px;border:1px solid var(--line);background:var(--surface);overflow:hidden;}
+  .g-table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.75;}
+  .g-table th,.g-table td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line);}
+  .g-table tr:last-child td{border-bottom:0;}
+  .g-table th{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--muted);background:var(--surface-2);}
+  .g-table td{color:var(--body);}
+  .g-table td:first-child{width:42%;font-weight:700;color:var(--fg);}
+
+  /* ---------- 紹介ページへ戻る ---------- */
+  .g-back{margin:clamp(40px,6vw,56px) 0 0;text-align:center;}
+  .g-back a{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--brand-lite);
+    text-decoration:none;border:1px solid rgba(46,166,226,.5);border-radius:999px;padding:12px 20px;}
+  .g-back a:hover{background:rgba(93,215,254,.08);}
+
+  /* ---------- フッター（紹介ページと同じ） ---------- */
+  .fr-foot{border-top:1px solid rgba(255,255,255,.08);margin-top:clamp(40px,7vw,72px);
+    padding:34px clamp(16px,5vw,40px) calc(34px + env(safe-area-inset-bottom));}
+  .fr-foot-in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 26px;
+    align-items:center;justify-content:space-between;}
+  .fr-foot-mark{font-weight:800;font-size:15px;}
+  .fr-foot-mark span{color:var(--brand-lite);}
+  .fr-foot-links{display:flex;flex-wrap:wrap;gap:8px 20px;}
+  .fr-foot-links a{font-size:13px;color:var(--muted);text-decoration:none;}
+  .fr-foot-links a:hover{color:var(--fg);}
+  .fr-foot-copy{width:100%;font-size:12px;color:#5C6773;}
+
+  @media (max-width:380px){
+    .fr-barnav a,.fr-mic{font-size:11.5px;padding:6px 8px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="fr-bar">
+  <!-- ロゴは紹介ページへ戻る -->
+  <a class="fr-wordmark" href="/en/frame-replay.html">Frame<span>Replay</span></a>
+  <nav class="fr-barnav" aria-label="On this page">
+    <a href="#need">What you need</a>
+    <a href="#steps">How to use</a>
+    <a href="#watch">Watch</a>
+    <a href="#trouble">Troubleshooting</a>
+  </nav>
+  <a class="fr-mic" href="/">MIC</a>
+  <div class="fr-lang" role="group" aria-label="Language">
+    <span class="fr-lang-current" aria-current="true">EN</span>
+    <a class="fr-lang-alt" href="/frame-replay-multicam.html" hreflang="ja" data-lang-switch>JP</a>
+  </div>
+</div>
+
+<main class="wrap" id="top">
+
+  <header class="g-hero">
+    <div class="g-eyebrow">FrameReplay · MultiCam</div>
+    <h1 class="g-h1"><span>Press Record on one device.</span> <span>All cameras record together.</span></h1>
+    <p class="g-lead">Record the same movement from the front, side and back at once, using several iPhones and iPads.<br>The videos come together on one device, so you can watch them side by side right away.</p>
+    <div class="flow">
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Press Record on the viewing device"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>Press Record on the viewing device</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="The camera devices start recording too (front, side, back)"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><rect x="10" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="21" cy="49" r="6" style="fill:#FF5A4F"/><rect x="88" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="99" cy="49" r="6" style="fill:#FF5A4F"/></svg><figcaption><span class="n">2</span>The camera devices start recording too (front, side, back)</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Stop, and the videos arrive on the viewing device"><rect x="47" y="30" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="6" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><rect x="94" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><line x1="27" y1="30" x2="45" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="45" cy="48" r="2.6" style="fill:var(--muted)"/><line x1="93" y1="30" x2="75" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="75" cy="48" r="2.6" style="fill:var(--muted)"/></svg><figcaption><span class="n">3</span>Stop, and the videos arrive on the viewing device</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Watch 2–4 angles side by side"><rect x="40" y="14" width="40" height="62" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="43" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="43" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/></svg><figcaption><span class="n">4</span>Watch 2–4 angles side by side</figcaption></figure>
+    </div>
+    <p class="flownote">Just connect every device to the same Wi-Fi. No internet needed.</p>
+  </header>
+
+  <section class="g-sec" id="roles">
+    <h2 class="g-h2">Two roles</h2>
+    <div class="roles">
+      <div class="role role--view"><h3 class="role-t">Viewing device</h3><p class="role-app">Receive in the app</p><p class="role-d">The device you press Record on. All videos come here. It also records one angle itself.</p></div>
+      <div class="role role--cam"><h3 class="role-t">Camera device</h3><p class="role-app">Be a camera in the app</p><p class="role-d">Set on a tripod to record another angle.</p></div>
+    </div>
+  </section>
+
+  <section class="g-sec" id="need">
+    <h2 class="g-h2">What you need</h2>
+    <ul class="g-list">
+      <li>Two or more iPhones or iPads with FrameReplay</li>
+      <li>The latest version of FrameReplay from the App Store on every device. Devices on different versions still connect, but fixes (such as the one for videos slowly drifting out of sync in long sessions) only work on updated devices.</li>
+      <li><b>Only the viewing device needs MultiCam.</b> Camera devices join with the free version of FrameReplay.
+        <ul><li>The viewing device needs Pro and MultiCam (a one-time add-on to Pro).</li><li>If you installed FrameReplay from the App Store before 21 September 2026, Pro and MultiCam are free for you.</li></ul></li>
+      <li>One Wi-Fi network that every device joins
+        <ul><li>Recommended: <b>a portable Wi-Fi router</b>, or <b>Personal Hotspot on an iPhone</b></li><li>Shared Wi-Fi at facilities or hotels often blocks communication between devices.</li></ul></li>
+      <li>A tripod or holder for each camera device</li>
+    </ul>
+  </section>
+
+  <section class="g-sec" id="steps">
+    <h2 class="g-h2">How to use it (4 steps)</h2>
+    <div class="g-step" id="step-1">
+      <div class="g-step-head"><span class="g-step-n">1</span><h3 class="g-step-t">Connect every device to the same Wi-Fi</h3></div>
+      <ul class="g-list">
+        <li>In Settings &gt; Wi-Fi on each device, choose the same network.</li>
+        <li>With Personal Hotspot, the iPhone sharing its connection can also be used as a viewing or camera device.</li>
+        <li>If 5 GHz is available, use it — videos arrive faster.</li>
+      </ul>
+    </div>
+    <div class="g-step" id="step-2">
+      <div class="g-step-head"><span class="g-step-n">2</span><h3 class="g-step-t">Set up the viewing device</h3><span class="role-tag role-tag--view">Viewing device</span></div>
+      <ul class="g-list">
+        <li>In FrameReplay, tap the gear at the top right of the recording screen, then <b>MultiCam</b> under <b>Connections</b>.</li>
+        <li>Set <b>This device</b> to <b>Receive</b>.</li>
+        <li>Enter a <b>Group</b> name (e.g. Team A).</li>
+        <li>Under <b>Name of this device</b>, enter the angle it records (e.g. Front).</li>
+        <li>When asked about Local Network, tap <b>Allow</b>.</li>
+      </ul>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-1-receive-en.webp" width="720" height="744" loading="lazy" decoding="async"
+             alt="Viewing device settings: Receive, group Team A, name Front.">
+        <figcaption>Viewing device: Receive · Team A · Front</figcaption>
+      </figure>
+    </div>
+    <div class="g-step" id="step-3">
+      <div class="g-step-head"><span class="g-step-n">3</span><h3 class="g-step-t">Add the camera devices</h3><span class="role-tag role-tag--cam">Camera device</span></div>
+      <ul class="g-list">
+        <li>Settings &gt; MultiCam &gt; <b>This device</b>: <b>Be a camera</b>.</li>
+        <li>Under <b>Groups nearby</b>, tap the button with the viewing device's group name (e.g. <b>Join Team A</b>). (If its name appears, the devices can reach each other.)
+          <ul><li>If its group name already matches the viewing device's, no button appears — it is already in the group.</li></ul></li>
+        <li>Under <b>Name of this device</b>, enter where it stands (e.g. Side, Behind), so you can tell the angles apart.</li>
+        <li>When asked about Local Network, tap <b>Allow</b>.</li>
+        <li>When <b>Connection</b> shows "Connected to" and a number (e.g. "Connected to 2"), you're ready.</li>
+      </ul>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-2a-join-en.webp" width="720" height="699" loading="lazy" decoding="async"
+             alt="Camera device settings showing Join Team A under Groups nearby.">
+        <figcaption>Camera device: tap Join Team A</figcaption>
+      </figure>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-2b-connected-en.webp" width="720" height="689" loading="lazy" decoding="async"
+             alt="Camera device settings: name Side, Connection: Connected to 1.">
+        <figcaption>Once joined: Connected to 1</figcaption>
+      </figure>
+      <div class="g-warn" role="note">
+        <p>⚠️ Keep the camera devices on the recording screen.</p>
+        <p>On any other screen they can't respond when recording starts. (The screen stays on by itself.)</p>
+      </div>
+    </div>
+    <div class="g-step" id="step-4">
+      <div class="g-step-head"><span class="g-step-n">4</span><h3 class="g-step-t">Record from the viewing device</h3><span class="role-tag role-tag--view">Viewing device</span></div>
+      <ul class="g-list">
+        <li>Press Record on the viewing device — every device starts recording.</li>
+        <li>Stop — every device stops, and the videos are sent to the viewing device automatically.</li>
+      </ul>
+      <p class="g-sub">Connection status (top left of the viewing device's recording screen)</p>
+      <ul class="g-list">
+        <li>Blue dot and a number: how many camera devices are connected (e.g. 1). The number doesn't change while videos are arriving.</li>
+        <li>Yellow dot: looking for camera devices (none connected yet) — "Looking for the other device".</li>
+        <li>Red dot: something needs your attention — "Not connected", "No camera connected" while recording, or a camera device's battery is low (20% or less and not charging), shown in place of the number, e.g. "Side Battery 12%".</li>
+      </ul>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-3-record-en.webp" width="720" height="960" loading="lazy" decoding="async"
+             alt="Viewing device recording screen with a blue dot and the number of connected camera devices, 1, at the top left.">
+        <figcaption>Blue dot and number at the top left: connected camera devices</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="g-sec" id="watch">
+    <h2 class="g-h2">Watch your videos</h2>
+    <ul class="g-list">
+      <li>On the viewing device, open the video and tap <b>Angles</b> to see 2–4 angles side by side.</li>
+      <li>They are lined up by the time they were recorded. If needed, adjust one frame at a time.</li>
+      <li>Tap the share button to turn the side-by-side view into one video you can save to Photos or send with AirDrop.</li>
+    </ul>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/fr-multicam-split-en.webp" width="900" height="1200" loading="lazy" decoding="async"
+             alt="MultiCam on the viewing device: the same movement recorded by two devices, front and side, lined up by recording time in 2 panes.">
+        <figcaption>2 panes with Angles (Front · Base / Side · -22 fr)</figcaption>
+      </figure>
+  </section>
+
+  <section class="g-sec" id="more">
+    <h2 class="g-h2">More</h2>
+    <ul class="g-list">
+      <li><b>Two viewing devices:</b> Set both to Receive in the same group. If the second one presses Record while a recording is under way, it joins that recording, and its videos go to both viewing devices. Each viewing device needs MultiCam.</li>
+      <li><b>Another team on the same Wi-Fi:</b> Use different group names. Only devices with the same group name connect.</li>
+      <li><b>If the connection drops:</b> The videos stay on the camera device and are sent when it reconnects.</li>
+      <li><b>Battery and storage:</b> When a camera device's battery runs low (and it isn't charging), the viewing device's recording screen shows it, e.g. "Side Battery 12%". In a camera device's Settings &gt; MultiCam you can choose not to keep sent videos (they are kept by default); they are only removed after they have been delivered, and the newest clip and any starred clips are kept.</li>
+    </ul>
+  </section>
+
+  <section class="g-sec" id="trouble">
+    <h2 class="g-h2">Troubleshooting</h2>
+    <div class="g-table-wrap">
+      <table class="g-table">
+        <thead><tr><th scope="col">Problem</th><th scope="col">Check first</th></tr></thead>
+        <tbody>
+          <tr><td>Stuck on "Looking for the other device"</td><td>Same Wi-Fi? Same group name?</td></tr>
+          <tr><td>Nothing under "Groups nearby"</td><td>Is Local Network allowed? (iPhone Settings &gt; FrameReplay &gt; Local Network)</td></tr>
+          <tr><td>Can't connect on facility Wi-Fi</td><td>Switch to a portable router or Personal Hotspot</td></tr>
+          <tr><td>A camera device doesn't record</td><td>Is it on the recording screen?</td></tr>
+          <tr><td>Videos take a long time to arrive</td><td>Use 5 GHz. Long or high-quality videos take longer.</td></tr>
+          <tr><td>The connection dropped</td><td>The videos stay on the camera device and arrive after reconnecting</td></tr>
+          <tr><td>Worried about a camera's battery</td><td>A camera running low shows its name and level on the viewing device's recording screen. Charge it for long sessions.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="g-back"><a href="/en/frame-replay.html">Back to FrameReplay</a></p>
+
+</main>
+
+<footer class="fr-foot">
+  <div class="fr-foot-in">
+    <div class="fr-foot-mark">Frame<span>Replay</span></div>
+    <nav class="fr-foot-links">
+      <a href="https://vanwhist.github.io/apps/framereplay/privacy/" target="_blank" rel="noopener">Privacy Policy</a>
+      <a href="https://vanwhist.github.io/apps/framereplay/support/" target="_blank" rel="noopener">Support</a>
+      <a href="/">mogul-mic.com</a>
+    </nav>
+    <div class="fr-foot-copy">© 2026 Yuta Jo</div>
+  </div>
+</footer>
+
+<script>
+  /* 言語切替：いま見ているアンカーを引き継ぐ（日英で id をそろえてある）。
+     JS が動かなくても href だけで切替は成立する。 */
+  (function(){
+    var a = document.querySelector('[data-lang-switch]');
+    if (!a) return;
+    var base = a.getAttribute('href').split('#')[0];
+    a.addEventListener('click', function(){
+      a.setAttribute('href', location.hash ? base + location.hash : base);
+    });
+  })();
+</script>
+<!-- ★ 計測。ルート相対で書くこと。英語版は階層が1つ深いので相対パスだと壊れる。 -->
+<script src="/assets/js/mic-analytics.js" data-scroll-depth defer></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "267adc99d15146b38cc2356821ce739d"}'></script>
+</body>
+</html>
