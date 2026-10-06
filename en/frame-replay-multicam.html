@@ -184,7 +184,7 @@
 
   /* ---------- App Store ボタン（紹介ページの .cta と同じ見た目） ----------
      SNS からガイドに直接来た人が、紹介ページを経由せずにアプリを入れられるように（2026-10-06 城さん）。
-     リンク先は紹介ページと同じ URL（日本語 ct=jp_lp／英語 ct=en_lp）。計測は data-cta-pos とページのパスで区別できる。 */
+     リンク先は紹介ページと同じ URL で、ct だけガイド用（日本語 ct=jp_guide／英語 ct=en_guide。紹介ページは jp_lp／en_lp）。 */
   .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
   .cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;
     min-height:52px;padding:14px 26px;border-radius:999px;
@@ -246,7 +246,7 @@
     <h1 class="g-h1"><span>Press Record on one device.</span> <span>All cameras record together.</span></h1>
     <p class="g-lead">Record the same movement from the front, side and back at once, using several iPhones and iPads.<br>The videos come together on one device, so you can watch them side by side right away.</p>
     <div class="cta-row">
-      <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_lp&amp;mt=8" data-cta-pos="hero" target="_blank" rel="noopener">Download on the App Store</a>
+      <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_guide&amp;mt=8" data-cta-pos="hero" target="_blank" rel="noopener">Download on the App Store</a>
     </div>
     <div class="flow">
       <figure><svg viewBox="0 0 120 90" role="img" aria-label="Press Record on the viewing device"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>Press Record on the viewing device</figcaption></figure>
@@ -391,7 +391,7 @@
   </section>
 
   <div class="cta-row g-get">
-    <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_lp&amp;mt=8" data-cta-pos="bottom" target="_blank" rel="noopener">Download on the App Store</a>
+    <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_guide&amp;mt=8" data-cta-pos="bottom" target="_blank" rel="noopener">Download on the App Store</a>
   </div>
   <p class="g-back"><a href="/en/frame-replay.html">Back to FrameReplay</a></p>
 
