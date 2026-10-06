@@ -247,16 +247,29 @@
   .fieldnote cite{display:block;margin-top:8px;font-size:12.5px;font-style:normal;color:var(--muted);}
   .fieldnote-shot{margin-top:16px;border-radius:12px;}
 
-  .future{border-radius:20px;padding:clamp(24px,4vw,36px);
-    background:repeating-linear-gradient(135deg,rgba(255,255,255,.015) 0 12px,transparent 12px 24px),var(--surface-2);
-    border:1px dashed rgba(232,180,90,.34);}
-  .future .sec-label{color:var(--future);}
-  .dev-badge{display:inline-flex;align-items:center;gap:6px;
-    font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 11px;border-radius:999px;
-    color:var(--future);border:1px solid rgba(232,180,90,.42);background:rgba(232,180,90,.1);}
-  .future-fig{margin:22px 0 0;border-radius:14px;padding:18px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.06);}
-  .future-fig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto;}
-  .future-note{margin:16px 0 0;font-size:12.5px;line-height:1.8;color:var(--muted);}
+  /* ---------- MultiCam（Pro に追加）----------
+     1.2 で使える機能になったので、ほかの欄と同じ通常の見た目（.feat と同じ面・枠）にする。
+     開発中用の点線の枠・将来用の色（.future・.dev-badge・.future-fig）は使わない
+     （日本語は 2026-10-04、英語は 2026-10-06 に画面写真へ差し替えて外した）。
+     写真は縦長（3:4）なので最大 320px。PC では本文の右に並べる。
+     本文の下に使い方ガイド（/frame-replay-multicam.html・英語は /en/ 側）へのリンクを置く（2026-10-06）。 */
+  .mc{border-radius:20px;padding:clamp(24px,4vw,36px);
+    background:var(--surface);border:1px solid var(--line);}
+  .mc-shot{max-width:320px;margin:22px auto 0;}
+  .mc-link{margin:16px 0 0;}
+  .mc-link a{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--brand-lite);
+    text-decoration:none;border:1px solid rgba(46,166,226,.5);border-radius:999px;padding:11px 18px;transition:background .2s;}
+  .mc-link a:hover{background:rgba(93,215,254,.08);}
+  @media (min-width:900px){
+    /* 文章（ラベル・見出し・本文・リンク）は写真の高さの中で上下中央に寄せる。上下の 1fr は余白。 */
+    .mc{display:grid;grid-template-columns:1fr minmax(0,320px);grid-template-rows:1fr auto auto auto auto 1fr;
+      column-gap:clamp(24px,4vw,48px);}
+    .mc > .sec-label{grid-column:1;grid-row:2;}
+    .mc > .sec-h{grid-column:1;grid-row:3;}
+    .mc > .sec-p{grid-column:1;grid-row:4;}
+    .mc > .mc-link{grid-column:1;grid-row:5;}
+    .mc > .mc-shot{grid-column:2;grid-row:1 / -1;margin:0;}
+  }
 
 
   .faq{display:grid;gap:10px;}
@@ -745,37 +758,19 @@
   <!-- ===== MultiCam (Pro add-on) =====
        Shipped in 1.2 (2026-10-01). One-time add-on to Pro ($39.99 in the US). Only the receiving device needs it.
        Automatic capture (every device records on a pass) is NOT in 1.2 - do not mention it (1.3).
-       The diagram is a placeholder until the real screenshot arrives (decided 2026-09-30). -->
+       The placeholder diagram was replaced with the English screenshot on 2026-10-06 (same look as the Japanese page).
+       The link below goes to the setup guide (/en/frame-replay-multicam.html, 2026-10-06). -->
   <section class="sec" id="multicam">
-    <div class="future rv">
+    <div class="mc rv">
       <div class="sec-label">Pro add-on</div>
       <h2 class="sec-h">MultiCam (Pro add-on, one-time purchase)</h2>
       <p class="sec-p">Film the same take on several iPhones and iPads at once, and collect it on one device. See front, side and back together, lined up by the time they were recorded. Only the device that collects and shows the videos needs it &mdash; camera devices join for free.</p>
-      <div class="future-fig">
-        <svg viewBox="0 0 520 190" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: footage from several iPhones gathering on the coach's device.">
-          <g stroke="#E8B45A" stroke-width="1.6" opacity=".9">
-            <rect x="24" y="20" width="44" height="74" rx="8"/>
-            <rect x="24" y="106" width="44" height="74" rx="8"/>
-            <rect x="120" y="63" width="44" height="74" rx="8"/>
-          </g>
-          <g stroke="#8A95A1" stroke-width="1.2" opacity=".75">
-            <path d="M38 34h16M38 42h10M38 120h16M38 128h10M134 77h16M134 85h10"/>
-          </g>
-          <g stroke="#E8B45A" stroke-width="1.5" stroke-dasharray="5 6" opacity=".75">
-            <path d="M72 57C150 57 210 74 300 92"/>
-            <path d="M72 143C150 143 210 118 300 98"/>
-            <path d="M168 100C214 100 256 96 300 95"/>
-          </g>
-          <g stroke="#5DD7FE" stroke-width="1.8">
-            <rect x="330" y="34" width="118" height="122" rx="12"/>
-            <path d="M348 64h82M348 80h60M348 96h82M348 112h48"/>
-          </g>
-          <text x="389" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Coach's device</text>
-          <text x="96" y="176" fill="#8A95A1" font-size="11" text-anchor="middle"
-                font-family="-apple-system,BlinkMacSystemFont,sans-serif">Multiple iPhones</text>
-        </svg>
-      </div>
+      <p class="mc-link"><a href="/en/frame-replay-multicam.html">How to set up MultiCam</a></p>
+      <figure class="shot-wrap mc-shot">
+        <img src="/assets/framereplay/fr-multicam-split-en.webp"
+             width="900" height="1200" loading="lazy" decoding="async"
+             alt="MultiCam on the viewing device: the same movement recorded by two devices, front and side, lined up by recording time in 2 panes.">
+      </figure>
     </div>
   </section>
 
