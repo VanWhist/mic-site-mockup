@@ -2290,12 +2290,14 @@
     });
   }
 
-  function apScrollToPanel(){
+  // instant を渡すとアニメーションなしで飛ぶ（URL の #athlete-<id> から開くとき）。
+  // カードのタップから呼ぶときは引数なし＝今までどおりなめらかに動く。
+  function apScrollToPanel(instant){
     const wrap = document.getElementById('apPanelWrap');
     if (!wrap) return;
     const headerOffset = 90; // clears the fixed site header
     const y = wrap.getBoundingClientRect().top + window.scrollY - headerOffset;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    window.scrollTo({ top: y, behavior: instant === true ? 'instant' : 'smooth' });
   }
 
   // The actual DOM update for opening a panel. Kept separate from apOpen so it can be
@@ -2352,12 +2354,58 @@
     apActiveIndex = -1;
     document.getElementById('apPanelWrap').classList.remove('open');
     apSetActiveCardClass(-1);
+    // URL の #athlete-<id> から開いていたら #athletes に置き換える。再読み込みで同じパネルが
+    // また開かないようにするため。replaceState なので履歴は増えず、hashchange も起きない。
+    if (location.hash.indexOf(AP_HASH_PREFIX) === 0) {
+      history.replaceState(history.state, '', location.pathname + location.search + '#athletes');
+    }
   };
 
   function apToggle(index, clickedImgEl){
     if (apActiveIndex === index) { window.apClose(); }
     else { apOpen(index, clickedImgEl); }
   }
+
+  // ---------- URL から選手のパネルを開く（#athlete-<id>）----------
+  // Instagram のリンクスタンプなどから、特定の選手のパネルを開いた状態で来られるようにする（2026-10-10）。
+  // 例：https://mogul-mic.com/#athlete-aruga-mutsuhito
+  // ★ <id> は data/athletes.js の AP_ATHLETES[].id。ここに選手名は書かない（選手が増えてもそのまま使える）。
+  // ★ ページ下部の goToEntryScrollTarget は、#athlete- で始まるハッシュをここ（apOpenFromHash）に任せる。
+  //   #athlete-… という要素は無いので、任せないと先頭へ戻されてしまう。
+  // ★ 戦歴APIの応答はパネルの戦歴の欄だけを描き直す（apLoadHistory）ので、開いたパネルは閉じない。
+  const AP_HASH_PREFIX = '#athlete-';
+
+  // ハッシュが #athlete-<id> でなければ null、id が見つからなければ -1、見つかればその番号。
+  function apIndexFromHash(){
+    if (location.hash.indexOf(AP_HASH_PREFIX) !== 0) return null;
+    let id = location.hash.slice(AP_HASH_PREFIX.length);
+    try { id = decodeURIComponent(id); } catch (e) { return -1; }
+    for (let i = 0; i < AP_ATHLETES.length; i++) {
+      if (AP_ATHLETES[i].id === id) return i;
+    }
+    return -1;
+  }
+
+  // #athlete-<id> を処理したら true。見つからない id は #athletes と同じ（選手紹介の位置まで）。
+  function apOpenFromHash(){
+    const index = apIndexFromHash();
+    if (index === null) return false;
+    if (index >= 0) {
+      if (apActiveIndex !== index) apApplyOpen(index);   // カードのタップと同じ開き方（拡大の演出なし）
+      apScrollToPanel(true);
+    } else {
+      const section = document.getElementById('athletes');
+      if (section) {
+        const y = section.getBoundingClientRect().top + window.scrollY - 90; // clears the fixed site header
+        window.scrollTo({ top: Math.max(y, 0), left: 0, behavior: 'instant' });
+      }
+    }
+    return true;
+  }
+  window.apOpenFromHash = apOpenFromHash;
+
+  // 表示中にハッシュが変わったときも同じ動き。#athlete- 以外のハッシュは今までどおりブラウザに任せる。
+  window.addEventListener('hashchange', function(){ apOpenFromHash(); });
 
   window.apToggleResults = function(btn){
     const list = btn.previousElementSibling;
@@ -3711,6 +3759,8 @@
   // native anchor jump, which can under/overshoot before hero images finish
   // loading and the page reaches its final height.
   function goToEntryScrollTarget(){
+    // #athlete-<id>（選手のパネルを開いた状態で来る URL）は選手紹介のスクリプトに任せる。
+    if (typeof window.apOpenFromHash === 'function' && window.apOpenFromHash()) return;
     const headerOffset = 90; // clears the fixed site header
     const id = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
     const target = id ? document.getElementById(id) : null;
