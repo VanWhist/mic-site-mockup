@@ -2290,6 +2290,18 @@
     });
   }
 
+  // URL（#athlete-<id>・#coach-<id>）からパネルを開いたとき、その人のカードを、カードの列の
+  // 見える位置まで横にずらす。ずらさないと、列は先頭のままで、パネルと上のカードが別の人になる（2026-10-11）。
+  // ★ ループ用の複製（aria-hidden）ではなく本物のカードを、初期表示と同じ位置（列の左の余白の位置）に合わせる。
+  //   先頭のカード（複製を含む）からの距離だけ横にずらせば、そのカードが先頭のカードの位置に来る。
+  // ★ 距離は offsetLeft（レイアウト上の位置）で測る。getBoundingClientRect は、列の出現の演出
+  //   （.reveal-scale の縮小）がかかった見た目の位置を返すので、後ろのカードほど短く測れてずれる（実際にずれた）。
+  // ★ 選手側とコーチ側の両方から呼ぶ。apRotateGroup と同じく「同じ処理の置き場」としてだけ切り出している。
+  function galleryShowCard(gallery, card){
+    if (!gallery || !card || !gallery.firstElementChild) return;
+    gallery.scrollLeft = card.offsetLeft - gallery.firstElementChild.offsetLeft;
+  }
+
   // instant を渡すとアニメーションなしで飛ぶ（URL の #athlete-<id> から開くとき）。
   // カードのタップから呼ぶときは引数なし＝今までどおりなめらかに動く。
   function apScrollToPanel(instant){
@@ -2392,6 +2404,8 @@
     if (index === null) return false;
     if (index >= 0) {
       if (apActiveIndex !== index) apApplyOpen(index);   // カードのタップと同じ開き方（拡大の演出なし）
+      galleryShowCard(document.getElementById('athleteGallery'),
+        document.querySelector('#athleteGallery .ap-card[data-ap-index="' + index + '"]:not([aria-hidden])'));
       apScrollToPanel(true);
     } else {
       const section = document.getElementById('athletes');
@@ -2749,6 +2763,8 @@
     if (index === null) return false;
     if (index >= 0) {
       if (cpActiveIndex !== index) cpApplyOpen(index);
+      galleryShowCard(document.getElementById('coachGallery'),
+        document.querySelector('#coachGallery .cp-card[data-cp-index="' + index + '"]:not([aria-hidden])'));
       cpScrollToPanel(true);
     } else {
       const section = document.getElementById('coaches');
