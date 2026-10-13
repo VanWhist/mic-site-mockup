@@ -76,6 +76,13 @@
   インライン化すると publish_photos.py の反映が公開サイトに出なくなる。
 - publish_photos.py を実行する前にも git fetch し、data/athletes.js が最新か確認する。
 
+## 本番サイト（mogul-mic.com）を確認するとき
+- 本番サイトを開いて確認するときは、手動・自動（Playwright 等）を問わず、
+  すべての URL に必ず ?mic_noanalytics=1 を付ける。
+- ハッシュ付きの URL は ?mic_noanalytics=1#athlete-... の順にする（# のあとに付けても効かない）。
+- 付け忘れると、アクセス解析に英語設定のアクセスが大量に混ざる
+  （2026/10/10・10/11 に約300件の実例あり）。
+
 ## 巻き戻しに気づいた場合
 - force push、reset --hard、revert で自力で戻そうとしない。
 - 失われた内容と該当コミットを特定して報告し、対処方針の指示を待つ。
