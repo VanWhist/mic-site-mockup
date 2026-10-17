@@ -387,6 +387,16 @@
   .fr-video-play:focus-visible{outline:3px solid #fff;outline-offset:4px;}
   @media (max-width:600px){.fr-video-play{width:54px;height:54px;}.fr-video-play svg{width:26px;height:26px;margin-left:3px;}}
   .fr-video-cap{margin:12px 0 0;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.7;}
+
+  /* ---------- 短い動画（2026-10-18）----------
+     静止画の代わりに、音なしで繰り返す 5〜13 秒の画面収録・実景。最初は poster だけで、見える所に来たら読み込んで流す。
+     動きを減らす設定のときは自動で流さず、再生ボタン（controls）を出す。 */
+  video[data-fr-clip]{display:block;width:100%;height:auto;background:#000;}
+  .shot-wrap.is-clip{max-width:340px;margin-left:auto;margin-right:auto;}
+  .mc-shot.is-clip{max-width:560px;}
+  /* MultiCam の動画は横長なので、広い画面では右の細い欄ではなく本文の下に横いっぱいで置く（:has が使えない古いブラウザは右の欄のまま） */
+  @media (min-width:900px){.mc:has(> .mc-shot.is-clip){display:block;}.mc > .mc-shot.is-clip{margin:22px auto 0;max-width:760px;}}
+  .mini-item video.scene-shot{border-radius:12px;}
 </style>
 </head>
 <body>
@@ -606,7 +616,7 @@
              width="720" height="900" loading="lazy" decoding="async" alt="撮影と保存の設定画面。押してから始めるまでの秒数と、自動で止めるまでの秒数を選べる。">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">一人で自主練</h3>
-        <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。端末を置いて自分の位置へ移動すれば、跳ぶ・投げる・打つ・走るといった動きも、トレーニングやリハビリの動作も、一人で撮れます。撮るたびに端末へ戻らなくて済みます。Apple Watch から録画を始めることもできます。</p>
+        <p class="scene-d">録画ボタンを押してから少し待って撮り始め、決めた長さで自動で止まります。たとえば、10秒後に撮り始めて10秒で止める。端末を置いて自分の位置へ移動すれば、跳ぶ・投げる・打つ・走るといった動きも、トレーニングやリハビリの動作も、一人で撮れます。Apple Watch から録画を始めることもできます。</p>
         <p class="scene-uses">使う機能：押してから始めるまで／自動で止める／Apple Watch から録画開始（watchOS 26.2 以上）</p>
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">Pro だとさらに</p>
@@ -781,10 +791,11 @@
           <p class="feat-b">前の動きと今回の動きを並べて、または重ねて比較。わずかな違いもすぐ確認できます。</p>
           <p class="feat-note">買う前に3回まで試せます。</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-feat-overlay.webp"
-               width="1040" height="780" loading="lazy" decoding="async"
-               alt="2本の映像を重ねて表示している画面。重なった映像の濃さをスライダーで調整できる。">
+        <figure class="shot-wrap is-clip">
+          <video data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-compare.webp" aria-label="前の一本と今の一本を左右に並べて流し、そのあと重ねて表示している画面。">
+            <source src="/assets/framereplay/fr-clip-compare.mp4" type="video/mp4">
+          </video>
         </figure>
       </article>
 
@@ -795,10 +806,11 @@
           <p class="feat-b">映像に線や丸を描き、角度を出して、フォームのチェックができます。感覚だけでなく、視覚的に動きを分析できます。</p>
           <p class="feat-note">買う前に3回まで試せます。</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-feat-angle.webp"
-               width="1040" height="780" loading="lazy" decoding="async"
-               alt="映像に線を引き、角度が表示されている画面。">
+        <figure class="shot-wrap is-clip">
+          <video data-fr-clip width="720" height="960" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-angle.webp" aria-label="トランポリンの映像に線を引き、角度（89°）と「いい！」の吹き出しを置いている画面。">
+            <source src="/assets/framereplay/fr-clip-angle.mp4" type="video/mp4">
+          </video>
         </figure>
       </article>
 
@@ -831,13 +843,19 @@
 
     <div class="mini">
       <div class="mini-item rv">
-        <img class="scene-shot" src="/assets/framereplay/fr-pro-replay.webp"
-             width="720" height="900" loading="lazy" decoding="async" alt="リプレイの画面。少し遅れて映像が流れ続け、カメラへすぐ戻れる。">
+        <video class="scene-shot" data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-replay.webp" aria-label="置いた iPad に、少し前の自分の動きが流れ続けている様子。録画ボタンは押していない。">
+          <source src="/assets/framereplay/fr-clip-replay.mp4" type="video/mp4">
+        </video>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
         <p class="mini-t">リプレイ <span class="pro-badge">PRO</span></p>
         <p class="mini-d">録画ボタンを押さなくても、少し遅れて映像が流れ続けます。</p>
       </div>
       <div class="mini-item rv">
+        <video class="scene-shot" data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-continuous.webp" aria-label="置いた iPad の前でウォータージャンプを跳ぶと、跳び終わったときにはその一本がもう再生されている様子。">
+          <source src="/assets/framereplay/fr-clip-continuous.mp4" type="video/mp4">
+        </video>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
         <p class="mini-t">連続モード <span class="pro-badge">PRO</span></p>
         <p class="mini-d">端末を置いて「連続」を1回押すだけ。動きを見つけて一本ごとに区切って残します。トランポリンの設定では、一本終わるたびに再生します。</p>
@@ -884,10 +902,11 @@
       <h2 class="sec-h">MultiCam（Pro に追加・買い切り ¥4,000）</h2>
       <p class="sec-p">何台かの iPhone・iPad で同じ一本を同時に撮り、1台に集めます。正面・横・後ろを並べて見られ、撮った時刻でそろいます。買うのは映像を集めて見る端末だけで、カメラ役の端末は無料で参加できます。</p>
       <p class="mc-link"><a href="/frame-replay-multicam.html">使い方ガイドを見る</a></p>
-      <figure class="shot-wrap mc-shot">
-        <img src="/assets/framereplay/fr-multicam-split.webp"
-             width="900" height="1200" loading="lazy" decoding="async"
-             alt="MultiCam の受け取る側の画面。正面と横の2台で撮った同じ一本が、撮った時刻をそろえて2分割で並ぶ。">
+      <figure class="shot-wrap mc-shot is-clip">
+        <video data-fr-clip width="960" height="670" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-multicam.webp" aria-label="MultiCam の受け取る側の iPad。正面と横の2台で撮った同じ一本が、撮った時刻をそろえて並んで流れる。">
+          <source src="/assets/framereplay/fr-clip-multicam.mp4" type="video/mp4">
+        </video>
       </figure>
     </div>
   </section>
@@ -1001,6 +1020,26 @@
     a.addEventListener('click', function(){
       a.setAttribute('href', location.hash ? base + location.hash : base);
     });
+  })();
+
+  /* 短い動画：見える所に来たら流し、外れたら止める（2026-10-18）。
+     preload="none" なので、見える所に来るまで動画は読み込まない。動きを減らす設定のときは自動で流さない。 */
+  (function(){
+    var clips = document.querySelectorAll('video[data-fr-clip]');
+    if (!clips.length) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      clips.forEach(function(v){ v.controls = true; });
+      return;
+    }
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        var v = e.target;
+        if (e.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function(){ v.controls = true; }); }
+        else { v.pause(); }
+      });
+    }, { threshold: 0.4 });
+    clips.forEach(function(v){ io.observe(v); });
   })();
 
   /* スクロールイン。prefers-reduced-motion のときは何もしない（CSS 側で無効化済み）。 */

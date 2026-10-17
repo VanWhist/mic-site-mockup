@@ -336,6 +336,16 @@
   .fr-video-play:focus-visible{outline:3px solid #fff;outline-offset:4px;}
   @media (max-width:600px){.fr-video-play{width:54px;height:54px;}.fr-video-play svg{width:26px;height:26px;margin-left:3px;}}
   .fr-video-cap{margin:12px 0 0;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.7;}
+
+  /* ---------- 短い動画（2026-10-18）----------
+     静止画の代わりに、音なしで繰り返す 5〜13 秒の画面収録・実景。最初は poster だけで、見える所に来たら読み込んで流す。
+     動きを減らす設定のときは自動で流さず、再生ボタン（controls）を出す。 */
+  video[data-fr-clip]{display:block;width:100%;height:auto;background:#000;}
+  .shot-wrap.is-clip{max-width:340px;margin-left:auto;margin-right:auto;}
+  .mc-shot.is-clip{max-width:560px;}
+  /* MultiCam の動画は横長なので、広い画面では右の細い欄ではなく本文の下に横いっぱいで置く（:has が使えない古いブラウザは右の欄のまま） */
+  @media (min-width:900px){.mc:has(> .mc-shot.is-clip){display:block;}.mc > .mc-shot.is-clip{margin:22px auto 0;max-width:760px;}}
+  .mini-item video.scene-shot{border-radius:12px;}
 </style>
 </head>
 <body>
@@ -546,7 +556,7 @@
              width="720" height="900" loading="lazy" decoding="async" alt="Recording settings: choose how long to wait before starting and when to stop automatically.">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-timer"></use></svg>
         <h3 class="scene-t">Train on your own</h3>
-        <p class="scene-d">Set a start delay and an auto-stop, then walk to your spot&mdash;for example, start recording after 10 seconds and stop after 10 seconds. Film a jump, a throw, a swing, a sprint, or a rehab exercise on your own, without walking back to the device each time. You can also start recording from Apple Watch.</p>
+        <p class="scene-d">Set a start delay and an auto-stop, then walk to your spot&mdash;for example, start recording after 10 seconds and stop after 10 seconds. Film a jump, a throw, a swing, a sprint, or a rehab exercise on your own. You can also start recording from Apple Watch.</p>
         <p class="scene-uses">Uses: Wait before starting / Stop automatically / Start recording from your wrist (Apple Watch, watchOS 26.2 or later)</p>
         <div class="scene-pro"><div class="scene-pro-in">
           <p class="scene-pro-h">With Pro</p>
@@ -720,10 +730,11 @@
           <p class="feat-b">Compare two takes side by side, play in sync, or overlay.</p>
           <p class="feat-note">Try it three times before you buy.</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-feat-overlay-en.webp"
-               width="1040" height="780" loading="lazy" decoding="async"
-               alt="Two takes overlaid, with a slider controlling how strongly the top one shows.">
+        <figure class="shot-wrap is-clip">
+          <video data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-compare-en.webp" aria-label="The last take and this one playing side by side, then overlaid.">
+            <source src="/assets/framereplay/fr-clip-compare-en.mp4" type="video/mp4">
+          </video>
         </figure>
       </article>
 
@@ -734,10 +745,11 @@
           <p class="feat-b">Draw lines and circles, and read the angles to analyze your movement.</p>
           <p class="feat-note">Try it three times before you buy.</p>
         </div>
-        <figure class="shot-wrap">
-          <img src="/assets/framereplay/fr-feat-angle-en.webp"
-               width="1040" height="780" loading="lazy" decoding="async"
-               alt="A line drawn over the video with the measured angle shown.">
+        <figure class="shot-wrap is-clip">
+          <video data-fr-clip width="720" height="960" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-angle-en.webp" aria-label="A line drawn over a trampoline jump, with the angle (89°) and a Good callout.">
+            <source src="/assets/framereplay/fr-clip-angle-en.mp4" type="video/mp4">
+          </video>
         </figure>
       </article>
 
@@ -767,13 +779,19 @@
 
     <div class="mini">
       <div class="mini-item rv">
-        <img class="scene-shot" src="/assets/framereplay/fr-pro-replay-en.webp"
-             width="720" height="900" loading="lazy" decoding="async" alt="Replay screen: the video keeps playing a few seconds behind, with a button back to the camera.">
+        <video class="scene-shot" data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-replay.webp" aria-label="A set-down iPad keeps showing the movement from a moment ago, without pressing record.">
+          <source src="/assets/framereplay/fr-clip-replay.mp4" type="video/mp4">
+        </video>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"></use></svg>
         <p class="mini-t">Replay <span class="pro-badge">PRO</span></p>
         <p class="mini-d">Without pressing record, the action keeps playing back a few seconds behind.</p>
       </div>
       <div class="mini-item rv">
+        <video class="scene-shot" data-fr-clip width="720" height="900" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-continuous.webp" aria-label="A jump at a water jump in front of a set-down iPad; by the time the athlete lands, that take is already playing.">
+          <source src="/assets/framereplay/fr-clip-continuous.mp4" type="video/mp4">
+        </video>
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-loop"></use></svg>
         <p class="mini-t">Continuous mode <span class="pro-badge">PRO</span></p>
         <p class="mini-d">Set the device down and tap Auto once. It finds each take and saves it as its own clip. With the trampoline setting, each take plays back as soon as it ends.</p>
@@ -814,10 +832,11 @@
       <h2 class="sec-h">MultiCam (Pro add-on, one-time purchase)</h2>
       <p class="sec-p">Film the same take on several iPhones and iPads at once, and collect it on one device. See front, side and back together, lined up by the time they were recorded. Only the device that collects and shows the videos needs it &mdash; camera devices join for free.</p>
       <p class="mc-link"><a href="/en/frame-replay-multicam.html">How to set up MultiCam</a></p>
-      <figure class="shot-wrap mc-shot">
-        <img src="/assets/framereplay/fr-multicam-split-en.webp"
-             width="900" height="1200" loading="lazy" decoding="async"
-             alt="MultiCam on the viewing device: the same movement recorded by two devices, front and side, lined up by recording time in 2 panes.">
+      <figure class="shot-wrap mc-shot is-clip">
+        <video data-fr-clip width="960" height="670" muted loop playsinline preload="none"
+               poster="/assets/framereplay/fr-clip-multicam-en.webp" aria-label="MultiCam on the receiving iPad: the same take from two devices, front and side, playing together lined up by recording time.">
+          <source src="/assets/framereplay/fr-clip-multicam-en.mp4" type="video/mp4">
+        </video>
       </figure>
     </div>
   </section>
@@ -921,6 +940,26 @@
 </footer>
 
 <script>
+  /* 短い動画：見える所に来たら流し、外れたら止める（2026-10-18）。
+     preload="none" なので、見える所に来るまで動画は読み込まない。動きを減らす設定のときは自動で流さない。 */
+  (function(){
+    var clips = document.querySelectorAll('video[data-fr-clip]');
+    if (!clips.length) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      clips.forEach(function(v){ v.controls = true; });
+      return;
+    }
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        var v = e.target;
+        if (e.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function(){ v.controls = true; }); }
+        else { v.pause(); }
+      });
+    }, { threshold: 0.4 });
+    clips.forEach(function(v){ io.observe(v); });
+  })();
+
   /* Language switch: carry the current anchor across.
      Without JS the plain href still works; it just drops the hash. */
   (function(){
