@@ -322,6 +322,20 @@
     .cta:hover{transform:none;}
     .faq summary::after{transition:none;}
   }
+
+  /* ---------- 紹介動画（2026-10-18）----------
+     トップページの「MICとは」と同じ作り。押すまでは自前のサムネイルだけ（YouTube に何も読み込まない）。 */
+  .fr-video{position:relative;max-width:960px;margin:22px auto 0;aspect-ratio:16/9;border-radius:16px;overflow:hidden;
+    background:#000;border:1px solid rgba(255,255,255,.08);}
+  /* 再生ボタンはサムネイルの文字（左）に重ならないよう、右の画面写真の上に置く */
+  .fr-video img,.fr-video iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;}
+  .fr-video-play{position:absolute;left:76%;top:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;border:0;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;
+    background:linear-gradient(135deg,var(--brand-lite),var(--brand-deep));box-shadow:0 8px 28px rgba(0,0,0,.45);}
+  .fr-video-play svg{width:34px;height:34px;margin-left:4px;}
+  .fr-video-play:focus-visible{outline:3px solid #fff;outline-offset:4px;}
+  @media (max-width:600px){.fr-video-play{width:54px;height:54px;}.fr-video-play svg{width:26px;height:26px;margin-left:3px;}}
+  .fr-video-cap{margin:12px 0 0;text-align:center;font-size:12.5px;color:var(--muted);line-height:1.7;}
 </style>
 </head>
 <body>
@@ -469,6 +483,40 @@
 </header>
 
 <div class="wrap">
+
+  <!-- ===== 紹介動画（2026-10-18）=====
+       日本語版は YouTube で限定公開のまま、このページに埋め込む（決定事項ログ 2026-10-18：YouTube は英語版だけを公開する方針のため）。
+       英語版は公開（https://www.youtube.com/watch?v=BH3G-zRH_HM）。動画を差し替えたら data-video-src と画像を直す。 -->
+  <section class="sec" id="video">
+    <div class="sec-label">Video</div>
+    <h2 class="sec-h">See it in action.</h2>
+    <p class="sec-p">How FrameReplay differs from your camera app, shown on real screens (about 5 minutes, 12 chapters). Pick a chapter to jump to any feature.</p>
+    <div class="fr-video" id="frVideo" data-video-src="https://www.youtube-nocookie.com/embed/BH3G-zRH_HM?autoplay=1&amp;rel=0&amp;playsinline=1">
+      <img src="/assets/framereplay/fr-intro-video-en.webp" alt="FrameReplay intro video thumbnail: Record. Review. Compare. 12 chapters, about 5 min." width="1280" height="720" loading="lazy" decoding="async">
+      <button type="button" class="fr-video-play" aria-label="Play the FrameReplay intro video"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    </div>
+    <p class="fr-video-cap">Plays on YouTube. Nothing is loaded from YouTube until you press play.</p>
+  </section>
+  <script>
+  // 押したときに初めて YouTube の iframe に差し替える（トップページの mvvVideo と同じ考え方）。
+  // ★ allow に fullscreen を入れない。allowfullscreen と併記すると警告が出るため。
+  (function(){
+    var frame = document.getElementById('frVideo');
+    var btn = frame && frame.querySelector('button');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var f = document.createElement('iframe');
+      f.src = frame.getAttribute('data-video-src');
+      f.title = 'FrameReplay intro video';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      f.setAttribute('frameborder', '0');
+      frame.innerHTML = '';
+      frame.appendChild(f);
+      f.focus();
+    });
+  })();
+  </script>
 
   <!-- ===== What you can do for free (draft v1.1 §2, 2026-09-28) =====
        Replaces the old "Included for free" (#other-features). Same structure as the Japanese page (PR #110–#112).
