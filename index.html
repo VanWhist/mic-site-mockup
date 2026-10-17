@@ -722,6 +722,62 @@
   @media (max-width:479px){ .tl-mame .btn{flex:1 1 100%;} }
   @media (min-width:760px){ .tl-mame{max-width:900px;padding:36px 44px 32px;} }
 
+  /* ---------- 30秒でわかるモーグル（Instagram リール・2026-10-17） ----------
+     一覧は data/reels.js。カードは横1列に並べ、入りきらない分は横スクロール。
+     PC では5本がちょうど1画面に収まる幅、スマホでは2本強が見える幅にする。 */
+  .reels{background:var(--bg);padding:12vh 6vw 14vh;position:relative;}
+  .rl-head{max-width:1160px;margin:0 auto;text-align:center;}
+  .rl-head h2{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.02em;
+    line-height:1.4;margin:14px 0 18px;}
+  .rl-head p{font-size:15px;line-height:1.9;color:#d3d3d8;margin:0 auto;max-width:44em;}
+  .rl-track{--rl-gap:16px;max-width:1160px;margin:6vh auto 0;display:grid;grid-auto-flow:column;
+    grid-auto-columns:calc((100% - var(--rl-gap) * 4) / 5);gap:var(--rl-gap);
+    overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
+    scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent;padding-bottom:10px;}
+  @media (max-width:899px){
+    .rl-track{grid-auto-columns:calc((100% - var(--rl-gap) * 2) / 3.3);}
+  }
+  @media (max-width:599px){
+    /* スマホ：画面の端まで使い、2本強を見せて「横に続く」ことが分かるようにする */
+    .reels{padding:10vh 6vw 11vh;}
+    .rl-track{--rl-gap:12px;margin-left:-6vw;margin-right:-6vw;padding-left:6vw;padding-right:6vw;
+      scroll-padding:0 6vw;grid-auto-columns:42vw;}
+  }
+  .rl-card{scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;min-width:0;
+    background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;text-align:left;cursor:pointer;}
+  .rl-thumb{position:relative;display:block;width:100%;aspect-ratio:9/16;border-radius:16px;overflow:hidden;
+    background:#1a1a1e;border:1px solid rgba(255,255,255,.12);transition:border-color .2s,transform .3s ease;}
+  .rl-thumb img{width:100%;height:100%;object-fit:cover;}
+  .rl-play{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;
+    background:rgba(10,10,12,.55);border:1.5px solid rgba(255,255,255,.85);
+    display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;}
+  .rl-play svg{width:22px;height:22px;fill:#fff;margin-left:3px;}
+  .rl-card:hover .rl-thumb,.rl-card:focus-visible .rl-thumb{border-color:rgba(255,255,255,.4);transform:translateY(-3px);}
+  .rl-card:hover .rl-play,.rl-card:focus-visible .rl-play{background:var(--accent);transform:scale(1.06);}
+  .rl-card:focus-visible{outline:none;}
+  .rl-card:focus-visible .rl-thumb{outline:2px solid var(--accent);outline-offset:3px;}
+  .rl-no{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--accent);}
+  .rl-title{display:block;font-size:14px;font-weight:700;line-height:1.55;color:var(--fg);margin-top:2px;}
+  .rl-links{max-width:1160px;margin:5vh auto 0;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+  .rl-links .btn{text-align:center;}
+  @media (max-width:479px){ .rl-links .btn{flex:1 1 100%;} }
+  /* 再生用の窓。押したときだけ Instagram の埋め込みを入れる */
+  .rl-modal{border:0;padding:0;background:transparent;color:var(--fg);
+    width:min(420px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);margin:auto;overflow:visible;}
+  .rl-modal::backdrop{background:rgba(0,0,0,.78);}
+  .rl-modal-inner{position:relative;background:#141417;border:1px solid rgba(255,255,255,.14);border-radius:18px;
+    padding:46px 12px 14px;max-height:calc(100dvh - 24px);overflow-y:auto;}
+  .rl-close{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;border:0;cursor:pointer;
+    background:rgba(255,255,255,.1);color:#fff;font-size:22px;line-height:36px;text-align:center;}
+  .rl-close:hover{background:rgba(255,255,255,.2);}
+  .rl-modal-title{position:absolute;top:14px;left:16px;right:52px;font-size:13px;font-weight:700;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rl-embed{min-height:200px;display:flex;flex-direction:column;align-items:center;}
+  .rl-embed .instagram-media{margin:0 auto !important;}
+  .rl-loading,.rl-fallback{font-size:13.5px;color:var(--muted);text-align:center;padding:40px 8px;line-height:1.8;}
+  .rl-fallback a{color:var(--accent);font-weight:700;}
+  @media (prefers-reduced-motion:reduce){ .rl-thumb,.rl-play{transition:none;} .rl-card:hover .rl-thumb{transform:none;} }
+
   /* ---------- FrameReplay mini hero ----------
      専用ページ（frame-replay.html）のファーストビューを小さく切り取った見せ方。
      ★ 色はこのブロックの中だけで完結させる。MIC共通の赤（--accent）は使わない。
@@ -3133,6 +3189,126 @@
     </div>
   </div>
 </section>
+
+
+<!-- ===== 30秒でわかるモーグル（Instagram リール・2026-10-17） =====
+     一覧は data/reels.js（新しい回は1行足すだけで出る）。豆知識のページ（mame/）から #reels へリンクしている。
+     ★ ページを開いただけでは instagram.com・facebook.com へ通信しない。
+       最初は自前のサムネイル（assets/reels/）だけを出し、押したときに初めて embed.js を読み込む。
+       この扱いはプライバシーポリシー（privacy.html の 6.）に書いてある。変えるときはそちらも直すこと。 -->
+<section class="reels" id="reels">
+  <div class="rl-head">
+    <div class="eyebrow reveal">Instagram Reels</div>
+    <h2 class="reveal delay-1">30秒でわかるモーグル</h2>
+    <p class="reveal delay-2">コブの中で、何が起きているのか。スローと図を使って、1本30秒で解説するシリーズです。</p>
+  </div>
+  <div class="rl-track" id="reelTrack" role="list" aria-label="30秒でわかるモーグルの一覧"></div>
+  <div class="rl-links reveal">
+    <a class="btn btn-ghost" href="https://www.instagram.com/mogul.mic/" target="_blank" rel="noopener" data-cta-pos="reels">Instagramでフォロー</a>
+    <a class="btn btn-primary" href="program-general.html">この内容をレッスンで → 一般レッスン</a>
+  </div>
+  <dialog class="rl-modal" id="reelModal" aria-labelledby="reelModalTitle">
+    <div class="rl-modal-inner">
+      <div class="rl-modal-title" id="reelModalTitle"></div>
+      <button class="rl-close" type="button" id="reelClose" aria-label="閉じる">×</button>
+      <div class="rl-embed" id="reelEmbed"></div>
+    </div>
+  </dialog>
+</section>
+<script src="data/reels.js"></script>
+<script>
+(function () {
+  'use strict';
+  var REELS = window.MIC_REELS || [];
+  var track = document.getElementById('reelTrack');
+  var modal = document.getElementById('reelModal');
+  var box = document.getElementById('reelEmbed');
+  var modalTitle = document.getElementById('reelModalTitle');
+  if (!track || !REELS.length) { var sec = document.getElementById('reels'); if (sec) sec.hidden = true; return; }
+
+  var EMBED_JS = 'https://www.instagram.com/embed.js';
+  var embedState = 'none'; // none → loading → ready / failed
+  var fallbackTimer = null;
+
+  function reelId(url) { var m = /\/reel\/([A-Za-z0-9_-]+)/.exec(url || ''); return m ? m[1] : ''; }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function label(r) { return (r.no != null ? '#' + r.no + ' ' : '') + r.title; }
+
+  // ---- 一覧（サムネイル・題名・再生ボタンだけ。ここでは Instagram に通信しない）
+  REELS.forEach(function (r) {
+    var id = reelId(r.url);
+    if (!id) { return; }
+    var item = el('div'); item.setAttribute('role', 'listitem');
+    var btn = el('button', 'rl-card'); btn.type = 'button';
+    btn.setAttribute('aria-label', label(r) + '（Instagramのリールを再生）');
+    var th = el('span', 'rl-thumb');
+    var img = el('img'); img.src = r.thumb; img.alt = ''; img.width = 540; img.height = 960;
+    img.loading = 'lazy'; img.decoding = 'async';
+    var play = el('span', 'rl-play');
+    play.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
+    th.appendChild(img); th.appendChild(play);
+    var cap = el('span');
+    if (r.no != null) { cap.appendChild(el('span', 'rl-no', '#' + r.no)); }
+    cap.appendChild(el('span', 'rl-title', r.title));
+    btn.appendChild(th); btn.appendChild(cap);
+    btn.addEventListener('click', function () { openReel(r, id); });
+    item.appendChild(btn); track.appendChild(item);
+  });
+
+  // ---- 押したとき：計測 → 窓を開く → Instagram の埋め込みを読み込む
+  function openReel(r, id) {
+    try { if (window.micAnalytics && window.micAnalytics.event) { window.micAnalytics.event('reel_open', id); } } catch (e) {}
+    modalTitle.textContent = label(r);
+    box.innerHTML = '';
+    var bq = el('blockquote', 'instagram-media');
+    bq.setAttribute('data-instgrm-permalink', 'https://www.instagram.com/reel/' + id + '/?utm_source=ig_embed&utm_campaign=loading');
+    bq.setAttribute('data-instgrm-version', '14');
+    bq.style.cssText = 'background:#fff;border:0;border-radius:12px;margin:0 auto;max-width:400px;min-width:280px;width:100%;';
+    var a = el('a', null, 'Instagramで見る'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
+    bq.appendChild(a);
+    box.appendChild(bq);
+    box.appendChild(el('p', 'rl-loading', '読み込み中…'));
+    if (typeof modal.showModal === 'function') { modal.showModal(); } else { modal.setAttribute('open', ''); }
+    loadEmbed();
+    // 埋め込みが出てこないとき（通信の遮断・拡張機能など）は、Instagram で開くリンクに切り替える
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(function () {
+      if (!box.querySelector('iframe')) { showFallback(r); }
+    }, 10000);
+  }
+  function processEmbeds() {
+    try { window.instgrm.Embeds.process(); } catch (e) {}
+    var wait = setInterval(function () {
+      if (box.querySelector('iframe')) { var l = box.querySelector('.rl-loading'); if (l) l.remove(); clearInterval(wait); }
+    }, 200);
+    setTimeout(function () { clearInterval(wait); }, 10000);
+  }
+  function loadEmbed() {
+    if (embedState === 'ready') { processEmbeds(); return; }
+    if (embedState === 'loading') { return; }
+    embedState = 'loading';
+    var s = document.createElement('script');
+    s.src = EMBED_JS; s.async = true;
+    s.onload = function () { embedState = 'ready'; processEmbeds(); };
+    s.onerror = function () { embedState = 'none'; s.remove(); };
+    document.body.appendChild(s);
+  }
+  function showFallback(r) {
+    box.innerHTML = '';
+    var p = el('p', 'rl-fallback', 'ここでは再生できませんでした。');
+    p.appendChild(document.createElement('br'));
+    var a = el('a', null, 'Instagramで見る →'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
+    p.appendChild(a);
+    box.appendChild(p);
+  }
+  // ---- 閉じたら中身を消す（再生を止めるため）
+  function closeModal() { if (typeof modal.close === 'function') { modal.close(); } else { modal.removeAttribute('open'); onClosed(); } }
+  function onClosed() { clearTimeout(fallbackTimer); box.innerHTML = ''; }
+  modal.addEventListener('close', onClosed);
+  document.getElementById('reelClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (ev) { if (ev.target === modal) { closeModal(); } }); // 窓の外側
+})();
+</script>
 
 
 <section class="calendar" id="calendar">

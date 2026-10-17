@@ -204,6 +204,25 @@
       else { window.addEventListener('load', onDepthScroll); }
     }
 
+    /* ---- ページ側から送るイベント（2026-10-17 追加） ---------------
+       リンクではない操作（トップページのリールのサムネイルを押した等）を数えるため。
+       使い方：window.micAnalytics.event('reel_open', 'DeL4oh7JvwK')
+       ★ 計測しない環境（ローカル・mic_noanalytics=1・自動ブラウザ）では定義されない。
+         呼ぶ側で window.micAnalytics があるか確かめてから呼ぶこと。 */
+    window.micAnalytics = {
+      event: function (name, detail) {
+        try {
+          send({
+            a: 'ev',
+            p: location.pathname.slice(0, 200),
+            v: sid,
+            e: String(name || '').slice(0, 40),
+            ed: String(detail || '').slice(0, 60)
+          });
+        } catch (e) {}
+      }
+    };
+
     /* ---- 外部リンク（CTA）のクリック ------------------------------- */
     document.addEventListener('click', function (ev) {
       try {
