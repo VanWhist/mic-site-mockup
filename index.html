@@ -730,7 +730,8 @@
   .rl-head h2{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.02em;
     line-height:1.4;margin:14px 0 18px;}
   .rl-head p{font-size:15px;line-height:1.9;color:#d3d3d8;margin:0 auto;max-width:44em;}
-  .rl-track{--rl-gap:16px;max-width:1160px;margin:6vh auto 0;display:grid;grid-auto-flow:column;
+  .rl-shell{position:relative;max-width:1160px;margin:6vh auto 0;}
+  .rl-track{--rl-gap:16px;max-width:1160px;margin:0 auto;display:grid;grid-auto-flow:column;
     grid-auto-columns:calc((100% - var(--rl-gap) * 4) / 5);gap:var(--rl-gap);
     overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
     scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent;padding-bottom:10px;}
@@ -758,6 +759,23 @@
   .rl-card:focus-visible .rl-thumb{outline:2px solid var(--accent);outline-offset:3px;}
   .rl-no{font-size:11.5px;font-weight:800;letter-spacing:.12em;color:var(--accent);}
   .rl-title{display:block;font-size:14px;font-weight:700;line-height:1.55;color:var(--fg);margin-top:2px;}
+  /* 左右の送りボタン（768px 以上だけ）。押すとカード1枚分ずつ送る。端では薄くして押せなくする。
+     送る先がない（全部が1画面に収まる）ときは、両方とも出さない。 */
+  .rl-nav{display:none;}
+  @media (min-width:768px){
+    .rl-nav{position:absolute;top:calc(50% - 30px);transform:translateY(-50%);z-index:3;
+      width:48px;height:48px;border-radius:50%;
+      background:rgba(16,16,18,.85);border:1px solid rgba(255,255,255,.22);
+      color:#fff;font-size:24px;line-height:1;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:background .2s ease,border-color .2s ease,opacity .2s ease;backdrop-filter:blur(6px);}
+    .rl-nav[hidden]{display:none;}
+    .rl-nav-prev{left:-24px;}
+    .rl-nav-next{right:-24px;}
+    .rl-nav:hover:not(:disabled){background:var(--accent);border-color:var(--accent);}
+    .rl-nav:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+    .rl-nav:disabled{opacity:.25;cursor:default;}
+  }
   .rl-links{max-width:1160px;margin:5vh auto 0;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
   .rl-links .btn{text-align:center;}
   @media (max-width:479px){ .rl-links .btn{flex:1 1 100%;} }
@@ -3202,7 +3220,11 @@
     <h2 class="reveal delay-1">30秒でわかるモーグル</h2>
     <p class="reveal delay-2">コブの中で、何が起きているのか。スローと図を使って、1本30秒で解説するシリーズです。</p>
   </div>
-  <div class="rl-track" id="reelTrack" role="list" aria-label="30秒でわかるモーグルの一覧"></div>
+  <div class="rl-shell">
+    <button class="rl-nav rl-nav-prev" type="button" id="reelPrev" aria-label="前の回へ送る" hidden>‹</button>
+    <div class="rl-track" id="reelTrack" role="list" aria-label="30秒でわかるモーグルの一覧"></div>
+    <button class="rl-nav rl-nav-next" type="button" id="reelNext" aria-label="次の回へ送る" hidden>›</button>
+  </div>
   <div class="rl-links reveal">
     <a class="btn btn-ghost" href="https://www.instagram.com/mogul.mic/" target="_blank" rel="noopener" data-cta-pos="reels">Instagramでフォロー</a>
     <a class="btn btn-primary" href="program-general.html">この内容をレッスンで → 一般レッスン</a>
@@ -3254,6 +3276,32 @@
     btn.addEventListener('click', function () { openReel(r, id); });
     item.appendChild(btn); track.appendChild(item);
   });
+
+  // ---- 左右の送りボタン（768px 以上だけ CSS で表示）。カード1枚分ずつ送る
+  var prevBtn = document.getElementById('reelPrev');
+  var nextBtn = document.getElementById('reelNext');
+  function stepWidth() {
+    var first = track.firstElementChild;
+    var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    return first ? first.getBoundingClientRect().width + gap : track.clientWidth;
+  }
+  function updateNav() {
+    var max = track.scrollWidth - track.clientWidth;
+    var scrollable = max > 2;
+    // 全部が1画面に収まるときは、送る先がないので両方とも出さない
+    prevBtn.hidden = nextBtn.hidden = !scrollable;
+    prevBtn.disabled = !scrollable || track.scrollLeft <= 2;
+    nextBtn.disabled = !scrollable || track.scrollLeft >= max - 2;
+  }
+  function slide(dir) {
+    var smooth = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    track.scrollBy({ left: dir * stepWidth(), behavior: smooth ? 'smooth' : 'auto' });
+  }
+  prevBtn.addEventListener('click', function () { slide(-1); });
+  nextBtn.addEventListener('click', function () { slide(1); });
+  track.addEventListener('scroll', updateNav, { passive: true });
+  window.addEventListener('resize', updateNav);
+  updateNav();
 
   // ---- 押したとき：計測 → 窓を開く → Instagram の埋め込みを読み込む
   function openReel(r, id) {
