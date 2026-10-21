@@ -11,5 +11,6 @@ window.MIC_REELS = [
   { no:2, title:'コブ1つの中で、何が起きている？',         url:'https://www.instagram.com/reel/DeRLtAlJP7T/', thumb:'assets/reels/30byou-02.webp' },
   { no:3, title:'コブの中で、板にかかる圧はどう変わる？', url:'https://www.instagram.com/reel/DeWOk4SJTKA/', thumb:'assets/reels/30byou-03.webp' },
   { no:4, title:'コブの中で、足の圧はどこにかける？',     url:'https://www.instagram.com/reel/Ded7sAIyvV6/', thumb:'assets/reels/30byou-04.webp' },
-  { no:5, title:'モーグルの「ライン」って、どこを通ってる？', url:'https://www.instagram.com/reel/DejHvDqShMb/', thumb:'assets/reels/30byou-05.webp' }
+  { no:5, title:'モーグルの「ライン」って、どこを通ってる？', url:'https://www.instagram.com/reel/DejHvDqShMb/', thumb:'assets/reels/30byou-05.webp' },
+  { no:7, title:'ターンの始まりは、どっちの足のどのエッジ？', url:'https://www.instagram.com/reel/Dev93UaSmr-/', thumb:'assets/reels/30byou-07.webp' }
 ];
