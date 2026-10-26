@@ -144,6 +144,22 @@
     .cta{flex:0 1 auto;}
   }
 
+  /* 最初の画面の補足（2026-10-26）。「無料」だけを大きくしない：ボタンより小さく、Pro と同じ行で書く */
+  .cta-note{margin:12px 0 0;font-size:12.5px;line-height:1.75;color:var(--muted);max-width:30em;}
+  .cta-note b{color:var(--body);font-weight:700;}
+  /* 途中のボタン（2026-10-26） */
+  .mid-cta{display:flex;justify-content:center;margin-top:clamp(26px,4vw,36px);}
+  /* スマホで下に出続けるボタン（2026-10-26）。上のボタンが見えなくなったら出し、最後のボタンが見えたら隠す */
+  .fr-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(11,16,22,.94);border-top:1px solid var(--line);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    transform:translateY(110%);transition:transform .22s ease;}
+  .fr-sticky.is-on{transform:none;}
+  .fr-sticky .cta{display:flex;width:100%;min-height:46px;padding:11px 20px;box-shadow:none;}
+  @media (min-width:900px){.fr-sticky{display:none;}}
+  @media (prefers-reduced-motion: reduce){.fr-sticky{transition:none;}}
+
   /* ---------- ヒーロー ---------- */
   .hero{position:relative;overflow:hidden;
     background:
@@ -513,6 +529,7 @@
       <div class="cta-row">
         <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=jp_lp&amp;mt=8" data-cta-pos="hero" target="_blank" rel="noopener">App Store でダウンロード</a>
       </div>
+      <p class="cta-note">無料でダウンロード・iPhone／iPad・登録不要。<br>スロー・コマ送りの見返しは無料。リプレイ・連続モード・2本比較・線を引くは<b>Pro</b>（買い切り）です。</p>
       <p style="margin:0;">
         <span class="origin">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -815,6 +832,7 @@
       </article>
 
     </div>
+    <div class="mid-cta"><a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=jp_lp&amp;mt=8" data-cta-pos="mid-features" target="_blank" rel="noopener">App Store でダウンロード</a></div>
   </section>
 
   <!-- ===== 採点はしません =====
@@ -837,7 +855,7 @@
   <section class="sec" id="pro">
     <div class="sec-label">More in Pro</div>
     <h2 class="sec-h">Pro で開く、6つの機能。</h2>
-    <p class="sec-p">上の2つとあわせて6つ。<b>買い切り ¥6,000</b>で、月々の支払いはありません。</p>
+    <p class="sec-p">上の2つとあわせて6つ。<b>買い切り</b>で、月々の支払いはありません。</p>
     <!-- 文言は現行ページのまま。日付が入っているので誤解が生じない。 -->
     <p class="avail"><b>2026年9月21日より前に、App StoreからFrameReplayを入れていた方は、Proと MultiCam の機能をそのまま無料で使えます。</b>買い直しも申請も要りません。アプリの設定画面の一番上に、その旨が出ます。</p>
 
@@ -886,6 +904,7 @@
              alt="連続モードで撮影している画面。端末を置いたまま、一本ごとに区切られる。">
       </figure>
     </div>
+    <div class="mid-cta"><a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=jp_lp&amp;mt=8" data-cta-pos="mid-pro" target="_blank" rel="noopener">App Store でダウンロード</a></div>
   </section>
 
   <div class="divider"></div>
@@ -899,7 +918,7 @@
   <section class="sec" id="multicam">
     <div class="mc rv">
       <div class="sec-label">Pro add-on</div>
-      <h2 class="sec-h">MultiCam（Pro に追加・買い切り ¥4,000）</h2>
+      <h2 class="sec-h">MultiCam（Pro に追加・買い切り）</h2>
       <p class="sec-p">何台かの iPhone・iPad で同じ一本を同時に撮り、1台に集めます。正面・横・後ろを並べて見られ、撮った時刻でそろいます。買うのは映像を集めて見る端末だけで、カメラ役の端末は無料で参加できます。</p>
       <p class="mc-link"><a href="/frame-replay-multicam.html">使い方ガイドを見る</a></p>
       <figure class="shot-wrap mc-shot is-clip">
@@ -997,6 +1016,8 @@
 
 </div>
 
+<div class="fr-sticky" id="fr-sticky" aria-hidden="true"><a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=jp_lp&amp;mt=8" data-cta-pos="sticky" target="_blank" rel="noopener" tabindex="-1">App Store でダウンロード</a></div>
+
 <footer class="fr-foot">
   <div class="fr-foot-in">
     <div class="fr-foot-mark">Frame<span>Replay</span></div>
@@ -1020,6 +1041,31 @@
     a.addEventListener('click', function(){
       a.setAttribute('href', location.hash ? base + location.hash : base);
     });
+  })();
+
+  /* スマホで下に出続けるボタン（2026-10-26）。上のボタン（hero）が画面から外れたら出し、
+     最後のボタン（#get）が見えたら隠す。JS が無いときは出ない（上と下のボタンはそのまま使える）。 */
+  (function(){
+    var bar = document.getElementById('fr-sticky');
+    var hero = document.querySelector('.cta[data-cta-pos="hero"]');
+    var get = document.getElementById('get');
+    if (!bar || !hero || !get || !('IntersectionObserver' in window)) return;
+    var link = bar.querySelector('a');
+    var heroOut = false, getIn = false;
+    function apply(){
+      var on = heroOut && !getIn;
+      bar.classList.toggle('is-on', on);
+      bar.setAttribute('aria-hidden', on ? 'false' : 'true');
+      link.tabIndex = on ? 0 : -1;
+    }
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ heroOut = !e.isIntersecting && e.boundingClientRect.top < 0; });
+      apply();
+    }).observe(hero);
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ getIn = e.isIntersecting; });
+      apply();
+    }).observe(get);
   })();
 
   /* 短い動画：見える所に来たら流し、外れたら止める（2026-10-18）。
