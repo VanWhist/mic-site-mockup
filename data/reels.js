@@ -14,5 +14,6 @@ window.MIC_REELS = [
   { no:5, title:'モーグルの「ライン」って、どこを通ってる？', url:'https://www.instagram.com/reel/DejHvDqShMb/', thumb:'assets/reels/30byou-05.webp' },
   { no:6, title:'モーグルの膝の角度は何度ぐらい？', url:'https://www.instagram.com/reel/Deq4QLkS0Sb/', thumb:'assets/reels/30byou-06.webp' },
   { no:7, title:'ターンの始まりは、どっちの足のどのエッジ？', url:'https://www.instagram.com/reel/Dev93UaSmr-/', thumb:'assets/reels/30byou-07.webp' },
-  { no:8, title:'谷足と外足、同じ足？', url:'https://www.instagram.com/reel/De5Q6vbyvqb/', thumb:'assets/reels/30byou-08.webp' }
+  { no:8, title:'谷足と外足、同じ足？', url:'https://www.instagram.com/reel/De5Q6vbyvqb/', thumb:'assets/reels/30byou-08.webp' },
+  { no:9, title:'コブの裏側、谷足はどっち？', url:'https://www.instagram.com/reel/DfB9E4HMPu_/', thumb:'assets/reels/30byou-09.webp' }
 ];
