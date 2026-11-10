@@ -15,5 +15,7 @@ window.MIC_REELS = [
   { no:6, title:'モーグルの膝の角度は何度ぐらい？', url:'https://www.instagram.com/reel/Deq4QLkS0Sb/', thumb:'assets/reels/30byou-06.webp' },
   { no:7, title:'ターンの始まりは、どっちの足のどのエッジ？', url:'https://www.instagram.com/reel/Dev93UaSmr-/', thumb:'assets/reels/30byou-07.webp' },
   { no:8, title:'谷足と外足、同じ足？', url:'https://www.instagram.com/reel/De5Q6vbyvqb/', thumb:'assets/reels/30byou-08.webp' },
-  { no:9, title:'コブの裏側、谷足はどっち？', url:'https://www.instagram.com/reel/DfB9E4HMPu_/', thumb:'assets/reels/30byou-09.webp' }
+  { no:9, title:'コブの裏側、谷足はどっち？', url:'https://www.instagram.com/reel/DfB9E4HMPu_/', thumb:'assets/reels/30byou-09.webp' },
+  { no:10, title:'膝の角度は頂点と溝で変わる？', url:'https://www.instagram.com/reel/DfMuAnMsnWg/', thumb:'assets/reels/30byou-10.webp' },
+  { no:11, title:'1本目と2本目を重ねると？', url:'https://www.instagram.com/reel/DfgwYnyyQos/', thumb:'assets/reels/30byou-11.webp' }
 ];
