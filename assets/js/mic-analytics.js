@@ -16,7 +16,7 @@
     // 読み込み元の <script> 要素。data-scroll-depth などのページごとの指定を読むため
     var me = document.currentScript || document.querySelector('script[src*="mic-analytics.js"]');
 
-    var API = 'https://script.google.com/macros/s/AKfycbwIcx4poYMx4xx9LqFLpkMC98B5UfPr03YnRmTVQM39-4ZUFvoZgUrb3U8hjVd2Zu49lQ/exec';
+    var API = 'https://script.google.com/macros/s/AKfycbw_-zZAimUDNcNHWVrDjpaQQQBBZtwaw1F7f4vfalKwCrV_5NnmZD2Tj_fh5bfRbGSI/exec';
 
     var K_OFF     = 'mic_analytics_off';
     var K_SID     = 'mic_sid';
