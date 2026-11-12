@@ -130,7 +130,8 @@
   .lessons-photo img{width:100%;height:100%;object-fit:cover;display:block;}
   .lessons-photo-cap{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 13px;
     background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.78));font-size:12.5px;font-weight:700;line-height:1.6;}
-  .lessons-photo-cap small{display:block;font-size:11px;font-weight:600;color:#d3d3d8;}
+  .lessons-photo-cap b{display:block;font-size:19px;font-weight:800;line-height:1.45;letter-spacing:-.01em;}
+  .lessons-photo-cap small{display:block;margin-top:3px;font-size:11px;font-weight:600;color:#d3d3d8;}
   .lesson-card{border:1px solid rgba(255,255,255,.13);border-radius:20px;background:rgba(255,255,255,.04);
     padding:18px 18px 20px;margin:0 0 16px;scroll-margin-top:84px;}
   .lesson-card:target{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
@@ -171,6 +172,16 @@
     .lc-row{grid-template-columns:68px 1fr;}
   }
 
+  .lesson-about{margin:22px 0 0;padding:20px 18px 18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
+  .la-k{font-size:10.5px;font-weight:800;letter-spacing:.14em;color:var(--accent);}
+  .la-h{margin:6px 0 10px;font-size:18px;font-weight:800;line-height:1.5;letter-spacing:-.01em;}
+  .la-head{display:flex;align-items:center;gap:14px;margin:8px 0 12px;}
+  .la-head img{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 20%;flex:0 0 auto;}
+  .la-head .la-h{margin:0;}
+  .lesson-about p{margin:0 0 9px;font-size:13.5px;line-height:1.9;color:#e2e2e6;}
+  .lesson-about p:last-child{margin-bottom:0;}
+  .la-facts{list-style:none;margin:2px 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:7px;}
+  .la-facts li{padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:11.5px;font-weight:700;color:#e2e2e6;}
   .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
     background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
     padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
@@ -533,7 +544,7 @@
     <p class="lessons-lead">日程ごとに申し込めます。料金のほかに、スキー場のリフト券が必要です。</p>
     <div class="lessons-photo">
       <img src="assets/lessons/snow-202612-shimbo.webp" width="960" height="600" alt="白馬の雪山を背に、スキーを両手に持つコーチ" loading="lazy" decoding="async">
-      <div class="lessons-photo-cap">12月の雪上レッスン<small>白馬八方尾根スキー場｜コーチ：新保 龍登</small></div>
+      <div class="lessons-photo-cap"><b>モーグルを、雪の上ではじめる。</b><small>12月の雪上レッスン｜白馬八方尾根スキー場｜コーチ：新保 龍登</small></div>
     </div>
     <article class="lesson-card" id="lesson-20261226">
       <div class="lc-head">
@@ -613,6 +624,23 @@
       </div>
       <p class="lc-help">対象に当てはまるか迷う方は、LINEで滑っている動画を送ってください。コーチが確認してお返事します。</p>
     </article>
+    <div class="lesson-about" id="lesson-coach">
+      <div class="la-k">COACH</div>
+      <div class="la-head">
+        <img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async">
+        <h3 class="la-h">教えるのは、<br>新保 龍登コーチです。</h3>
+      </div>
+      <ul class="la-facts"><li>MIC出身</li><li>全日本選手権 6位（2019）</li><li>SAJ強化指定選手（2020〜2022）</li><li>FREERIDE WORLD TOUR JAPAN 7位（2025）</li></ul>
+      <p>大阪府出身。小学2年生でモーグルを始め、小学4年生でMICの前身「Jr.プロジェクト」に入りました。2024年の全日本選手権を最後にモーグル競技を引退しています。</p>
+      <p>いまは白馬エリアを拠点に、フリーライドのプロライダーとして滑りながら、若手モーグル選手の育成を続けています。会場の白馬八方尾根は、その白馬エリアのスキー場です。</p>
+    </div>
+    <div class="lesson-about" id="lesson-level">
+      <div class="la-k">LEVEL</div>
+      <h3 class="la-h">年齢ではなく、<br>滑れる斜面でそろえています。</h3>
+      <p>年齢はそろえていません。そろえているのは「中級斜面をターンしながら滑れること」だけです。全員が同じ斜面を一緒に滑れると、待つ時間が減り、一人あたりの滑る時間が長くなります。</p>
+      <p>定員を午前・午後 各5名にしているのは、コーチが一人ひとりの滑りを見られる人数にするためです。</p>
+      <p>モーグルの経験も、競技を目指しているかどうかも問いません。</p>
+    </div>
   </section>
 
   <div class="philosophy">
