@@ -119,6 +119,58 @@
   .fee-note{font-size:12px;line-height:1.8;color:var(--muted);}
   .fee-note b{color:#d8d8dc;font-weight:700;}
 
+  /* ---------- 開催予定のレッスン（回ごとのカード）----------
+     回ごとに1枚。上から「日付・時間 → 料金（リフト券別）→ 対象 → 集合・コーチ・定員・締切 → 申込」。
+     10月の回は対象と料金がページの下にしかなく、申込に進まなかった（2026-10-13 の決定）。
+     カードの id は lesson-<開催日8桁>。Instagram のストーリーなどから #lesson-20261226 の形で直接飛ばす。 */
+  .lessons{margin:0 0 34px;}
+  .lessons-h{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px;}
+  .lessons-lead{font-size:13px;line-height:1.85;color:#d3d3d8;margin:0 0 16px;}
+  .lessons-photo{position:relative;border-radius:18px;overflow:hidden;margin:0 0 14px;aspect-ratio:16/10;background:#111;}
+  .lessons-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .lessons-photo-cap{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 13px;
+    background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.78));font-size:12.5px;font-weight:700;line-height:1.6;}
+  .lessons-photo-cap small{display:block;font-size:11px;font-weight:600;color:#d3d3d8;}
+  .lesson-card{border:1px solid rgba(255,255,255,.13);border-radius:20px;background:rgba(255,255,255,.04);
+    padding:18px 18px 20px;margin:0 0 16px;scroll-margin-top:84px;}
+  .lesson-card:target{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+  .lc-head{display:flex;align-items:center;gap:14px;}
+  .lc-date{flex:0 0 auto;min-width:74px;padding:9px 10px 8px;border-radius:14px;background:var(--accent);color:#fff;text-align:center;line-height:1.1;}
+  .lc-date b{display:block;font-size:23px;font-weight:800;letter-spacing:-.02em;}
+  .lc-date span{display:block;margin-top:3px;font-size:11.5px;font-weight:800;}
+  .lc-title{font-size:17px;font-weight:800;line-height:1.45;}
+  .lc-sub{margin-top:3px;font-size:12.5px;line-height:1.6;color:#d3d3d8;}
+  .lc-sub span{white-space:nowrap;}
+  .lc-fee{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 8px;}
+  .lc-fee-item{padding:12px 12px 11px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+  .lc-fee-plan{font-size:12px;font-weight:800;color:#d3d3d8;}
+  .lc-fee-amount{margin-top:2px;font-size:22px;font-weight:800;white-space:nowrap;}
+  .lc-fee-amount small{font-size:11px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .lc-fee-note{font-size:12px;line-height:1.8;color:var(--muted);}
+  .lc-fee-note b{color:#e2e2e6;font-weight:700;}
+  .lc-fee-note a{color:#e2e2e6;}
+  .lc-target{margin:14px 0 4px;padding:13px 14px 12px;border-radius:14px;border:1px solid rgba(255,90,60,.45);background:rgba(255,90,60,.07);}
+  .lc-target-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--accent);}
+  .lc-target ul{list-style:none;margin:7px 0 0;padding:0;}
+  .lc-target li{position:relative;padding-left:19px;font-size:14px;line-height:1.75;color:#f0f0f3;}
+  .lc-target li::before{content:'';position:absolute;left:2px;top:.62em;width:9px;height:5px;
+    border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);}
+  .lc-rows{margin:12px 0 0;}
+  .lc-row{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:13.5px;line-height:1.75;}
+  .lc-row:last-child{border-bottom:none;}
+  .lc-row dt{font-size:11.5px;font-weight:800;color:var(--muted);padding-top:2px;}
+  .lc-row dd{margin:0;color:#e2e2e6;}
+  .lc-row dd small{display:block;font-size:12px;color:var(--muted);}
+  .lc-coach{display:flex;align-items:center;gap:10px;}
+  .lc-coach img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:50% 20%;flex:0 0 auto;}
+  .lc-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+  .lc-actions .cta-btn{margin:0;}
+  .lc-help{margin:12px 0 0;font-size:12px;line-height:1.8;color:var(--muted);}
+  @media (max-width:380px){
+    .lc-fee-amount{font-size:19px;}
+    .lc-row{grid-template-columns:68px 1fr;}
+  }
+
   .cta-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
     background:var(--accent);color:#fff;font-size:15px;font-weight:800;border-radius:999px;
     padding:16px;margin-top:6px;text-decoration:none;box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
@@ -471,6 +523,97 @@
   <div class="eyebrow">PROGRAM 02</div>
   <div class="headline">一般レッスン</div>
   <div class="subcopy">競技を目指さない方も、楽しみながら上達したい方も。全年齢・全レベルが対象です。</div>
+
+  <!-- ===== 開催予定のレッスン（回ごとのカード）=====
+       回が決まったら、このセクションに <article class="lesson-card" id="lesson-<開催日8桁>"> を1枚足す。終わった回は消す。
+       ★ 12/26・27 の回：時間は新保コーチ確認済み（2026-11-12）。リフト券の金額は八方尾根公式 2026-2027（ハイシーズン）。
+         使うリフトはアルペンクワッド・黒菱クワッド（デビューチケットでは行けないので案内しない）。 -->
+  <section class="lessons" id="lessons">
+    <h2 class="lessons-h">開催予定のレッスン</h2>
+    <p class="lessons-lead">日程ごとに申し込めます。料金のほかに、スキー場のリフト券が必要です。</p>
+    <div class="lessons-photo">
+      <img src="assets/lessons/snow-202612-shimbo.webp" width="960" height="600" alt="白馬の雪山を背に、スキーを両手に持つコーチ" loading="lazy" decoding="async">
+      <div class="lessons-photo-cap">12月の雪上レッスン<small>白馬八方尾根スキー場｜コーチ：新保 龍登</small></div>
+    </div>
+    <article class="lesson-card" id="lesson-20261226">
+      <div class="lc-head">
+        <div class="lc-date"><b>12/26</b><span>土曜日</span></div>
+        <div>
+          <div class="lc-title">雪上レッスン｜白馬八方尾根</div>
+          <div class="lc-sub"><span>午前 10:00–12:00</span>／<span>午後 13:00–15:00</span></div>
+        </div>
+      </div>
+      <div class="lc-fee">
+        <div class="lc-fee-item"><div class="lc-fee-plan">半日（2時間）</div><div class="lc-fee-amount">¥5,500<small>税込</small></div></div>
+        <div class="lc-fee-item"><div class="lc-fee-plan">1日（4時間）</div><div class="lc-fee-amount">¥11,000<small>税込</small></div></div>
+      </div>
+      <div class="lc-fee-note">
+        半日は午前か午後のどちらか、1日は両方に参加します。<br>
+        <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円／午前券・午後券 大人 8,100円・こども 4,050円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
+        交通・宿・昼食は各自でご用意ください。
+      </div>
+      <div class="lc-target">
+        <div class="lc-target-h">この回の対象</div>
+        <ul>
+          <li>小学生以上</li>
+          <li>中級斜面をターンしながら滑れる方</li>
+          <li>モーグルは初めてでも大丈夫です</li>
+          <li>ふだんのスキー用具で参加できます</li>
+        </ul>
+      </div>
+      <dl class="lc-rows">
+        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は調整中です。</small></dd></div>
+        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
+        <div class="lc-row"><dt>定員</dt><dd>午前・午後 各5名</dd></div>
+        <div class="lc-row"><dt>申込締切</dt><dd>12月23日（水）</dd></div>
+      </dl>
+      <div class="lc-actions">
+        <!-- ★ 申込フォームの URL は未定（10月のフォームをコピーして雪上用に直す）。決まったら href を差し替える。 -->
+        <a class="cta-btn" href="#lesson-20261226" data-cta-pos="lesson-20261226" data-todo="form-url">この回に申し込む</a>
+        <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20261226-line">LINEで相談する</a>
+      </div>
+      <p class="lc-help">対象に当てはまるか迷う方は、LINEで滑っている動画を送ってください。コーチが確認してお返事します。</p>
+    </article>
+    <article class="lesson-card" id="lesson-20261227">
+      <div class="lc-head">
+        <div class="lc-date"><b>12/27</b><span>日曜日</span></div>
+        <div>
+          <div class="lc-title">雪上レッスン｜白馬八方尾根</div>
+          <div class="lc-sub"><span>午前 10:00–12:00</span>／<span>午後 13:00–15:00</span></div>
+        </div>
+      </div>
+      <div class="lc-fee">
+        <div class="lc-fee-item"><div class="lc-fee-plan">半日（2時間）</div><div class="lc-fee-amount">¥5,500<small>税込</small></div></div>
+        <div class="lc-fee-item"><div class="lc-fee-plan">1日（4時間）</div><div class="lc-fee-amount">¥11,000<small>税込</small></div></div>
+      </div>
+      <div class="lc-fee-note">
+        半日は午前か午後のどちらか、1日は両方に参加します。<br>
+        <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円／午前券・午後券 大人 8,100円・こども 4,050円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
+        交通・宿・昼食は各自でご用意ください。
+      </div>
+      <div class="lc-target">
+        <div class="lc-target-h">この回の対象</div>
+        <ul>
+          <li>小学生以上</li>
+          <li>中級斜面をターンしながら滑れる方</li>
+          <li>モーグルは初めてでも大丈夫です</li>
+          <li>ふだんのスキー用具で参加できます</li>
+        </ul>
+      </div>
+      <dl class="lc-rows">
+        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は調整中です。</small></dd></div>
+        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
+        <div class="lc-row"><dt>定員</dt><dd>午前・午後 各5名</dd></div>
+        <div class="lc-row"><dt>申込締切</dt><dd>12月24日（木）</dd></div>
+      </dl>
+      <div class="lc-actions">
+        <!-- ★ 申込フォームの URL は未定（10月のフォームをコピーして雪上用に直す）。決まったら href を差し替える。 -->
+        <a class="cta-btn" href="#lesson-20261227" data-cta-pos="lesson-20261227" data-todo="form-url">この回に申し込む</a>
+        <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20261227-line">LINEで相談する</a>
+      </div>
+      <p class="lc-help">対象に当てはまるか迷う方は、LINEで滑っている動画を送ってください。コーチが確認してお返事します。</p>
+    </article>
+  </section>
 
   <div class="philosophy">
     <div class="philosophy-quote">選手育成コースを指導するのと<span class="accent">同じコーチ陣</span>から、<br>一般レッスンでも直接指導が受けられます。</div>
