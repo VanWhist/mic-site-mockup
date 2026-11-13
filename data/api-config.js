@@ -1,6 +1,6 @@
 // MIC アプリのエンドポイント設定
 //
-// consent.html と upload.html が読み込みます。
+// upload.html と lesson-apply.html が読み込みます。
 // .json ではなく .js なのは、file:// でローカルプレビューしたときに fetch が CORS で
 // 阻まれるためです（athletes.js と同じ理由）。
 //
@@ -13,5 +13,9 @@
 
 window.MIC_API = {
   // MIC-Upload-API（mogul.mic@gmail.com でデプロイ。2026/08/15 設定）
-  uploadApi: 'https://script.google.com/macros/s/AKfycbxKy_MfsKrCmHpec9yvl2oKxVnkDwT14iM83jPmRxG6KWEMevj1nPt_1zAyd-1HNeCrlA/exec'
+  uploadApi: 'https://script.google.com/macros/s/AKfycbxKy_MfsKrCmHpec9yvl2oKxVnkDwT14iM83jPmRxG6KWEMevj1nPt_1zAyd-1HNeCrlA/exec',
+
+  // MIC-Lesson-Apply-API（一般レッスンの申込フォーム lesson-apply.html の受け取り先）。
+  // mogul.mic@gmail.com でデプロイ（2026/11/13 設定）。空にすると、申込フォームは送信せず公式LINEへ案内する。
+  lessonApplyApi: 'https://script.google.com/macros/s/AKfycbzhwpmiJGzq3gy74xL-mE2M37QUH1D8X26sN0QXSKDjX9fwyVp28HyASM46N1JpJjCItQ/exec'
 };

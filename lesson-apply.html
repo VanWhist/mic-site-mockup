@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>雪上レッスンのお申し込み｜MIC</title>
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --fg:#f5f5f7;
+    --accent:#ff5a3c;
+    --muted:#9a9a9f;
+    --line:rgba(255,255,255,.12);
+    --card:#131316;
+    --field:#1b1b1e;
+    --ok:#4ade80;
+    --ng:#f87171;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:"Hiragino Sans","Noto Sans JP",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    /* 16px を下回ると iOS が入力欄フォーカス時にページを拡大してしまう */
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:0 max(20px, env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  }
+  [hidden]{display:none!important;}
+  .wrap{max-width:600px;margin:0 auto;}
+  a{color:var(--fg);}
+
+  header{padding:26px 0 20px;border-bottom:1px solid var(--line);margin-bottom:24px;}
+  .brand{display:inline-block;font-size:13px;letter-spacing:.18em;color:var(--muted);font-weight:700;text-decoration:none;}
+  h1{font-size:22px;line-height:1.5;margin:10px 0 4px;font-weight:800;}
+  .lead{color:#d3d3d8;font-size:14.5px;margin:6px 0 0;}
+  .back{display:inline-block;margin-top:10px;font-size:13px;color:var(--muted);}
+
+  /* レッスンの要点（料金・時間を最初に見せる） */
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;}
+  .summary dl{margin:0;display:grid;grid-template-columns:72px 1fr;gap:7px 10px;font-size:14px;line-height:1.7;}
+  .summary dt{color:var(--muted);font-size:12.5px;font-weight:700;padding-top:2px;}
+  .summary dd{margin:0;}
+  .summary small{display:block;color:var(--muted);font-size:12.5px;}
+
+  section.block{margin:34px 0;}
+  h2{font-size:17px;margin:0 0 4px;font-weight:800;}
+  .hint{font-size:13px;color:var(--muted);margin:0 0 6px;line-height:1.7;}
+
+  .field{margin:20px 0;}
+  label.q, span.q{display:block;font-size:14.5px;font-weight:700;margin-bottom:8px;}
+  .req,.opt{display:inline-block;margin-left:7px;padding:0 7px;border-radius:5px;font-size:11px;font-weight:800;vertical-align:2px;}
+  .req{color:var(--accent);border:1px solid var(--accent);}
+  .opt{color:var(--muted);border:1px solid var(--line);}
+  .note{display:block;font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.65;}
+
+  input[type=text],input[type=tel],input[type=email],select,textarea{
+    width:100%;padding:13px 14px;border-radius:12px;
+    background:var(--field);border:1px solid var(--line);color:var(--fg);
+    font-size:16px;font-family:inherit;line-height:1.5;
+  }
+  textarea{min-height:84px;resize:vertical;line-height:1.7;}
+  select{appearance:none;-webkit-appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);}
+  .invalid input[type=text],.invalid input[type=tel],.invalid input[type=email],.invalid select,.invalid .choices{border-color:var(--ng);}
+  .err{display:none;color:var(--ng);font-size:13px;margin-top:6px;}
+  .invalid .err{display:block;}
+
+  /* 選ぶ欄（ラジオ）：指で押しやすい大きさのボタンにする */
+  .choices{display:flex;flex-wrap:wrap;gap:8px;border-radius:12px;}
+  .choice{position:relative;flex:1 1 0;min-width:84px;}
+  .choice input{position:absolute;opacity:0;pointer-events:none;}
+  .choice span{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:48px;
+    text-align:center;padding:9px 6px;border-radius:12px;line-height:1.35;
+    background:var(--field);border:1px solid var(--line);font-size:14.5px;cursor:pointer;
+    transition:background .15s ease,border-color .15s ease;
+  }
+  .choice span small{font-size:11px;color:var(--muted);margin-top:2px;}
+  .choice input:checked + span{background:rgba(255,90,60,.14);border-color:var(--accent);font-weight:700;}
+  .choice input:checked + span small{color:#e2e2e6;}
+  .choice input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+  .choice input:disabled + span{opacity:.4;cursor:not-allowed;}
+  .choice.none input:checked + span{background:#26262a;border-color:rgba(255,255,255,.28);color:#d3d3d8;}
+
+  /* 参加する人（1人ずつのまとまり） */
+  .person{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 16px 6px;margin:16px 0;}
+  .person-head{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .person-head h3{margin:0;font-size:16px;font-weight:800;}
+  .remove{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:10px;
+    min-height:40px;padding:6px 12px;font-size:13px;font-family:inherit;cursor:pointer;}
+  .day{margin:10px 0 14px;}
+  .day-label{font-size:13.5px;font-weight:700;margin-bottom:6px;}
+  .day-label .closed{color:var(--ng);font-size:12px;font-weight:700;margin-left:6px;}
+  .day.from-card .day-label::after{content:'このカードから来ました';margin-left:8px;padding:1px 7px;border-radius:5px;
+    background:rgba(255,90,60,.14);color:#ffb7a8;font-size:11px;font-weight:700;}
+
+  .add{display:block;width:100%;min-height:52px;border-radius:14px;border:1px dashed rgba(255,255,255,.25);
+    background:transparent;color:var(--fg);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;}
+
+  .picker{display:block;text-align:center;padding:16px 14px;border-radius:14px;border:1px dashed rgba(255,255,255,.22);background:#141417;cursor:pointer;}
+  .picker .big{font-size:15px;font-weight:700;}
+  .picker .sub{font-size:12px;color:var(--muted);margin-top:3px;}
+  .picker input{display:none;}
+  .vfile{display:flex;gap:10px;align-items:center;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--field);border:1px solid var(--line);}
+  .vfile .name{flex:1;min-width:0;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .vfile .size{font-size:12px;color:var(--muted);}
+  .vfile button{border:none;background:transparent;color:var(--muted);font-size:20px;padding:4px 8px;cursor:pointer;font-family:inherit;}
+
+  .check{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:12px;background:var(--field);border:1px solid var(--line);margin:10px 0;cursor:pointer;font-size:14.5px;line-height:1.65;}
+  .check input{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--accent);}
+  .invalid .check{border-color:var(--ng);}
+
+  .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin:26px 0 14px;}
+  .total .k{font-size:13.5px;color:#d3d3d8;font-weight:700;}
+  .total .v{font-size:22px;font-weight:800;white-space:nowrap;}
+  .total small{display:block;font-size:12px;color:var(--muted);font-weight:500;}
+
+  .submit{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;border:none;border-radius:999px;
+    background:var(--accent);color:#fff;font-size:16.5px;font-weight:800;font-family:inherit;cursor:pointer;
+    box-shadow:0 10px 24px -10px rgba(255,90,60,.55);}
+  .submit:disabled{opacity:.5;cursor:default;}
+  .notice{margin:14px 0;padding:13px 15px;border-radius:12px;font-size:14px;line-height:1.7;
+    background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.45);}
+  .notice.info{background:rgba(255,255,255,.05);border-color:var(--line);}
+  .bar{height:8px;border-radius:99px;background:#26262a;overflow:hidden;margin-top:10px;}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s ease;}
+  .barlabel{font-size:13px;color:var(--muted);margin-top:6px;}
+
+  /* 送信後の画面 */
+  .done{padding:30px 0 10px;}
+  .done .mark{width:56px;height:56px;border-radius:50%;background:rgba(74,222,128,.14);border:1px solid rgba(74,222,128,.5);
+    display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .done .mark::after{content:'';width:20px;height:11px;border-left:3px solid var(--ok);border-bottom:3px solid var(--ok);transform:rotate(-45deg) translate(2px,-2px);}
+  .done p{margin:10px 0;font-size:15px;}
+  .done .no{font-size:13px;color:var(--muted);}
+  .line-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin-top:18px;border-radius:999px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:var(--fg);font-weight:700;text-decoration:none;}
+
+  /* ロボットよけの欄。人には見えない */
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+  footer{margin-top:40px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="brand" href="index.html">MIC</a>
+    <h1 id="title">雪上レッスンのお申し込み</h1>
+    <p class="lead">入力は3分ほどです。会員登録やアプリは要りません。お申し込みのあと、こちらからご連絡します。</p>
+    <a class="back" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
+  </header>
+
+  <main id="main">
+    <div class="summary">
+      <dl>
+        <dt>会場</dt><dd id="sumPlace">白馬八方尾根スキー場</dd>
+        <dt>コーチ</dt><dd id="sumCoach">新保 龍登</dd>
+        <dt>時間</dt><dd>午前 10:00–12:00／午後 13:00–15:00<small>半日は午前か午後のどちらか、1日は両方です。</small></dd>
+        <dt>料金</dt><dd>半日（2時間）5,500円／1日（4時間）11,000円（税込）<small>別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。</small></dd>
+        <dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd>
+      </dl>
+    </div>
+
+    <form id="form" novalidate>
+      <!-- 申し込む人 -->
+      <section class="block">
+        <h2>申し込む人</h2>
+        <p class="hint">参加する方が小・中・高校生のときは、保護者の方の情報を入れてください。</p>
+
+        <div class="field" data-f="a_name">
+          <label class="q" for="a_name">お名前<span class="req">必須</span></label>
+          <input type="text" id="a_name" autocomplete="name" maxlength="40">
+          <div class="err">お名前を入れてください。</div>
+        </div>
+        <div class="field" data-f="a_tel">
+          <label class="q" for="a_tel">電話番号<span class="req">必須</span></label>
+          <input type="tel" id="a_tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="090-1234-5678">
+          <span class="note">当日の中止・時間変更のご連絡に使います。</span>
+          <div class="err">電話番号を、数字10〜11けたで入れてください。</div>
+        </div>
+        <div class="field" data-f="a_email">
+          <label class="q" for="a_email">メールアドレス<span class="req">必須</span></label>
+          <input type="email" id="a_email" autocomplete="email" inputmode="email" maxlength="120">
+          <span class="note">受付のお知らせをお送りします。</span>
+          <div class="err">メールアドレスを正しく入れてください。</div>
+        </div>
+        <div class="field">
+          <label class="q" for="a_source">このレッスンを知ったきっかけ<span class="opt">任意</span></label>
+          <select id="a_source">
+            <option value="">選んでください</option>
+            <option>Instagram</option>
+            <option>MICのホームページ</option>
+            <option>公式LINE</option>
+            <option>知人・コーチから</option>
+            <option>その他</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- 参加する人 -->
+      <section class="block">
+        <h2>参加する人</h2>
+        <p class="hint">1人ずつ入れてください。兄弟・家族は4人までまとめて申し込めます。</p>
+        <div id="people"></div>
+        <button type="button" class="add" id="addPerson">＋ 参加する人を追加する</button>
+      </section>
+
+      <!-- 確認と同意 -->
+      <section class="block">
+        <h2>確認と同意</h2>
+        <div class="field" data-f="checks">
+          <span class="q">対象の確認<span class="req">必須</span></span>
+          <label class="check"><input type="checkbox" id="c_level"><span>参加する人は、中級斜面以上を滑れます。</span></label>
+          <label class="check"><input type="checkbox" id="c_lift"><span>リフト券は、各自で用意します。</span></label>
+          <div class="err">2つとも確認してください。</div>
+        </div>
+        <div class="field" data-f="consents">
+          <span class="q">同意<span class="req">必須</span></span>
+          <!-- 1つ目は 2026年10月の一般レッスン（O-air）のフォームと同じ文言（2026-11-13 城さん決定）。変えるときは確認を取る -->
+          <label class="check"><input type="checkbox" id="g_rules"><span>参加に際しては開催要項の内容を理解し（未成年者は保護者同意の上）、いかなる補償についても主催者に求めないことに同意します。また傷害保険への加入を義務づけています。<small class="note">参加同意書は、受付のメールでお送りします。</small></span></label>
+          <label class="check"><input type="checkbox" id="g_privacy"><span>入力した内容（けが・持病などを含む）を、<a href="privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a>に沿って取り扱うことに同意します。</span></label>
+          <label class="check"><input type="checkbox" id="g_guardian"><span>参加する人が未成年の場合は、保護者が参加に同意しています。</span></label>
+          <div class="err">3つとも同意してください。</div>
+        </div>
+      </section>
+
+      <div class="hp" aria-hidden="true"><label>会社名<input type="text" id="hp_company" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="total">
+        <div class="k">参加費の合計<small>リフト券は含みません</small></div>
+        <div class="v" id="total">0円</div>
+      </div>
+
+      <div class="notice" id="formError" hidden></div>
+      <div class="notice info" id="notReady" hidden>ただいまフォームから送信できません。お手数ですが、<a href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="apply-notready-line">公式LINE</a>からお申し込みください。</div>
+
+      <button type="submit" class="submit" id="submit">この内容で申し込む</button>
+      <div id="progress" hidden>
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="barlabel" id="barLabel"></div>
+      </div>
+    </form>
+  </main>
+
+  <section class="done" id="done" hidden>
+    <div class="mark" aria-hidden="true"></div>
+    <h1>お申し込みを受け付けました</h1>
+    <p id="doneText">ご入力のメールアドレスに、受付のお知らせをお送りしました。内容を確認して、こちらからご連絡します。</p>
+    <p class="no">受付番号：<span id="doneId"></span></p>
+    <div class="notice" id="doneVideoError" hidden></div>
+    <p class="no">メールが届かないときは、迷惑メールのフォルダをご確認いただくか、公式LINEからご連絡ください。</p>
+    <a class="line-btn" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="apply-done-line">公式LINEを友だち追加する</a>
+    <a class="back" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
+  </section>
+
+  <footer>MIC — Mogul Improvement Community</footer>
+</div>
+
+<!-- 参加する人 1人分のひな形 -->
+<template id="personTpl">
+  <div class="person">
+    <div class="person-head">
+      <h3>参加する人 <span class="n"></span></h3>
+      <button type="button" class="remove">この人を消す</button>
+    </div>
+    <div class="field" data-f="p_name">
+      <label class="q">お名前<span class="req">必須</span></label>
+      <input type="text" class="p_name" autocomplete="off" maxlength="40">
+      <div class="err">お名前を入れてください。</div>
+    </div>
+    <div class="field" data-f="p_kana">
+      <label class="q">ふりがな<span class="req">必須</span></label>
+      <input type="text" class="p_kana" autocomplete="off" maxlength="60">
+      <div class="err">ふりがなを入れてください。</div>
+    </div>
+    <div class="field" data-f="p_age">
+      <label class="q">年齢（学年）<span class="req">必須</span></label>
+      <input type="text" class="p_age" autocomplete="off" maxlength="20" placeholder="例：10歳（小4）">
+      <div class="err">年齢（学年）を入れてください。</div>
+    </div>
+    <div class="field" data-f="p_slots">
+      <span class="q">参加する回<span class="req">必須</span></span>
+      <div class="days"></div>
+      <div class="err">少なくとも1つの回を選んでください。</div>
+    </div>
+    <div class="field">
+      <span class="q">スキー歴<span class="opt">任意</span></span>
+      <div class="choices" data-radio="ski_years">
+        <label class="choice"><input type="radio" value="1〜2年"><span>1〜2年</span></label>
+        <label class="choice"><input type="radio" value="3〜5年"><span>3〜5年</span></label>
+        <label class="choice"><input type="radio" value="6年以上"><span>6年以上</span></label>
+      </div>
+    </div>
+    <div class="field" data-f="p_slope">
+      <span class="q">ふだん滑っている斜面<span class="req">必須</span></span>
+      <div class="choices" data-radio="slope">
+        <label class="choice"><input type="radio" value="中級斜面"><span>中級斜面</span></label>
+        <label class="choice"><input type="radio" value="上級斜面"><span>上級斜面</span></label>
+        <label class="choice"><input type="radio" value="コブ斜面も滑る"><span>コブ斜面も滑る</span></label>
+      </div>
+      <div class="err">選んでください。</div>
+    </div>
+    <div class="field" data-f="p_mogul">
+      <span class="q">モーグルの経験<span class="req">必須</span></span>
+      <div class="choices" data-radio="mogul">
+        <label class="choice"><input type="radio" value="初めて"><span>初めて</span></label>
+        <label class="choice"><input type="radio" value="少しある"><span>少しある</span></label>
+        <label class="choice"><input type="radio" value="大会に出ている"><span>大会に出ている</span></label>
+      </div>
+      <div class="err">選んでください。</div>
+    </div>
+    <div class="field" data-f="p_video">
+      <span class="q">滑っている動画<span class="opt">任意</span></span>
+      <label class="picker">
+        <div class="big">動画を1本選ぶ</div>
+        <div class="sub">60秒くらいまで・250MBまで</div>
+        <input type="file" class="p_video" accept="video/*">
+      </label>
+      <div class="vfile" hidden><span class="name"></span><span class="size"></span><button type="button" class="vdel" aria-label="動画を外す">×</button></div>
+      <span class="note">送ってもらえると、コーチが当日までに滑りを見ておけます。対象に当てはまるか迷う方も、動画を一緒に送ってください。送らなくても申し込めます。</span>
+      <div class="err">250MBより大きい動画は送れません。短く切ってから選んでください。</div>
+    </div>
+    <div class="field">
+      <label class="q">今回やってみたいこと<span class="opt">任意</span></label>
+      <textarea class="p_wish" maxlength="400"></textarea>
+    </div>
+    <div class="field">
+      <label class="q">不安なこと<span class="opt">任意</span></label>
+      <textarea class="p_worry" maxlength="400"></textarea>
+    </div>
+    <div class="field">
+      <label class="q">けが・持病など、当日気をつけてほしいこと<span class="opt">任意</span></label>
+      <textarea class="p_health" maxlength="400"></textarea>
+    </div>
+    <div class="field">
+      <label class="q">加盟団体（SAJ登録など）<span class="opt">任意</span></label>
+      <input type="text" class="p_org" autocomplete="off" maxlength="60">
+    </div>
+    <div class="field">
+      <span class="q">MICのレッスンに参加したことがありますか<span class="opt">任意</span></span>
+      <div class="choices" data-radio="mic_before">
+        <label class="choice"><input type="radio" value="初めて"><span>初めて</span></label>
+        <label class="choice"><input type="radio" value="ある"><span>ある</span></label>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script src="data/api-config.js"></script>
+<script src="data/lesson-apply.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var C = window.MIC_LESSON_APPLY;
+  var API = (window.MIC_API && window.MIC_API.lessonApplyApi) || '';
+  var MAX_PEOPLE = 4;
+  var VIDEO_CHUNK = 8 * 1024 * 1024;   // Drive の再開可能アップロードは 256KB の倍数で送る
+
+  var $ = function(id){ return document.getElementById(id); };
+  var people = $('people');
+  var tpl = $('personTpl');
+  var qs = new URLSearchParams(location.search);
+  var fromLesson = qs.get('lesson') || '';
+  var seq = 0;
+
+  function track(name, detail){
+    try { if (window.micAnalytics) window.micAnalytics.event(name, detail || ''); } catch (e) {}
+  }
+
+  // ---- 締切（JST の締切日 23:59 まで） ----
+  function isClosed(lesson){
+    var end = new Date(lesson.deadline + 'T23:59:59+09:00').getTime();
+    return Date.now() > end;
+  }
+  var openLessons = C.lessons.filter(function(l){ return !isClosed(l); });
+
+  function yen(n){ return n.toLocaleString('ja-JP') + '円'; }
+  function fmtSize(b){ return b >= 1048576 ? (b / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(b / 1024)) + 'KB'; }
+
+  // ---- 参加する人 ----
+  function addPerson(){
+    if (people.children.length >= MAX_PEOPLE) return;
+    seq++;
+    var node = tpl.content.firstElementChild.cloneNode(true);
+    var key = 'p' + seq;
+
+    // ラジオの name は人ごとに分ける
+    node.querySelectorAll('[data-radio]').forEach(function(g){
+      g.querySelectorAll('input').forEach(function(r){ r.name = key + '_' + g.getAttribute('data-radio'); });
+    });
+    // label と入力欄を結び付ける
+    node.querySelectorAll('.field').forEach(function(f, i){
+      var input = f.querySelector('input[type=text],textarea');
+      var label = f.querySelector('label.q');
+      if (input && label) { input.id = key + '_f' + i; label.htmlFor = input.id; }
+    });
+
+    // 参加する回（開催日ごとに 参加しない／午前／午後／1日）
+    var days = node.querySelector('.days');
+    C.lessons.forEach(function(l){
+      var closed = isClosed(l);
+      var d = document.createElement('div');
+      d.className = 'day' + (l.id === fromLesson && !closed ? ' from-card' : '');
+      d.setAttribute('data-lesson', l.id);
+      var html = '<div class="day-label">' + l.label + (closed ? '<span class="closed">締め切りました</span>' : '') + '</div><div class="choices">';
+      html += '<label class="choice none"><input type="radio" name="' + key + '_' + l.id + '" value=""' + (closed ? ' disabled' : '') + ' checked><span>参加しない</span></label>';
+      C.slots.forEach(function(s){
+        html += '<label class="choice"><input type="radio" name="' + key + '_' + l.id + '" value="' + s.value + '"' + (closed ? ' disabled' : '') + '><span>' + s.label + '<small>' + s.time + '</small></span></label>';
+      });
+      d.innerHTML = html + '</div>';
+      days.appendChild(d);
+    });
+    // カードから来た回を先頭に
+    var picked = days.querySelector('.from-card');
+    if (picked) days.insertBefore(picked, days.firstChild);
+
+    node.querySelector('.remove').addEventListener('click', function(){
+      node.remove(); renumber(); updateTotal();
+    });
+
+    // 動画
+    var vin = node.querySelector('.p_video');
+    var vbox = node.querySelector('.vfile');
+    var vfield = node.querySelector('[data-f=p_video]');
+    vin.addEventListener('change', function(){
+      var f = vin.files && vin.files[0];
+      vfield.classList.remove('invalid');
+      if (!f) { vbox.hidden = true; node._video = null; return; }
+      if (f.size > C.video.maxBytes) { vfield.classList.add('invalid'); vin.value = ''; vbox.hidden = true; node._video = null; return; }
+      node._video = f;
+      vbox.querySelector('.name').textContent = f.name;
+      vbox.querySelector('.size').textContent = fmtSize(f.size);
+      vbox.hidden = false;
+    });
+    node.querySelector('.vdel').addEventListener('click', function(){
+      vin.value = ''; node._video = null; vbox.hidden = true;
+    });
+
+    node.addEventListener('change', updateTotal);
+    people.appendChild(node);
+    renumber();
+  }
+
+  function renumber(){
+    var list = people.querySelectorAll('.person');
+    list.forEach(function(p, i){
+      p.querySelector('.n').textContent = list.length > 1 ? (i + 1) : '';
+      p.querySelector('.remove').hidden = list.length === 1;
+    });
+    $('addPerson').hidden = list.length >= MAX_PEOPLE;
+  }
+
+  function radioValue(scope, name){
+    var r = scope.querySelector('input[type=radio][name="' + name + '"]:checked');
+    return r ? r.value : '';
+  }
+  function groupValue(p, key){
+    var r = p.querySelector('[data-radio="' + key + '"] input:checked');
+    return r ? r.value : '';
+  }
+  function slotsOf(p){
+    var out = {};
+    p.querySelectorAll('.day').forEach(function(d){
+      var id = d.getAttribute('data-lesson');
+      var r = d.querySelector('input:checked');
+      if (r && r.value) out[id] = r.value;
+    });
+    return out;
+  }
+  function feeOf(v){
+    for (var i = 0; i < C.slots.length; i++) if (C.slots[i].value === v) return C.slots[i].fee;
+    return 0;
+  }
+  function updateTotal(){
+    var sum = 0;
+    people.querySelectorAll('.person').forEach(function(p){
+      var s = slotsOf(p);
+      Object.keys(s).forEach(function(k){ sum += feeOf(s[k]); });
+    });
+    $('total').textContent = yen(sum);
+  }
+
+  // ---- 入力チェック ----
+  function mark(field, bad){ if (field) field.classList.toggle('invalid', !!bad); return !bad; }
+
+  function validate(){
+    var ok = true, first = null;
+    function chk(field, good){
+      if (!mark(field, !good)) { ok = false; if (!first) first = field; }
+    }
+    var name = $('a_name').value.trim();
+    var tel = $('a_tel').value.replace(/[^\d]/g, '');
+    var email = $('a_email').value.trim();
+    chk($('a_name').closest('.field'), name.length > 0);
+    chk($('a_tel').closest('.field'), /^\d{10,11}$/.test(tel));
+    chk($('a_email').closest('.field'), /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+
+    people.querySelectorAll('.person').forEach(function(p){
+      chk(p.querySelector('[data-f=p_name]'), p.querySelector('.p_name').value.trim().length > 0);
+      chk(p.querySelector('[data-f=p_kana]'), p.querySelector('.p_kana').value.trim().length > 0);
+      chk(p.querySelector('[data-f=p_age]'), p.querySelector('.p_age').value.trim().length > 0);
+      chk(p.querySelector('[data-f=p_slots]'), Object.keys(slotsOf(p)).length > 0);
+      chk(p.querySelector('[data-f=p_slope]'), groupValue(p, 'slope') !== '');
+      chk(p.querySelector('[data-f=p_mogul]'), groupValue(p, 'mogul') !== '');
+    });
+
+    chk(document.querySelector('[data-f=checks]'), $('c_level').checked && $('c_lift').checked);
+    chk(document.querySelector('[data-f=consents]'), $('g_rules').checked && $('g_privacy').checked && $('g_guardian').checked);
+    return {ok: ok, first: first};
+  }
+
+  // 一度エラーを出した欄は、直したらすぐ赤を消す
+  document.addEventListener('input', function(e){
+    var f = e.target.closest && e.target.closest('.field.invalid');
+    if (f && f.getAttribute('data-f') !== 'p_video') f.classList.remove('invalid');
+  });
+  document.addEventListener('change', function(e){
+    var f = e.target.closest && e.target.closest('.field.invalid');
+    if (f && f.getAttribute('data-f') !== 'p_video') f.classList.remove('invalid');
+  });
+
+  // ---- 送信 ----
+  // Apps Script はカスタムヘッダを読めず、Content-Type を text/plain にしないと
+  // CORS のプリフライトが飛ぶ。本文に JSON 文字列を入れて POST する（upload.html と同じ）。
+  function callApi(payload){
+    return fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      if (!res.ok) throw new Error('サーバーの応答がエラーでした（' + res.status + '）');
+      return res.json();
+    });
+  }
+
+  var REASONS = {
+    closed:  '選んだ回のお申し込みは締め切りました。ページを読み込み直して、選び直してください。',
+    invalid: '入力内容をうまく受け取れませんでした。お手数ですが、もう一度お試しください。',
+    busy:    'ただいま混み合っています。少し時間をおいてから、もう一度お試しください。',
+    server_error: 'うまく処理できませんでした。少し時間をおいてお試しください。繰り返す場合は公式LINEからご連絡ください。'
+  };
+
+  function collect(){
+    return {
+      action: 'apply',
+      series: C.series,
+      applicant: {
+        name: $('a_name').value.trim(),
+        tel: $('a_tel').value.trim(),
+        email: $('a_email').value.trim(),
+        source: $('a_source').value
+      },
+      participants: Array.prototype.map.call(people.querySelectorAll('.person'), function(p){
+        var v = p._video;
+        return {
+          name: p.querySelector('.p_name').value.trim(),
+          kana: p.querySelector('.p_kana').value.trim(),
+          age: p.querySelector('.p_age').value.trim(),
+          slots: slotsOf(p),
+          ski_years: groupValue(p, 'ski_years'),
+          slope: groupValue(p, 'slope'),
+          mogul: groupValue(p, 'mogul'),
+          wish: p.querySelector('.p_wish').value.trim(),
+          worry: p.querySelector('.p_worry').value.trim(),
+          health: p.querySelector('.p_health').value.trim(),
+          org: p.querySelector('.p_org').value.trim(),
+          mic_before: groupValue(p, 'mic_before'),
+          video: v ? {name: v.name, size: v.size, type: v.type || ''} : null
+        };
+      }),
+      checks: {level: $('c_level').checked, lift: $('c_lift').checked},
+      consents: {rules: $('g_rules').checked, privacy: $('g_privacy').checked, guardian: $('g_guardian').checked},
+      from_lesson: fromLesson,
+      utm: ['utm_source','utm_medium','utm_campaign'].map(function(k){ return qs.get(k) || ''; }).join('/'),
+      hp: $('hp_company').value
+    };
+  }
+
+  function showError(msg){
+    var n = $('formError'); n.textContent = msg; n.hidden = false;
+    n.scrollIntoView({block: 'center', behavior: 'smooth'});
+  }
+  function setBusy(on, label){
+    $('submit').disabled = on;
+    $('progress').hidden = !on;
+    if (label) $('barLabel').textContent = label;
+  }
+  function setBar(ratio){ $('barFill').style.width = Math.round(ratio * 100) + '%'; }
+
+  var sending = false;
+  $('form').addEventListener('submit', function(e){
+    e.preventDefault();
+    if (sending) return;
+    $('formError').hidden = true;
+    var v = validate();
+    if (!v.ok) {
+      showError('入力が足りないところがあります。赤い欄を確認してください。');
+      if (v.first) v.first.scrollIntoView({block: 'center', behavior: 'smooth'});
+      track('apply_invalid', '');
+      return;
+    }
+    if (!API) { $('notReady').hidden = false; return; }
+
+    var payload = collect();
+    var videos = [];
+    people.querySelectorAll('.person').forEach(function(p, i){ if (p._video) videos.push({idx: i, file: p._video}); });
+
+    sending = true;
+    setBusy(true, '送信しています…'); setBar(0.05);
+    track('apply_submit', fromLesson);
+
+    callApi(payload).then(function(res){
+      if (!res || !res.ok) {
+        sending = false; setBusy(false);
+        showError(REASONS[res && res.reason] || REASONS.server_error);
+        track('apply_error', (res && res.reason) || 'no_reason');
+        return;
+      }
+      // 申込はここで受け付け済み。動画は後から送る（失敗しても申込は残る）
+      return sendVideos(res.id, res.video_token, videos).then(function(failed){
+        finish(res.id, failed);
+      });
+    }).catch(function(err){
+      sending = false; setBusy(false);
+      showError('送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。（' + err.message + '）');
+      track('apply_error', 'network');
+    });
+  });
+
+  // ---- 動画（Google Drive の再開可能アップロードへ直接送る） ----
+  function sendVideos(appId, vtoken, videos){
+    if (!videos.length) return Promise.resolve([]);
+    var total = videos.reduce(function(s, v){ return s + v.file.size; }, 0);
+    var doneBytes = 0;
+    var failed = [];
+    var chain = Promise.resolve();
+    videos.forEach(function(v, n){
+      chain = chain.then(function(){
+        $('barLabel').textContent = '動画を送っています（' + (n + 1) + '／' + videos.length + '）…画面を閉じずにお待ちください';
+        return callApi({action: 'video_start', id: appId, video_token: vtoken, idx: v.idx,
+                        name: v.file.name, size: v.file.size, type: v.file.type || ''})
+          .then(function(r){
+            if (!r || !r.ok || !r.session) throw new Error((r && r.reason) || 'no_session');
+            return putChunks(r.session, v.file, function(sent){ setBar((doneBytes + sent) / total); });
+          })
+          .then(function(fileId){
+            doneBytes += v.file.size;
+            return callApi({action: 'video_done', id: appId, video_token: vtoken, idx: v.idx, file_id: fileId || ''})
+              .catch(function(){});   // 記録だけの呼び出し。失敗しても動画は Drive に届いている
+          })
+          .catch(function(){ failed.push(v.idx); doneBytes += v.file.size; });
+      });
+    });
+    return chain.then(function(){ return failed; });
+  }
+
+  function putChunks(session, file, onProgress){
+    function from(pos, retry){
+      var end = Math.min(pos + VIDEO_CHUNK, file.size);
+      return fetch(session, {
+        method: 'PUT',
+        headers: {'Content-Range': 'bytes ' + pos + '-' + (end - 1) + '/' + file.size},
+        body: file.slice(pos, end)
+      }).then(function(res){
+        if (res.status === 308) {
+          var r = res.headers.get('Range');
+          var next = r ? parseInt(r.split('-')[1], 10) + 1 : end;
+          onProgress(next);
+          return from(next, 0);
+        }
+        if (res.status === 200 || res.status === 201) {
+          onProgress(file.size);
+          return res.json().then(function(j){ return j && j.id; }).catch(function(){ return ''; });
+        }
+        throw new Error('status ' + res.status);
+      }).catch(function(err){
+        if (retry >= 3) throw err;
+        return new Promise(function(ok){ setTimeout(ok, 1500 * (retry + 1)); }).then(function(){ return from(pos, retry + 1); });
+      });
+    }
+    return from(0, 0);
+  }
+
+  function finish(appId, failedVideos){
+    sending = false;
+    $('main').hidden = true;
+    $('done').hidden = false;
+    $('doneId').textContent = appId;
+    if (failedVideos.length) {
+      var n = $('doneVideoError');
+      n.textContent = 'お申し込みは受け付けましたが、動画だけ送れませんでした。お手数ですが、公式LINEから動画を送ってください。';
+      n.hidden = false;
+    }
+    track('apply_done', fromLesson + (failedVideos.length ? '/video_failed' : ''));
+    window.scrollTo(0, 0);
+  }
+
+  // ---- はじめの表示 ----
+  $('sumPlace').textContent = C.place;
+  $('sumCoach').textContent = C.coach;
+  $('addPerson').addEventListener('click', function(){ addPerson(); });
+  addPerson();
+  updateTotal();
+
+  if (!openLessons.length) {
+    $('submit').disabled = true;
+    var n = $('notReady');
+    n.textContent = 'この雪上レッスンのお申し込みは締め切りました。今後のレッスンは、一般レッスンのページでご案内します。';
+    n.hidden = false;
+  } else if (!API) {
+    $('notReady').hidden = false;
+  }
+
+  // フォームを開いた・書き始めた、を数える（どこで止まったかを見るため）
+  track('apply_view', fromLesson);
+  var started = false;
+  $('form').addEventListener('input', function(){
+    if (started) return; started = true; track('apply_start', fromLesson);
+  });
+})();
+</script>
+<script src="/assets/js/mic-analytics.js" defer></script>
+</body>
+</html>
