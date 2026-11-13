@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MultiCam 使い方ガイド｜FrameReplay</title>
-<meta name="description" content="FrameReplay の MultiCam の使い方。1台で録画を押すだけで、何台もの iPhone・iPad がいっしょに撮ります。用意するもの、4つの手順、困ったときに確かめること。">
+<meta name="description" content="FrameReplay の MultiCam の使い方。1台で録画を押すだけで、何台もの iPhone・iPad がいっしょに撮ります。役割は 3 つ（受け取る端末・カメラ端末・サブ）、QR コードで加える、ルーターなしでつなぐ、困ったときに確かめること。">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="FrameReplay">
 <meta property="og:title" content="MultiCam 使い方ガイド｜FrameReplay">
-<meta property="og:description" content="FrameReplay の MultiCam の使い方。1台で録画を押すだけで、何台もの iPhone・iPad がいっしょに撮ります。用意するもの、4つの手順、困ったときに確かめること。">
+<meta property="og:description" content="FrameReplay の MultiCam の使い方。1台で録画を押すだけで、何台もの iPhone・iPad がいっしょに撮ります。役割は 3 つ（受け取る端末・カメラ端末・サブ）、QR コードで加える、ルーターなしでつなぐ、困ったときに確かめること。">
 <meta property="og:url" content="https://mogul-mic.com/frame-replay-multicam.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
 <meta property="og:image:width" content="1200">
@@ -27,9 +27,11 @@
      FrameReplay MultiCam 使い方ガイド（日本語版・英語版で共通）
      ・紹介ページ（/frame-replay.html）と同じ単体の製品ページの作り。MIC の共通ナビ・フッターは載せない。
      ・英語版 /en/frame-replay-multicam.html と CSS・構造は完全に同一。直すときは必ず両方そろえること。
-     ・文章は「MultiCam使い方ガイド_内容確定案_v4.md」（2026-10-06 城さん了承）のまま。
-       自動で撮る機能（通過で全台が撮る）は書かない（1.3）。
-     ・端末の役割の色：見る端末＝ブランドの水色（--brand-lite）、カメラ端末＝黄土色（--future）。
+     ・文章は「MultiCam使い方ガイド_内容確定案_v4.md」（2026-10-06 城さん了承）をもとに、1.3（2026-11-13 公開）に合わせて
+       役割 3 つ・QR コード・ルーターなし（Wi-Fi Aware）・サブ・FlashAir のサブを足した。
+       1.3 で出していないもの（自動で撮る・多方向のリプレイ・サブのリプレイなど）は書かない。
+     ・1.3 の新しい画面写真（mc-guide-13-*）は日本語の画面だけ。英語版は英語の画面写真がそろうまで載せていない（日英で画像の数が違う）。
+     ・端末の役割の色：受け取る端末＝ブランドの水色（--brand-lite）、カメラ端末＝黄土色（--future）、サブ＝緑（--sub）。
        図・手順の印・役割のカードで同じ色を使う。
      ・画像のパスはルート相対（英語版は階層が1つ深いため）。
      ============================================================ */
@@ -45,6 +47,7 @@
     --brand:#2EA6E2;
     --brand-deep:#0177C6;
     --future:#E8B45A;
+    --sub:#7AD39A;
     /* 注意の囲みだけに使う。ブランドの色とは混ぜない。 */
     --warn:#F08A66;
     --bar:58px;
@@ -132,16 +135,19 @@
   .dot--blue{color:var(--brand-lite);} .dot--yellow{color:#F2C94C;} .dot--red{color:#FF5A4F;}
 
   /* ---------- 端末の役割 ---------- */
-  .roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
   .role{padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top-width:3px;}
   .role--view{border-top-color:var(--brand-lite);}
   .role--cam{border-top-color:var(--future);}
+  .role--sub{border-top-color:var(--sub);}
   .role-t{margin:0;font-size:16.5px;font-weight:800;}
   .role--view .role-t{color:var(--brand-lite);}
   .role--cam .role-t{color:var(--future);}
+  .role--sub .role-t{color:var(--sub);}
+  .role-price{margin:10px 0 0;font-size:12.5px;font-weight:800;color:var(--fg);}
   .role-app{margin:4px 0 8px;font-size:12.5px;color:var(--muted);}
   .role-d{margin:0;font-size:14px;line-height:1.85;color:var(--body);}
-  @media (max-width:560px){.roles{grid-template-columns:1fr;}}
+  @media (max-width:760px){.roles{grid-template-columns:1fr;}}
 
   /* ---------- 手順 ---------- */
   .g-step{margin-top:16px;padding:20px 20px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);}
@@ -153,6 +159,7 @@
   .role-tag{flex:0 0 auto;font-size:11.5px;font-weight:800;line-height:1;padding:5px 10px;border-radius:999px;}
   .role-tag--view{color:var(--brand-lite);background:rgba(93,215,254,.1);border:1px solid rgba(93,215,254,.32);}
   .role-tag--cam{color:var(--future);background:rgba(232,180,90,.1);border:1px solid rgba(232,180,90,.38);}
+  .role-tag--sub{color:var(--sub);background:rgba(122,211,154,.1);border:1px solid rgba(122,211,154,.36);}
 
   /* ---------- 画面写真 ----------
      縦長なので幅いっぱいにしない。スマホ・PC とも最大 300px で中央に。
@@ -229,7 +236,7 @@
   <nav class="fr-barnav" aria-label="ページ内">
     <a href="#need">用意するもの</a>
     <a href="#steps">使い方</a>
-    <a href="#watch">動画を見る</a>
+    <a href="#sub">サブで見る</a>
     <a href="#trouble">困ったとき</a>
   </nav>
   <a class="fr-mic" href="/">MIC</a>
@@ -244,24 +251,25 @@
   <header class="g-hero">
     <div class="g-eyebrow">FrameReplay · MultiCam</div>
     <h1 class="g-h1"><span>1台で録画を押すだけ。</span><span>何台もの端末が、いっしょに撮ります。</span></h1>
-    <p class="g-lead">何台かの iPhone・iPad で、同じ動きを正面・横・後ろから同時に撮れます。<br>撮った動画は 1 台に集まり、並べてその場で見られます。</p>
+    <p class="g-lead">何台かの iPhone・iPad で、同じ動きを正面・横・後ろから同時に撮れます。<br>撮った動画は 1 台に集まり、並べてその場で見られます。手元の iPhone（サブ）でも 1 本ずつ見られます。</p>
     <div class="cta-row">
       <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=jp_guide&amp;mt=8" data-cta-pos="hero" target="_blank" rel="noopener">App Store でダウンロード</a>
     </div>
     <div class="flow">
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="見る端末で録画を押す"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>見る端末で録画を押す</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="受け取る端末で録画を押す"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>受け取る端末で録画を押す</figcaption></figure>
       <figure><svg viewBox="0 0 120 90" role="img" aria-label="カメラ端末も同時に撮り始める（正面・横・後ろ）"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><rect x="10" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="21" cy="49" r="6" style="fill:#FF5A4F"/><rect x="88" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="99" cy="49" r="6" style="fill:#FF5A4F"/></svg><figcaption><span class="n">2</span>カメラ端末も同時に撮り始める（正面・横・後ろ）</figcaption></figure>
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="止めると、動画が見る端末に集まる"><rect x="47" y="30" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="6" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><rect x="94" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><line x1="27" y1="30" x2="45" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="45" cy="48" r="2.6" style="fill:var(--muted)"/><line x1="93" y1="30" x2="75" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="75" cy="48" r="2.6" style="fill:var(--muted)"/></svg><figcaption><span class="n">3</span>止めると、動画が見る端末に集まる</figcaption></figure>
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="2〜4 分割で並べて見る"><rect x="40" y="14" width="40" height="62" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="43" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="43" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/></svg><figcaption><span class="n">4</span>2〜4 分割で並べて見る</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="止めると、動画が受け取る端末に集まる"><rect x="47" y="30" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="6" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><rect x="94" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><line x1="27" y1="30" x2="45" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="45" cy="48" r="2.6" style="fill:var(--muted)"/><line x1="93" y1="30" x2="75" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="75" cy="48" r="2.6" style="fill:var(--muted)"/></svg><figcaption><span class="n">3</span>止めると、動画が受け取る端末に集まる</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="並べて見る。サブの iPhone にも届く"><rect x="30" y="14" width="40" height="62" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="33" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="33" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="51" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="51" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="88" y="34" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--sub);stroke-width:2.5"/><rect x="91" y="40" width="14" height="20" rx="1.5" style="fill:var(--sub);opacity:.5"/><line x1="72" y1="50" x2="86" y2="50" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/></svg><figcaption><span class="n">4</span>並べて見る。サブの iPhone にも届く</figcaption></figure>
     </div>
-    <p class="flownote">全部の端末を同じ Wi-Fi につなぐだけ。インターネットは使いません。</p>
+    <p class="flownote">つなぎ方は、ルーターなし（対応する端末どうし）か、同じ Wi-Fi。インターネットは使いません。</p>
   </header>
 
   <section class="g-sec" id="roles">
-    <h2 class="g-h2">端末の役割は 2 つ</h2>
+    <h2 class="g-h2">端末の役割は 3 つ</h2>
     <div class="roles">
-      <div class="role role--view"><h3 class="role-t">見る端末</h3><p class="role-app">アプリでは「受け取る」</p><p class="role-d">録画を押す端末。全部の動画がここに集まる。この端末も 1 つの向きとして撮る</p></div>
-      <div class="role role--cam"><h3 class="role-t">カメラ端末</h3><p class="role-app">アプリでは「カメラになる」</p><p class="role-d">三脚などに置いて、別の向きから撮る</p></div>
+      <div class="role role--view"><h3 class="role-t">受け取る端末</h3><p class="role-app">アプリでは「受け取る」</p><p class="role-d">録画を押す端末。全部の動画がここに集まり、並べて見られる。この端末も 1 つの向きとして撮る</p><p class="role-price">Pro と MultiCam が要る</p></div>
+      <div class="role role--cam"><h3 class="role-t">カメラ端末</h3><p class="role-app">アプリでは「カメラになる」</p><p class="role-d">三脚などに置いて、別の向きから撮る。撮った動画は受け取る端末へ送る</p><p class="role-price">無料</p></div>
+      <div class="role role--sub"><h3 class="role-t">サブ</h3><p class="role-app">アプリでは「サブ（見るだけ）」</p><p class="role-d">受け取る端末に入った動画が、手元の iPhone にも届く。コーチ・選手・スタッフがその場で 1 本ずつ見られる</p><p class="role-price">無料</p></div>
     </div>
   </section>
 
@@ -269,11 +277,14 @@
     <h2 class="g-h2">用意するもの</h2>
     <ul class="g-list">
       <li>FrameReplay を入れた iPhone・iPad を 2 台以上</li>
-      <li>全部の端末の FrameReplay を、App Store の最新版にしておく（版が混ざっていてもつながるが、長い撮影で並べた動画が少しずつずれる、などの直しは、最新版にした端末でしか効かない）</li>
-      <li><b>MultiCam を買うのは見る端末だけ。</b>カメラ端末は、無料の FrameReplay のままで参加できる
-        <ul><li>見る端末には Pro と MultiCam（Pro に追加する買い切り）が要る</li><li>2026年9月21日より前に、今お使いの Apple ID で App Store から FrameReplay を入れたことがある方は、Pro と MultiCam が無料（TestFlight 版だけで使っていた方は対象外）。アプリが自動で確かめ、対象の方は設定画面の一番上に「1.0 からお使いの方として、Pro が有効になっています」と出る</li></ul></li>
-      <li>全部の端末がつながる Wi-Fi を 1 つ
-        <ul><li>おすすめ：<b>ポータブル Wi-Fi ルーター</b>、または <b>iPhone のインターネット共有（テザリング）</b></li><li>施設やホテルなどの共有 Wi-Fi は、端末どうしの通信を止めていて使えないことがある</li></ul></li>
+      <li>全部の端末の FrameReplay を、App Store の最新版にしておく（ルーターなしでつなぐ・QR コードで加える・サブは 1.3 から）</li>
+      <li><b>買うのは受け取る端末だけ。</b>カメラ端末とサブは、無料の FrameReplay のままで参加できる
+        <ul><li>受け取る端末には Pro と MultiCam（Pro に追加する買い切り）が要る</li><li>2026年9月21日より前に、今お使いの Apple ID で App Store から FrameReplay を入れたことがある方は、Pro と MultiCam が無料（TestFlight 版だけで使っていた方は対象外）。アプリが自動で確かめ、対象の方は設定画面の一番上に「1.0 からお使いの方として、Pro が有効になっています」と出る</li></ul></li>
+      <li><b>つなぎ方を 1 つ選ぶ</b>
+        <ul>
+          <li><b>ルーターなし（Wi-Fi Aware）</b>：Wi-Fi ルーターがない場所でも、端末どうしを直接つなぐ。対応は iOS 26 以降の iPhone 12 以降と一部の iPad。相手ごとに、最初の 1 回だけペアリングが要る</li>
+          <li><b>同じ Wi-Fi</b>：全部の端末を同じ Wi-Fi につなぐ。おすすめは<b>ポータブル Wi-Fi ルーター</b>か <b>iPhone のインターネット共有（テザリング）</b>。施設やホテルなどの共有 Wi-Fi は、端末どうしの通信を止めていて使えないことがある。ルーターなしに対応していない端末は、こちらでつなぐ</li>
+        </ul></li>
       <li>カメラ端末を固定する三脚・ホルダー</li>
     </ul>
   </section>
@@ -281,60 +292,80 @@
   <section class="g-sec" id="steps">
     <h2 class="g-h2">使い方（4 つの手順）</h2>
     <div class="g-step" id="step-1">
-      <div class="g-step-head"><span class="g-step-n">1</span><h3 class="g-step-t">全部の端末を、同じ Wi-Fi につなぐ</h3></div>
-      <ul class="g-list">
-        <li>iPhone・iPad の「設定 → Wi-Fi」で、同じネットワークを選ぶ</li>
-        <li>インターネット共有を使うときは、共有している iPhone 自身も、見る端末・カメラ端末のどちらにも使える</li>
-        <li>5GHz が選べるなら 5GHz にする（動画が早く届く）</li>
-      </ul>
-    </div>
-    <div class="g-step" id="step-2">
-      <div class="g-step-head"><span class="g-step-n">2</span><h3 class="g-step-t">見る端末を準備する</h3><span class="role-tag role-tag--view">見る端末</span></div>
+      <div class="g-step-head"><span class="g-step-n">1</span><h3 class="g-step-t">受け取る端末を準備する</h3><span class="role-tag role-tag--view">受け取る端末</span></div>
       <ul class="g-list">
         <li>FrameReplay の撮影画面の右上の歯車 →「接続」の <b>「MultiCam」</b> を開く</li>
         <li>「この端末の役割」を <b>「受け取る」</b></li>
         <li><b>「グループ」</b> に名前を入れる（例：チームA）</li>
         <li><b>「この端末の名前」</b> に、この端末で撮る向きを入れる（例：正面）</li>
+        <li>ルーターなしでつなぐなら、<b>「ルーターなしでつなぐ（Wi-Fi Aware）」</b> をオン（対応している端末にだけ出る）。同じ Wi-Fi でつなぐなら、iPhone・iPad の「設定 → Wi-Fi」で全部の端末を同じネットワークにする（5GHz が選べるなら 5GHz）</li>
         <li>「ローカルネットワーク」の確認が出たら <b>「許可」</b></li>
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-1-receive.webp" width="720" height="803" loading="lazy" decoding="async"
-             alt="見る端末の設定画面。役割「受け取る」、グループ「チームA」、名前「正面」。">
-        <figcaption>見る端末の設定（受け取る・チームA・正面）</figcaption>
+             alt="受け取る端末の設定画面。役割「受け取る」、グループ「チームA」、名前「正面」。">
+        <figcaption>受け取る端末の設定（受け取る・チームA・正面）</figcaption>
       </figure>
     </div>
-    <div class="g-step" id="step-3">
-      <div class="g-step-head"><span class="g-step-n">3</span><h3 class="g-step-t">カメラ端末を参加させる</h3><span class="role-tag role-tag--cam">カメラ端末</span></div>
+    <div class="g-step" id="step-2">
+      <div class="g-step-head"><span class="g-step-n">2</span><h3 class="g-step-t">カメラ端末・サブを QR コードで加える</h3><span class="role-tag role-tag--cam">カメラ端末</span><span class="role-tag role-tag--sub">サブ</span></div>
       <ul class="g-list">
-        <li>「設定 → MultiCam」→「この端末の役割」を <b>「カメラになる」</b></li>
-        <li><b>「近くのグループ」</b> に見る端末のグループが出るので、グループ名のボタン（例：<b>「チームA」に入る</b>）を押す（名前が出ていれば、電波は届いている）
-          <ul><li>グループ名を先に見る端末と同じにしていれば、ボタンは出ない（もう入っている）</li></ul></li>
-        <li><b>「この端末の名前」</b> に置き場所を入れる（例：横・後ろ）。見る端末で、どの向きの動画か分かる</li>
+        <li><b>受け取る端末</b>：同じ MultiCam の画面の <b>「端末を追加（QR コード）」</b> で、<b>「加える役割」</b>（カメラになる／サブ（見るだけ））を選ぶと、QR コードが出る</li>
+        <li><b>加える端末</b>：FrameReplay の「設定 → MultiCam」→ <b>「QR コードを読んで参加する」</b> を押し、受け取る端末の QR コードを写す（iPhone のカメラアプリで写しても開ける）</li>
+        <li>「MultiCam に参加」の画面で、受け取る端末・役割・グループを確かめて <b>「参加する」</b>。役割・グループ・つなぐ相手がまとめて決まる</li>
+        <li>カメラ端末は <b>「この端末の名前」</b> に置き場所を入れる（例：横・後ろ）。受け取る端末で、どの向きの動画か分かる</li>
         <li>「ローカルネットワーク」の確認が出たら <b>「許可」</b></li>
+      </ul>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-13-qr.webp" width="588" height="659" loading="lazy" decoding="async"
+             alt="受け取る端末の MultiCam の画面。端末を追加（QR コード）で、加える役割に「サブ（見るだけ）」を選び、QR コードが出ている。">
+        <figcaption>受け取る端末：加える役割を選ぶと QR コードが出る（QR はぼかしています）</figcaption>
+      </figure>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-13-join.webp" width="590" height="538" loading="lazy" decoding="async"
+             alt="加える端末の「MultiCam に参加」の画面。受け取る端末・この端末の役割・グループが出て、下に「参加する」のボタン。">
+        <figcaption>加える端末：読んだ中身を確かめて「参加する」</figcaption>
+      </figure>
+      <p class="g-sub">QR コードを使わずに加えるとき</p>
+      <ul class="g-list">
+        <li>加える端末で「この端末の役割」を選び、<b>「近くのグループ」</b> に出る受け取る端末のグループのボタン（例：<b>「チームA」に入る</b>）を押す（同じ Wi-Fi でつなぐとき）</li>
         <li>「つながり具合」が「〇台とつながっています」になれば準備完了</li>
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-2a-join.webp" width="720" height="685" loading="lazy" decoding="async"
              alt="カメラ端末の設定画面。近くのグループに「チームA」に入る のボタンが出ている。">
-        <figcaption>カメラ端末：「チームA」に入る を押す</figcaption>
-      </figure>
-      <figure class="g-shot">
-        <img src="/assets/framereplay/mc-guide-2b-connected.webp" width="720" height="651" loading="lazy" decoding="async"
-             alt="カメラ端末の設定画面。名前「横」、つながり具合「1台とつながっています」。">
-        <figcaption>入ると「1台とつながっています」</figcaption>
+        <figcaption>QR コードを使わないとき：「チームA」に入る を押す</figcaption>
       </figure>
       <div class="g-warn" role="note">
         <p>⚠️ カメラ端末は、撮影画面を開いたままにしてください。</p>
         <p>ほかの画面にいると、合図が来ても撮れません（画面は消えないようにしてあります）。</p>
       </div>
     </div>
-    <div class="g-step" id="step-4">
-      <div class="g-step-head"><span class="g-step-n">4</span><h3 class="g-step-t">見る端末で録画する</h3><span class="role-tag role-tag--view">見る端末</span></div>
+    <div class="g-step" id="step-3">
+      <div class="g-step-head"><span class="g-step-n">3</span><h3 class="g-step-t">ルーターなしのときだけ：最初の 1 回のペアリング</h3></div>
       <ul class="g-list">
-        <li>見る端末で録画を押す → 全部の端末が撮り始める</li>
-        <li>止める → 全部の端末が止まり、動画が見る端末へ自動で届く</li>
+        <li>ルーターなしでつなぐときは、受け取る端末と、加える端末ごとに、<b>最初の 1 回だけ</b>ペアリングが要る（前に別の端末とペアにしていても、相手が違えば要る）。QR コードで参加すると、加える端末に手順が出る</li>
+        <li><b>QR コードとペアリングは別の操作</b>：QR コードは役割・グループ・相手を決めるだけ。ルーターなしでつなぐには、そのあとのペアリングも要る。ルーターなしをオンにした受け取る端末の QR コードで加えた端末は、同じ Wi-Fi にいてもペアリングが要る</li>
+        <li><b>受け取る端末</b>：QR コードのすぐ下の <b>「この端末を見つけてもらう」</b> を押し、<b>その画面を開いたまま</b>にする</li>
+        <li><b>加える端末</b>：<b>「受け取る端末とペアリング」</b> を押し、受け取る端末を選ぶ</li>
+        <li>両方の画面にコードが出たら、同じかどうか確かめる</li>
+        <li>加える端末の <b>「この端末で使えるペア」</b> に受け取る端末が出れば終わり。ここに出るのは iPhone・iPad 自体の名前（iPhone の「設定 → 一般 → 情報 → 名前」）で、FrameReplay で付けた名前ではない。<b>次からはペアリングは要らない</b></li>
+        <li>受け取る端末の「この端末で使えるペア」が「なし」のままなら、受け取る端末の <b>「カメラ役・サブを選ぶ」</b> から選ぶ</li>
+        <li>撮っている最中・つながっている最中にペアリングを開くと、つながりが止まることがある。<b>撮る前に済ませる</b></li>
       </ul>
-      <p class="g-sub">つながりの表示（見る端末の撮影画面の左上）</p>
+      <figure class="g-shot">
+        <img src="/assets/framereplay/mc-guide-13-pair.webp" width="590" height="494" loading="lazy" decoding="async"
+             alt="加える端末の画面。サブとして参加したことが出て、その下に「この端末で使えるペア」「ペアを解除するには」「受け取る端末とペアリング」「この端末を見つけてもらう」が並ぶ。">
+        <figcaption>加える端末：「受け取る端末とペアリング」から受け取る端末を選ぶ（名前は置き換えています）</figcaption>
+      </figure>
+    </div>
+    <div class="g-step" id="step-4">
+      <div class="g-step-head"><span class="g-step-n">4</span><h3 class="g-step-t">受け取る端末で録画する</h3><span class="role-tag role-tag--view">受け取る端末</span></div>
+      <ul class="g-list">
+        <li>受け取る端末で録画を押す → 全部のカメラ端末が撮り始める</li>
+        <li>止める → 全部の端末が止まり、動画が受け取る端末へ自動で届く。サブがあれば、サブにも届く</li>
+      </ul>
+      <p class="g-sub">つながりの表示（受け取る端末の撮影画面の左上）</p>
       <ul class="g-list">
         <li>水色の<i class="dot dot--blue">●</i> と数字：つながっているカメラ端末の台数（例：1）。この数は動画が届いている最中も変わらない</li>
         <li>黄色の<i class="dot dot--yellow">●</i>：カメラ端末を探している（まだ1台もつながっていない）。「相手を探しています」と出る</li>
@@ -342,7 +373,7 @@
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-3-record.webp" width="720" height="960" loading="lazy" decoding="async"
-             alt="見る端末の撮影画面。左上に水色の点と、つながっているカメラ端末の台数「1」が出ている。">
+             alt="受け取る端末の撮影画面。左上に水色の点と、つながっているカメラ端末の台数「1」が出ている。">
         <figcaption>左上の水色の●と数字が、つながっているカメラ端末の台数</figcaption>
       </figure>
     </div>
@@ -351,7 +382,7 @@
   <section class="g-sec" id="watch">
     <h2 class="g-h2">撮った動画を見る</h2>
     <ul class="g-list">
-      <li>見る端末で動画を開き、<b>「方向」</b> を押すと、同じ時に撮った動画が 2〜4 分割で並ぶ</li>
+      <li>受け取る端末で動画を開き、<b>「方向」</b> を押すと、同じ時に撮った動画が 2〜4 分割で並ぶ</li>
       <li>撮った時刻で自動でそろう。ずれていたら 1 コマずつ直せる</li>
       <li>共有のボタンで、並べた見た目のまま 1 本の動画にして、写真に保存したり AirDrop で渡したりできる</li>
     </ul>
@@ -362,15 +393,50 @@
       </figure>
   </section>
 
+  <section class="g-sec" id="sub">
+    <h2 class="g-h2">サブ（見るだけ）で見る</h2>
+    <ul class="g-list">
+      <li>受け取る端末に入った動画が、サブにもそのまま届く。サブは何台でもつなげる</li>
+      <li><b>無料でできること</b>：届いた動画を 1 本ずつ再生・スロー・コマ送り・トリム・見るときの明るさ</li>
+      <li><b>「カメラ役だけ撮る」</b>：サブの撮影画面のこのボタンで、カメラ端末に撮らせられる（サブ自身は撮らない）。撮れた動画は受け取る端末に届き、サブにも届く。もう一度押すと止まる（押さなくても、サブの「自動で止める」の秒数で止まる。自動で止めるを切っていれば 30 秒）</li>
+      <li><b>Pro が要ること</b>：比較・線と角度（どちらも買う前に 3 回まで試せる）・加工して書き出す（見ている速さのまま・2 画面のまま）。2 方向以上を並べて見るには Pro と MultiCam が要る</li>
+      <li>使い方の例：受け取る端末を置いたまま、コーチやトレーナーが手元の iPhone で、撮ったばかりの 1 本を選手と一緒に見る</li>
+    </ul>
+    <figure class="g-shot">
+      <img src="/assets/framereplay/mc-guide-13-subbtn.webp" width="590" height="243" loading="lazy" decoding="async"
+           alt="サブの撮影画面の下側。録画ボタンの右に「カメラ役だけ撮る」のボタンがある。">
+      <figcaption>サブの撮影画面：「カメラ役だけ撮る」でカメラ端末に撮らせる</figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec" id="flashair-sub">
+    <h2 class="g-h2">FlashAir の動画をサブで見る</h2>
+    <ul class="g-list">
+      <li>FlashAir（無線の SD カード）を入れたビデオカメラから受け取った動画を、サブにもそのまま送れる。MultiCam を使わず、FlashAir だけで使う人向け</li>
+      <li><b>送る端末（Pro）</b>：「設定 → FlashAir取り込み」→ <b>「サブにも送る」</b> の <b>「受け取った動画をサブにも送る」</b> をオン。下に QR コードが出る。MultiCam の購入は要らない
+        <ul>
+          <li>送るのは FlashAir から受け取った動画だけ（この端末で撮った動画は送らない）</li>
+          <li>オンにするスイッチが出るのは、MultiCam の役割が「使わない」のとき。役割が「受け取る」（MultiCam を購入済み）なら、FlashAir の動画は自動でサブへ行く（サブは「設定 → MultiCam」で加える）</li>
+          <li>送っている間は、送る端末の FrameReplay を開いたままにする</li>
+        </ul></li>
+      <li><b>サブにする端末（無料）</b>：「設定 → FlashAir取り込み」→ <b>「サブとして受け取る」</b> の <b>「QR コードを読んでサブになる」</b> で、送る端末の QR コードを写す
+        <ul>
+          <li>この端末で FlashAir をオンにする必要はない。FlashAir の画面に「FlashAir から受け取るのは Pro で使えます」と出ていても、サブとして受け取るのは無料</li>
+          <li>Pro のない端末では、サブになると、設定の一覧の FlashAir取り込みの行に「サブ（見るだけ）」と出る</li>
+        </ul></li>
+      <li>つなぎ方は MultiCam と同じ（ルーターなし、または同じ Wi-Fi）。ルーターなしなら、最初の 1 回だけ<a href="#step-3">ペアリング</a>が要る</li>
+    </ul>
+  </section>
+
   <section class="g-sec" id="more">
     <h2 class="g-h2">もっと使いこなす</h2>
-    <h3 class="g-h3">2 台の見る端末で見る</h3>
+    <h3 class="g-h3">2 台の受け取る端末で見る</h3>
     <ul class="g-list">
       <li>2 台とも「受け取る」にして、同じグループに入れる</li>
-      <li>1 台で録画している途中に、もう 1 台でも録画を押すと、その撮影に途中から加わる（アプリでは「相乗り」と呼ぶ）。その撮影の動画は、2 台の見る端末の両方に届く</li>
-      <li>それぞれの見る端末に MultiCam が要る</li>
+      <li>1 台で録画している途中に、もう 1 台でも録画を押すと、その撮影に途中から加わる（アプリでは「相乗り」と呼ぶ）。その撮影の動画は、2 台の受け取る端末の両方に届く</li>
+      <li>それぞれの受け取る端末に MultiCam が要る</li>
     </ul>
-    <h3 class="g-h3">同じ Wi-Fi で、ほかのチームも使うとき</h3>
+    <h3 class="g-h3">同じ場所で、ほかのチームも使うとき</h3>
     <ul class="g-list">
       <li>グループ名を分ける。同じグループ名どうしだけがつながる</li>
     </ul>
@@ -380,8 +446,13 @@
     </ul>
     <h3 class="g-h3">カメラ端末の電池と容量</h3>
     <ul class="g-list">
-      <li>カメラ端末の電池が少なくなると（充電していないとき）、見る端末の撮影画面に「横 電池 12%」のように出る。長く使うときは充電しながら</li>
+      <li>カメラ端末の電池が少なくなると（充電していないとき）、受け取る端末の撮影画面に「横 電池 12%」のように出る。長く使うときは充電しながら</li>
       <li>カメラ端末の「設定 → MultiCam」で、送った動画を残さないようにできる（既定は「残す」）。残さない設定でも、送り終わるまでは消さない。いちばん新しい1本と、印を付けた動画は残る</li>
+    </ul>
+    <h3 class="g-h3" id="unpair">ペアを解除する（ルーターなしのとき）</h3>
+    <ul class="g-list">
+      <li>アプリの中からは解除できない。iPhone の <b>「設定」→「プライバシーとセキュリティ」→「ペアリング済みのデバイス」→「編集」</b> で消す</li>
+      <li>ペアは iPhone 全体で共通なので、ほかのアプリでも使えなくなる</li>
     </ul>
   </section>
 
@@ -391,13 +462,20 @@
       <table class="g-table">
         <thead><tr><th scope="col">こんなとき</th><th scope="col">まず確かめること</th></tr></thead>
         <tbody>
-          <tr><td>「相手を探しています」のまま</td><td>全部の端末が同じ Wi-Fi か／グループ名が同じか</td></tr>
+          <tr><td>「相手を探しています」のまま</td><td>同じ Wi-Fi なら：全部の端末が同じ Wi-Fi か／グループ名が同じか。ルーターなしなら：その相手とペアリングを済ませたか（ルーターなしをオンにした QR コードで加えた端末は、同じ Wi-Fi にいてもペアリングが要る）</td></tr>
+          <tr><td>「ルーターなしでつなぐ」が出てこない</td><td>その端末は対応していない（iOS 26 以降の iPhone 12 以降と一部の iPad）。同じ Wi-Fi でつなぐ（受け取る端末も同じ Wi-Fi に入れておく）</td></tr>
+          <tr><td>ペアリングのコードが出ない・合わない</td><td>受け取る端末の「この端末を見つけてもらう」の画面を開いたまま、加える端末でもう一度「受け取る端末とペアリング」から選ぶ</td></tr>
+          <tr><td>「この端末で使えるペア」が「なし」のまま</td><td>受け取る端末の「この端末を見つけてもらう」を開いたままにして、もう一度ペアリング。それでもだめなら受け取る端末の「カメラ役・サブを選ぶ」から選ぶ</td></tr>
+          <tr><td>アプリの中で QR コードが読めない</td><td>iPhone のカメラアプリで QR コードを写す（FrameReplay が開く）</td></tr>
+          <tr><td>「端末を追加（QR コード）」が出てこない</td><td>役割が「受け取る」か。受け取る端末には MultiCam が要る</td></tr>
           <tr><td>「近くのグループ」に何も出ない</td><td>「ローカルネットワーク」を許可したか（iPhone の「設定 → FrameReplay → ローカルネットワーク」をオン）</td></tr>
-          <tr><td>施設の Wi-Fi でつながらない</td><td>ポータブル Wi-Fi ルーターか、iPhone のインターネット共有に切り替える</td></tr>
+          <tr><td>施設の Wi-Fi でつながらない</td><td>ルーターなしでつなぐか、ポータブル Wi-Fi ルーター・iPhone のインターネット共有に切り替える</td></tr>
+          <tr><td>使いたい機能で購入を求められる</td><td>どの端末で使っているか。サブで比較・線と角度・加工して書き出すは Pro、2 方向以上を並べて見るのは Pro と MultiCam。受け取る端末には Pro と MultiCam が要る</td></tr>
           <tr><td>カメラ端末が撮らない</td><td>撮影画面を開いたままか</td></tr>
-          <tr><td>動画がなかなか届かない</td><td>5GHz にする。長い動画・高画質の動画は、届くまで時間がかかる</td></tr>
-          <tr><td>途中でつながりが切れた</td><td>撮った動画はカメラ端末に残る。つなぎ直すと届く</td></tr>
-          <tr><td>カメラ端末の電池が心配</td><td>電池が少ない台は、見る端末の撮影画面に名前と残りが出る。長く使うときは充電しながら</td></tr>
+          <tr><td>サブに動画が届かない</td><td>サブが受け取る端末と同じグループか（QR コードで加え直すと確実）。FlashAir のサブなら、送る端末の FrameReplay を開いたままか</td></tr>
+          <tr><td>動画がなかなか届かない</td><td>同じ Wi-Fi なら 5GHz にする。長い動画・高画質の動画は、届くまで時間がかかる</td></tr>
+          <tr><td>途中でつながりが切れた</td><td>撮った動画はカメラ端末に残る。つなぎ直すと届く。撮っている最中にペアリングを開いていないか</td></tr>
+          <tr><td>カメラ端末の電池が心配</td><td>電池が少ない台は、受け取る端末の撮影画面に名前と残りが出る。長く使うときは充電しながら</td></tr>
         </tbody>
       </table>
     </div>
