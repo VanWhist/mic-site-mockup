@@ -16,7 +16,6 @@ window.MIC_API = {
   uploadApi: 'https://script.google.com/macros/s/AKfycbxKy_MfsKrCmHpec9yvl2oKxVnkDwT14iM83jPmRxG6KWEMevj1nPt_1zAyd-1HNeCrlA/exec',
 
   // MIC-Lesson-Apply-API（一般レッスンの申込フォーム lesson-apply.html の受け取り先）。
-  // mogul.mic@gmail.com でデプロイしたあと、その /exec URL を入れる。
-  // 空のあいだは、申込フォームは送信できず、公式LINEへ案内する。
-  lessonApplyApi: ''
+  // mogul.mic@gmail.com でデプロイ（2026/11/13 設定）。空にすると、申込フォームは送信せず公式LINEへ案内する。
+  lessonApplyApi: 'https://script.google.com/macros/s/AKfycbzhwpmiJGzq3gy74xL-mE2M37QUH1D8X26sN0QXSKDjX9fwyVp28HyASM46N1JpJjCItQ/exec'
 };

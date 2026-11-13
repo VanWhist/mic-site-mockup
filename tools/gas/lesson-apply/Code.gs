@@ -145,9 +145,19 @@ function apply_(b, opt) {
         q.wish, q.worry, q.health, q.org, q.mic_before,
         q.video, '',
         str_(b.from_lesson, 10), str_(b.utm, 120), opt.test ? 'テスト' : '受付', ''
-      ].map(cell_);
+      ].map(function (v) {
+        // 受付日時（Date）と参加者番号（数）はそのまま。文字の欄だけ、数式として読まれないようにする
+        return (v instanceof Date || typeof v === 'number') ? v : cell_(v);
+      });
     });
-    sh.getRange(sh.getLastRow() + 1, 1, rows.length, HEADERS.length).setValues(rows);
+    var r0 = sh.getLastRow() + 1;
+    var range = sh.getRange(r0, 1, rows.length, HEADERS.length);
+    // 文字の欄は「書式なしテキスト」にしてから書く。電話番号の先頭の 0 や、
+    // 年齢・加盟団体などが数字や日付に読み替えられるのを防ぐ
+    range.setNumberFormat('@');
+    sh.getRange(r0, COL['受付日時'], rows.length, 1).setNumberFormat('yyyy/mm/dd hh:mm:ss');
+    sh.getRange(r0, COL['参加者番号'], rows.length, 1).setNumberFormat('0');
+    range.setValues(rows);
     counts = countBySlot_(sh);
     // 動画を送るための合言葉。受付番号だけでは送れないようにする（1日で無効）
     if (people.some(function (q) { return q.video; })) cache.put('vt:' + appId, vtoken, 21600);
