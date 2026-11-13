@@ -287,25 +287,36 @@ function videoStart_(b) {
   var type = /^video\//.test(String(b.type)) ? String(b.type) : 'video/mp4';
   var appId = str_(b.id, 20);
   var name = appId + '_' + (Number(b.idx) + 1) + '_' + str_(b.name, 80).replace(/[\\\/:*?"<>|]/g, '_');
-  var res = UrlFetchApp.fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true', {
+  var r = startSession_(folder, name, type, size);
+  if (!r.session) {
+    console.error('resumable start', r.code, r.body);
+    // 何番で断られたかだけ返す（ブラウザのコンソールで、どの段で止まったか分かるように）
+    return { ok: false, reason: 'drive_start_failed', status: r.code };
+  }
+  return { ok: true, session: r.session };
+}
+
+// Drive の再開可能アップロードを始める。{code, session, body} を返す。
+// ★ このプロジェクトで「サービス → Drive API」を足しておくこと。無いと 403 で断られる
+//   （DriveApp が使えていても、REST の呼び出しは別に有効化が要る）
+// ★ 開始時に Origin を付けないと、ブラウザからの PUT が CORS で止まる
+function startSession_(folder, name, type, size) {
+  var res = UrlFetchApp.fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&supportsAllDrives=true&fields=id', {
     method: 'post',
     contentType: 'application/json; charset=UTF-8',
     headers: {
       Authorization: 'Bearer ' + ScriptApp.getOAuthToken(),
       'X-Upload-Content-Type': type,
       'X-Upload-Content-Length': String(size),
-      // ブラウザから直接 PUT するため、送信元のオリジンを伝えておく（CORS）
       Origin: prop_('SITE_ORIGIN', 'https://mogul-mic.com')
     },
-    payload: JSON.stringify({ name: name, parents: [folder] }),
+    payload: JSON.stringify({ name: name, parents: [folder], mimeType: type }),
     muteHttpExceptions: true
   });
-  if (res.getResponseCode() !== 200) {
-    console.error('resumable start', res.getResponseCode(), res.getContentText());
-    return { ok: false, reason: 'server_error' };
-  }
+  var code = res.getResponseCode();
   var h = res.getAllHeaders();
-  return { ok: true, session: h.Location || h.location };
+  var session = code === 200 ? String(h.Location || h.location || '') : '';
+  return { code: code, session: session, body: session ? '' : res.getContentText().slice(0, 500) };
 }
 
 function videoDone_(b) {
@@ -348,4 +359,17 @@ function testApplyToMe() {
     from_lesson: '', utm: 'test', hp: ''
   }, { test: true });
   console.log(JSON.stringify(res));
+}
+
+// 設置後の試し：動画の受け取りを始められるかだけを確かめる（ファイルは作らない）。
+// 「開始 OK（200）」と出れば、Drive への送信を始められる。403 なら「サービス → Drive API」を足す。
+function testVideoStart() {
+  var folder = prop_('VIDEO_FOLDER_ID');
+  if (!folder) { console.log('★ VIDEO_FOLDER_ID が未設定'); return; }
+  var r = startSession_(folder, 'テスト_開始だけ.mp4', 'video/mp4', 1024);
+  if (!r.session) { console.log('★ 開始できない：Drive が ' + r.code + ' を返した\n' + r.body); return; }
+  console.log('開始 OK（200）');
+  // 始めた送信は取り消す（空のファイルを残さない）
+  var c = UrlFetchApp.fetch(r.session, { method: 'delete', muteHttpExceptions: true });
+  console.log('取り消し：' + c.getResponseCode() + '（499 なら取り消し済み）');
 }

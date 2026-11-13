@@ -18,5 +18,6 @@ window.MIC_REELS = [
   { no:9, title:'コブの裏側、谷足はどっち？', url:'https://www.instagram.com/reel/DfB9E4HMPu_/', thumb:'assets/reels/30byou-09.webp' },
   { no:10, title:'膝の角度は頂点と溝で変わる？', url:'https://www.instagram.com/reel/DfMuAnMsnWg/', thumb:'assets/reels/30byou-10.webp' },
   { no:11, title:'1本目と2本目を重ねると？', url:'https://www.instagram.com/reel/DfgwYnyyQos/', thumb:'assets/reels/30byou-11.webp' },
-  { no:12, title:'切り替えは"点"じゃない？', url:'https://www.instagram.com/reel/Dfl7vjTymQw/', thumb:'assets/reels/30byou-12.webp' }
+  { no:12, title:'切り替えは"点"じゃない？', url:'https://www.instagram.com/reel/Dfl7vjTymQw/', thumb:'assets/reels/30byou-12.webp' },
+  { no:13, title:'コブの中で、体はどう動いている？', url:'https://www.instagram.com/reel/DfrIm1BS53R/', thumb:'assets/reels/30byou-13.webp' }
 ];
