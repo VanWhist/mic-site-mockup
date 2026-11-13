@@ -1699,6 +1699,14 @@
      ★ 動画が読めないときも poster で枠が埋まるよう、poster も同じ cover で敷く。 */
   .ev-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;
     display:block;background:#1b1b1e center 40%/cover no-repeat;}
+  /* 縦長（9:16）の動画をそのまま全部見せる回（2026-12 雪上レッスン：コーチ紹介リールの全編）。
+     .ev-inner に ev-inner--portrait、.ev-media に is-portrait を付ける。
+     ★ 高さは aspect-ratio ではなく ::before の余白で作る（iPhone の WebKit でグリッドの中の枠が 0 になるため）。
+     ★ 動画と枠が同じ 9:16 なので、テロップも含めて切れずに映る。 */
+  .ev-inner--portrait{grid-template-columns:minmax(0,260px) minmax(0,1fr);}
+  .ev-media.is-portrait{min-height:0;}
+  .ev-media.is-portrait::before{content:"";display:block;padding-top:177.78%;}
+  .ev-media.is-portrait video{object-position:center center;background-position:center center;}
   .ev-flag{position:absolute;top:12px;left:12px;background:var(--accent);color:#fff;
     font-size:11.5px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:999px;}
   .ev-body{display:flex;flex-direction:column;justify-content:center;padding:6px 6px 6px 0;}
@@ -1728,6 +1736,10 @@
        グリッドの中の枠の高さが 0 になり、動画（写真）の枠が丸ごと消えた（2026-11-13 城さんの iPhone で発生）。 */
     .ev-media{min-height:0;}
     .ev-media::before{content:"";display:block;padding-top:75%;}
+    /* 縦長の枠は、タブレットなどで大きくなりすぎないよう幅を 360px までにして中央に置く */
+    .ev-inner--portrait{grid-template-columns:1fr;}
+    .ev-media.is-portrait{width:100%;max-width:360px;margin:0 auto;}
+    .ev-media.is-portrait::before{padding-top:177.78%;}
     .ev-body{padding:2px 4px 6px;}
     .ev-title{font-size:26px;}
     .ev-actions{gap:11px;}
@@ -1827,19 +1839,21 @@
 
 <!-- 期間限定の特集枠。data-until を過ぎると下のスクリプトが要素ごと消す。 -->
 <section class="ev-band reveal" id="eventFeature" data-until="2026-12-27">
-  <div class="ev-inner">
-    <div class="ev-media">
-      <!-- 2026-12 雪上レッスン：新保龍登コーチの滑り（2.9秒・音なし・約560KB）。
+  <div class="ev-inner ev-inner--portrait">
+    <div class="ev-media is-portrait">
+      <!-- 2026-12 雪上レッスン：新保龍登コーチの紹介リールの全編（21.6秒・音なし・約2.4MB。
+           元は D:\Claude\MICインスタ活用\リール\MIC_reel_coach_shinbo_ryuto.mp4。540×960 に縮めて音声を外したもの）。
+           城さんの希望で、短い切り出しではなく全編を、縦長の枠でテロップまで切らずに流す（2026-11-13）。
            画面に入っているときだけ再生し、外れたら止める（下のスクリプト）。
            動きを控えたい設定の端末では再生せず、poster だけを見せる。
            ★ 動画の URL は video の data-src に置き、ページの読み込みが終わって段が画面に近づいてから src に付ける。
              最初から付けると、autoplay のせいで開いた直後に動画を丸ごと読み、ほかの画像の読み込みが遅れる（4G 相当で約0.5秒）。
            10月の回の写真 assets/coaches/tanaka-hana.jpg はコーチ紹介でも使うので消さない。 -->
       <video id="eventFeatureVideo" muted autoplay loop playsinline preload="metadata"
-             data-src="assets/events/shinbo-lesson-loop.mp4"
-             poster="assets/events/shinbo-lesson-poster.jpg"
-             style="background-image:url('assets/events/shinbo-lesson-poster.jpg')"
-             aria-label="新保龍登コーチの滑り"></video>
+             data-src="assets/events/shinbo-reel-full.mp4"
+             poster="assets/events/shinbo-reel-full-poster.jpg"
+             style="background-image:url('assets/events/shinbo-reel-full-poster.jpg')"
+             aria-label="新保龍登コーチの紹介動画"></video>
       <span class="ev-flag">12月開催</span>
     </div>
     <div class="ev-body">
