@@ -647,11 +647,13 @@
     var chain = Promise.resolve();
     videos.forEach(function(v, n){
       chain = chain.then(function(){
+        var stage = 'video_start';   // どの段で止まったかを、コンソールと計測に残す
         $('barLabel').textContent = '動画を送っています（' + (n + 1) + '／' + videos.length + '）…画面を閉じずにお待ちください';
         return callApi({action: 'video_start', id: appId, video_token: vtoken, idx: v.idx,
                         name: v.file.name, size: v.file.size, type: v.file.type || ''})
           .then(function(r){
-            if (!r || !r.ok || !r.session) throw new Error((r && r.reason) || 'no_session');
+            if (!r || !r.ok || !r.session) throw new Error(((r && r.reason) || 'no_session') + (r && r.status ? ' ' + r.status : ''));
+            stage = 'put';
             return putChunks(r.session, v.file, function(sent){ setBar((doneBytes + sent) / total); });
           })
           .then(function(fileId){
@@ -659,7 +661,13 @@
             return callApi({action: 'video_done', id: appId, video_token: vtoken, idx: v.idx, file_id: fileId || ''})
               .catch(function(){});   // 記録だけの呼び出し。失敗しても動画は Drive に届いている
           })
-          .catch(function(){ failed.push(v.idx); doneBytes += v.file.size; });
+          .catch(function(err){
+            // ★ session の URL は出さない（持っている人がそのアップロードに書き込めるため）
+            var why = (err && err.name === 'TypeError') ? 'network_or_cors' : String((err && err.message) || err);
+            try { console.warn('[lesson-apply] 動画を送れませんでした：段=' + stage + '／' + why); } catch (e) {}
+            track('apply_video_error', stage + ':' + why);
+            failed.push(v.idx); doneBytes += v.file.size;
+          });
       });
     });
     return chain.then(function(){ return failed; });
