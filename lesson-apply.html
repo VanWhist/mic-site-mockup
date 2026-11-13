@@ -582,7 +582,9 @@
       checks: {level: $('c_level').checked, lift: $('c_lift').checked},
       consents: {rules: $('g_rules').checked, privacy: $('g_privacy').checked, guardian: $('g_guardian').checked},
       from_lesson: fromLesson,
-      utm: ['utm_source','utm_medium','utm_campaign'].map(function(k){ return qs.get(k) || ''; }).join('/'),
+      // utm がひとつも無いときは空にする（"//" を入れない）
+      utm: (function(){ var v = ['utm_source','utm_medium','utm_campaign'].map(function(k){ return qs.get(k) || ''; });
+                        return v.join('') ? v.join('/') : ''; })(),
       hp: $('hp_company').value
     };
   }
