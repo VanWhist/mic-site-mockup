@@ -1829,15 +1829,14 @@
       <!-- 2026-12 雪上レッスン：新保龍登コーチの滑り（2.9秒・音なし・約560KB）。
            画面に入っているときだけ再生し、外れたら止める（下のスクリプト）。
            動きを控えたい設定の端末では再生せず、poster だけを見せる。
-           ★ 動画の src は data-src に置き、段が画面に近づいてから付ける。最初から付けると、
-             autoplay のせいで開いた直後に動画を丸ごと読み、ほかの画像の読み込みが遅れる（4G 相当で約0.5秒）。
+           ★ 動画の URL は video の data-src に置き、ページの読み込みが終わって段が画面に近づいてから src に付ける。
+             最初から付けると、autoplay のせいで開いた直後に動画を丸ごと読み、ほかの画像の読み込みが遅れる（4G 相当で約0.5秒）。
            10月の回の写真 assets/coaches/tanaka-hana.jpg はコーチ紹介でも使うので消さない。 -->
       <video id="eventFeatureVideo" muted autoplay loop playsinline preload="metadata"
+             data-src="assets/events/shinbo-lesson-loop.mp4"
              poster="assets/events/shinbo-lesson-poster.jpg"
              style="background-image:url('assets/events/shinbo-lesson-poster.jpg')"
-             aria-label="新保龍登コーチの滑り">
-        <source data-src="assets/events/shinbo-lesson-loop.mp4" type="video/mp4">
-      </video>
+             aria-label="新保龍登コーチの滑り"></video>
       <span class="ev-flag">12月開催</span>
     </div>
     <div class="ev-body">
@@ -1877,15 +1876,25 @@
     var v = document.getElementById('eventFeatureVideo');
     if (!v || !document.body.contains(v)) return;   // 掲載期間が過ぎて枠ごと消えたとき
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-    function stop(){ v.removeAttribute('autoplay'); v.autoplay = false; try { v.pause(); } catch (e) {} }
-    if (reduce && reduce.matches) { stop(); return; }  // src を付けないので動画は読まない（poster だけ）
+    var stopped = false;   // 動きを控える設定になったら true。以後は読み込みも再生もしない
     var loaded = false;
-    function load(){                                  // data-src を src に移して読み込みを始める（1回だけ）
-      if (loaded) return; loaded = true;
-      var s = v.querySelector('source[data-src]');
-      if (s) { s.src = s.getAttribute('data-src'); s.removeAttribute('data-src'); v.load(); }
+    var visible = false;   // 枠の 25% 以上が画面に入っているか
+    // 再生をやめて poster だけに戻す（読み込み済みなら src を外して最初の状態に戻す）
+    function stop(){
+      stopped = true;
+      v.removeAttribute('autoplay'); v.autoplay = false;
+      try { v.pause(); } catch (e) {}
+      if (loaded) { v.removeAttribute('src'); v.load(); }
     }
-    function play(){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }  // 自動再生が許されない端末では poster のまま
+    if (reduce && reduce.matches) { stop(); return; }  // src を付けないので動画は読まない（poster だけ）
+    function load(){                                  // data-src を src に移して読み込みを始める（1回だけ）
+      if (loaded || stopped) return; loaded = true;
+      v.src = v.getAttribute('data-src');
+    }
+    function play(){                                  // 自動再生が許されない端末では poster のまま
+      if (stopped) return;
+      var p = v.play(); if (p && p.catch) p.catch(function(){});
+    }
     if (!('IntersectionObserver' in window)) { load(); return; }  // 古いブラウザは autoplay のまま
     // 画面の少し手前（下 300px）で読み込みを始める。ただしページの読み込み（load）が終わってから。
     // PC 幅では開いた時点でこの範囲に入るので、すぐ読むとほかの画像と取り合いになる（4G 相当で load が約0.5秒遅れた）。
@@ -1895,17 +1904,23 @@
       if (entries.some(function(en){ return en.isIntersecting; })) { load(); near.disconnect(); }
     }, { rootMargin: '0px 0px 300px 0px' });
     if (pageLoaded()) { near.observe(v); }
-    else { window.addEventListener('load', function(){ near.observe(v); if (visible) { load(); play(); } }); }
-    // 画面に入っているときだけ再生し、外れたら止める
-    var visible = false;
+    else {
+      window.addEventListener('load', function(){
+        if (stopped) return;
+        near.observe(v);
+        if (visible) { load(); play(); }
+      });
+    }
+    // 画面に入っているときだけ再生し、外れたら止める。
+    // isIntersecting は少しでも見えれば true になるブラウザがあるので、見えている割合で判定する。
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        visible = en.isIntersecting;
+        visible = en.isIntersecting && en.intersectionRatio >= 0.25;
         if (visible) { if (pageLoaded()) { load(); play(); } } else { v.pause(); }
       });
-    }, { threshold: 0.25 });
+    }, { threshold: [0, 0.25] });
     // 手前で読み込んだとき、autoplay で画面外のまま動き出さないようにする
-    v.addEventListener('playing', function(){ if (!visible) v.pause(); });
+    v.addEventListener('playing', function(){ if (!visible || stopped) v.pause(); });
     io.observe(v);
     if (reduce && reduce.addEventListener) {
       reduce.addEventListener('change', function(e){ if (e.matches) { near.disconnect(); io.disconnect(); stop(); } });
