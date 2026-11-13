@@ -83,7 +83,8 @@ function isClosed_(id) {
   return Date.now() > new Date(l.deadline + 'T23:59:59+09:00').getTime();
 }
 
-function apply_(b) {
+function apply_(b, opt) {
+  opt = opt || {};
   // ロボットよけの欄に何か入っていたら、受け付けたふりをして記録しない
   if (b.hp) return { ok: true, id: 'X', video_token: '' };
 
@@ -143,7 +144,7 @@ function apply_(b) {
         q.ski_years, q.slope, q.mogul,
         q.wish, q.worry, q.health, q.org, q.mic_before,
         q.video, '',
-        str_(b.from_lesson, 10), str_(b.utm, 120), '受付', ''
+        str_(b.from_lesson, 10), str_(b.utm, 120), opt.test ? 'テスト' : '受付', ''
       ].map(cell_);
     });
     sh.getRange(sh.getLastRow() + 1, 1, rows.length, HEADERS.length).setValues(rows);
@@ -174,14 +175,15 @@ function sheet_() {
   return sh;
 }
 
-// 回ごと・時間帯ごとの申込人数（状態が「取消」の行は数えない）。1日は午前・午後の両方に数える
+// 回ごと・時間帯ごとの申込人数（状態が「取消」「テスト」の行は数えない）。1日は午前・午後の両方に数える
 function countBySlot_(sh) {
   var last = sh.getLastRow();
   var out = {};
   if (last < 2) return out;
   var v = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
   v.forEach(function (r) {
-    if (String(r[COL['状態'] - 1]).indexOf('取消') >= 0) return;
+    var st = String(r[COL['状態'] - 1]);
+    if (st.indexOf('取消') >= 0 || st.indexOf('テスト') >= 0) return;
     String(r[COL['参加する回'] - 1]).split('／').forEach(function (s) {
       Object.keys(LESSONS).forEach(function (id) {
         var l = LESSONS[id].label;
@@ -311,4 +313,22 @@ function checkSetup() {
   var sh = sheet_();
   console.log('申込シート：' + sh.getParent().getName() + ' / ' + sh.getName() + '（' + (sh.getLastRow() - 1) + '件）');
   if (prop_('VIDEO_FOLDER_ID')) console.log('動画フォルダ：' + DriveApp.getFolderById(prop_('VIDEO_FOLDER_ID')).getName());
+}
+
+// 設置後の試し：自分（実行したアカウント）あてに、試しの申込を1件通す。
+// 申込シートに「状態：テスト」の行が入り、受付メールと知らせるメールが届けば成功。
+// テストの行は申込数に数えない。締切を過ぎた回しかないときは、使える回がないので失敗する。
+function testApplyToMe() {
+  var me = Session.getActiveUser().getEmail();
+  var open = Object.keys(LESSONS).filter(function (id) { return !isClosed_(id); });
+  if (!open.length) { console.log('受付中の回がありません'); return; }
+  var slots = {}; slots[open[0]] = 'am';
+  var res = apply_({
+    action: 'apply', series: 'test',
+    applicant: { name: 'テスト 申込者', tel: '090-0000-0000', email: me, source: 'その他' },
+    participants: [{ name: 'テスト 参加者', kana: 'てすと', age: '10歳（小4）', slots: slots, slope: '中級斜面', mogul: '初めて' }],
+    checks: { level: true, lift: true }, consents: { rules: true, privacy: true, guardian: true },
+    from_lesson: '', utm: 'test', hp: ''
+  }, { test: true });
+  console.log(JSON.stringify(res));
 }
