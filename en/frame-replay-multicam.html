@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>How to set up MultiCam | FrameReplay</title>
-<meta name="description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. What you need, four steps, and troubleshooting.">
+<meta name="description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. Three roles (receiving device, camera device, Sub), adding devices by QR code, connecting without a router, and troubleshooting.">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="FrameReplay">
 <meta property="og:title" content="How to set up MultiCam | FrameReplay">
-<meta property="og:description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. What you need, four steps, and troubleshooting.">
+<meta property="og:description" content="How to use MultiCam in FrameReplay: press Record on one device and every camera records together. Three roles (receiving device, camera device, Sub), adding devices by QR code, connecting without a router, and troubleshooting.">
 <meta property="og:url" content="https://mogul-mic.com/en/frame-replay-multicam.html">
 <meta property="og:image" content="https://mogul-mic.com/assets/brand/og-frame-replay.jpg">
 <meta property="og:image:width" content="1200">
@@ -27,9 +27,11 @@
      FrameReplay MultiCam 使い方ガイド（日本語版・英語版で共通）
      ・紹介ページ（/frame-replay.html）と同じ単体の製品ページの作り。MIC の共通ナビ・フッターは載せない。
      ・英語版 /en/frame-replay-multicam.html と CSS・構造は完全に同一。直すときは必ず両方そろえること。
-     ・文章は「MultiCam使い方ガイド_内容確定案_v4.md」（2026-10-06 城さん了承）のまま。
-       自動で撮る機能（通過で全台が撮る）は書かない（1.3）。
-     ・端末の役割の色：見る端末＝ブランドの水色（--brand-lite）、カメラ端末＝黄土色（--future）。
+     ・文章は「MultiCam使い方ガイド_内容確定案_v4.md」（2026-10-06 城さん了承）をもとに、1.3（2026-11-13 公開）に合わせて
+       役割 3 つ・QR コード・ルーターなし（Wi-Fi Aware）・サブ・FlashAir のサブを足した。
+       1.3 で出していないもの（自動で撮る・多方向のリプレイ・サブのリプレイなど）は書かない。
+     ・1.3 の新しい画面写真（mc-guide-13-*）は日本語の画面だけ。英語版は英語の画面写真がそろうまで載せていない（日英で画像の数が違う）。
+     ・端末の役割の色：受け取る端末＝ブランドの水色（--brand-lite）、カメラ端末＝黄土色（--future）、サブ＝緑（--sub）。
        図・手順の印・役割のカードで同じ色を使う。
      ・画像のパスはルート相対（英語版は階層が1つ深いため）。
      ============================================================ */
@@ -45,6 +47,7 @@
     --brand:#2EA6E2;
     --brand-deep:#0177C6;
     --future:#E8B45A;
+    --sub:#7AD39A;
     /* 注意の囲みだけに使う。ブランドの色とは混ぜない。 */
     --warn:#F08A66;
     --bar:58px;
@@ -132,16 +135,19 @@
   .dot--blue{color:var(--brand-lite);} .dot--yellow{color:#F2C94C;} .dot--red{color:#FF5A4F;}
 
   /* ---------- 端末の役割 ---------- */
-  .roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
   .role{padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--line);border-top-width:3px;}
   .role--view{border-top-color:var(--brand-lite);}
   .role--cam{border-top-color:var(--future);}
+  .role--sub{border-top-color:var(--sub);}
   .role-t{margin:0;font-size:16.5px;font-weight:800;}
   .role--view .role-t{color:var(--brand-lite);}
   .role--cam .role-t{color:var(--future);}
+  .role--sub .role-t{color:var(--sub);}
+  .role-price{margin:10px 0 0;font-size:12.5px;font-weight:800;color:var(--fg);}
   .role-app{margin:4px 0 8px;font-size:12.5px;color:var(--muted);}
   .role-d{margin:0;font-size:14px;line-height:1.85;color:var(--body);}
-  @media (max-width:560px){.roles{grid-template-columns:1fr;}}
+  @media (max-width:760px){.roles{grid-template-columns:1fr;}}
 
   /* ---------- 手順 ---------- */
   .g-step{margin-top:16px;padding:20px 20px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);}
@@ -153,6 +159,7 @@
   .role-tag{flex:0 0 auto;font-size:11.5px;font-weight:800;line-height:1;padding:5px 10px;border-radius:999px;}
   .role-tag--view{color:var(--brand-lite);background:rgba(93,215,254,.1);border:1px solid rgba(93,215,254,.32);}
   .role-tag--cam{color:var(--future);background:rgba(232,180,90,.1);border:1px solid rgba(232,180,90,.38);}
+  .role-tag--sub{color:var(--sub);background:rgba(122,211,154,.1);border:1px solid rgba(122,211,154,.36);}
 
   /* ---------- 画面写真 ----------
      縦長なので幅いっぱいにしない。スマホ・PC とも最大 300px で中央に。
@@ -229,7 +236,7 @@
   <nav class="fr-barnav" aria-label="On this page">
     <a href="#need">What you need</a>
     <a href="#steps">How to use</a>
-    <a href="#watch">Watch</a>
+    <a href="#sub">Subs</a>
     <a href="#trouble">Troubleshooting</a>
   </nav>
   <a class="fr-mic" href="/">MIC</a>
@@ -244,24 +251,25 @@
   <header class="g-hero">
     <div class="g-eyebrow">FrameReplay · MultiCam</div>
     <h1 class="g-h1"><span>Press Record on one device.</span> <span>All cameras record together.</span></h1>
-    <p class="g-lead">Record the same movement from the front, side and back at once, using several iPhones and iPads.<br>The videos come together on one device, so you can watch them side by side right away.</p>
+    <p class="g-lead">Record the same movement from the front, side and back at once, using several iPhones and iPads.<br>The videos come together on one device, so you can watch them side by side right away — and one at a time on your own iPhone (a Sub).</p>
     <div class="cta-row">
       <a class="cta" href="https://apps.apple.com/app/apple-store/id6805541932?pt=129366246&amp;ct=en_guide&amp;mt=8" data-cta-pos="hero" target="_blank" rel="noopener">Download on the App Store</a>
     </div>
     <div class="flow">
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Press Record on the viewing device"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>Press Record on the viewing device</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Press Record on the receiving device"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><text x="60" y="84" text-anchor="middle" style="fill:var(--brand-lite);font:700 10px -apple-system,BlinkMacSystemFont,sans-serif">REC</text></svg><figcaption><span class="n">1</span>Press Record on the receiving device</figcaption></figure>
       <figure><svg viewBox="0 0 120 90" role="img" aria-label="The camera devices start recording too (front, side, back)"><rect x="47" y="23" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><circle cx="60" cy="45" r="6" style="fill:#FF5A4F"/><rect x="10" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="21" cy="49" r="6" style="fill:#FF5A4F"/><rect x="88" y="30" width="22" height="38" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><circle cx="99" cy="49" r="6" style="fill:#FF5A4F"/></svg><figcaption><span class="n">2</span>The camera devices start recording too (front, side, back)</figcaption></figure>
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Stop, and the videos arrive on the viewing device"><rect x="47" y="30" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="6" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><rect x="94" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><line x1="27" y1="30" x2="45" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="45" cy="48" r="2.6" style="fill:var(--muted)"/><line x1="93" y1="30" x2="75" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="75" cy="48" r="2.6" style="fill:var(--muted)"/></svg><figcaption><span class="n">3</span>Stop, and the videos arrive on the viewing device</figcaption></figure>
-      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Watch 2–4 angles side by side"><rect x="40" y="14" width="40" height="62" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="43" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="43" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="61" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/></svg><figcaption><span class="n">4</span>Watch 2–4 angles side by side</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Stop, and the videos arrive on the receiving device"><rect x="47" y="30" width="26" height="44" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="6" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><rect x="94" y="8" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--future);stroke-width:2.5"/><line x1="27" y1="30" x2="45" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="45" cy="48" r="2.6" style="fill:var(--muted)"/><line x1="93" y1="30" x2="75" y2="48" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/><circle cx="75" cy="48" r="2.6" style="fill:var(--muted)"/></svg><figcaption><span class="n">3</span>Stop, and the videos arrive on the receiving device</figcaption></figure>
+      <figure><svg viewBox="0 0 120 90" role="img" aria-label="Watch side by side. Subs get the videos too"><rect x="30" y="14" width="40" height="62" rx="5" style="fill:var(--surface-2);stroke:var(--brand-lite);stroke-width:2.5"/><rect x="33" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="33" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="51" y="18" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="51" y="46" width="16" height="26" rx="1.5" style="fill:var(--brand-lite);opacity:.5"/><rect x="88" y="34" width="20" height="34" rx="5" style="fill:var(--surface-2);stroke:var(--sub);stroke-width:2.5"/><rect x="91" y="40" width="14" height="20" rx="1.5" style="fill:var(--sub);opacity:.5"/><line x1="72" y1="50" x2="86" y2="50" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:3 3"/></svg><figcaption><span class="n">4</span>Watch side by side. Subs get the videos too</figcaption></figure>
     </div>
-    <p class="flownote">Just connect every device to the same Wi-Fi. No internet needed.</p>
+    <p class="flownote">Connect without a router (between supported devices) or over the same Wi-Fi. No internet needed.</p>
   </header>
 
   <section class="g-sec" id="roles">
-    <h2 class="g-h2">Two roles</h2>
+    <h2 class="g-h2">Three roles</h2>
     <div class="roles">
-      <div class="role role--view"><h3 class="role-t">Viewing device</h3><p class="role-app">Receive in the app</p><p class="role-d">The device you press Record on. All videos come here. It also records one angle itself.</p></div>
-      <div class="role role--cam"><h3 class="role-t">Camera device</h3><p class="role-app">Be a camera in the app</p><p class="role-d">Set on a tripod to record another angle.</p></div>
+      <div class="role role--view"><h3 class="role-t">Receiving device</h3><p class="role-app">Receive in the app</p><p class="role-d">The device you press Record on. All videos come here and can be watched side by side. It also records one angle itself.</p><p class="role-price">Needs Pro and MultiCam</p></div>
+      <div class="role role--cam"><h3 class="role-t">Camera device</h3><p class="role-app">Be a camera in the app</p><p class="role-d">Set on a tripod to record another angle. Its videos go to the receiving device.</p><p class="role-price">Free</p></div>
+      <div class="role role--sub"><h3 class="role-t">Sub</h3><p class="role-app">Sub (view only) in the app</p><p class="role-d">Videos that arrive on the receiving device also show up on your own iPhone, so a coach, athlete or staff member can watch them one at a time on the spot.</p><p class="role-price">Free</p></div>
     </div>
   </section>
 
@@ -269,11 +277,14 @@
     <h2 class="g-h2">What you need</h2>
     <ul class="g-list">
       <li>Two or more iPhones or iPads with FrameReplay</li>
-      <li>The latest version of FrameReplay from the App Store on every device. Devices on different versions still connect, but fixes (such as the one for videos slowly drifting out of sync in long sessions) only work on updated devices.</li>
-      <li><b>Only the viewing device needs MultiCam.</b> Camera devices join with the free version of FrameReplay.
-        <ul><li>The viewing device needs Pro and MultiCam (a one-time add-on to Pro).</li><li>If you downloaded FrameReplay from the App Store with your current Apple ID before 21 September 2026, Pro and MultiCam are free for you (TestFlight-only use does not count). The app checks this automatically; if it applies, the top of Settings shows "Pro is on for you, as someone who has used the app since 1.0".</li></ul></li>
-      <li>One Wi-Fi network that every device joins
-        <ul><li>Recommended: <b>a portable Wi-Fi router</b>, or <b>Personal Hotspot on an iPhone</b></li><li>Shared Wi-Fi at facilities or hotels often blocks communication between devices.</li></ul></li>
+      <li>The latest version of FrameReplay from the App Store on every device (connecting without a router, adding devices by QR code and Subs need version 1.3 or later)</li>
+      <li><b>Only the receiving device needs a purchase.</b> Camera devices and Subs join with the free version of FrameReplay.
+        <ul><li>The receiving device needs Pro and MultiCam (a one-time add-on to Pro).</li><li>If you downloaded FrameReplay from the App Store with your current Apple ID before 21 September 2026, Pro and MultiCam are free for you (TestFlight-only use does not count). The app checks this automatically; if it applies, the top of Settings shows "Pro is on for you, as someone who has used the app since 1.0".</li></ul></li>
+      <li><b>One way to connect</b>
+        <ul>
+          <li><b>Without a router (Wi-Fi Aware):</b> devices link directly, even where there is no Wi-Fi network. Works on iPhone 12 or later and some iPads with iOS 26 or later. Each pair of devices needs to pair once, the first time.</li>
+          <li><b>The same Wi-Fi:</b> every device joins one Wi-Fi network. Recommended: <b>a portable Wi-Fi router</b> or <b>Personal Hotspot on an iPhone</b>. Shared Wi-Fi at facilities or hotels often blocks communication between devices. Devices that don't support Wi-Fi Aware connect this way.</li>
+        </ul></li>
       <li>A tripod or holder for each camera device</li>
     </ul>
   </section>
@@ -281,60 +292,65 @@
   <section class="g-sec" id="steps">
     <h2 class="g-h2">How to use it (4 steps)</h2>
     <div class="g-step" id="step-1">
-      <div class="g-step-head"><span class="g-step-n">1</span><h3 class="g-step-t">Connect every device to the same Wi-Fi</h3></div>
-      <ul class="g-list">
-        <li>In Settings &gt; Wi-Fi on each device, choose the same network.</li>
-        <li>With Personal Hotspot, the iPhone sharing its connection can also be used as a viewing or camera device.</li>
-        <li>If 5 GHz is available, use it — videos arrive faster.</li>
-      </ul>
-    </div>
-    <div class="g-step" id="step-2">
-      <div class="g-step-head"><span class="g-step-n">2</span><h3 class="g-step-t">Set up the viewing device</h3><span class="role-tag role-tag--view">Viewing device</span></div>
+      <div class="g-step-head"><span class="g-step-n">1</span><h3 class="g-step-t">Set up the receiving device</h3><span class="role-tag role-tag--view">Receiving device</span></div>
       <ul class="g-list">
         <li>In FrameReplay, tap the gear at the top right of the recording screen, then <b>MultiCam</b> under <b>Connections</b>.</li>
         <li>Set <b>This device</b> to <b>Receive</b>.</li>
         <li>Enter a <b>Group</b> name (e.g. Team A).</li>
         <li>Under <b>Name of this device</b>, enter the angle it records (e.g. Front).</li>
+        <li>To connect without a router, turn on <b>Connect without a router (Wi-Fi Aware)</b> (shown only on supported devices). To use the same Wi-Fi, choose the same network in Settings &gt; Wi-Fi on every device (5 GHz if available).</li>
         <li>When asked about Local Network, tap <b>Allow</b>.</li>
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-1-receive-en.webp" width="720" height="744" loading="lazy" decoding="async"
-             alt="Viewing device settings: Receive, group Team A, name Front.">
-        <figcaption>Viewing device: Receive · Team A · Front</figcaption>
+             alt="Receiving device settings: Receive, group Team A, name Front.">
+        <figcaption>Receiving device: Receive · Team A · Front</figcaption>
       </figure>
     </div>
-    <div class="g-step" id="step-3">
-      <div class="g-step-head"><span class="g-step-n">3</span><h3 class="g-step-t">Add the camera devices</h3><span class="role-tag role-tag--cam">Camera device</span></div>
+    <div class="g-step" id="step-2">
+      <div class="g-step-head"><span class="g-step-n">2</span><h3 class="g-step-t">Add camera devices and Subs with a QR code</h3><span class="role-tag role-tag--cam">Camera device</span><span class="role-tag role-tag--sub">Sub</span></div>
       <ul class="g-list">
-        <li>Settings &gt; MultiCam &gt; <b>This device</b>: <b>Be a camera</b>.</li>
-        <li>Under <b>Groups nearby</b>, tap the button with the viewing device's group name (e.g. <b>Join Team A</b>). (If its name appears, the devices can reach each other.)
-          <ul><li>If its group name already matches the viewing device's, no button appears — it is already in the group.</li></ul></li>
-        <li>Under <b>Name of this device</b>, enter where it stands (e.g. Side, Behind), so you can tell the angles apart.</li>
+        <li><b>Receiving device:</b> on the same MultiCam screen, open <b>Add a device (QR code)</b> and choose <b>Add as</b> (Be a camera / Sub (view only)). A QR code appears.</li>
+        <li><b>Device you are adding:</b> in FrameReplay, go to Settings &gt; MultiCam &gt; <b>Scan a QR code to join</b> and point it at the receiving device's QR code (the iPhone Camera app works too).</li>
+        <li>On the <b>Join MultiCam</b> screen, check the receiving device, role and group, then tap <b>Join</b>. The role, group and receiving device are set in one go.</li>
+        <li>On a camera device, enter where it stands under <b>Name of this device</b> (e.g. Side, Behind), so you can tell the angles apart.</li>
         <li>When asked about Local Network, tap <b>Allow</b>.</li>
+      </ul>
+      <p class="g-sub">Adding a device without the QR code</p>
+      <ul class="g-list">
+        <li>On the device you are adding, choose its role under <b>This device</b>, then under <b>Groups nearby</b> tap the button with the receiving device's group (e.g. <b>Join Team A</b>) (when using the same Wi-Fi).</li>
         <li>When <b>Connection</b> shows "Connected to" and a number (e.g. "Connected to 2"), you're ready.</li>
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-2a-join-en.webp" width="720" height="699" loading="lazy" decoding="async"
              alt="Camera device settings showing Join Team A under Groups nearby.">
-        <figcaption>Camera device: tap Join Team A</figcaption>
-      </figure>
-      <figure class="g-shot">
-        <img src="/assets/framereplay/mc-guide-2b-connected-en.webp" width="720" height="689" loading="lazy" decoding="async"
-             alt="Camera device settings: name Side, Connection: Connected to 1.">
-        <figcaption>Once joined: Connected to 1</figcaption>
+        <figcaption>Without the QR code: tap Join Team A</figcaption>
       </figure>
       <div class="g-warn" role="note">
         <p>⚠️ Keep the camera devices on the recording screen.</p>
         <p>On any other screen they can't respond when recording starts. (The screen stays on by itself.)</p>
       </div>
     </div>
-    <div class="g-step" id="step-4">
-      <div class="g-step-head"><span class="g-step-n">4</span><h3 class="g-step-t">Record from the viewing device</h3><span class="role-tag role-tag--view">Viewing device</span></div>
+    <div class="g-step" id="step-3">
+      <div class="g-step-head"><span class="g-step-n">3</span><h3 class="g-step-t">Without a router only: pair once, the first time</h3></div>
       <ul class="g-list">
-        <li>Press Record on the viewing device — every device starts recording.</li>
-        <li>Stop — every device stops, and the videos are sent to the viewing device automatically.</li>
+        <li>When connecting without a router, the receiving device and each device you add need to pair <b>once, the first time</b> (even if they were paired with a different device before). After joining by QR code, the device you are adding shows the steps.</li>
+        <li><b>The QR code and pairing are separate steps:</b> the QR code only sets the role, group and receiving device. Connecting without a router also needs pairing. A device added with the QR code of a receiving device that has Connect without a router on needs to pair even when both are on the same Wi-Fi.</li>
+        <li><b>Receiving device:</b> tap <b>Let others find this device</b>, right below the QR code, and <b>keep that screen open</b>.</li>
+        <li><b>Device you are adding:</b> tap <b>Pair with a receiving device</b> and choose the receiving device.</li>
+        <li>When a code appears on both screens, check that they match.</li>
+        <li>You're done when the receiving device appears under <b>Pairs this device can use</b> on the device you added. The name shown there is the iPhone or iPad's own name (Settings &gt; General &gt; About &gt; Name), not the name you gave it in FrameReplay. <b>You won't need to pair again next time.</b></li>
+        <li>If <b>Pairs this device can use</b> still shows None on the receiving device, choose the device from <b>Choose a camera or Sub</b> there.</li>
+        <li>Opening pairing while recording or connected may interrupt the connection. <b>Pair before you start recording.</b></li>
       </ul>
-      <p class="g-sub">Connection status (top left of the viewing device's recording screen)</p>
+    </div>
+    <div class="g-step" id="step-4">
+      <div class="g-step-head"><span class="g-step-n">4</span><h3 class="g-step-t">Record from the receiving device</h3><span class="role-tag role-tag--view">Receiving device</span></div>
+      <ul class="g-list">
+        <li>Press Record on the receiving device — every camera device starts recording.</li>
+        <li>Stop — every device stops, and the videos are sent to the receiving device automatically. Any Subs get them too.</li>
+      </ul>
+      <p class="g-sub">Connection status (top left of the receiving device's recording screen)</p>
       <ul class="g-list">
         <li>Blue dot and a number: how many camera devices are connected (e.g. 1). The number doesn't change while videos are arriving.</li>
         <li>Yellow dot: looking for camera devices (none connected yet) — "Looking for the other device".</li>
@@ -342,7 +358,7 @@
       </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/mc-guide-3-record-en.webp" width="720" height="960" loading="lazy" decoding="async"
-             alt="Viewing device recording screen with a blue dot and the number of connected camera devices, 1, at the top left.">
+             alt="Receiving device recording screen with a blue dot and the number of connected camera devices, 1, at the top left.">
         <figcaption>Blue dot and number at the top left: connected camera devices</figcaption>
       </figure>
     </div>
@@ -351,24 +367,55 @@
   <section class="g-sec" id="watch">
     <h2 class="g-h2">Watch your videos</h2>
     <ul class="g-list">
-      <li>On the viewing device, open the video and tap <b>Angles</b> to see 2–4 angles side by side.</li>
+      <li>On the receiving device, open the video and tap <b>Angles</b> to see 2–4 angles side by side.</li>
       <li>They are lined up by the time they were recorded. If needed, adjust one frame at a time.</li>
       <li>Tap the share button to turn the side-by-side view into one video you can save to Photos or send with AirDrop.</li>
     </ul>
       <figure class="g-shot">
         <img src="/assets/framereplay/fr-multicam-split-en.webp" width="900" height="1200" loading="lazy" decoding="async"
-             alt="MultiCam on the viewing device: the same movement recorded by two devices, front and side, lined up by recording time in 2 panes.">
+             alt="MultiCam on the receiving device: the same movement recorded by two devices, front and side, lined up by recording time in 2 panes.">
         <figcaption>2 panes with Angles (Front · Base / Side · -22 fr)</figcaption>
       </figure>
+  </section>
+
+  <section class="g-sec" id="sub">
+    <h2 class="g-h2">Watch on a Sub (view only)</h2>
+    <ul class="g-list">
+      <li>Videos that arrive on the receiving device also arrive on each Sub. Any number of Subs can join.</li>
+      <li><b>Free on a Sub:</b> play each video one at a time, slow motion, frame-by-frame, trim and viewing brightness.</li>
+      <li><b>Cameras only:</b> this button on a Sub's recording screen makes the camera devices record (the Sub itself doesn't record). The videos go to the receiving device and on to the Sub. Tap it again to stop (if you don't, they stop after the Sub's auto-stop time, or 30 seconds if auto-stop is off).</li>
+      <li><b>Needs Pro:</b> compare, lines and angles (both can be tried 3 times before you buy), and export with edits (at the speed you watched, with both panes). Watching two or more angles side by side needs Pro and MultiCam.</li>
+      <li>For example: leave the receiving device in place while a coach or trainer watches the latest take with the athlete on their own iPhone.</li>
+    </ul>
+  </section>
+
+  <section class="g-sec" id="flashair-sub">
+    <h2 class="g-h2">Watch FlashAir videos on a Sub</h2>
+    <ul class="g-list">
+      <li>Videos received from a video camera with a FlashAir (Wi-Fi SD card) can also be sent straight to Subs. This is for people who use FlashAir without MultiCam.</li>
+      <li><b>Sending device (Pro):</b> Settings &gt; FlashAir import &gt; <b>Send to Subs too</b>: turn on <b>Send received videos to Subs</b>. A QR code appears below. No MultiCam purchase needed.
+        <ul>
+          <li>Only videos received from FlashAir are sent (not videos recorded on this device).</li>
+          <li>The switch appears only when the MultiCam role is Not used. If the role is Receive (with MultiCam purchased), FlashAir videos already go to Subs (add Subs in Settings &gt; MultiCam).</li>
+          <li>Keep FrameReplay open on the sending device while it sends.</li>
+        </ul></li>
+      <li><b>Device to use as a Sub (free):</b> Settings &gt; FlashAir import &gt; <b>Receive as a Sub</b> &gt; <b>Scan a QR code to become a Sub</b>, and scan the sending device's QR code.
+        <ul>
+          <li>You don't need to turn on FlashAir on this device. Even if the FlashAir screen says "Receiving from FlashAir is part of Pro", receiving as a Sub is free.</li>
+          <li>On a device without Pro, once it is a Sub, the FlashAir import row in Settings shows Sub (view only).</li>
+        </ul></li>
+      <li>Devices connect the same way as MultiCam (without a router, or over the same Wi-Fi). Without a router, they need to <a href="#step-3">pair</a> once, the first time.</li>
+    </ul>
   </section>
 
   <section class="g-sec" id="more">
     <h2 class="g-h2">More</h2>
     <ul class="g-list">
-      <li><b>Two viewing devices:</b> Set both to Receive in the same group. If the second one presses Record while a recording is under way, it joins that recording, and its videos go to both viewing devices. Each viewing device needs MultiCam.</li>
-      <li><b>Another team on the same Wi-Fi:</b> Use different group names. Only devices with the same group name connect.</li>
+      <li><b>Two receiving devices:</b> Set both to Receive in the same group. If the second one presses Record while a recording is under way, it joins that recording, and its videos go to both receiving devices. Each receiving device needs MultiCam.</li>
+      <li><b>Another team in the same place:</b> Use different group names. Only devices with the same group name connect.</li>
       <li><b>If the connection drops:</b> The videos stay on the camera device and are sent when it reconnects.</li>
-      <li><b>Battery and storage:</b> When a camera device's battery runs low (and it isn't charging), the viewing device's recording screen shows it, e.g. "Side Battery 12%". In a camera device's Settings &gt; MultiCam you can choose not to keep sent videos (they are kept by default); they are only removed after they have been delivered, and the newest clip and any starred clips are kept.</li>
+      <li><b>Battery and storage:</b> When a camera device's battery runs low (and it isn't charging), the receiving device's recording screen shows it, e.g. "Side Battery 12%". In a camera device's Settings &gt; MultiCam you can choose not to keep sent videos (they are kept by default); they are only removed after they have been delivered, and the newest clip and any starred clips are kept.</li>
+      <li id="unpair"><b>Removing a pair (without a router):</b> Pairs can't be removed inside the app. On the iPhone, go to <b>Settings &gt; Privacy &amp; Security &gt; Paired Devices &gt; Edit</b>. Pairs are shared across the iPhone, so other apps lose them too.</li>
     </ul>
   </section>
 
@@ -378,13 +425,20 @@
       <table class="g-table">
         <thead><tr><th scope="col">Problem</th><th scope="col">Check first</th></tr></thead>
         <tbody>
-          <tr><td>Stuck on "Looking for the other device"</td><td>Same Wi-Fi? Same group name?</td></tr>
+          <tr><td>Stuck on "Looking for the other device"</td><td>On the same Wi-Fi: same network? Same group name? Without a router: have these two devices paired? (A device added with the QR code of a receiving device that has Connect without a router on needs to pair even on the same Wi-Fi.)</td></tr>
+          <tr><td>"Connect without a router" doesn't appear</td><td>That device isn't supported (iPhone 12 or later and some iPads, iOS 26 or later). Connect over the same Wi-Fi (with the receiving device on it too).</td></tr>
+          <tr><td>No pairing code appears, or the codes don't match</td><td>Keep "Let others find this device" open on the receiving device, then choose it again from "Pair with a receiving device" on the device you are adding.</td></tr>
+          <tr><td>"Pairs this device can use" still shows None</td><td>Keep "Let others find this device" open on the receiving device and pair again. If that fails, choose the device from "Choose a camera or Sub" on the receiving device.</td></tr>
+          <tr><td>The app can't scan the QR code</td><td>Scan it with the iPhone Camera app (FrameReplay opens).</td></tr>
+          <tr><td>"Add a device (QR code)" doesn't appear</td><td>Is the role set to Receive? The receiving device needs MultiCam.</td></tr>
           <tr><td>Nothing under "Groups nearby"</td><td>Is Local Network allowed? (iPhone Settings &gt; FrameReplay &gt; Local Network)</td></tr>
-          <tr><td>Can't connect on facility Wi-Fi</td><td>Switch to a portable router or Personal Hotspot</td></tr>
+          <tr><td>Can't connect on facility Wi-Fi</td><td>Connect without a router, or switch to a portable router or Personal Hotspot</td></tr>
+          <tr><td>A feature asks you to buy</td><td>Which device are you on? On a Sub, compare, lines and angles, and export with edits need Pro; watching two or more angles side by side needs Pro and MultiCam. The receiving device needs Pro and MultiCam.</td></tr>
           <tr><td>A camera device doesn't record</td><td>Is it on the recording screen?</td></tr>
-          <tr><td>Videos take a long time to arrive</td><td>Use 5 GHz. Long or high-quality videos take longer.</td></tr>
-          <tr><td>The connection dropped</td><td>The videos stay on the camera device and arrive after reconnecting</td></tr>
-          <tr><td>Worried about a camera's battery</td><td>A camera running low shows its name and level on the viewing device's recording screen. Charge it for long sessions.</td></tr>
+          <tr><td>Videos don't reach a Sub</td><td>Is the Sub in the same group as the receiving device? (Adding it again by QR code is the surest way.) For FlashAir Subs: is FrameReplay open on the sending device?</td></tr>
+          <tr><td>Videos take a long time to arrive</td><td>On the same Wi-Fi, use 5 GHz. Long or high-quality videos take longer.</td></tr>
+          <tr><td>The connection dropped</td><td>The videos stay on the camera device and arrive after reconnecting. Did pairing get opened while recording?</td></tr>
+          <tr><td>Worried about a camera's battery</td><td>A camera running low shows its name and level on the receiving device's recording screen. Charge it for long sessions.</td></tr>
         </tbody>
       </table>
     </div>
