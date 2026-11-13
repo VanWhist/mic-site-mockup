@@ -1693,6 +1693,12 @@
   /* 画像は絶対配置にして、枠の高さを右側の本文に合わせる。
      そうしないと縦長写真の実寸が行の高さを決めてしまい、右側に大きな余白が出る。 */
   .ev-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;}
+  /* 動画を入れる回（2026-12 雪上レッスン〜）。大きさと切り取りは img と同じ。
+     スマホの 4:3 の枠では縦が 4 割ほどしか映らない。コーチは動画の上から 35〜55% あたりを
+     滑ってくるので、縦位置を 40% にしてコーチが枠の中ほどに来るようにする（55% だと頭が上端に付く）。
+     ★ 動画が読めないときも poster で枠が埋まるよう、poster も同じ cover で敷く。 */
+  .ev-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;
+    display:block;background:#1b1b1e center 40%/cover no-repeat;}
   .ev-flag{position:absolute;top:12px;left:12px;background:var(--accent);color:#fff;
     font-size:11.5px;font-weight:800;letter-spacing:.04em;padding:5px 11px;border-radius:999px;}
   .ev-body{display:flex;flex-direction:column;justify-content:center;padding:6px 6px 6px 0;}
@@ -1817,28 +1823,39 @@
 
 
 <!-- 期間限定の特集枠。data-until を過ぎると下のスクリプトが要素ごと消す。 -->
-<section class="ev-band reveal" id="eventFeature" data-until="2026-10-18">
+<section class="ev-band reveal" id="eventFeature" data-until="2026-12-27">
   <div class="ev-inner">
     <div class="ev-media">
-      <img src="assets/coaches/tanaka-hana.jpg" alt="MICコーチ 田中花">
-      <span class="ev-flag">10月開催</span>
+      <!-- 2026-12 雪上レッスン：新保龍登コーチの滑り（2.9秒・音なし・約560KB）。
+           画面に入っているときだけ再生し、外れたら止める（下のスクリプト）。
+           動きを控えたい設定の端末では再生せず、poster だけを見せる。
+           ★ 動画の URL は video の data-src に置き、ページの読み込みが終わって段が画面に近づいてから src に付ける。
+             最初から付けると、autoplay のせいで開いた直後に動画を丸ごと読み、ほかの画像の読み込みが遅れる（4G 相当で約0.5秒）。
+           10月の回の写真 assets/coaches/tanaka-hana.jpg はコーチ紹介でも使うので消さない。 -->
+      <video id="eventFeatureVideo" muted autoplay loop playsinline preload="metadata"
+             data-src="assets/events/shinbo-lesson-loop.mp4"
+             poster="assets/events/shinbo-lesson-poster.jpg"
+             style="background-image:url('assets/events/shinbo-lesson-poster.jpg')"
+             aria-label="新保龍登コーチの滑り"></video>
+      <span class="ev-flag">12月開催</span>
     </div>
     <div class="ev-body">
       <div class="ev-eyebrow"><span class="ev-dot"></span>期間限定のご案内</div>
       <h2 class="ev-title"><span class="ev-kind">モーグル</span>MIC一般レッスン</h2>
-      <p class="ev-sub">担当コーチは田中花。<br>競技を目指していない方も参加できます。</p>
+      <p class="ev-sub">担当コーチは新保龍登。<br>モーグルは初めてでも大丈夫です。</p>
       <div class="ev-meta">
-        <span class="ev-chip">10/10（土）– 10/18（日）</span>
-        <span class="ev-chip">ウォータージャンプ O-air／大阪府大東市</span>
-        <span class="ev-chip">対象レベル O-air 6・7・9番台</span>
+        <span class="ev-chip">12/26（土）・27（日）</span>
+        <span class="ev-chip">雪上 白馬八方尾根／長野県白馬村</span>
+        <span class="ev-chip">小学生以上・中級斜面以上</span>
+        <span class="ev-chip">半日 ¥5,500（税込）</span>
       </div>
       <div class="ev-actions">
-        <a class="ev-cta" href="event-general-202610.html">一般レッスンの詳細を見る
+        <a class="ev-cta" href="program-general.html#lessons">詳細・お申し込み
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
-        <span class="ev-deadline">申込締切 <b>各開催日の3日前</b></span>
+        <span class="ev-deadline">申込締切 <b>12/26の回は12/23（水）、12/27の回は12/24（木）</b></span>
       </div>
-      <p class="ev-note">技はストレートジャンプ、アップライト、ヘリ、バックフリップに限定します。</p>
+      <p class="ev-note">リフト券は別途必要です。</p>
     </div>
   </div>
 </section>
@@ -1851,6 +1868,63 @@
     if (!until) return;
     // data-until の当日いっぱいは表示する（日本時間の23:59:59まで）
     if (new Date() > new Date(until + 'T23:59:59+09:00')) el.remove();
+  })();
+
+  // 枠の動画：画面に入っているときだけ再生し、外れたら止める。
+  // 動きを控えたい設定の端末では再生せず、poster だけを見せる（2026-11 追加）。
+  (function(){
+    var v = document.getElementById('eventFeatureVideo');
+    if (!v || !document.body.contains(v)) return;   // 掲載期間が過ぎて枠ごと消えたとき
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    var stopped = false;   // 動きを控える設定になったら true。以後は読み込みも再生もしない
+    var loaded = false;
+    var visible = false;   // 枠の 25% 以上が画面に入っているか
+    // 再生をやめて poster だけに戻す（読み込み済みなら src を外して最初の状態に戻す）
+    function stop(){
+      stopped = true;
+      v.removeAttribute('autoplay'); v.autoplay = false;
+      try { v.pause(); } catch (e) {}
+      if (loaded) { v.removeAttribute('src'); v.load(); }
+    }
+    if (reduce && reduce.matches) { stop(); return; }  // src を付けないので動画は読まない（poster だけ）
+    function load(){                                  // data-src を src に移して読み込みを始める（1回だけ）
+      if (loaded || stopped) return; loaded = true;
+      v.src = v.getAttribute('data-src');
+    }
+    function play(){                                  // 自動再生が許されない端末では poster のまま
+      if (stopped) return;
+      var p = v.play(); if (p && p.catch) p.catch(function(){});
+    }
+    if (!('IntersectionObserver' in window)) { load(); return; }  // 古いブラウザは autoplay のまま
+    // 画面の少し手前（下 300px）で読み込みを始める。ただしページの読み込み（load）が終わってから。
+    // PC 幅では開いた時点でこの範囲に入るので、すぐ読むとほかの画像と取り合いになる（4G 相当で load が約0.5秒遅れた）。
+    // ★ スマホ幅では読み込み途中に一瞬「画面に入った」と判定されることがあるので、再生側（下の io）も load の後まで読み込まない。
+    function pageLoaded(){ return document.readyState === 'complete'; }
+    var near = new IntersectionObserver(function(entries){
+      if (entries.some(function(en){ return en.isIntersecting; })) { load(); near.disconnect(); }
+    }, { rootMargin: '0px 0px 300px 0px' });
+    if (pageLoaded()) { near.observe(v); }
+    else {
+      window.addEventListener('load', function(){
+        if (stopped) return;
+        near.observe(v);
+        if (visible) { load(); play(); }
+      });
+    }
+    // 画面に入っているときだけ再生し、外れたら止める。
+    // isIntersecting は少しでも見えれば true になるブラウザがあるので、見えている割合で判定する。
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        visible = en.isIntersecting && en.intersectionRatio >= 0.25;
+        if (visible) { if (pageLoaded()) { load(); play(); } } else { v.pause(); }
+      });
+    }, { threshold: [0, 0.25] });
+    // 手前で読み込んだとき、autoplay で画面外のまま動き出さないようにする
+    v.addEventListener('playing', function(){ if (!visible || stopped) v.pause(); });
+    io.observe(v);
+    if (reduce && reduce.addEventListener) {
+      reduce.addEventListener('change', function(e){ if (e.matches) { near.disconnect(); io.disconnect(); stop(); } });
+    }
   })();
 </script>
 
