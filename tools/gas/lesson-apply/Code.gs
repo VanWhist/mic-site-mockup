@@ -134,11 +134,15 @@ function apply_(b, opt) {
   try {
     var sh = sheet_();
     var now = new Date();
+    // 受付日時は、日本時間の文字にしてから書く。Date のまま書くと、セルの書式によっては
+    // 別のタイムゾーンの文字になった（2026-11-13 に実際に17時間ずれた）。
+    // 書式が日付の列に書くので、シートが日付として読み取る
+    var stamp = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm:ss');
     appId = Utilities.formatDate(now, 'Asia/Tokyo', 'MMdd') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
     vtoken = Utilities.getUuid();
     var rows = people.map(function (q, idx) {
       return [
-        now, appId, str_(b.series, 30), idx + 1,
+        stamp, appId, str_(b.series, 30), idx + 1,
         app.name, app.tel, app.email, app.source,
         q.name, q.kana, q.age, slotsText_(q.slots),
         q.ski_years, q.slope, q.mogul,
@@ -146,18 +150,21 @@ function apply_(b, opt) {
         q.video, '',
         str_(b.from_lesson, 10), str_(b.utm, 120), opt.test ? 'テスト' : '受付', ''
       ].map(function (v) {
-        // 受付日時（Date）と参加者番号（数）はそのまま。文字の欄だけ、数式として読まれないようにする
-        return (v instanceof Date || typeof v === 'number') ? v : cell_(v);
+        // 参加者番号（数）はそのまま。文字の欄は、数式として読まれないようにする
+        return typeof v === 'number' ? v : cell_(v);
       });
     });
-    var r0 = sh.getLastRow() + 1;
-    var range = sh.getRange(r0, 1, rows.length, HEADERS.length);
-    // 文字の欄は「書式なしテキスト」にしてから書く。電話番号の先頭の 0 や、
-    // 年齢・加盟団体などが数字や日付に読み替えられるのを防ぐ
-    range.setNumberFormat('@');
-    sh.getRange(r0, COL['受付日時'], rows.length, 1).setNumberFormat('yyyy/mm/dd hh:mm:ss');
-    sh.getRange(r0, COL['参加者番号'], rows.length, 1).setNumberFormat('0');
-    range.setValues(rows);
+    var r0 = sh.getLastRow() + 1, n = rows.length;
+    // 書式は列ごとに分けて付ける。文字の列だけ「書式なしテキスト」にして、電話番号の先頭の 0 や、
+    // 年齢・加盟団体などが数字や日付に読み替えられるのを防ぐ。
+    // ★ 受付日時と参加者番号の列には、書式なしテキストを一度もかけない
+    //   （かけてから日付の書式に戻しても、文字のまま入った）
+    sh.getRange(r0, COL['受付日時'], n, 1).setNumberFormat('yyyy/mm/dd hh:mm:ss');
+    sh.getRange(r0, COL['受付番号'], n, 2).setNumberFormat('@');                    // 受付番号・回の組
+    sh.getRange(r0, COL['参加者番号'], n, 1).setNumberFormat('0');
+    sh.getRange(r0, COL['申込者氏名'], n, HEADERS.length - COL['申込者氏名'] + 1).setNumberFormat('@');
+    SpreadsheetApp.flush();   // 書式を先に確定させてから値を書く
+    sh.getRange(r0, 1, n, HEADERS.length).setValues(rows);
     counts = countBySlot_(sh);
     // 動画を送るための合言葉。受付番号だけでは送れないようにする（1日で無効）
     if (people.some(function (q) { return q.video; })) cache.put('vt:' + appId, vtoken, 21600);
