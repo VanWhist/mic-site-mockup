@@ -122,6 +122,7 @@
   .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin:26px 0 14px;}
   .total .k{font-size:13.5px;color:#d3d3d8;font-weight:700;}
   .total .v{font-size:22px;font-weight:800;white-space:nowrap;}
+  .paynote{margin:-4px 2px 16px;}
   .total small{display:block;font-size:12px;color:var(--muted);font-weight:500;}
 
   .submit{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;border:none;border-radius:999px;
@@ -240,6 +241,8 @@
         <div class="k">参加費の合計<small>リフト券は含みません</small></div>
         <div class="v" id="total">0円</div>
       </div>
+      <!-- お支払いと中止の決まりの短い版（2026-11-14 城さん決定）。全文は program-general.html#lesson-policy。変えるときは両方そろえる -->
+      <p class="note paynote">レッスン料は、当日、集合場所で現金でお支払いください。キャンセル料はかかりません。天候などで中止するときは、当日の朝7:00までにご連絡します。中止した分のレッスン料はいただきません。くわしくは<a href="program-general.html#lesson-policy" target="_blank" rel="noopener">お支払いと、中止のときのこと</a>をご覧ください。</p>
 
       <div class="notice" id="formError" hidden></div>
       <div class="notice info" id="notReady" hidden>ただいまフォームから送信できません。お手数ですが、<a href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="apply-notready-line">公式LINE</a>からお申し込みください。</div>
