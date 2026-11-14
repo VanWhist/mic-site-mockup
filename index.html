@@ -1730,6 +1730,31 @@
   .ev-deadline{font-size:12.5px;color:var(--muted);}
   .ev-deadline b{color:var(--fg);font-size:14px;}
   .ev-note{margin-top:12px;font-size:12px;color:var(--muted);}
+  /* 2つ以上の回を同時に出すとき（2026-11 試作：12月 新保コーチ＋1月 渡辺コーチ）。
+     下のスクリプトが、掲載期間内の回が2つ以上あれば .ev-band に is-multi を付ける。1つなら今までどおりの1枚表示。
+     広い画面では2枚を横に並べ、狭い画面では1枚ずつ横にスワイプして切り替える（次の枚の端が少しのぞく）。
+     縦に積まないので、スマホでも段の高さは1枚分のまま。
+     ★ 切り替えボタン（.ev-pager）は、横にはみ出して隠れている枚があるときだけ出す。 */
+  .ev-track{position:relative;}
+  .ev-band.is-multi .ev-track{max-width:1120px;margin:0 auto;display:flex;gap:16px;
+    overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+  .ev-band.is-multi .ev-track::-webkit-scrollbar{display:none;}
+  .ev-band.is-multi .ev-inner{flex:0 0 calc(50% - 8px);margin:0;scroll-snap-align:start;
+    grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:20px;}
+  .ev-band.is-multi .ev-title{font-size:clamp(24px,2.6vw,30px);}
+  /* 枠を本文の高さに引き伸ばすと 9:16 が崩れ、リールのテロップが左右で切れるので、縦長の比率のまま上下中央に置く */
+  .ev-band.is-multi .ev-media.is-portrait{align-self:center;}
+  /* 幅が半分になると「MIC一般レッスン」の最後の1文字だけが折り返すので、種目の札を見出しの上の行に出す */
+  .ev-band.is-multi .ev-kind{display:table;margin:0 0 8px;}
+  .ev-pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .ev-pager[hidden]{display:none;}
+  .ev-pager button{font:inherit;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;}
+  .ev-pager button[aria-current="true"]{color:#fff;background:var(--accent);border-color:var(--accent);}
+  @media (max-width:1179px){
+    .ev-band.is-multi .ev-inner{flex-basis:88%;grid-template-columns:minmax(0,240px) minmax(0,1fr);}
+  }
   @media (max-width:820px){
     .ev-inner{grid-template-columns:1fr;gap:16px;padding:14px;}
     /* 4:3 の高さは ::before の余白で作る。aspect-ratio だけだと、iPhone（WebKit）で
@@ -1745,6 +1770,9 @@
     .ev-actions{gap:11px;}
     .ev-cta{width:100%;justify-content:center;}
     .ev-deadline{width:100%;text-align:center;}
+    .ev-band.is-multi .ev-track{gap:12px;}
+    .ev-band.is-multi .ev-inner{flex-basis:86%;grid-template-columns:1fr;gap:16px;}
+    .ev-band.is-multi .ev-title{font-size:26px;}
   }
 
 </style>
@@ -1837,9 +1865,12 @@
 </section>
 
 
-<!-- 期間限定の特集枠。data-until を過ぎると下のスクリプトが要素ごと消す。 -->
-<section class="ev-band reveal" id="eventFeature" data-until="2026-12-27">
-  <div class="ev-inner ev-inner--portrait">
+<!-- 期間限定の特集枠。回（.ev-inner）ごとに data-until を持ち、過ぎた回は下のスクリプトが消す。
+     全部の回が過ぎたら段ごと消す。掲載中の回が2つ以上あれば横に並べる（スマホは横スワイプ）。
+     data-label は切り替えボタンの文字。 -->
+<section class="ev-band reveal" id="eventFeature">
+ <div class="ev-track" id="eventFeatureTrack" role="region" aria-label="期間限定のご案内">
+  <div class="ev-inner ev-inner--portrait" data-until="2026-12-27" data-label="12月｜新保コーチ">
     <div class="ev-media is-portrait">
       <!-- 2026-12 雪上レッスン：新保龍登コーチの紹介リールの全編（21.6秒・音なし・約2.4MB。
            元はインスタのリール MIC_reel_coach_shinbo_ryuto。540×960 に縮めて音声を外したもの）。
@@ -1875,16 +1906,87 @@
       <p class="ev-note">リフト券は別途必要です。</p>
     </div>
   </div>
+  <!-- 2027-01 雪上レッスン（渡辺大晴コーチ）。★ 対象の文言は、決まりしだい見直す。
+       写真はコーチ紹介の2枚目（動画をもらえたら新保コーチの回と同じく video に差し替える）。
+       ボタンの行き先は、一般レッスンのページに1月の回のカードができたら #lesson-20270107 などに変える。 -->
+  <div class="ev-inner ev-inner--portrait" data-until="2027-01-11" data-label="1月｜渡辺コーチ">
+    <div class="ev-media is-portrait">
+      <img src="assets/coaches/watanabe-taisei-2.jpg" alt="コブを滑る渡辺大晴コーチ" loading="lazy" decoding="async" style="object-position:43% 45%">
+      <span class="ev-flag">1月開催</span>
+    </div>
+    <div class="ev-body">
+      <div class="ev-eyebrow"><span class="ev-dot"></span>期間限定のご案内</div>
+      <h2 class="ev-title"><span class="ev-kind">モーグル</span>MIC一般レッスン</h2>
+      <p class="ev-sub">担当コーチは渡辺大晴。<br>モーグルは初めてでも大丈夫です。</p>
+      <div class="ev-meta">
+        <span class="ev-chip">1/7（木）〜11（月・祝）</span>
+        <span class="ev-chip">雪上 白馬八方尾根／長野県白馬村</span>
+        <span class="ev-chip">小学生以上・中級斜面以上</span>
+        <span class="ev-chip">1日のみ ¥11,000（税込）</span>
+      </div>
+      <div class="ev-actions">
+        <a class="ev-cta" href="program-general.html#lessons">詳細・お申し込み
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+        <span class="ev-deadline">申込締切 <b>1/4（月）</b></span>
+      </div>
+      <p class="ev-note">各日2名以上で開催します。リフト券は別途必要です。</p>
+    </div>
+  </div>
+ </div>
+ <div class="ev-pager" id="eventFeaturePager" hidden></div>
 </section>
 <script>
-  // 掲載期間を過ぎたら枠ごと消す。消し忘れで古い告知が残るのを防ぐための仕掛け。
+  // 掲載期間を過ぎた回を消す。全部過ぎたら段ごと消す。消し忘れで古い告知が残るのを防ぐための仕掛け。
+  // 掲載中の回が2つ以上なら横に並べ、隠れている回があるときだけ切り替えボタンを出す（2026-11 追加）。
   (function(){
-    var el = document.getElementById('eventFeature');
-    if (!el) return;
-    var until = el.getAttribute('data-until');
-    if (!until) return;
-    // data-until の当日いっぱいは表示する（日本時間の23:59:59まで）
-    if (new Date() > new Date(until + 'T23:59:59+09:00')) el.remove();
+    var band = document.getElementById('eventFeature');
+    if (!band) return;
+    var now = new Date();
+    Array.prototype.forEach.call(band.querySelectorAll('.ev-inner[data-until]'), function(card){
+      // data-until の当日いっぱいは表示する（日本時間の23:59:59まで）
+      if (now > new Date(card.getAttribute('data-until') + 'T23:59:59+09:00')) card.remove();
+    });
+    var cards = band.querySelectorAll('.ev-inner');
+    if (!cards.length) { band.remove(); return; }
+    if (cards.length < 2) return;
+    band.classList.add('is-multi');
+
+    var track = document.getElementById('eventFeatureTrack');
+    var pager = document.getElementById('eventFeaturePager');
+    var buttons = Array.prototype.map.call(cards, function(card, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = card.getAttribute('data-label') || String(i + 1);
+      b.addEventListener('click', function(){
+        // 動きを控える設定の端末では、滑らかに動かさずに切り替える（動画もこの設定では止めている）
+        var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        track.scrollTo({ left: card.offsetLeft, behavior: calm ? 'auto' : 'smooth' });
+      });
+      pager.appendChild(b);
+      return b;
+    });
+    // いま一番左に来ている回のボタンを強調する
+    function markCurrent(){
+      var current = 0, best = Infinity;
+      Array.prototype.forEach.call(cards, function(card, i){
+        var d = Math.abs(card.offsetLeft - track.scrollLeft);
+        if (d < best) { best = d; current = i; }
+      });
+      buttons.forEach(function(b, i){ b.setAttribute('aria-current', i === current ? 'true' : 'false'); });
+    }
+    // 横にはみ出している（隠れている回がある）ときだけボタンを出す
+    function update(){
+      pager.hidden = track.scrollWidth <= track.clientWidth + 4;
+      markCurrent();
+    }
+    var ticking = false;
+    track.addEventListener('scroll', function(){
+      if (ticking) return; ticking = true;
+      requestAnimationFrame(function(){ ticking = false; markCurrent(); });
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   })();
 
   // 枠の動画：画面に入っているときだけ再生し、外れたら止める。
