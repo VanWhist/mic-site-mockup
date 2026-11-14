@@ -236,7 +236,7 @@ function mailApplicant_(appId, app, people) {
   var opt = { name: 'MIC（Mogul Improvement Community）' };
   var pdf = prop_('CONSENT_PDF_ID');
   if (pdf) {
-    lines.splice(lines.length - 3, 0, '参加同意書を添付しています。当日までにご確認ください。', '');
+    lines.splice(lines.length - 3, 0, '参加同意書を添付しています。ご記入のうえ、レッスン当日、参加費と一緒にお渡しください。', '');
     opt.attachments = [DriveApp.getFileById(pdf).getBlob()];
   }
   MailApp.sendEmail(app.email, '【MIC】雪上レッスンのお申し込みを受け付けました（' + appId + '）', lines.join('\n'), opt);
