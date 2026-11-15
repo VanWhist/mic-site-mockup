@@ -112,6 +112,12 @@
   .day-label .closed{color:var(--ng);font-size:12px;font-weight:700;margin-left:6px;}
   .day.from-card .day-label::after{content:'このカードから来ました';margin-left:8px;padding:1px 7px;border-radius:5px;
     background:rgba(255,90,60,.14);color:#ffb7a8;font-size:11px;font-weight:700;}
+  /* コーチごとの見出し。カードから来たときは、そのコーチの回だけを出す（ほかのコーチの回を間違えて選ばないように、2026-11-15）。
+     ほかのコーチの回は「ほかのコーチの回も申し込む」を押したときだけ出す */
+  .days-coach{margin:4px 0 -2px;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.02em;}
+  .days-coach:first-child{margin-top:0;}
+  .more-coaches{display:block;width:100%;min-height:46px;margin:0;border-radius:12px;border:1px dashed rgba(255,255,255,.25);
+    background:transparent;color:#d3d3d8;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;}
 
   .add{display:block;width:100%;min-height:52px;border-radius:14px;border:1px dashed rgba(255,255,255,.25);
     background:transparent;color:var(--fg);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;}
@@ -402,6 +408,26 @@
   }
   var openLessons = C.lessons.filter(function(l){ return !isClosed(l); });
 
+  // カードから来たときは、その回のコーチの回だけを出す（そのコーチの回が全部締め切っていたら絞らない）
+  var fromLessonObj = C.lessons.filter(function(l){ return l.id === fromLesson; })[0];
+  var focusCoach = (fromLessonObj && openLessons.some(function(l){ return l.coach === fromLessonObj.coach; })) ? fromLessonObj.coach : '';
+  var showAllCoaches = !focusCoach;
+  // 並べる順：絞るコーチの回（カードから来た回を先頭）→ ほかのコーチの回。コーチごとにまとめる
+  var orderedLessons = (function(){
+    var coaches = [];
+    if (focusCoach) coaches.push(focusCoach);
+    C.lessons.forEach(function(l){ if (coaches.indexOf(l.coach) < 0) coaches.push(l.coach); });
+    var out = [];
+    coaches.forEach(function(c){
+      C.lessons.forEach(function(l){ if (l.coach === c) out.push(l); });
+    });
+    out.sort(function(a, b){
+      if (a.coach !== b.coach) return coaches.indexOf(a.coach) - coaches.indexOf(b.coach);
+      return (b.id === fromLesson) - (a.id === fromLesson);
+    });
+    return out;
+  })();
+
   function yen(n){ return n.toLocaleString('ja-JP') + '円'; }
   function fmtSize(b){ return b >= 1048576 ? (b / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(b / 1024)) + 'KB'; }
 
@@ -425,9 +451,20 @@
 
     // 参加する回（回ごとに 参加しない＋その回で選べる枠）
     var days = node.querySelector('.days');
-    C.lessons.forEach(function(l){
+    var prevCoach = '';
+    orderedLessons.forEach(function(l){
       var closed = isClosed(l);
+      var hide = !showAllCoaches && l.coach !== focusCoach;
+      if (l.coach !== prevCoach) {
+        var h = document.createElement('div');
+        h.className = 'days-coach';
+        h.textContent = l.coach + 'コーチの回';
+        h.hidden = hide;
+        days.appendChild(h);
+        prevCoach = l.coach;
+      }
       var d = document.createElement('div');
+      d.hidden = hide;
       d.className = 'day' + (l.id === fromLesson && !closed ? ' from-card' : '');
       d.setAttribute('data-lesson', l.id);
       var html = '<div class="day-label"><span class="date">' + l.label + '</span><span class="coach">' + l.coach + 'コーチ</span>' +
@@ -441,9 +478,14 @@
       d.innerHTML = html + '</div>';
       days.appendChild(d);
     });
-    // カードから来た回を先頭に
-    var picked = days.querySelector('.from-card');
-    if (picked) days.insertBefore(picked, days.firstChild);
+    if (!showAllCoaches && orderedLessons.some(function(l){ return l.coach !== focusCoach; })) {
+      var more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'more-coaches';
+      more.textContent = 'ほかのコーチの回も申し込む';
+      more.addEventListener('click', showAllLessons);
+      days.appendChild(more);
+    }
 
     node.querySelector('.remove').addEventListener('click', function(){
       node.remove(); renumber(); updateTotal();
@@ -754,11 +796,24 @@
     window.scrollTo(0, 0);
   }
 
+  // 「ほかのコーチの回も申し込む」：全員分の、隠していた回を出す
+  function showAllLessons(){
+    showAllCoaches = true;
+    people.querySelectorAll('.days [hidden]').forEach(function(el){ el.hidden = false; });
+    people.querySelectorAll('.more-coaches').forEach(function(b){ b.remove(); });
+    renderSummary();
+    track('apply_all_coaches', fromLesson);
+  }
+
   // ---- はじめの表示 ----
   $('sumPlace').textContent = C.place;
-  // 概要のコーチと料金は、受付中の回から作る（全部締め切ったあとは全部の回から）
-  (function(){
-    var src = openLessons.length ? openLessons : C.lessons;
+  // 概要のコーチと料金は、受付中の回から作る（全部締め切ったあとは全部の回から）。
+  // カードから来て絞っているときは、そのコーチの回から作る
+  var SUM_TIME_NOTE = $('sumTimeNote').textContent;
+  var SUM_FEE_NOTE = $('sumFeeNote').textContent;
+  function renderSummary(){
+    var base = openLessons.length ? openLessons : C.lessons;
+    var src = showAllCoaches ? base : base.filter(function(l){ return l.coach === focusCoach; });
     var coaches = [], half = false;
     src.forEach(function(l){
       if (coaches.indexOf(l.coach) < 0) coaches.push(l.coach);
@@ -766,11 +821,12 @@
     });
     $('sumCoach').textContent = coaches.join('／');
     $('sumFee').textContent = (half ? '半日（2時間）' + yen(feeOf('am')) + '／' : '') + '1日（4時間）' + yen(feeOf('day')) + '（税込）';
-    if (!half) $('sumTimeNote').textContent = '午前と午後の両方を通して受けます。';
-    if (half && src.some(function(l){ return l.slots.indexOf('am') < 0; })) {
-      $('sumFeeNote').textContent = '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。';
-    }
-  })();
+    $('sumTimeNote').textContent = half ? SUM_TIME_NOTE : '午前と午後の両方を通して受けます。';
+    $('sumFeeNote').textContent = (half && src.some(function(l){ return l.slots.indexOf('am') < 0; }))
+      ? '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。'
+      : SUM_FEE_NOTE;
+  }
+  renderSummary();
   $('addPerson').addEventListener('click', function(){ addPerson(); });
   addPerson();
   updateTotal();
