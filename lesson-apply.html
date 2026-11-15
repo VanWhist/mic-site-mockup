@@ -100,7 +100,9 @@
   /* 参加する回：回ごとに枠で囲み、日付を大きく出す（回の区切りが分かりにくかったため、2026-11-15）。
      参加する枠を選んだ回は、枠の線をオレンジにする */
   .days{display:grid;gap:10px;margin:8px 0 14px;}
-  .day{margin:0;padding:12px 12px 12px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.13);
+  .day .choice span{white-space:nowrap;}
+  .day-label .coach,.day-label .closed{white-space:nowrap;}
+  .day{margin:0;padding:12px 10px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.13);
     transition:border-color .15s ease,background .15s ease;}
   .day:has(input:checked:not([value=""])){border-color:var(--accent);background:rgba(255,90,60,.05);}
   .day-label{font-size:13.5px;font-weight:700;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);}
