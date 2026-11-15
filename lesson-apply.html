@@ -832,7 +832,7 @@
       if (caps.indexOf(c) < 0) caps.push(c);
     });
     $('sumCap').textContent = (!showAllCoaches && caps.length === 1)
-      ? (/^[0-9]/.test(caps[0]) ? '各日' : '') + caps[0]
+      ? (src.length > 1 && /^[0-9０-９]/.test(caps[0]) ? '各日' : '') + caps[0]
       : SUM_CAP;
   }
   renderSummary();
