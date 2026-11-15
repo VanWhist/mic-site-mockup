@@ -120,8 +120,8 @@
   .fee-note b{color:#d8d8dc;font-weight:700;}
 
   /* ---------- 開催予定のレッスン（コーチごとのカード）----------
-     コーチ（開催の組）ごとに1枚。閉じているときは「写真・コーチ・日程・時間・料金」だけを見せ、
-     押すと「料金の説明 → 対象 → 日付ごとの申込 → 集合・定員・お支払い → LINE」を開く（2026-11-15 城さん決定）。
+     コーチ（開催の組）ごとに1枚。閉じているときは「写真・コーチ・日程・一言・時間・料金」だけを見せ、
+     押すと「コーチ紹介 → 料金の説明 → 対象 → 日付ごとの申込 → 集合・定員・お支払い → LINE」を開く（2026-11-15 城さん決定）。
      10月の回は対象と料金がページの下にしかなく、申込に進まなかった（2026-10-13 の決定）。開いた中で対象を申込の前に置くのはそのため。
      日付の行の id は lesson-<回のid>（12月は開催日8桁、1月からは YYYYMMDD-コーチ）。カレンダーや Instagram から
      #lesson-20261226 の形で直接飛ばす。その場合は下のスクリプトがカードを開いて、その日の行まで動かす。 */
@@ -145,6 +145,7 @@
   .lg-coach img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 20%;flex:0 0 auto;}
   .lg-coach-name{font-size:12px;font-weight:800;color:var(--muted);}
   .lg-dates{font-size:19px;font-weight:800;line-height:1.4;letter-spacing:-.01em;}
+  .lg-quote{margin:10px 0 0;padding:1px 0 1px 11px;border-left:3px solid var(--accent);font-size:14px;font-weight:700;line-height:1.65;color:#fff;}
   .lg-meta{list-style:none;margin:10px 0 0;padding:0;font-size:12.5px;line-height:1.75;color:#d3d3d8;}
   .lg-meta b{color:#fff;font-weight:800;}
   .lg-toggle{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;padding:13px 14px;border-radius:999px;
@@ -157,6 +158,10 @@
   .lesson-group[open] .lg-toggle .lg-t-open{display:none;}
   .lesson-group[open] .lg-toggle .lg-t-close{display:inline;}
   .lg-body{padding:0 18px 20px;}
+  .lg-profile{margin:2px 0 16px;padding:0 0 14px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .lg-profile-k{font-size:10.5px;font-weight:800;letter-spacing:.14em;color:var(--accent);margin:0 0 8px;}
+  .lg-profile p{margin:0 0 8px;font-size:13px;line-height:1.85;color:#e2e2e6;}
+  .lg-profile p:last-child{margin-bottom:0;}
   .lg-days-h{margin:18px 0 8px;font-size:15px;font-weight:800;}
   .lg-days{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
   .lg-day{display:flex;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:14px;
@@ -182,6 +187,7 @@
   .lc-target{margin:14px 0 4px;padding:13px 14px 12px;border-radius:14px;border:1px solid rgba(255,90,60,.45);background:rgba(255,90,60,.07);}
   .lc-target-h{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--accent);}
   .lc-target ul{list-style:none;margin:7px 0 0;padding:0;}
+  .lc-target-note{margin:6px 0 0;font-size:12px;line-height:1.7;color:#d3d3d8;}
   .lc-target li{position:relative;padding-left:19px;font-size:14px;line-height:1.75;color:#f0f0f3;}
   .lc-target li::before{content:'';position:absolute;left:2px;top:.62em;width:9px;height:5px;
     border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);}
@@ -199,12 +205,8 @@
   .lesson-about{margin:22px 0 0;padding:20px 18px 18px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);}
   .la-k{font-size:10.5px;font-weight:800;letter-spacing:.14em;color:var(--accent);}
   .la-h{margin:6px 0 10px;font-size:18px;font-weight:800;line-height:1.5;letter-spacing:-.01em;}
-  .la-head{display:flex;align-items:center;gap:14px;margin:8px 0 12px;}
-  .la-head img{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 20%;flex:0 0 auto;}
-  .la-head .la-h{margin:0;}
   .lesson-about p{margin:0 0 9px;font-size:13.5px;line-height:1.9;color:#e2e2e6;}
   .lesson-about p:last-child{margin-bottom:0;}
-  .lesson-about p.la-quote{margin:0 0 12px;padding:2px 0 2px 12px;border-left:3px solid var(--accent);font-size:15px;font-weight:700;line-height:1.7;color:#fff;}
   .la-facts{list-style:none;margin:2px 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:7px;}
   .lesson-policy{scroll-margin-top:84px;}
   .lesson-policy h4{margin:16px 0 6px;font-size:14px;font-weight:800;color:#fff;}
@@ -578,13 +580,14 @@
     <h2 class="lessons-h">開催予定のレッスン</h2>
     <p class="lessons-lead">コーチごとのカードを押すと、日付を選んで申し込めます。料金のほかに、スキー場のリフト券が必要です。</p>
     <details class="lesson-group" id="lesson-group-shimbo">
-      <summary class="lg-summary" aria-label="新保 龍登コーチの回　12/26（土）・27（日）　日付を選んで申し込む">
+      <summary class="lg-summary" aria-label="新保 龍登コーチの回　12/26（土）・27（日）　「シーズン初めにコブの基本を一緒に身につけましょう！」　日付を選んで申し込む">
         <div class="lessons-photo">
           <img src="assets/lessons/snow-202612-shimbo.webp" width="960" height="600" alt="白馬の雪山を背に、スキーを両手に持つコーチ" loading="lazy" decoding="async">
           <div class="lessons-photo-cap"><b>モーグルを、雪の上ではじめる。</b><small>12月の雪上レッスン｜白馬八方尾根スキー場</small></div>
         </div>
         <div class="lg-info">
           <div class="lg-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><div><div class="lg-coach-name">コーチ：新保 龍登</div><div class="lg-dates">12/26（土）・27（日）</div></div></div>
+          <p class="lg-quote">「シーズン初めにコブの基本を一緒に身につけましょう！」</p>
           <ul class="lg-meta">
             <li>時間：<b>午前 10:00–12:00／午後 13:00–15:00</b></li>
             <li>料金：<b>半日（2時間）¥5,500・1日（4時間）¥11,000</b>（税込・リフト券は別途）</li>
@@ -593,6 +596,12 @@
         </div>
       </summary>
       <div class="lg-body">
+        <div class="lg-profile">
+          <div class="lg-profile-k">COACH｜新保 龍登</div>
+          <ul class="la-facts"><li>MIC出身</li><li>全日本選手権 6位（2019）</li><li>SAJ強化指定選手（2020〜2022）</li><li>FREERIDE WORLD TOUR JAPAN 7位（2025）</li></ul>
+          <p>大阪府出身。小学2年生でモーグルを始め、小学4年生でMICの前身「Jr.プロジェクト」に入りました。2024年の全日本選手権を最後にモーグル競技を引退しています。</p>
+          <p>いまは白馬エリアを拠点に、フリーライドのプロライダーとして滑りながら、若手モーグル選手の育成を続けています。会場の白馬八方尾根は、その白馬エリアのスキー場です。</p>
+        </div>
         <div class="lc-fee-note">
           半日は午前か午後のどちらか、1日は両方に参加します。<br>
           <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円／午前券・午後券 大人 8,100円・こども 4,050円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
@@ -606,6 +615,7 @@
             <li>モーグルは初めてでも大丈夫です</li>
             <li>ふだんのスキー用具で参加できます</li>
           </ul>
+          <p class="lc-target-note">コブを滑ったことがなくても、フラットからご指導します。</p>
         </div>
         <div class="lg-days-h">日付を選んで申し込む</div>
         <ul class="lg-days">
@@ -622,13 +632,14 @@
       </div>
     </details>
     <details class="lesson-group" id="lesson-group-watanabe">
-      <summary class="lg-summary" aria-label="渡辺 大晴コーチの回　1/7（木）〜11（月・祝）　日付を選んで申し込む">
+      <summary class="lg-summary" aria-label="渡辺 大晴コーチの回　1/7（木）〜11（月・祝）　「モーグルの理屈を知って上達しましょう！」　日付を選んで申し込む">
         <div class="lessons-photo">
           <img src="assets/lessons/snow-202701-watanabe.webp" width="960" height="600" alt="雪の林を背に、空中で体を回すスキーヤー" loading="lazy" decoding="async">
           <div class="lessons-photo-cap"><b>モーグルの理屈を知って、上達する。</b><small>1月の雪上レッスン｜1/7〜1/11 毎日開催｜白馬八方尾根スキー場</small></div>
         </div>
         <div class="lg-info">
           <div class="lg-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><div><div class="lg-coach-name">コーチ：渡辺 大晴</div><div class="lg-dates">1/7（木）〜11（月・祝）</div></div></div>
+          <p class="lg-quote">「モーグルの理屈を知って上達しましょう！」</p>
           <ul class="lg-meta">
             <li>時間：<b>午前 10:00–12:00／午後 13:00–15:00</b></li>
             <li>料金：<b>1日（4時間）¥11,000</b>（税込・リフト券は別途）</li>
@@ -637,6 +648,13 @@
         </div>
       </summary>
       <div class="lg-body">
+        <!-- 渡辺コーチの紹介文はトップページのコーチ紹介（watanabe-taisei）と、告知の確認（2026-11-15 本人）から -->
+        <div class="lg-profile">
+          <div class="lg-profile-k">COACH｜渡辺 大晴</div>
+          <ul class="la-facts"><li>元ワールドカップ選手</li><li>W杯デュアルモーグル 決勝進出（2015）</li><li>モーグルナショナルチーム アシスタントコーチ（2026〜）</li></ul>
+          <p>大阪府大阪市出身。冬は長野県や北海道を中心に活動しています。ワールドカップでの経験や、コーチになってから得たモーグルの知見が、いまの指導につながっています。</p>
+          <p>上達することの楽しさを伝えたいと思っています。得意なのは、ターンとエアの指導と見本です。</p>
+        </div>
         <div class="lc-fee-note">
           この回は1日（午前と午後の両方）のみです。<br>
           <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
@@ -650,6 +668,7 @@
             <li>モーグルは初めてでも大丈夫です</li>
             <li>ふだんのスキー用具で参加できます</li>
           </ul>
+          <p class="lc-target-note">コブを滑ったことがなくても、フラットからご指導します。</p>
         </div>
         <div class="lg-days-h">日付を選んで申し込む</div>
         <ul class="lg-days">
@@ -668,35 +687,6 @@
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-group-watanabe-line">LINEで相談する</a>
       </div>
     </details>
-    <div class="lesson-about" id="lesson-coach">
-      <div class="la-k">COACH｜12月の回</div>
-      <div class="la-head">
-        <img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async">
-        <h3 class="la-h">教えるのは、<br>新保 龍登コーチです。</h3>
-      </div>
-      <ul class="la-facts"><li>MIC出身</li><li>全日本選手権 6位（2019）</li><li>SAJ強化指定選手（2020〜2022）</li><li>FREERIDE WORLD TOUR JAPAN 7位（2025）</li></ul>
-      <p class="la-quote">「シーズン初めにコブの基本を一緒に身につけましょう！」</p>
-      <p>大阪府出身。小学2年生でモーグルを始め、小学4年生でMICの前身「Jr.プロジェクト」に入りました。2024年の全日本選手権を最後にモーグル競技を引退しています。</p>
-      <p>いまは白馬エリアを拠点に、フリーライドのプロライダーとして滑りながら、若手モーグル選手の育成を続けています。会場の白馬八方尾根は、その白馬エリアのスキー場です。</p>
-    </div>
-    <!-- 1月の回のコーチ。文はトップページのコーチ紹介（watanabe-taisei）と、告知の確認（2026-11-15 本人）から -->
-    <div class="lesson-about" id="lesson-coach-watanabe">
-      <div class="la-k">COACH｜1月の回</div>
-      <div class="la-head">
-        <img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%">
-        <h3 class="la-h">教えるのは、<br>渡辺 大晴コーチです。</h3>
-      </div>
-      <ul class="la-facts"><li>元ワールドカップ選手</li><li>W杯デュアルモーグル 決勝進出（2015）</li><li>モーグルナショナルチーム アシスタントコーチ（2026〜）</li></ul>
-      <p class="la-quote">「モーグルの理屈を知って上達しましょう！」</p>
-      <p>大阪府大阪市出身。冬は長野県や北海道を中心に活動しています。ワールドカップでの経験や、コーチになってから得たモーグルの知見が、いまの指導につながっています。</p>
-      <p>上達することの楽しさを伝えたいと思っています。得意なのは、ターンとエアの指導と見本です。</p>
-    </div>
-    <div class="lesson-about" id="lesson-level">
-      <div class="la-k">LEVEL</div>
-      <h3 class="la-h">参加の目安</h3>
-      <p>中級斜面以上を滑れる方が対象です。コブを滑ったことがなくても、フラットからご指導します。モーグル用の板じゃなくても大丈夫です。</p>
-      <p>小学生から大人まで、一緒に滑りましょう。少人数で行います（定員はコーチごとのカードに書いています）。</p>
-    </div>
     <!-- 雪上レッスンのお支払いと中止の決まり（2026-11-14 城さん決定）。12月以降の雪上レッスンに共通。
          申込フォーム（lesson-apply.html）の短い版からこの段（#lesson-policy）へリンクしている。変えるときは両方そろえる。 -->
     <div class="lesson-about lesson-policy" id="lesson-policy">
