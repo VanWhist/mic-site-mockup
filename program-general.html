@@ -168,7 +168,14 @@
   .lg-day-info{flex:1 1 auto;min-width:0;font-size:12px;line-height:1.6;color:var(--muted);}
   .lg-day-btn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;
     background:var(--accent);color:#fff;font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;}
+  .lg-day-info span{white-space:nowrap;}
   .lg-body .cta-btn.ghost{margin-top:16px;}
+  @media (max-width:359px){
+    .lg-day{gap:8px;padding:10px 8px;}
+    .lg-day-date{min-width:46px;}
+    .lg-day-date b{font-size:18px;}
+    .lg-day-btn{padding:10px 12px;font-size:13px;}
+  }
   .lc-fee-note{font-size:12px;line-height:1.8;color:var(--muted);}
   .lc-fee-note b{color:#e2e2e6;font-weight:700;}
   .lc-fee-note a{color:#e2e2e6;}
@@ -571,7 +578,7 @@
     <h2 class="lessons-h">開催予定のレッスン</h2>
     <p class="lessons-lead">コーチごとのカードを押すと、日付を選んで申し込めます。料金のほかに、スキー場のリフト券が必要です。</p>
     <details class="lesson-group" id="lesson-group-shimbo">
-      <summary class="lg-summary">
+      <summary class="lg-summary" aria-label="新保 龍登コーチの回　12/26（土）・27（日）　日付を選んで申し込む">
         <div class="lessons-photo">
           <img src="assets/lessons/snow-202612-shimbo.webp" width="960" height="600" alt="白馬の雪山を背に、スキーを両手に持つコーチ" loading="lazy" decoding="async">
           <div class="lessons-photo-cap"><b>モーグルを、雪の上ではじめる。</b><small>12月の雪上レッスン｜白馬八方尾根スキー場</small></div>
@@ -580,7 +587,7 @@
           <div class="lg-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><div><div class="lg-coach-name">コーチ：新保 龍登</div><div class="lg-dates">12/26（土）・27（日）</div></div></div>
           <ul class="lg-meta">
             <li>時間：<b>午前 10:00–12:00／午後 13:00–15:00</b></li>
-            <li>料金：<b>半日 ¥5,500・1日 ¥11,000</b>（税込・リフト券は別途）</li>
+            <li>料金：<b>半日（2時間）¥5,500・1日（4時間）¥11,000</b>（税込・リフト券は別途）</li>
           </ul>
           <div class="lg-toggle"><span class="lg-t-open">日付を選んで申し込む</span><span class="lg-t-close">閉じる</span></div>
         </div>
@@ -602,8 +609,8 @@
         </div>
         <div class="lg-days-h">日付を選んで申し込む</div>
         <ul class="lg-days">
-          <li class="lg-day" id="lesson-20261226"><div class="lg-day-date"><b>12/26</b><span>土曜日</span></div><div class="lg-day-info">午前・午後・1日<br>締切 12月23日（水）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20261226" data-cta-pos="lesson-20261226">申し込む</a></li>
-          <li class="lg-day" id="lesson-20261227"><div class="lg-day-date"><b>12/27</b><span>日曜日</span></div><div class="lg-day-info">午前・午後・1日<br>締切 12月24日（木）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20261227" data-cta-pos="lesson-20261227">申し込む</a></li>
+          <li class="lg-day" id="lesson-20261226"><div class="lg-day-date"><b>12/26</b><span>土曜日</span></div><div class="lg-day-info">午前・午後・1日<br><span>締切 12月23日（水）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20261226" data-cta-pos="lesson-20261226">申し込む</a></li>
+          <li class="lg-day" id="lesson-20261227"><div class="lg-day-date"><b>12/27</b><span>日曜日</span></div><div class="lg-day-info">午前・午後・1日<br><span>締切 12月24日（木）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20261227" data-cta-pos="lesson-20261227">申し込む</a></li>
         </ul>
         <dl class="lc-rows">
           <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
@@ -615,7 +622,7 @@
       </div>
     </details>
     <details class="lesson-group" id="lesson-group-watanabe">
-      <summary class="lg-summary">
+      <summary class="lg-summary" aria-label="渡辺 大晴コーチの回　1/7（木）〜11（月・祝）　日付を選んで申し込む">
         <div class="lessons-photo">
           <img src="assets/lessons/snow-202701-watanabe.webp" width="960" height="600" alt="雪の林を背に、空中で体を回すスキーヤー" loading="lazy" decoding="async">
           <div class="lessons-photo-cap"><b>モーグルの理屈を知って、上達する。</b><small>1月の雪上レッスン｜1/7〜1/11 毎日開催｜白馬八方尾根スキー場</small></div>
@@ -624,7 +631,7 @@
           <div class="lg-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><div><div class="lg-coach-name">コーチ：渡辺 大晴</div><div class="lg-dates">1/7（木）〜11（月・祝）</div></div></div>
           <ul class="lg-meta">
             <li>時間：<b>午前 10:00–12:00／午後 13:00–15:00</b></li>
-            <li>料金：<b>1日 ¥11,000</b>（税込・リフト券は別途）</li>
+            <li>料金：<b>1日（4時間）¥11,000</b>（税込・リフト券は別途）</li>
           </ul>
           <div class="lg-toggle"><span class="lg-t-open">日付を選んで申し込む</span><span class="lg-t-close">閉じる</span></div>
         </div>
@@ -646,11 +653,11 @@
         </div>
         <div class="lg-days-h">日付を選んで申し込む</div>
         <ul class="lg-days">
-          <li class="lg-day" id="lesson-20270107-watanabe"><div class="lg-day-date"><b>1/7</b><span>木曜日</span></div><div class="lg-day-info">1日のみ<br>締切 1月4日（月）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270107-watanabe" data-cta-pos="lesson-20270107-watanabe">申し込む</a></li>
-          <li class="lg-day" id="lesson-20270108-watanabe"><div class="lg-day-date"><b>1/8</b><span>金曜日</span></div><div class="lg-day-info">1日のみ<br>締切 1月4日（月）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270108-watanabe" data-cta-pos="lesson-20270108-watanabe">申し込む</a></li>
-          <li class="lg-day" id="lesson-20270109-watanabe"><div class="lg-day-date"><b>1/9</b><span>土曜日</span></div><div class="lg-day-info">1日のみ<br>締切 1月4日（月）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270109-watanabe" data-cta-pos="lesson-20270109-watanabe">申し込む</a></li>
-          <li class="lg-day" id="lesson-20270110-watanabe"><div class="lg-day-date"><b>1/10</b><span>日曜日</span></div><div class="lg-day-info">1日のみ<br>締切 1月4日（月）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270110-watanabe" data-cta-pos="lesson-20270110-watanabe">申し込む</a></li>
-          <li class="lg-day" id="lesson-20270111-watanabe"><div class="lg-day-date"><b>1/11</b><span>月曜・祝日</span></div><div class="lg-day-info">1日のみ<br>締切 1月4日（月）</div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270111-watanabe" data-cta-pos="lesson-20270111-watanabe">申し込む</a></li>
+          <li class="lg-day" id="lesson-20270107-watanabe"><div class="lg-day-date"><b>1/7</b><span>木曜日</span></div><div class="lg-day-info">1日のみ<br><span>締切 1月4日（月）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270107-watanabe" data-cta-pos="lesson-20270107-watanabe">申し込む</a></li>
+          <li class="lg-day" id="lesson-20270108-watanabe"><div class="lg-day-date"><b>1/8</b><span>金曜日</span></div><div class="lg-day-info">1日のみ<br><span>締切 1月4日（月）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270108-watanabe" data-cta-pos="lesson-20270108-watanabe">申し込む</a></li>
+          <li class="lg-day" id="lesson-20270109-watanabe"><div class="lg-day-date"><b>1/9</b><span>土曜日</span></div><div class="lg-day-info">1日のみ<br><span>締切 1月4日（月）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270109-watanabe" data-cta-pos="lesson-20270109-watanabe">申し込む</a></li>
+          <li class="lg-day" id="lesson-20270110-watanabe"><div class="lg-day-date"><b>1/10</b><span>日曜日</span></div><div class="lg-day-info">1日のみ<br><span>締切 1月4日（月）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270110-watanabe" data-cta-pos="lesson-20270110-watanabe">申し込む</a></li>
+          <li class="lg-day" id="lesson-20270111-watanabe"><div class="lg-day-date"><b>1/11</b><span>月曜・祝日</span></div><div class="lg-day-info">1日のみ<br><span>締切 1月4日（月）</span></div><a class="lg-day-btn" href="lesson-apply.html?lesson=20270111-watanabe" data-cta-pos="lesson-20270111-watanabe">申し込む</a></li>
         </ul>
         <dl class="lc-rows">
           <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
@@ -688,7 +695,7 @@
       <div class="la-k">LEVEL</div>
       <h3 class="la-h">参加の目安</h3>
       <p>中級斜面以上を滑れる方が対象です。コブを滑ったことがなくても、フラットからご指導します。モーグル用の板じゃなくても大丈夫です。</p>
-      <p>小学生から大人まで、一緒に滑りましょう。少人数で行います（定員は回ごとのカードに書いています）。</p>
+      <p>小学生から大人まで、一緒に滑りましょう。少人数で行います（定員はコーチごとのカードに書いています）。</p>
     </div>
     <!-- 雪上レッスンのお支払いと中止の決まり（2026-11-14 城さん決定）。12月以降の雪上レッスンに共通。
          申込フォーム（lesson-apply.html）の短い版からこの段（#lesson-policy）へリンクしている。変えるときは両方そろえる。 -->
