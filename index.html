@@ -1898,7 +1898,7 @@
         <span class="ev-chip">半日 ¥5,500（税込）</span>
       </div>
       <div class="ev-actions">
-        <a class="ev-cta" href="program-general.html#lessons">詳細・お申し込み
+        <a class="ev-cta" href="program-general.html#lesson-group-shimbo">詳細・お申し込み
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
         <span class="ev-deadline">申込締切 <b>12/26の回は12/23（水）、12/27の回は12/24（木）</b></span>
@@ -1906,12 +1906,18 @@
       <p class="ev-note">リフト券は別途必要です。</p>
     </div>
   </div>
-  <!-- 2027-01 雪上レッスン（渡辺大晴コーチ）。★ 対象の文言は、決まりしだい見直す。
-       写真はコーチ紹介の2枚目（動画をもらえたら新保コーチの回と同じく video に差し替える）。
-       ボタンの行き先は、一般レッスンのページに1月の回のカードができたら #lesson-20270107 などに変える。 -->
+  <!-- 2027-01 雪上レッスン（渡辺大晴コーチ）。対象は12月の回と同じ（渡辺コーチ確認済み 2026-11-15）。
+       ボタンは一般レッスンのページの渡辺コーチのカード（#lesson-group-watanabe）へ。開いた状態で表示される。 -->
   <div class="ev-inner ev-inner--portrait" data-until="2027-01-11" data-label="1月｜渡辺コーチ">
     <div class="ev-media is-portrait">
-      <img src="assets/coaches/watanabe-taisei-2.jpg" alt="コブを滑る渡辺大晴コーチ" loading="lazy" decoding="async" style="object-position:43% 45%">
+      <!-- 渡辺大晴コーチの紹介リールの全編（22.8秒・音なし・約2.5MB。元はインスタのリール MIC_reel_coach_watanabe_taisei_v2。
+           540×960 に縮めて音声を外したもの。2026-11-15）。新保コーチの回と同じく、画面に入っているときだけ再生する。
+           ★ テロップの成績2行と最後のひと言は確認中（差し替えになったら、縮め直してこのファイルを置き換える）。 -->
+      <video muted autoplay loop playsinline preload="metadata"
+             data-src="assets/events/watanabe-reel-full.mp4"
+             poster="assets/events/watanabe-reel-full-poster.jpg"
+             style="background-image:url('assets/events/watanabe-reel-full-poster.jpg')"
+             aria-label="渡辺大晴コーチの紹介動画"></video>
       <span class="ev-flag">1月開催</span>
     </div>
     <div class="ev-body">
@@ -1925,7 +1931,7 @@
         <span class="ev-chip">1日のみ ¥11,000（税込）</span>
       </div>
       <div class="ev-actions">
-        <a class="ev-cta" href="program-general.html#lessons">詳細・お申し込み
+        <a class="ev-cta" href="program-general.html#lesson-group-watanabe">詳細・お申し込み
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
         <span class="ev-deadline">申込締切 <b>1/4（月）</b></span>
@@ -1991,9 +1997,10 @@
 
   // 枠の動画：画面に入っているときだけ再生し、外れたら止める。
   // 動きを控えたい設定の端末では再生せず、poster だけを見せる（2026-11 追加）。
-  (function(){
-    var v = document.getElementById('eventFeatureVideo');
-    if (!v || !document.body.contains(v)) return;   // 掲載期間が過ぎて枠ごと消えたとき
+  // 回が2つになったので、枠の中の動画（data-src を持つ video）1本ずつに同じ仕組みを付ける（2026-11-15）。
+  // スマホで横に並んだとき、隠れている側の動画は「画面に入っていない」扱いになり、読み込みも再生もしない。
+  Array.prototype.forEach.call(document.querySelectorAll('#eventFeature video[data-src]'), function(v){
+    if (!document.body.contains(v)) return;   // 掲載期間が過ぎて回ごと消えたとき
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
     var stopped = false;   // 動きを控える設定になったら true。以後は読み込みも再生もしない
     var loaded = false;
@@ -2045,7 +2052,7 @@
     if (reduce && reduce.addEventListener) {
       reduce.addEventListener('change', function(e){ if (e.matches) { near.disconnect(); io.disconnect(); stop(); } });
     }
-  })();
+  });
 </script>
 
 <section class="mvv" id="mvv">
