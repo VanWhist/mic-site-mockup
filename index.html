@@ -3648,7 +3648,13 @@
   var APPLY_PAGES = [
     { match: 'MIC一般レッスン', month: '2026-10', url: 'event-general-202610.html' },
     { match: 'MIC一般レッスン', date: '2026-12-26', url: 'program-general.html#lesson-20261226' },
-    { match: 'MIC一般レッスン', date: '2026-12-27', url: 'program-general.html#lesson-20261227' }
+    { match: 'MIC一般レッスン', date: '2026-12-27', url: 'program-general.html#lesson-20261227' },
+    { match: 'MIC一般レッスン', date: '2027-01-07', url: 'program-general.html#lesson-20270107-watanabe' },
+    { match: 'MIC一般レッスン', date: '2027-01-08', url: 'program-general.html#lesson-20270108-watanabe' },
+    { match: 'MIC一般レッスン', date: '2027-01-09', url: 'program-general.html#lesson-20270109-watanabe' },
+    { match: 'MIC一般レッスン', date: '2027-01-10', url: 'program-general.html#lesson-20270110-watanabe' },
+    { match: 'MIC一般レッスン', date: '2027-01-11', url: 'program-general.html#lesson-20270111-watanabe' }
+    // ★ 同じ日に2人のコーチの回を開くときは、日付だけでは行き先を分けられない。match にコーチ名など、予定のタイトルで見分けられる文を入れる
   ];
   function applyPageFor(ev){
     var title = (ev && ev.title) || '';
