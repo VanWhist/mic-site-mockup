@@ -2026,10 +2026,11 @@
     // 最初から読むとほかの画像と取り合いになる（4G 相当で load が約0.5秒遅れた）。
     // 全編（約2.4MB）にしたので、段まで見ない人には読ませない（以前は画面の下 300px 手前から読んでいた）。
     // ★ スマホ幅では読み込み途中に一瞬「画面に入った」と判定されることがあるので、再生側（下の io）も load の後まで読み込まない。
+    // 回が2つ並ぶとき、隣の枚が少しのぞくだけで読み込まない・再生しないよう、動画の半分以上が見えたときだけ読み込み・再生する（2026-11-15）。
     function pageLoaded(){ return document.readyState === 'complete'; }
     var near = new IntersectionObserver(function(entries){
-      if (entries.some(function(en){ return en.isIntersecting; })) { load(); near.disconnect(); }
-    }, { rootMargin: '0px' });
+      if (entries.some(function(en){ return en.isIntersecting && en.intersectionRatio >= 0.5; })) { load(); near.disconnect(); }
+    }, { threshold: [0, 0.5] });
     if (pageLoaded()) { near.observe(v); }
     else {
       window.addEventListener('load', function(){
@@ -2042,10 +2043,10 @@
     // isIntersecting は少しでも見えれば true になるブラウザがあるので、見えている割合で判定する。
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
-        visible = en.isIntersecting && en.intersectionRatio >= 0.25;
+        visible = en.isIntersecting && en.intersectionRatio >= 0.5;
         if (visible) { if (pageLoaded()) { load(); play(); } } else { v.pause(); }
       });
-    }, { threshold: [0, 0.25] });
+    }, { threshold: [0, 0.5] });
     // 手前で読み込んだとき、autoplay で画面外のまま動き出さないようにする
     v.addEventListener('playing', function(){ if (!visible || stopped) v.pause(); });
     io.observe(v);
