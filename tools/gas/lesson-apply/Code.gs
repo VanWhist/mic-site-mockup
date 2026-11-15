@@ -36,13 +36,24 @@ var HEADERS = [
 var COL = {};
 HEADERS.forEach(function (h, i) { COL[h] = i + 1; });
 
-// lesson-apply.html の data/lesson-apply.js と同じ内容にそろえる
+// lesson-apply.html の data/lesson-apply.js と同じ内容にそろえる（id・date・slots・deadline）
+// label は申込シートの「参加する回」とメールに書く名前。回ごとの申込数もこの名前で数える。
+//   12月の2回は、すでにシートに入っている行と同じ名前のまま（コーチ名なし）にしておく。
+//   1月からは、同じ日に2人のコーチの回があっても分かるよう、コーチ名を入れる。
+// cap は知らせるメールに出す定員の目安（自動では締めない）。半日ありの回は午前・午後それぞれの人数、
+//   1日のみの回はその回の人数。
 var LESSONS = {
-  '20261226': { label: '12/26（土）', deadline: '2026-12-23' },
-  '20261227': { label: '12/27（日）', deadline: '2026-12-24' }
+  '20261226': { date: '2026-12-26', label: '12/26（土）', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-23' },
+  '20261227': { date: '2026-12-27', label: '12/27（日）', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-24' },
+  '20270107-watanabe': { date: '2027-01-07', label: '1/7（木）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
+  '20270108-watanabe': { date: '2027-01-08', label: '1/8（金）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
+  '20270109-watanabe': { date: '2027-01-09', label: '1/9（土）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
+  '20270110-watanabe': { date: '2027-01-10', label: '1/10（日）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
+  '20270111-watanabe': { date: '2027-01-11', label: '1/11（月・祝）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' }
 };
 var SLOTS = { am: '午前 10:00–12:00', pm: '午後 13:00–15:00', day: '1日（午前・午後）' };
 var FEES = { am: 5500, pm: 5500, day: 11000 };
+var PARTS = { am: ['am'], pm: ['pm'], day: ['am', 'pm'] };   // 時間の重なりを見るため（1日＝午前＋午後）
 
 function prop_(k, d) {
   var v = PropertiesService.getScriptProperties().getProperty(k);
@@ -106,7 +117,9 @@ function apply_(b, opt) {
     var raw = p.slots || {};
     for (var id in raw) {
       if (!Object.prototype.hasOwnProperty.call(raw, id)) continue;
-      if (!LESSONS[id] || !SLOTS[raw[id]]) return { ok: false, reason: 'invalid' };
+      // hasOwnProperty で見る（__proto__ などのキーで Object の中身を引かないように）
+      var okLesson = Object.prototype.hasOwnProperty.call(LESSONS, id) && Object.prototype.hasOwnProperty.call(SLOTS, raw[id]);
+      if (!okLesson || LESSONS[id].slots.indexOf(raw[id]) < 0) return { ok: false, reason: 'invalid' };
       if (isClosed_(id)) return { ok: false, reason: 'closed' };
       slots[id] = raw[id];
     }
@@ -118,6 +131,7 @@ function apply_(b, opt) {
       video: p.video && p.video.name ? str_(p.video.name, 120) : ''
     };
     if (!q.name || !q.kana || !q.age || !Object.keys(slots).length || !q.slope || !q.mogul) return { ok: false, reason: 'invalid' };
+    if (hasOverlap_(slots)) return { ok: false, reason: 'invalid' };
     people.push(q);
   }
 
@@ -148,7 +162,7 @@ function apply_(b, opt) {
         q.ski_years, q.slope, q.mogul,
         q.wish, q.worry, q.health, q.org, q.mic_before,
         q.video, '',
-        str_(b.from_lesson, 10), str_(b.utm, 120), opt.test ? 'テスト' : '受付', ''
+        str_(b.from_lesson, 30), str_(b.utm, 120), opt.test ? 'テスト' : '受付', ''
       ].map(function (v) {
         // 参加者番号（数）はそのまま。文字の欄は、数式として読まれないようにする
         return typeof v === 'number' ? v : cell_(v);
@@ -177,6 +191,19 @@ function apply_(b, opt) {
   return { ok: true, id: appId, video_token: vtoken };
 }
 
+// 1人が、同じ日の回で時間の重なる枠を両方選んでいないか
+function hasOverlap_(slots) {
+  var used = {};
+  return Object.keys(slots).some(function (id) {
+    return PARTS[slots[id]].some(function (part) {
+      var k = LESSONS[id].date + ':' + part;
+      if (used[k]) return true;
+      used[k] = true;
+      return false;
+    });
+  });
+}
+
 function slotsText_(slots) {
   return Object.keys(slots).sort().map(function (id) { return LESSONS[id].label + ' ' + SLOTS[slots[id]]; }).join('／');
 }
@@ -192,21 +219,25 @@ function sheet_() {
   return sh;
 }
 
-// 回ごと・時間帯ごとの申込人数（状態が「取消」「テスト」の行は数えない）。1日は午前・午後の両方に数える
+// 回ごと・時間帯ごとの申込人数（状態が「取消」「テスト」の行は数えない）。
+// 半日ありの回は午前・午後に分けて数え、1日はその両方に数える。1日のみの回は、その回の人数を数える。
+// 返す値：{ 表示名: { n: 人数, cap: 定員の目安 } }
 function countBySlot_(sh) {
   var last = sh.getLastRow();
   var out = {};
   if (last < 2) return out;
+  function add(k, cap) { out[k] = out[k] || { n: 0, cap: cap }; out[k].n++; }
   var v = sh.getRange(2, 1, last - 1, HEADERS.length).getValues();
   v.forEach(function (r) {
     var st = String(r[COL['状態'] - 1]);
     if (st.indexOf('取消') >= 0 || st.indexOf('テスト') >= 0) return;
     String(r[COL['参加する回'] - 1]).split('／').forEach(function (s) {
       Object.keys(LESSONS).forEach(function (id) {
-        var l = LESSONS[id].label;
-        if (s.indexOf(l) !== 0) return;
-        if (s.indexOf('午前') >= 0 || s.indexOf('1日') >= 0) out[l + ' 午前'] = (out[l + ' 午前'] || 0) + 1;
-        if (s.indexOf('午後') >= 0 || s.indexOf('1日') >= 0) out[l + ' 午後'] = (out[l + ' 午後'] || 0) + 1;
+        var L = LESSONS[id], l = L.label;
+        if (s.indexOf(l + ' ') !== 0) return;   // 名前のあとの空白まで見る（1/1 と 1/10 などを取り違えない）
+        if (L.slots.indexOf('am') < 0) { add(l, L.cap); return; }
+        if (s.indexOf('午前') >= 0 || s.indexOf('1日') >= 0) add(l + ' 午前', L.cap);
+        if (s.indexOf('午後') >= 0 || s.indexOf('1日') >= 0) add(l + ' 午後', L.cap);
       });
     });
   });
@@ -253,9 +284,16 @@ function mailNotify_(appId, app, people, counts) {
     if (q.health) lines.push('　けが・持病：' + q.health);
     if (q.video) lines.push('　動画：あり（届いたら別のメールで知らせます）');
   });
-  lines.push('', '― 回ごとの申込数（この申込を含む・定員の目安は1枠5名）');
-  Object.keys(counts).sort().forEach(function (k) {
-    lines.push('　' + k + '：' + counts[k] + '名' + (counts[k] >= 5 ? '  ★5名に達しました' : ''));
+  lines.push('', '― 回ごとの申込数（この申込を含む・定員の目安）');
+  // 回の順（LESSONS の順）に並べる
+  var keys = [];
+  Object.keys(LESSONS).forEach(function (id) {
+    var l = LESSONS[id].label;
+    [l, l + ' 午前', l + ' 午後'].forEach(function (k) { if (counts[k]) keys.push(k); });
+  });
+  keys.forEach(function (k) {
+    var c = counts[k];
+    lines.push('　' + k + '：' + c.n + '名／' + c.cap + '名' + (c.n >= c.cap ? '  ★' + c.cap + '名に達しました' : ''));
   });
   lines.push('', '申込シート：https://docs.google.com/spreadsheets/d/' + prop_('SHEET_ID') + '/edit');
   MailApp.sendEmail(to, '【MIC申込】雪上レッスン ' + app.name + ' 様（' + appId + '）', lines.join('\n'));
@@ -350,7 +388,7 @@ function testApplyToMe() {
   var me = Session.getActiveUser().getEmail();
   var open = Object.keys(LESSONS).filter(function (id) { return !isClosed_(id); });
   if (!open.length) { console.log('受付中の回がありません'); return; }
-  var slots = {}; slots[open[0]] = 'am';
+  var slots = {}; slots[open[0]] = LESSONS[open[0]].slots[0];
   var res = apply_({
     action: 'apply', series: 'test',
     applicant: { name: 'テスト 申込者', tel: '090-0000-0000', email: me, source: 'その他' },

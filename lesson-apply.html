@@ -99,6 +99,8 @@
     min-height:40px;padding:6px 12px;font-size:13px;font-family:inherit;cursor:pointer;}
   .day{margin:10px 0 14px;}
   .day-label{font-size:13.5px;font-weight:700;margin-bottom:6px;}
+  .day-label .coach{font-weight:500;color:var(--muted);margin-left:6px;}
+  .day-label .cap{display:block;font-size:12px;font-weight:500;color:var(--muted);}
   .day-label .closed{color:var(--ng);font-size:12px;font-weight:700;margin-left:6px;}
   .day.from-card .day-label::after{content:'このカードから来ました';margin-left:8px;padding:1px 7px;border-radius:5px;
     background:rgba(255,90,60,.14);color:#ffb7a8;font-size:11px;font-weight:700;}
@@ -166,9 +168,9 @@
       <dl>
         <dt>会場</dt><dd id="sumPlace">白馬八方尾根スキー場</dd>
         <dt>コーチ</dt><dd id="sumCoach">新保 龍登</dd>
-        <dt>時間</dt><dd>午前 10:00–12:00／午後 13:00–15:00<small>半日は午前か午後のどちらか、1日は両方です。</small></dd>
-        <dt>料金</dt><dd>半日（2時間）5,500円／1日（4時間）11,000円（税込）<small>別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。</small></dd>
-        <dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd>
+        <dt>時間</dt><dd>午前 10:00–12:00／午後 13:00–15:00<small id="sumTimeNote">半日は午前か午後のどちらか、1日は両方です。</small></dd>
+        <dt>料金</dt><dd><span id="sumFee">半日（2時間）5,500円／1日（4時間）11,000円（税込）</span><small id="sumFeeNote">別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。</small></dd>
+        <dt>定員</dt><dd>回ごとに、下の「参加する回」に書いています。</dd>
       </dl>
     </div>
 
@@ -382,6 +384,10 @@
   }
 
   // ---- 締切（JST の締切日 23:59 まで） ----
+  function slotDef(v){
+    for (var i = 0; i < C.slotDefs.length; i++) if (C.slotDefs[i].value === v) return C.slotDefs[i];
+    return null;
+  }
   function isClosed(lesson){
     var end = new Date(lesson.deadline + 'T23:59:59+09:00').getTime();
     return Date.now() > end;
@@ -409,16 +415,19 @@
       if (input && label) { input.id = key + '_f' + i; label.htmlFor = input.id; }
     });
 
-    // 参加する回（開催日ごとに 参加しない／午前／午後／1日）
+    // 参加する回（回ごとに 参加しない＋その回で選べる枠）
     var days = node.querySelector('.days');
     C.lessons.forEach(function(l){
       var closed = isClosed(l);
       var d = document.createElement('div');
       d.className = 'day' + (l.id === fromLesson && !closed ? ' from-card' : '');
       d.setAttribute('data-lesson', l.id);
-      var html = '<div class="day-label">' + l.label + (closed ? '<span class="closed">締め切りました</span>' : '') + '</div><div class="choices">';
+      var html = '<div class="day-label">' + l.label + '<span class="coach">' + l.coach + 'コーチ</span>' +
+        (closed ? '<span class="closed">締め切りました</span>' : '') +
+        '<span class="cap">' + (l.slots.indexOf('am') < 0 ? '1日のみ・' : '') + '定員 ' + l.capacityLabel + '・締切 ' + l.deadlineLabel + '</span></div><div class="choices">';
       html += '<label class="choice none"><input type="radio" name="' + key + '_' + l.id + '" value=""' + (closed ? ' disabled' : '') + ' checked><span>参加しない</span></label>';
-      C.slots.forEach(function(s){
+      l.slots.forEach(function(v){
+        var s = slotDef(v);
         html += '<label class="choice"><input type="radio" name="' + key + '_' + l.id + '" value="' + s.value + '"' + (closed ? ' disabled' : '') + '><span>' + s.label + '<small>' + s.time + '</small></span></label>';
       });
       d.innerHTML = html + '</div>';
@@ -482,8 +491,24 @@
     return out;
   }
   function feeOf(v){
-    for (var i = 0; i < C.slots.length; i++) if (C.slots[i].value === v) return C.slots[i].fee;
-    return 0;
+    var s = slotDef(v);
+    return s ? s.fee : 0;
+  }
+  // 同じ日の回で、時間の重なる枠を選んでいないか（例：同じ日に 渡辺コーチの1日と 田中コーチの午前）
+  function hasOverlap(slots){
+    var used = {};
+    var lessonById = {};
+    C.lessons.forEach(function(l){ lessonById[l.id] = l; });
+    return Object.keys(slots).some(function(id){
+      var l = lessonById[id], s = slotDef(slots[id]);
+      if (!l || !s) return false;
+      return s.parts.some(function(part){
+        var k = l.date + ':' + part;
+        if (used[k]) return true;
+        used[k] = true;
+        return false;
+      });
+    });
   }
   function updateTotal(){
     var sum = 0;
@@ -513,7 +538,9 @@
       chk(p.querySelector('[data-f=p_name]'), p.querySelector('.p_name').value.trim().length > 0);
       chk(p.querySelector('[data-f=p_kana]'), p.querySelector('.p_kana').value.trim().length > 0);
       chk(p.querySelector('[data-f=p_age]'), p.querySelector('.p_age').value.trim().length > 0);
-      chk(p.querySelector('[data-f=p_slots]'), Object.keys(slotsOf(p)).length > 0);
+      var ps = slotsOf(p), pf = p.querySelector('[data-f=p_slots]');
+      pf.querySelector('.err').textContent = Object.keys(ps).length ? '同じ日の回で、時間が重なっています。どちらか1つにしてください。' : '少なくとも1つの回を選んでください。';
+      chk(pf, Object.keys(ps).length > 0 && !hasOverlap(ps));
       chk(p.querySelector('[data-f=p_slope]'), groupValue(p, 'slope') !== '');
       chk(p.querySelector('[data-f=p_mogul]'), groupValue(p, 'mogul') !== '');
     });
@@ -721,7 +748,21 @@
 
   // ---- はじめの表示 ----
   $('sumPlace').textContent = C.place;
-  $('sumCoach').textContent = C.coach;
+  // 概要のコーチと料金は、受付中の回から作る（全部締め切ったあとは全部の回から）
+  (function(){
+    var src = openLessons.length ? openLessons : C.lessons;
+    var coaches = [], half = false;
+    src.forEach(function(l){
+      if (coaches.indexOf(l.coach) < 0) coaches.push(l.coach);
+      if (l.slots.indexOf('am') >= 0 || l.slots.indexOf('pm') >= 0) half = true;
+    });
+    $('sumCoach').textContent = coaches.join('／');
+    $('sumFee').textContent = (half ? '半日（2時間）' + yen(feeOf('am')) + '／' : '') + '1日（4時間）' + yen(feeOf('day')) + '（税込）';
+    if (!half) $('sumTimeNote').textContent = '午前と午後の両方を通して受けます。';
+    if (half && src.some(function(l){ return l.slots.indexOf('am') < 0; })) {
+      $('sumFeeNote').textContent = '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。';
+    }
+  })();
   $('addPerson').addEventListener('click', function(){ addPerson(); });
   addPerson();
   updateTotal();
