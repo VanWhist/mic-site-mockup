@@ -101,19 +101,18 @@
      参加する枠を選んだ回は、枠の線をオレンジにする */
   .days{display:grid;gap:10px;margin:8px 0 14px;}
   .day .choice span{white-space:nowrap;}
-  .day-label .coach,.day-label .closed{white-space:nowrap;}
+  .day-label .closed{white-space:nowrap;}
   .day{margin:0;padding:12px 10px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.13);
     transition:border-color .15s ease,background .15s ease;}
   .day:has(input:checked:not([value=""])){border-color:var(--accent);background:rgba(255,90,60,.05);}
   .day-label{font-size:13.5px;font-weight:700;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);}
   .day-label .date{font-size:17px;font-weight:800;letter-spacing:-.01em;}
-  .day-label .coach{font-weight:500;color:var(--muted);margin-left:8px;}
   .day-label .cap{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--muted);}
   .day-label .closed{color:var(--ng);font-size:12px;font-weight:700;margin-left:6px;}
   .day.from-card .day-label::after{content:'このカードから来ました';margin-left:8px;padding:1px 7px;border-radius:5px;
     background:rgba(255,90,60,.14);color:#ffb7a8;font-size:11px;font-weight:700;}
   /* コーチごとの見出し。カードから来たときは、そのコーチの回だけを出す（ほかのコーチの回を間違えて選ばないように、2026-11-15）。
-     ほかのコーチの回は「ほかのコーチの回も申し込む」を押したときだけ出す */
+     ほかのコーチの回は「ほかのコーチのレッスンも申し込む」を押したときだけ出す。各日の枠にはコーチ名を出さない（見出しにあるため） */
   .days-coach{margin:4px 0 -2px;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.02em;}
   .days-coach:first-child{margin-top:0;}
   .more-coaches{display:block;width:100%;min-height:46px;margin:0;border-radius:12px;border:1px dashed rgba(255,255,255,.25);
@@ -458,7 +457,7 @@
       if (l.coach !== prevCoach) {
         var h = document.createElement('div');
         h.className = 'days-coach';
-        h.textContent = l.coach + 'コーチの回';
+        h.textContent = l.coach + 'コーチのレッスン';
         h.hidden = hide;
         days.appendChild(h);
         prevCoach = l.coach;
@@ -467,7 +466,7 @@
       d.hidden = hide;
       d.className = 'day' + (l.id === fromLesson && !closed ? ' from-card' : '');
       d.setAttribute('data-lesson', l.id);
-      var html = '<div class="day-label"><span class="date">' + l.label + '</span><span class="coach">' + l.coach + 'コーチ</span>' +
+      var html = '<div class="day-label"><span class="date">' + l.label + '</span>' +
         (closed ? '<span class="closed">締め切りました</span>' : '') +
         '<span class="cap">' + (l.slots.indexOf('am') < 0 ? '1日のみ・' : '') + '定員 ' + l.capacityLabel + '・締切 ' + l.deadlineLabel + '</span></div><div class="choices">';
       html += '<label class="choice none"><input type="radio" name="' + key + '_' + l.id + '" value=""' + (closed ? ' disabled' : '') + ' checked><span>参加しない</span></label>';
@@ -482,7 +481,7 @@
       var more = document.createElement('button');
       more.type = 'button';
       more.className = 'more-coaches';
-      more.textContent = 'ほかのコーチの回も申し込む';
+      more.textContent = 'ほかのコーチのレッスンも申し込む';
       more.addEventListener('click', showAllLessons);
       days.appendChild(more);
     }
@@ -796,7 +795,7 @@
     window.scrollTo(0, 0);
   }
 
-  // 「ほかのコーチの回も申し込む」：全員分の、隠していた回を出す
+  // 「ほかのコーチのレッスンも申し込む」：全員分の、隠していた回を出す
   function showAllLessons(){
     showAllCoaches = true;
     people.querySelectorAll('.days [hidden]').forEach(function(el){ el.hidden = false; });
