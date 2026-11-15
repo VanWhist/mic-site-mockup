@@ -97,10 +97,18 @@
   .person-head h3{margin:0;font-size:16px;font-weight:800;}
   .remove{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:10px;
     min-height:40px;padding:6px 12px;font-size:13px;font-family:inherit;cursor:pointer;}
-  .day{margin:10px 0 14px;}
-  .day-label{font-size:13.5px;font-weight:700;margin-bottom:6px;}
-  .day-label .coach{font-weight:500;color:var(--muted);margin-left:6px;}
-  .day-label .cap{display:block;font-size:12px;font-weight:500;color:var(--muted);}
+  /* 参加する回：回ごとに枠で囲み、日付を大きく出す（回の区切りが分かりにくかったため、2026-11-15）。
+     参加する枠を選んだ回は、枠の線をオレンジにする */
+  .days{display:grid;gap:10px;margin:8px 0 14px;}
+  .day .choice span{white-space:nowrap;}
+  .day-label .coach,.day-label .closed{white-space:nowrap;}
+  .day{margin:0;padding:12px 10px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.13);
+    transition:border-color .15s ease,background .15s ease;}
+  .day:has(input:checked:not([value=""])){border-color:var(--accent);background:rgba(255,90,60,.05);}
+  .day-label{font-size:13.5px;font-weight:700;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .day-label .date{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+  .day-label .coach{font-weight:500;color:var(--muted);margin-left:8px;}
+  .day-label .cap{display:block;margin-top:2px;font-size:12px;font-weight:500;color:var(--muted);}
   .day-label .closed{color:var(--ng);font-size:12px;font-weight:700;margin-left:6px;}
   .day.from-card .day-label::after{content:'このカードから来ました';margin-left:8px;padding:1px 7px;border-radius:5px;
     background:rgba(255,90,60,.14);color:#ffb7a8;font-size:11px;font-weight:700;}
@@ -422,7 +430,7 @@
       var d = document.createElement('div');
       d.className = 'day' + (l.id === fromLesson && !closed ? ' from-card' : '');
       d.setAttribute('data-lesson', l.id);
-      var html = '<div class="day-label">' + l.label + '<span class="coach">' + l.coach + 'コーチ</span>' +
+      var html = '<div class="day-label"><span class="date">' + l.label + '</span><span class="coach">' + l.coach + 'コーチ</span>' +
         (closed ? '<span class="closed">締め切りました</span>' : '') +
         '<span class="cap">' + (l.slots.indexOf('am') < 0 ? '1日のみ・' : '') + '定員 ' + l.capacityLabel + '・締切 ' + l.deadlineLabel + '</span></div><div class="choices">';
       html += '<label class="choice none"><input type="radio" name="' + key + '_' + l.id + '" value=""' + (closed ? ' disabled' : '') + ' checked><span>参加しない</span></label>';
