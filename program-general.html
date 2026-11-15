@@ -165,9 +165,26 @@
   .lc-row dd small{display:block;font-size:12px;color:var(--muted);}
   .lc-coach{display:flex;align-items:center;gap:10px;}
   .lc-coach img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:50% 20%;flex:0 0 auto;}
-  .lc-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
-  .lc-actions .cta-btn{margin:0;}
+  .lc-actions{display:flex;gap:10px;margin-top:14px;}
+  .lc-actions .cta-btn{margin:0;flex:1.5 1 0;padding:15px 10px;white-space:nowrap;}
+  .lc-actions .cta-btn.ghost{flex:1 1 0;}
+  /* 横に2つ並べると収まらない狭い画面（370px未満）では、縦に並べる */
+  @media (max-width:369px){
+    .lc-actions{flex-direction:column;}
+    .lc-actions .cta-btn,.lc-actions .cta-btn.ghost{flex:none;}
+  }
   .lc-help{margin:12px 0 0;font-size:12px;line-height:1.8;color:var(--muted);}
+  /* スマホで縦に長くなりすぎるため、対象・集合・定員などは折りたたむ（2026-11-15）。
+     #lesson-<回のid> で直接開いたときは、下のスクリプトがその回を開く。 */
+  .lc-more{margin:14px 0 0;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);}
+  .lc-more summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;
+    font-size:13.5px;font-weight:800;color:#e2e2e6;cursor:pointer;list-style:none;}
+  .lc-more summary::-webkit-details-marker{display:none;}
+  .lc-more summary::after{content:'';flex:0 0 auto;width:8px;height:8px;margin-right:3px;
+    border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:translateY(-2px) rotate(45deg);transition:transform .2s;}
+  .lc-more[open] summary::after{transform:translateY(2px) rotate(-135deg);}
+  .lc-more-body{padding:0 14px 12px;}
+  .lc-more-body .lc-target{margin-top:0;}
   @media (max-width:380px){
     .lc-fee-amount{font-size:19px;}
     .lc-row{grid-template-columns:68px 1fr;}
@@ -573,27 +590,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円／午前券・午後券 大人 8,100円・こども 4,050円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>12月23日（水）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>12月23日（水）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20261226" data-cta-pos="lesson-20261226">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20261226-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <article class="lesson-card" id="lesson-20261227">
       <div class="lc-head">
@@ -612,27 +634,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円／午前券・午後券 大人 8,100円・こども 4,050円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>12月24日（木）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/coaches/shimbo-ryuto.jpg" alt="" loading="lazy" decoding="async"><span>新保 龍登</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>1枠5名程度<small>午前・午後がそれぞれ1枠です。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>12月24日（木）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20261227" data-cta-pos="lesson-20261227">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20261227-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <div class="lessons-photo lessons-photo-next">
       <img src="assets/lessons/snow-202701-watanabe.webp" width="960" height="600" alt="雪の林を背に、空中で体を回すスキーヤー" loading="lazy" decoding="async">
@@ -654,27 +681,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20270107-watanabe" data-cta-pos="lesson-20270107-watanabe">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20270107-watanabe-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <article class="lesson-card" id="lesson-20270108-watanabe">
       <div class="lc-head">
@@ -692,27 +724,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20270108-watanabe" data-cta-pos="lesson-20270108-watanabe">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20270108-watanabe-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <article class="lesson-card" id="lesson-20270109-watanabe">
       <div class="lc-head">
@@ -730,27 +767,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20270109-watanabe" data-cta-pos="lesson-20270109-watanabe">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20270109-watanabe-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <article class="lesson-card" id="lesson-20270110-watanabe">
       <div class="lc-head">
@@ -768,27 +810,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20270110-watanabe" data-cta-pos="lesson-20270110-watanabe">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20270110-watanabe-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <article class="lesson-card" id="lesson-20270111-watanabe">
       <div class="lc-head">
@@ -806,27 +853,32 @@
         <b>別途 リフト券が必要です。</b>めやす：1日券 大人 9,800円・こども（6〜17歳）4,900円（<a href="https://www.happo-one.jp/ticket/" target="_blank" rel="noopener">八方尾根 公式の料金</a>）。<br>
         交通・宿・昼食は各自でご用意ください。
       </div>
-      <div class="lc-target">
-        <div class="lc-target-h">この回の対象</div>
-        <ul>
-          <li>小学生以上</li>
-          <li>中級斜面以上を滑れる方</li>
-          <li>モーグルは初めてでも大丈夫です</li>
-          <li>ふだんのスキー用具で参加できます</li>
-        </ul>
-      </div>
-      <dl class="lc-rows">
-        <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
-        <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
-        <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
-        <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
-        <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
-      </dl>
+      <details class="lc-more">
+        <summary>対象・コーチ・定員・締切を見る</summary>
+        <div class="lc-more-body">
+        <div class="lc-target">
+          <div class="lc-target-h">この回の対象</div>
+          <ul>
+            <li>小学生以上</li>
+            <li>中級斜面以上を滑れる方</li>
+            <li>モーグルは初めてでも大丈夫です</li>
+            <li>ふだんのスキー用具で参加できます</li>
+          </ul>
+        </div>
+        <dl class="lc-rows">
+          <div class="lc-row"><dt>集合</dt><dd>白馬八方尾根スキー場<small>集合場所と時刻は、お申し込みのあとにご連絡します。</small></dd></div>
+          <div class="lc-row"><dt>コーチ</dt><dd><div class="lc-coach"><img src="assets/lessons/coach-watanabe-avatar.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 50%"><span>渡辺 大晴</span></div></dd></div>
+          <div class="lc-row"><dt>定員</dt><dd>6名<small>2名以上で開催します。2名に届かないときは、1月4日（月）に中止をご連絡し、ほかの日への振替をご案内します。</small></dd></div>
+          <div class="lc-row"><dt>申込締切</dt><dd>1月4日（月）</dd></div>
+          <div class="lc-row"><dt>お支払い</dt><dd>当日、現金で<small>キャンセル料はかかりません。<a href="#lesson-policy">中止のときのこと</a></small></dd></div>
+        </dl>
+        <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
+        </div>
+      </details>
       <div class="lc-actions">
         <a class="cta-btn" href="lesson-apply.html?lesson=20270111-watanabe" data-cta-pos="lesson-20270111-watanabe">この回に申し込む</a>
         <a class="cta-btn ghost" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="lesson-20270111-watanabe-line">LINEで相談する</a>
       </div>
-      <p class="lc-help">対象に当てはまるか迷う方は、申込フォームで滑っている動画も一緒に送ってください。コーチが確認してお返事します。</p>
     </article>
     <div class="lesson-about" id="lesson-coach">
       <div class="la-k">COACH｜12月の回</div>
@@ -1015,6 +1067,21 @@
 </footer>
 
 
+<script>
+  /* 開催予定のレッスン：#lesson-<回のid> で開いたときは、その回の折りたたみを開く */
+  (function(){
+    function openTarget(){
+      var id = location.hash.slice(1);
+      if (!/^lesson-[0-9]{8}/.test(id)) return;
+      var card = document.getElementById(id);
+      var more = card && card.querySelector('details.lc-more');
+      if (more) more.open = true;
+    }
+    openTarget();
+    window.addEventListener('hashchange', openTarget);
+  })();
+
+</script>
 <script>
   /* 上部ナビ：ハンバーガーで全画面メニューを開閉する（スマホのみ表示） */
   (function(){
