@@ -168,6 +168,11 @@
   .lc-actions{display:flex;gap:10px;margin-top:14px;}
   .lc-actions .cta-btn{margin:0;flex:1.5 1 0;padding:15px 10px;white-space:nowrap;}
   .lc-actions .cta-btn.ghost{flex:1 1 0;}
+  /* 横に2つ並べると収まらない狭い画面（370px未満）では、縦に並べる */
+  @media (max-width:369px){
+    .lc-actions{flex-direction:column;}
+    .lc-actions .cta-btn,.lc-actions .cta-btn.ghost{flex:none;}
+  }
   .lc-help{margin:12px 0 0;font-size:12px;line-height:1.8;color:var(--muted);}
   /* スマホで縦に長くなりすぎるため、対象・集合・定員などは折りたたむ（2026-11-15）。
      #lesson-<回のid> で直接開いたときは、下のスクリプトがその回を開く。 */
