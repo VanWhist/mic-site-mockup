@@ -27,21 +27,22 @@ window.MIC_LESSON_APPLY = {
   // coach     その回のコーチ
   // slots     選べる枠（下の slotDefs の value）。半日ありは ['am','pm','day']、1日のみは ['day']
   // capacity  定員。capacityLabel はフォームに出す書き方（自動では締めない。2026-11 の決定）
+  // capacityNote  定員の補足（任意）。コーチで絞った概要の「定員」に、かっこ書きで出す
   lessons: [
     { id: '20261226', date: '2026-12-26', label: '12/26（土）', coach: '新保 龍登', slots: ['am', 'pm', 'day'],
       capacityLabel: '午前・午後それぞれ5名程度', deadline: '2026-12-23', deadlineLabel: '12月23日（水）' },
     { id: '20261227', date: '2026-12-27', label: '12/27（日）', coach: '新保 龍登', slots: ['am', 'pm', 'day'],
       capacityLabel: '午前・午後それぞれ5名程度', deadline: '2026-12-24', deadlineLabel: '12月24日（木）' },
     { id: '20270107-watanabe', date: '2027-01-07', label: '1/7（木）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
     { id: '20270108-watanabe', date: '2027-01-08', label: '1/8（金）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
     { id: '20270109-watanabe', date: '2027-01-09', label: '1/9（土）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
     { id: '20270110-watanabe', date: '2027-01-10', label: '1/10（日）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
     { id: '20270111-watanabe', date: '2027-01-11', label: '1/11（月・祝）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' }
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' }
   ],
 
   // 枠の決まり。value は申込シートに入る値。parts は時間の重なりを見るためのもの（1日＝午前＋午後）

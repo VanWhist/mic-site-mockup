@@ -183,7 +183,7 @@
         <dt>コーチ</dt><dd id="sumCoach">新保 龍登</dd>
         <dt>時間</dt><dd>午前 10:00–12:00／午後 13:00–15:00<small id="sumTimeNote">半日は午前か午後のどちらか、1日は両方です。</small></dd>
         <dt>料金</dt><dd><span id="sumFee">半日（2時間）5,500円／1日（4時間）11,000円（税込）</span><small id="sumFeeNote">別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。</small></dd>
-        <dt>定員</dt><dd>回ごとに、下の「参加する回」に書いています。</dd>
+        <dt>定員</dt><dd id="sumCap">回ごとに、下の「参加する回」に書いています。</dd>
       </dl>
     </div>
 
@@ -810,6 +810,7 @@
   // カードから来て絞っているときは、そのコーチの回から作る
   var SUM_TIME_NOTE = $('sumTimeNote').textContent;
   var SUM_FEE_NOTE = $('sumFeeNote').textContent;
+  var SUM_CAP = $('sumCap').textContent;
   function renderSummary(){
     var base = openLessons.length ? openLessons : C.lessons;
     var src = showAllCoaches ? base : base.filter(function(l){ return l.coach === focusCoach; });
@@ -824,6 +825,15 @@
     $('sumFeeNote').textContent = (half && src.some(function(l){ return l.slots.indexOf('am') < 0; }))
       ? '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。'
       : SUM_FEE_NOTE;
+    // 定員：コーチで絞っていて、どの回も同じ定員なら、その数を直接書く（例：各日6名（2名以上で開催））
+    var caps = [];
+    src.forEach(function(l){
+      var c = l.capacityLabel + (l.capacityNote ? '（' + l.capacityNote + '）' : '');
+      if (caps.indexOf(c) < 0) caps.push(c);
+    });
+    $('sumCap').textContent = (!showAllCoaches && caps.length === 1)
+      ? (/^[0-9]/.test(caps[0]) ? '各日' : '') + caps[0]
+      : SUM_CAP;
   }
   renderSummary();
   $('addPerson').addEventListener('click', function(){ addPerson(); });
