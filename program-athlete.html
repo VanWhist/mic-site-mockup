@@ -911,7 +911,8 @@
 //   同じ埋め込みを2ファイルに置くと sync_calendar.py / embed_calendar_inline.py が
 //   両方を更新する前提になり、片方だけ古くなる経路が新しく生まれる。
 //   それは今回直している不具合そのものなので、増やさない。
-//   出所は index.html と同じ API と calendar-data.json なので、日程は一致する。
+//   出所は index.html と同じ API なので、日程は一致する。API が駄目なとき、index.html は
+//   埋め込みの表示を残し、こちら（埋め込みなし）は calendar-data.json を読む（2026-11-17〜）。
 (function () {
   var CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbw4Ld53wjYfI8qVkick48qNsQssm7HXQ8mE1RFwME0TYa2Fig2_AboL0HSkpG068umU/exec';
   var CLINIC_KEYWORD = '強化練習会';
@@ -1016,7 +1017,9 @@
   }
 
   function load() {
-    // index.html と同じ出所・同じ順序。両ページで違う日程が出ないようにする。
+    // index.html と同じ API を先に読む。両ページで違う日程が出ないようにする。
+    // API が駄目なときの calendar-data.json は、埋め込みを持たないこのページだけの予備
+    // （index.html は埋め込みがあるので読まない。2026-11-17〜）。
     //
     // ★ タイムアウトは直列。両方が「応答なしで待たされる」と 8秒＋8秒＝最悪16秒、
     //   「読み込み中…」が続く。後で「全体で8秒」に変える余地がある。
