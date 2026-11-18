@@ -20,5 +20,6 @@ window.MIC_REELS = [
   { no:11, title:'1本目と2本目を重ねると？', url:'https://www.instagram.com/reel/DfgwYnyyQos/', thumb:'assets/reels/30byou-11.webp' },
   { no:12, title:'切り替えは"点"じゃない？', url:'https://www.instagram.com/reel/Dfl7vjTymQw/', thumb:'assets/reels/30byou-12.webp' },
   { no:13, title:'コブの中で、体はどう動いている？', url:'https://www.instagram.com/reel/DfrIm1BS53R/', thumb:'assets/reels/30byou-13.webp' },
-  { no:14, title:'重心は、板の線を越える？', url:'https://www.instagram.com/reel/Df1eMsnyE58/', thumb:'assets/reels/30byou-14.webp' }
+  { no:14, title:'重心は、板の線を越える？', url:'https://www.instagram.com/reel/Df1eMsnyE58/', thumb:'assets/reels/30byou-14.webp' },
+  { no:15, title:'横から見ると、重心はどう動く？', url:'https://www.instagram.com/reel/Df4ImZjK4E1/', thumb:'assets/reels/30byou-15.webp' }
 ];
