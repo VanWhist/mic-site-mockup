@@ -1912,7 +1912,7 @@
     <div class="ev-media is-portrait">
       <!-- 渡辺大晴コーチの紹介リールの全編（22.8秒・音なし・約2.5MB。元はインスタのリール MIC_reel_coach_watanabe_taisei_v2。
            540×960 に縮めて音声を外したもの。2026-11-15）。新保コーチの回と同じく、画面に入っているときだけ再生する。
-           ★ テロップの成績2行と最後のひと言は確認中（差し替えになったら、縮め直してこのファイルを置き換える）。 -->
+           テロップの成績2行と最後のひと言は 2026-11-16 城さん確認済み。 -->
       <video muted autoplay loop playsinline preload="metadata"
              data-src="assets/events/watanabe-reel-full.mp4"
              poster="assets/events/watanabe-reel-full-poster.jpg"
@@ -1937,6 +1937,33 @@
         <span class="ev-deadline">申込締切 <b>1/4（月）</b></span>
       </div>
       <p class="ev-note">各日2名以上で開催します。リフト券は別途必要です。</p>
+    </div>
+  </div>
+  <!-- 2027-01 雪上レッスン（田中花コーチ・1/16・17）。2026-11-21 城さん決定。条件は12月の新保コーチの回と同じ。
+       写真はコーチ紹介の2枚目（紹介リールができたら video に差し替える）。ボタンは田中コーチのカード（#lesson-group-tanaka）へ。
+       ★ 対象は花さんに確認中（いまは12月の回と同じ書き方）。 -->
+  <div class="ev-inner ev-inner--portrait" data-until="2027-01-17" data-label="1月｜田中コーチ">
+    <div class="ev-media is-portrait">
+      <img src="assets/coaches/tanaka-hana-2.jpg" alt="コブを滑る田中花コーチ" loading="lazy" decoding="async" style="object-position:55% 50%">
+      <span class="ev-flag">1月開催</span>
+    </div>
+    <div class="ev-body">
+      <div class="ev-eyebrow"><span class="ev-dot"></span>期間限定のご案内</div>
+      <h2 class="ev-title"><span class="ev-kind">モーグル</span>MIC一般レッスン</h2>
+      <p class="ev-sub">担当コーチは田中花。<br>モーグルは初めてでも大丈夫です。</p>
+      <div class="ev-meta">
+        <span class="ev-chip">1/16（土）・17（日）</span>
+        <span class="ev-chip">雪上 白馬八方尾根／長野県白馬村</span>
+        <span class="ev-chip">小学生以上・中級斜面以上</span>
+        <span class="ev-chip">半日 ¥5,500（税込）</span>
+      </div>
+      <div class="ev-actions">
+        <a class="ev-cta" href="program-general.html#lesson-group-tanaka">詳細・お申し込み
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+        <span class="ev-deadline">申込締切 <b>1/16の回は1/13（水）、1/17の回は1/14（木）</b></span>
+      </div>
+      <p class="ev-note">リフト券は別途必要です。</p>
     </div>
   </div>
  </div>
@@ -3763,7 +3790,9 @@
     { match: 'MIC一般レッスン', date: '2027-01-08', url: 'program-general.html#lesson-20270108-watanabe' },
     { match: 'MIC一般レッスン', date: '2027-01-09', url: 'program-general.html#lesson-20270109-watanabe' },
     { match: 'MIC一般レッスン', date: '2027-01-10', url: 'program-general.html#lesson-20270110-watanabe' },
-    { match: 'MIC一般レッスン', date: '2027-01-11', url: 'program-general.html#lesson-20270111-watanabe' }
+    { match: 'MIC一般レッスン', date: '2027-01-11', url: 'program-general.html#lesson-20270111-watanabe' },
+    { match: 'MIC一般レッスン', date: '2027-01-16', url: 'program-general.html#lesson-20270116-tanaka' },
+    { match: 'MIC一般レッスン', date: '2027-01-17', url: 'program-general.html#lesson-20270117-tanaka' }
     // ★ 同じ日に2人のコーチの回を開くときは、日付だけでは行き先を分けられない。match にコーチ名など、予定のタイトルで見分けられる文を入れる
   ];
   function applyPageFor(ev){
