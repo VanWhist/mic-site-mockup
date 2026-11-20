@@ -1987,6 +1987,7 @@
 
     var track = document.getElementById('eventFeatureTrack');
     var pager = document.getElementById('eventFeaturePager');
+    var picked = -1; // 最後に押したボタンの回（右端まで動いたときの強調に使う）
     var buttons = Array.prototype.map.call(cards, function(card, i){
       var b = document.createElement('button');
       b.type = 'button';
@@ -1994,7 +1995,9 @@
       b.addEventListener('click', function(){
         // 動きを控える設定の端末では、滑らかに動かさずに切り替える（動画もこの設定では止めている）
         var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        picked = i;
         track.scrollTo({ left: card.offsetLeft, behavior: calm ? 'auto' : 'smooth' });
+        markCurrent(); // すでに右端にいて動かないときも強調を切り替える
       });
       pager.appendChild(b);
       return b;
@@ -2006,6 +2009,11 @@
         var d = Math.abs(card.offsetLeft - track.scrollLeft);
         if (d < best) { best = d; current = i; }
       });
+      // 右端まで動いたときは、最後の回は左端に来られない。押した回が見えていればその回、そうでなければ最後の回を強調する
+      if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 4) {
+        var p = cards[picked];
+        current = (p && p.offsetLeft >= track.scrollLeft - 4) ? picked : cards.length - 1;
+      }
       buttons.forEach(function(b, i){ b.setAttribute('aria-current', i === current ? 'true' : 'false'); });
     }
     // 横にはみ出している（隠れている回がある）ときだけボタンを出す
