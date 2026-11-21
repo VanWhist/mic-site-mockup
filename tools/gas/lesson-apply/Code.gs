@@ -49,7 +49,9 @@ var LESSONS = {
   '20270108-watanabe': { date: '2027-01-08', label: '1/8（金）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
   '20270109-watanabe': { date: '2027-01-09', label: '1/9（土）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
   '20270110-watanabe': { date: '2027-01-10', label: '1/10（日）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
-  '20270111-watanabe': { date: '2027-01-11', label: '1/11（月・祝）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' }
+  '20270111-watanabe': { date: '2027-01-11', label: '1/11（月・祝）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
+  '20270116-tanaka': { date: '2027-01-16', label: '1/16（土）田中コーチ', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2027-01-13' },
+  '20270117-tanaka': { date: '2027-01-17', label: '1/17（日）田中コーチ', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2027-01-14' }
 };
 var SLOTS = { am: '午前 10:00–12:00', pm: '午後 13:00–15:00', day: '1日（午前・午後）' };
 var FEES = { am: 5500, pm: 5500, day: 11000 };

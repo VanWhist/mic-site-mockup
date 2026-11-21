@@ -42,7 +42,11 @@ window.MIC_LESSON_APPLY = {
     { id: '20270110-watanabe', date: '2027-01-10', label: '1/10（日）', coach: '渡辺 大晴', slots: ['day'],
       capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
     { id: '20270111-watanabe', date: '2027-01-11', label: '1/11（月・祝）', coach: '渡辺 大晴', slots: ['day'],
-      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' }
+      capacityLabel: '6名', capacityNote: '2名以上で開催', deadline: '2027-01-04', deadlineLabel: '1月4日（月）' },
+    { id: '20270116-tanaka', date: '2027-01-16', label: '1/16（土）', coach: '田中 花', slots: ['am', 'pm', 'day'],
+      capacityLabel: '午前・午後それぞれ5名程度', deadline: '2027-01-13', deadlineLabel: '1月13日（水）' },
+    { id: '20270117-tanaka', date: '2027-01-17', label: '1/17（日）', coach: '田中 花', slots: ['am', 'pm', 'day'],
+      capacityLabel: '午前・午後それぞれ5名程度', deadline: '2027-01-14', deadlineLabel: '1月14日（木）' }
   ],
 
   // 枠の決まり。value は申込シートに入る値。parts は時間の重なりを見るためのもの（1日＝午前＋午後）
