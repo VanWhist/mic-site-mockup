@@ -128,10 +128,8 @@
      row-gap を 118→136、padding-bottom を 116→152 に広げた（PCも同様）。
      padding-bottom は最後の段に来る CSBA の紹介文（3行）とリンク2つが収まる高さ。
      広げないと、キャプションが次の段のロゴに重なる（実測 -3〜-7px、CSBA は -25px）。 */
-  /* 狭い幅では右の列のキャプションの幅が狭まり（320px で 136px）、紹介文が1行増える。
-     その分だけ段の間を広げる（広げないと次の段のロゴに重なる。実測 -13px）。
-     Chrome の実測では 370px まで重なる。iPhone は文字幅が少し違うので余裕を見て 389px まで
-     （360px の Android と 375px の iPhone SE を含め、390px 以上の iPhone は含めない）。
+  /* 8社までは、狭い幅で右の列のキャプションの幅が狭まり（320px で 136px）、紹介文が1行増えて
+     次の段のロゴに重なった（実測 -13px）。そのため 389px 以下だけ row-gap を 152px にしていた。
      2026-11 9社（大分県スキー・スノーボード連盟を追加）：しまだ病院が右の列に移り、紹介文が3行になって
      390px 以上でも次の段のロゴに重なる（実測 -12.6px。560〜580px も同じ）。row-gap を 136→156 にし、
      389px 以下の 152px の指定は 156px に含まれるので外した。 */
@@ -206,8 +204,8 @@
   .mic-links:empty{display:none;}
 
   @media (min-width:768px){
-    /* 9社（2026-11）：PC でもしまだ病院の紹介文が次の段のロゴに重なる（実測 -5.8px）ため 148→160 */
-    .mic-wrap{column-gap:14px;row-gap:160px;padding-bottom:156px;}
+    /* 9社（2026-11）：PC でもしまだ病院の紹介文が次の段のロゴに重なる（実測 -5.8px）ため 148→168 */
+    .mic-wrap{column-gap:14px;row-gap:168px;padding-bottom:156px;}
     .mic-plate{padding:14px 16px;border-radius:10px;min-height:74px;}
     .mic-word{height:44px;font-size:14px;}
     .mic-tag{font-size:11px;}
