@@ -1525,19 +1525,24 @@
   /* 折り返しレイアウト。row-gap がキャプション用の予約領域を兼ねる */
   .mic-wrap{
     position:relative;display:flex;flex-wrap:wrap;
-    column-gap:10px;row-gap:80px;padding-bottom:98px;
+    column-gap:10px;row-gap:120px;padding-bottom:120px;
   }
   /* 2026/09 Community v2：padding-bottom を 78→98（PCは 92→104）に広げた。
      最後の段に来る CSBA の紹介文が長く（スマホで3行）、広げないとキャプションが
      すぐ下の「Communityを見る」ボタンに重なる（実測 -10px）。 */
-  /* 狭い幅では右の列のキャプションの幅が狭まり（320px で 136px）、紹介文が1行増える。
-     その分だけ段の間を広げる（広げないと次の段のロゴに重なる。実測 -11px）。
-     Chrome の実測では 370px まで重なる。iPhone は文字幅が少し違うので余裕を見て 389px まで
-     （360px の Android と 375px の iPhone SE を含め、390px 以上の iPhone は含めない）。 */
-  @media (max-width:389px){ .mic-wrap{row-gap:96px;} }
-  /* 8社になり（鍼灸院志を追加）、スマホの2列では CSBA が最後の段の右の列に来る。右の列はキャプションの
-     幅が狭く、CSBA の長い紹介文の行数が増えて「Communityを見る」ボタンに重なる（実測 -12〜-32px。
-     Chrome では 400px まで重なる）。iPhone の文字幅の違いを見込み、429px 以下だけ下の余白を広げる。 */
+  /* 8社までは、狭い幅で右の列のキャプションの幅が狭まり（320px で 136px）、紹介文が1行増えて
+     次の段のロゴに重なった（実測 -11px）。そのため 389px 以下だけ row-gap を 96px にしていた。 */
+  /* 2026-11 9社（大分県スキー・スノーボード連盟を追加）：しまだ病院が右の列に移り、紹介文が3行になって
+     次の段のロゴに重なる（実測 390〜590px で -10.6px、389px 以下の WebKit で -14.2px）。
+     row-gap を 80→120 にした（WebKit の 555〜557px では、大分の紹介文が4行になり、96px でも -10px
+     重なったため。1px 刻みで実測し、iPhone の文字幅の違いを見込んで余裕を取った）。
+     389px 以下の指定（96px）は 120px に含まれるので外した。
+     あわせて padding-bottom を 98→120（PC は 104→120）にした。3列になる幅などで CSBA が最後の段の
+     右寄りに来ると紹介文が4行になり、「Communityを見る」ボタンに重なるため（WebKit の実測 -12.2〜-13px。
+     8社のときから 430px・950px で起きていた）。 */
+  /* 8社のとき（鍼灸院志を追加）、スマホの2列では CSBA が最後の段の右の列に来て、長い紹介文が
+     「Communityを見る」ボタンに重なった（実測 -12〜-32px）。そのため 429px 以下だけ下の余白を広げている。
+     9社では CSBA は最後の段の左の列に来るが、文字の大きさの違いを見込み、そのまま残す。 */
   @media (max-width:429px){ .mic-wrap{padding-bottom:138px;} }
 
   .mic-item{cursor:pointer;transform:none;
@@ -1606,7 +1611,8 @@
   .mic-cap-note{font-size:11.5px;color:var(--mic-sub);line-height:1.7;margin-top:5px;text-wrap:pretty;}
 
   @media (min-width:768px){
-    .mic-wrap{column-gap:14px;row-gap:96px;padding-bottom:104px;}
+    /* 9社（2026-11）：768px 付近で Tr-J の紹介文と次の段のロゴのすき間が 0.2px（WebKit）になるため row-gap 96→108 */
+    .mic-wrap{column-gap:14px;row-gap:108px;padding-bottom:120px;}
     .mic-plate{padding:14px 16px;border-radius:10px;min-height:74px;}
     .mic-word{height:44px;font-size:14px;}
     .mic-tag{font-size:11px;}
@@ -4036,7 +4042,7 @@
   </div>
 
   <div class="cm-stats">
-    <div class="cm-stat reveal"><div class="num">8</div><div class="lbl">支援・連携先</div></div>
+    <div class="cm-stat reveal"><div class="num">9</div><div class="lbl">支援・連携先</div></div>
     <div class="cm-stat reveal delay-1"><div class="num">9</div><div class="lbl">活動拠点</div></div>
   </div>
 
@@ -4070,6 +4076,7 @@
   var PARTNERS = [
     {name:"SNOW BASE 98",     tag:"用品・チューンナップ",       note:"選手の用具選びとブーツフィッティングを支えていただいています", role:"EQUIPMENT", logo:"assets/community/snowbase98.png"},
     {name:"広島県スキー連盟", tag:"フリースタイル委員会・広島", note:"広島県のフリースタイル競技の普及・強化で連携しています",       role:"FEDERATION", logo:"assets/community/hiroshima-freestyle.png", dark:true, boost:true},
+    {name:"大分県スキー・スノーボード連盟", tag:"フリースタイル委員会・大分", note:"大分県のモーグル競技の普及・強化で連携しています", role:"FEDERATION", logo:"assets/community/oita-skifed-logo.png", boost:true},
     {name:"Tr-J",             tag:"モーグルチーム・長野",       note:"合同練習や大会を通じて交流させていただいています",             role:"TEAM", logo:"assets/community/trj-logo.png", dark:true, boost:true},
     {name:"EQUIPE F.S.C",     tag:"SAJ公認クラブ・新潟",        note:"育成の面で連携させていただいています",                         role:"CLUB", logo:"assets/community/equipe-fsc-logo.png"},
     {name:"運動器ケア しまだ病院", tag:"メディカルサポート・大阪", note:"MIC選手のメディカル・コンディションを支えていただいております", role:"MEDICAL", logo:"assets/community/shimada-hospital.png", boost:true},
