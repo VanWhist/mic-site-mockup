@@ -22,5 +22,6 @@ window.MIC_REELS = [
   { no:13, title:'コブの中で、体はどう動いている？', url:'https://www.instagram.com/reel/DfrIm1BS53R/', thumb:'assets/reels/30byou-13.webp' },
   { no:14, title:'重心は、板の線を越える？', url:'https://www.instagram.com/reel/Df1eMsnyE58/', thumb:'assets/reels/30byou-14.webp' },
   { no:15, title:'横から見ると、重心はどう動く？', url:'https://www.instagram.com/reel/Df4ImZjK4E1/', thumb:'assets/reels/30byou-15.webp' },
-  { no:16, title:'モーグルの点数は、どう決まる？', url:'https://www.instagram.com/reel/Df9MnopqfQI/', thumb:'assets/reels/30byou-16.webp' }
+  { no:16, title:'モーグルの点数は、どう決まる？', url:'https://www.instagram.com/reel/Df9MnopqfQI/', thumb:'assets/reels/30byou-16.webp' },
+  { no:17, title:'ターン60点、ジャッジはどこを見る？', url:'https://www.instagram.com/reel/DgKEl1RyR0A/', thumb:'assets/reels/30byou-17.webp' }
 ];
