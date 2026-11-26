@@ -258,6 +258,8 @@
         <div class="k">参加費の合計<small>リフト券は含みません</small></div>
         <div class="v" id="total">0円</div>
       </div>
+      <!-- 体験会の回を選んだときだけ出す（まとめ料金の説明。2026-11-26） -->
+      <p class="note paynote" id="trialFeeNote" hidden>体験会は、1日を2日選ぶと10,000円、3日選ぶと15,000円です（半日は1回3,300円のままで、まとめ料金には入りません）。</p>
       <!-- お支払いと中止の決まりの短い版（2026-11-14 城さん決定）。全文は program-general.html#lesson-policy。変えるときは両方そろえる -->
       <p class="note paynote">レッスン料は、当日、集合場所で現金でお支払いください。キャンセル料はかかりません。天候などで中止するときは、当日の朝7:00までにご連絡します。中止した分のレッスン料はいただきません。くわしくは<a href="program-general.html#lesson-policy" target="_blank" rel="noopener">お支払いと、中止のときのこと</a>をご覧ください。</p>
 
@@ -604,6 +606,7 @@
     // 体験会の回を選んだときだけ、体験会の条件の確認を出す
     var t = anyTrial();
     $('c_trial_row').hidden = !t;
+    $('trialFeeNote').hidden = !t;
     if (!t) $('c_trial').checked = false;
     $('checksErr').textContent = t ? '3つとも確認してください。' : '2つとも確認してください。';
   }
