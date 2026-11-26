@@ -42,6 +42,10 @@ HEADERS.forEach(function (h, i) { COL[h] = i + 1; });
 //   1月からは、同じ日に2人のコーチの回があっても分かるよう、コーチ名を入れる。
 // cap は知らせるメールに出す定員の目安（自動では締めない）。半日ありの回は午前・午後それぞれの人数、
 //   1日のみの回はその回の人数。
+// fees / slotText があれば、その回だけ料金と「参加する回」に書く枠の名前を変える（体験会）。
+//   slotText には、回ごとの申込数を数えるために「午前」「午後」「1日」の文字を必ず入れる
+var TRIAL_FEES = { am: 3300, pm: 3300, day: 5500 };
+var TRIAL_SLOT_TEXT = { am: '午前（約2時間・時間は後日ご案内）', pm: '午後（約2時間・時間は後日ご案内）', day: '1日（午前・午後）' };
 var LESSONS = {
   '20261226': { date: '2026-12-26', label: '12/26（土）', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-23' },
   '20261227': { date: '2026-12-27', label: '12/27（日）', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-24' },
@@ -51,11 +55,19 @@ var LESSONS = {
   '20270110-watanabe': { date: '2027-01-10', label: '1/10（日）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
   '20270111-watanabe': { date: '2027-01-11', label: '1/11（月・祝）渡辺コーチ', slots: ['day'], cap: 6, deadline: '2027-01-04' },
   '20270116-tanaka': { date: '2027-01-16', label: '1/16（土）田中コーチ', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2027-01-13' },
-  '20270117-tanaka': { date: '2027-01-17', label: '1/17（日）田中コーチ', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2027-01-14' }
+  '20270117-tanaka': { date: '2027-01-17', label: '1/17（日）田中コーチ', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2027-01-14' },
+  // 冬休み モーグル体験会（2026-11-26 城さん決定）。コーチなし・時間は申込後に知らせる・料金は fees と BUNDLES。
+  // trial の回を選ぶ申込は、checks.trial（小中高生・公認登録なし・ヘルメット）がないと受け付けない
+  '20261228-trial': { date: '2026-12-28', label: '12/28（月）体験会', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-25', group: 'trial', trial: true, fees: TRIAL_FEES, slotText: TRIAL_SLOT_TEXT },
+  '20261229-trial': { date: '2026-12-29', label: '12/29（火）体験会', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-26', group: 'trial', trial: true, fees: TRIAL_FEES, slotText: TRIAL_SLOT_TEXT },
+  '20261230-trial': { date: '2026-12-30', label: '12/30（水）体験会', slots: ['am', 'pm', 'day'], cap: 5, deadline: '2026-12-27', group: 'trial', trial: true, fees: TRIAL_FEES, slotText: TRIAL_SLOT_TEXT }
 };
 var SLOTS = { am: '午前 10:00–12:00', pm: '午後 13:00–15:00', day: '1日（午前・午後）' };
 var FEES = { am: 5500, pm: 5500, day: 11000 };
 var PARTS = { am: ['am'], pm: ['pm'], day: ['am', 'pm'] };   // 時間の重なりを見るため（1日＝午前＋午後）
+// まとめ料金。group の回で「1日」を選んだ日の数が n 日のとき、その n 日分を合わせてこの金額にする（半日は入れない）。
+// data/lesson-apply.js の bundles と同じにする
+var BUNDLES = { trial: { 2: 10000, 3: 15000 } };
 
 function prop_(k, d) {
   var v = PropertiesService.getScriptProperties().getProperty(k);
@@ -134,6 +146,8 @@ function apply_(b, opt) {
     };
     if (!q.name || !q.kana || !q.age || !Object.keys(slots).length || !q.slope || !q.mogul) return { ok: false, reason: 'invalid' };
     if (hasOverlap_(slots)) return { ok: false, reason: 'invalid' };
+    // 体験会の回を選んだときは、体験会の条件（小中高生・公認登録なし・ヘルメット）の確認が要る
+    if (hasTrial_(slots) && !c.trial) return { ok: false, reason: 'invalid' };
     people.push(q);
   }
 
@@ -206,8 +220,15 @@ function hasOverlap_(slots) {
   });
 }
 
+function hasTrial_(slots) {
+  return Object.keys(slots).some(function (id) { return !!LESSONS[id].trial; });
+}
+
 function slotsText_(slots) {
-  return Object.keys(slots).sort().map(function (id) { return LESSONS[id].label + ' ' + SLOTS[slots[id]]; }).join('／');
+  return Object.keys(slots).sort().map(function (id) {
+    var L = LESSONS[id];
+    return L.label + ' ' + ((L.slotText && L.slotText[slots[id]]) || SLOTS[slots[id]]);
+  }).join('／');
 }
 
 function sheet_() {
@@ -246,9 +267,28 @@ function countBySlot_(sh) {
   return out;
 }
 
+function feeOfLesson_(L, v) {
+  return (L.fees && L.fees[v] != null) ? L.fees[v] : FEES[v];
+}
+
+// 1人分の参加費。lesson-apply.html の personFee と同じ計算にする
+function personFee_(slots) {
+  var sum = 0, dayFees = {};
+  Object.keys(slots).forEach(function (id) {
+    var L = LESSONS[id], f = feeOfLesson_(L, slots[id]);
+    sum += f;
+    if (slots[id] === 'day' && L.group && BUNDLES[L.group]) (dayFees[L.group] = dayFees[L.group] || []).push(f);
+  });
+  Object.keys(dayFees).forEach(function (g) {
+    var t = BUNDLES[g][dayFees[g].length];
+    if (t != null) { dayFees[g].forEach(function (f) { sum -= f; }); sum += t; }
+  });
+  return sum;
+}
+
 function feeTotal_(people) {
   var sum = 0;
-  people.forEach(function (q) { Object.keys(q.slots).forEach(function (id) { sum += FEES[q.slots[id]]; }); });
+  people.forEach(function (q) { sum += personFee_(q.slots); });
   return sum;
 }
 
@@ -263,6 +303,9 @@ function mailApplicant_(appId, app, people) {
   });
   lines.push('', '参加費の合計：' + feeTotal_(people).toLocaleString() + '円（税込・リフト券は別）');
   lines.push('会場：白馬八方尾根スキー場', '');
+  if (people.some(function (q) { return hasTrial_(q.slots); })) {
+    lines.push('冬休み モーグル体験会の集合場所と時間は、あらためてご連絡します。当日はヘルメットをお持ちください。', '');
+  }
   lines.push('当日の中止・時間変更は、ご入力の電話番号またはこのメールアドレスへご連絡します。');
   lines.push('ご不明な点は、公式LINEからご連絡ください：' + prop_('LINE_URL', 'https://lin.ee/Q6XCwYg'), '');
   lines.push('MIC — Mogul Improvement Community', 'https://mogul-mic.com/');
