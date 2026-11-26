@@ -292,10 +292,17 @@ function feeTotal_(people) {
   return sum;
 }
 
+// 申込の呼び名。体験会の回だけの申込は「冬休み モーグル体験会」、それ以外は「雪上レッスン」
+function kindName_(people) {
+  var all = people.every(function (q) { return Object.keys(q.slots).every(function (id) { return !!LESSONS[id].trial; }); });
+  return all ? '冬休み モーグル体験会' : '雪上レッスン';
+}
+
 function mailApplicant_(appId, app, people) {
+  var kind = kindName_(people);
   var lines = [];
   lines.push(app.name + ' 様', '');
-  lines.push('MIC の雪上レッスンにお申し込みいただき、ありがとうございます。', '次の内容で受け付けました。内容を確認して、こちらからご連絡します。', '');
+  lines.push('MIC の' + kind + 'にお申し込みいただき、ありがとうございます。', '次の内容で受け付けました。内容を確認して、こちらからご連絡します。', '');
   lines.push('受付番号：' + appId, '');
   people.forEach(function (q, i) {
     lines.push('■ 参加する人' + (people.length > 1 ? (i + 1) : '') + '：' + q.name + '（' + q.age + '）');
@@ -304,7 +311,8 @@ function mailApplicant_(appId, app, people) {
   lines.push('', '参加費の合計：' + feeTotal_(people).toLocaleString() + '円（税込・リフト券は別）');
   lines.push('会場：白馬八方尾根スキー場', '');
   if (people.some(function (q) { return hasTrial_(q.slots); })) {
-    lines.push('冬休み モーグル体験会の集合場所と時間は、あらためてご連絡します。当日はヘルメットをお持ちください。', '');
+    lines.push('冬休み モーグル体験会の集合場所と時間は、あらためてご連絡します。当日はヘルメットをお持ちください。',
+      '参加費は、当日、集合場所で現金でお支払いください。', '');
   }
   lines.push('当日の中止・時間変更は、ご入力の電話番号またはこのメールアドレスへご連絡します。');
   lines.push('ご不明な点は、公式LINEからご連絡ください：' + prop_('LINE_URL', 'https://lin.ee/Q6XCwYg'), '');
@@ -315,13 +323,14 @@ function mailApplicant_(appId, app, people) {
     lines.splice(lines.length - 3, 0, '参加同意書を添付しています。ご記入のうえ、レッスン当日、参加費と一緒にお渡しください。', '');
     opt.attachments = [DriveApp.getFileById(pdf).getBlob()];
   }
-  MailApp.sendEmail(app.email, '【MIC】雪上レッスンのお申し込みを受け付けました（' + appId + '）', lines.join('\n'), opt);
+  MailApp.sendEmail(app.email, '【MIC】' + kind + 'のお申し込みを受け付けました（' + appId + '）', lines.join('\n'), opt);
 }
 
 function mailNotify_(appId, app, people, counts) {
   var to = prop_('NOTIFY_EMAILS');
   if (!to) return;
-  var lines = ['雪上レッスンに申込がありました。', '', '受付番号：' + appId, '申込者：' + app.name + '／' + app.tel + '／' + app.email, ''];
+  var kind = kindName_(people);
+  var lines = [kind + 'に申込がありました。', '', '受付番号：' + appId, '申込者：' + app.name + '／' + app.tel + '／' + app.email, ''];
   people.forEach(function (q, i) {
     lines.push('■ ' + (i + 1) + '. ' + q.name + '（' + q.kana + '・' + q.age + '）');
     lines.push('　回：' + slotsText_(q.slots));
@@ -341,7 +350,7 @@ function mailNotify_(appId, app, people, counts) {
     lines.push('　' + k + '：' + c.n + '名／' + c.cap + '名' + (c.n >= c.cap ? '  ★' + c.cap + '名に達しました' : ''));
   });
   lines.push('', '申込シート：https://docs.google.com/spreadsheets/d/' + prop_('SHEET_ID') + '/edit');
-  MailApp.sendEmail(to, '【MIC申込】雪上レッスン ' + app.name + ' 様（' + appId + '）', lines.join('\n'));
+  MailApp.sendEmail(to, '【MIC申込】' + kind + ' ' + app.name + ' 様（' + appId + '）', lines.join('\n'));
 }
 
 // ---------------------------------------------------------------- 動画

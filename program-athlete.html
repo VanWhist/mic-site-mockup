@@ -529,7 +529,7 @@
   }
 
   /* ---------- 冬休み モーグル体験会（2026-12-28〜30）----------
-     2026-11-26 城さん決定（LP案のB案「選手への入口」）。data-until を過ぎたら下のスクリプトがブロックごと消す。
+     2026-11-26 城さん決定（LP案のB案「選手への入口」）。data-until（最後の締切）を過ぎたら下のスクリプトがブロックごと消す。
      参加費は税込、選手育成コースの料金は税別。どちらも書き分ける。 */
   .trial{margin:34px 0 8px;border:1px solid rgba(255,90,60,.3);border-radius:20px;overflow:hidden;
     background:linear-gradient(160deg,rgba(255,90,60,.10),rgba(255,255,255,.02) 55%);}
@@ -634,10 +634,10 @@
   <!-- 冬休み モーグル体験会（2026-12-28〜30）。2026-11-26 城さん決定。
        対象：これからモーグルを始めたい小中高生・公認登録者は不可。担当コーチはつかず、選手育成コースの練習に混ざる。
        時間と集合場所は申込後に知らせる。料金は data/lesson-apply.js と Apps Script（tools/gas/lesson-apply/Code.gs）にそろえる。
-       data-until を過ぎたら、ページ下のスクリプトがブロックごと消す。 -->
-  <section class="trial" id="trial" data-until="2026-12-30" aria-labelledby="trialTitle">
+       data-until（最後の締切 12/27）を過ぎたら、すぐ下のスクリプトがブロックごと消す。 -->
+  <section class="trial" id="trial" data-until="2026-12-27" aria-labelledby="trialTitle">
     <div class="trial-photo">
-      <img src="assets/top/athlete_A.jpg" alt="青空の下でエアをするMICの選手" loading="lazy" decoding="async">
+      <img src="assets/top/athlete_A.jpg" alt="バックフリップを決めるMICの選手" loading="lazy" decoding="async">
       <span class="trial-flag">冬休み 体験会</span>
     </div>
     <div class="trial-in">

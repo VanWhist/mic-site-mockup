@@ -840,6 +840,7 @@
     showAllCoaches = true;
     people.querySelectorAll('.days [hidden]').forEach(function(el){ el.hidden = false; });
     people.querySelectorAll('.more-coaches').forEach(function(b){ b.remove(); });
+    renderHead();
     renderSummary();
     track('apply_all_coaches', fromLesson);
   }
@@ -852,12 +853,18 @@
   var SUM_TIME_NOTE = $('sumTimeNote').textContent;
   var SUM_FEE_NOTE = $('sumFeeNote').textContent;
   var SUM_CAP = $('sumCap').textContent;
-  // 体験会のカードから来たときは、見出しと戻り先も体験会のものにする
+  // 体験会のカードから来たときは、見出しと戻り先も体験会のものにする。
+  // 「コーチの一般レッスンも申し込む」を押したら、一般レッスンの書き方に戻す
   var focusInfo = focusCoach ? groupInfo(focusCoach) : null;
-  if (focusInfo) {
-    $('title').textContent = focusInfo.title;
-    document.title = focusInfo.title + '｜MIC';
-    [$('backTop'), $('backDone')].forEach(function(a){ a.href = focusInfo.back.href; a.textContent = focusInfo.back.label; });
+  var DEF_HEAD = { title: $('title').textContent, doc: document.title, href: $('backTop').getAttribute('href'), label: $('backTop').textContent };
+  function renderHead(){
+    var gi = (!showAllCoaches && focusInfo) ? focusInfo : null;
+    $('title').textContent = gi ? gi.title : DEF_HEAD.title;
+    document.title = gi ? gi.title + '｜MIC' : DEF_HEAD.doc;
+    [$('backTop'), $('backDone')].forEach(function(a){
+      a.href = gi ? gi.back.href : DEF_HEAD.href;
+      a.textContent = gi ? gi.back.label : DEF_HEAD.label;
+    });
   }
   function renderSummary(){
     var base = openLessons.length ? openLessons : C.lessons;
@@ -868,6 +875,7 @@
       $('sumCoach').textContent = gi.coach;
       $('sumTime').textContent = gi.time;
       $('sumTimeNote').textContent = '';
+      $('sumTimeNote').hidden = true;
       $('sumFee').textContent = gi.fee;
       $('sumFeeNote').textContent = gi.feeNote;
     }
@@ -884,6 +892,7 @@
       others.forEach(function(l){ var h = groupInfo(groupOf(l)).heading; if (extra.indexOf(h) < 0) extra.push(h); });
       $('sumCoach').textContent = coaches.concat(extra.map(function(h){ return h.replace(/（.*）$/, '') + '（コーチなし）'; })).join('／');
       $('sumTime').textContent = SUM_TIME;
+      $('sumTimeNote').hidden = false;
       $('sumFee').textContent = (half ? '半日（2時間）' + yen(feeOf('am')) + '／' : '') + '1日（4時間）' + yen(feeOf('day')) + '（税込）'
         + (extra.length ? '。体験会は別の料金です（下の回に書いています）' : '');
       $('sumTimeNote').textContent = (half ? SUM_TIME_NOTE : '午前と午後の両方を通して受けます。')
@@ -902,6 +911,7 @@
       ? (src.length > 1 && /^[0-9０-９]/.test(caps[0]) ? '各日' : '') + caps[0]
       : SUM_CAP;
   }
+  renderHead();
   renderSummary();
   $('addPerson').addEventListener('click', function(){ addPerson(); });
   addPerson();
