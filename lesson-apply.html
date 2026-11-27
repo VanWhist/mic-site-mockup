@@ -173,7 +173,7 @@
     <a class="brand" href="index.html">MIC</a>
     <h1 id="title">雪上レッスンのお申し込み</h1>
     <p class="lead">入力は3分ほどです。会員登録やアプリは要りません。お申し込みのあと、こちらからご連絡します。</p>
-    <a class="back" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
+    <a class="back" id="backTop" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
   </header>
 
   <main id="main">
@@ -181,7 +181,7 @@
       <dl>
         <dt>会場</dt><dd id="sumPlace">白馬八方尾根スキー場</dd>
         <dt>コーチ</dt><dd id="sumCoach">新保 龍登</dd>
-        <dt>時間</dt><dd>午前 10:00–12:00／午後 13:00–15:00<small id="sumTimeNote">半日は午前か午後のどちらか、1日は両方です。</small></dd>
+        <dt>時間</dt><dd><span id="sumTime">午前 10:00–12:00／午後 13:00–15:00</span><small id="sumTimeNote">半日は午前か午後のどちらか、1日は両方です。</small></dd>
         <dt>料金</dt><dd><span id="sumFee">半日（2時間）5,500円／1日（4時間）11,000円（税込）</span><small id="sumFeeNote">別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。</small></dd>
         <dt>定員</dt><dd id="sumCap">回ごとに、下の「参加する回」に書いています。</dd>
       </dl>
@@ -238,7 +238,9 @@
           <span class="q">対象の確認<span class="req">必須</span></span>
           <label class="check"><input type="checkbox" id="c_level"><span>参加する人は、中級斜面以上を滑れます。</span></label>
           <label class="check"><input type="checkbox" id="c_lift"><span>リフト券は、各自で用意します。</span></label>
-          <div class="err">2つとも確認してください。</div>
+          <!-- 体験会の回を選んだときだけ出す（2026-11-26 城さん決定：小中高生・公認登録者は不可・ヘルメット必須） -->
+          <label class="check" id="c_trial_row" hidden><input type="checkbox" id="c_trial"><span>体験会に参加する人は小学生〜高校生で、公認登録（SAJの競技者登録）をしていません。当日はヘルメットをかぶります。</span></label>
+          <div class="err" id="checksErr">2つとも確認してください。</div>
         </div>
         <div class="field" data-f="consents">
           <span class="q">同意<span class="req">必須</span></span>
@@ -256,6 +258,8 @@
         <div class="k">参加費の合計<small>リフト券は含みません</small></div>
         <div class="v" id="total">0円</div>
       </div>
+      <!-- 体験会の回を選んだときだけ出す（まとめ料金の説明。2026-11-26） -->
+      <p class="note paynote" id="trialFeeNote" hidden>体験会は、1日を2日選ぶと10,000円、3日選ぶと15,000円です（半日は1回3,300円のままで、まとめ料金には入りません）。</p>
       <!-- お支払いと中止の決まりの短い版（2026-11-14 城さん決定）。全文は program-general.html#lesson-policy。変えるときは両方そろえる -->
       <p class="note paynote">レッスン料は、当日、集合場所で現金でお支払いください。キャンセル料はかかりません。天候などで中止するときは、当日の朝7:00までにご連絡します。中止した分のレッスン料はいただきません。くわしくは<a href="program-general.html#lesson-policy" target="_blank" rel="noopener">お支払いと、中止のときのこと</a>をご覧ください。</p>
 
@@ -278,7 +282,7 @@
     <div class="notice" id="doneVideoError" hidden></div>
     <p class="no">メールが届かないときは、迷惑メールのフォルダをご確認いただくか、公式LINEからご連絡ください。</p>
     <a class="line-btn" href="https://lin.ee/Q6XCwYg" target="_blank" rel="noopener" data-cta-pos="apply-done-line">公式LINEを友だち追加する</a>
-    <a class="back" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
+    <a class="back" id="backDone" href="program-general.html#lessons">← 一般レッスンのページに戻る</a>
   </section>
 
   <footer>MIC — Mogul Improvement Community</footer>
@@ -407,21 +411,27 @@
   }
   var openLessons = C.lessons.filter(function(l){ return !isClosed(l); });
 
-  // カードから来たときは、その回のコーチの回だけを出す（そのコーチの回が全部締め切っていたら絞らない）
-  var fromLessonObj = C.lessons.filter(function(l){ return l.id === fromLesson; })[0];
-  var focusCoach = (fromLessonObj && openLessons.some(function(l){ return l.coach === fromLessonObj.coach; })) ? fromLessonObj.coach : '';
+  // 回のまとまり。ふだんはコーチごと、コーチのいない回（体験会など）は group ごと
+  function groupOf(l){ return l.group || l.coach; }
+  function groupInfo(g){ return (C.groups && C.groups[g]) || null; }
+  var lessonById = {};
+  C.lessons.forEach(function(l){ lessonById[l.id] = l; });
+
+  // カードから来たときは、その回のまとまり（コーチ・体験会）の回だけを出す（全部締め切っていたら絞らない）
+  var fromLessonObj = lessonById[fromLesson];
+  var focusCoach = (fromLessonObj && openLessons.some(function(l){ return groupOf(l) === groupOf(fromLessonObj); })) ? groupOf(fromLessonObj) : '';
   var showAllCoaches = !focusCoach;
-  // 並べる順：絞るコーチの回（カードから来た回を先頭）→ ほかのコーチの回。コーチごとにまとめる
+  // 並べる順：絞るまとまりの回（カードから来た回を先頭）→ ほかの回。まとまりごとにまとめる
   var orderedLessons = (function(){
     var coaches = [];
     if (focusCoach) coaches.push(focusCoach);
-    C.lessons.forEach(function(l){ if (coaches.indexOf(l.coach) < 0) coaches.push(l.coach); });
+    C.lessons.forEach(function(l){ if (coaches.indexOf(groupOf(l)) < 0) coaches.push(groupOf(l)); });
     var out = [];
     coaches.forEach(function(c){
-      C.lessons.forEach(function(l){ if (l.coach === c) out.push(l); });
+      C.lessons.forEach(function(l){ if (groupOf(l) === c) out.push(l); });
     });
     out.sort(function(a, b){
-      if (a.coach !== b.coach) return coaches.indexOf(a.coach) - coaches.indexOf(b.coach);
+      if (groupOf(a) !== groupOf(b)) return coaches.indexOf(groupOf(a)) - coaches.indexOf(groupOf(b));
       return (b.id === fromLesson) - (a.id === fromLesson);
     });
     return out;
@@ -453,14 +463,15 @@
     var prevCoach = '';
     orderedLessons.forEach(function(l){
       var closed = isClosed(l);
-      var hide = !showAllCoaches && l.coach !== focusCoach;
-      if (l.coach !== prevCoach) {
+      var hide = !showAllCoaches && groupOf(l) !== focusCoach;
+      if (groupOf(l) !== prevCoach) {
         var h = document.createElement('div');
+        var gi = groupInfo(groupOf(l));
         h.className = 'days-coach';
-        h.textContent = l.coach + 'コーチのレッスン';
+        h.textContent = gi ? gi.heading : l.coach + 'コーチのレッスン';
         h.hidden = hide;
         days.appendChild(h);
-        prevCoach = l.coach;
+        prevCoach = groupOf(l);
       }
       var d = document.createElement('div');
       d.hidden = hide;
@@ -472,16 +483,19 @@
       html += '<label class="choice none"><input type="radio" name="' + key + '_' + l.id + '" value=""' + (closed ? ' disabled' : '') + ' checked><span>参加しない</span></label>';
       l.slots.forEach(function(v){
         var s = slotDef(v);
-        html += '<label class="choice"><input type="radio" name="' + key + '_' + l.id + '" value="' + s.value + '"' + (closed ? ' disabled' : '') + '><span>' + s.label + '<small>' + s.time + '</small></span></label>';
+        // その回だけの料金がある回（体験会）は、枠の下に料金も出す
+        var sub = (l.slotTimes && l.slotTimes[v]) || s.time;
+        if (l.fees) sub += '・' + yen(feeOfLesson(l, v));
+        html += '<label class="choice"><input type="radio" name="' + key + '_' + l.id + '" value="' + s.value + '"' + (closed ? ' disabled' : '') + '><span>' + s.label + '<small>' + sub + '</small></span></label>';
       });
       d.innerHTML = html + '</div>';
       days.appendChild(d);
     });
-    if (!showAllCoaches && orderedLessons.some(function(l){ return l.coach !== focusCoach; })) {
+    if (!showAllCoaches && orderedLessons.some(function(l){ return groupOf(l) !== focusCoach; })) {
       var more = document.createElement('button');
       more.type = 'button';
       more.className = 'more-coaches';
-      more.textContent = 'ほかのコーチのレッスンも申し込む';
+      more.textContent = (groupInfo(focusCoach) && groupInfo(focusCoach).more) || 'ほかのコーチのレッスンも申し込む';
       more.addEventListener('click', showAllLessons);
       days.appendChild(more);
     }
@@ -543,11 +557,37 @@
     var s = slotDef(v);
     return s ? s.fee : 0;
   }
+  // その回の料金（回に fees があればそれ、なければ slotDefs の fee）
+  function feeOfLesson(l, v){
+    return (l && l.fees && l.fees[v] != null) ? l.fees[v] : feeOf(v);
+  }
+  // 1人分の参加費。まとめ料金（C.bundles）のある group は、「1日」を選んだ日の数で差し替える。
+  // 半日はまとめ料金に入れない。Apps Script の personFee_ と同じ計算にする
+  function personFee(slots){
+    var sum = 0, dayFees = {};
+    Object.keys(slots).forEach(function(id){
+      var l = lessonById[id];
+      if (!l) return;
+      var f = feeOfLesson(l, slots[id]);
+      sum += f;
+      if (slots[id] === 'day' && l.group && C.bundles && C.bundles[l.group]) (dayFees[l.group] = dayFees[l.group] || []).push(f);
+    });
+    Object.keys(dayFees).forEach(function(g){
+      var t = C.bundles[g][dayFees[g].length];
+      if (t != null) { dayFees[g].forEach(function(f){ sum -= f; }); sum += t; }
+    });
+    return sum;
+  }
+  // 体験会の回を選んでいる人がいるか
+  function anyTrial(){
+    return Array.prototype.some.call(people.querySelectorAll('.person'), function(p){
+      var s = slotsOf(p);
+      return Object.keys(s).some(function(id){ return lessonById[id] && lessonById[id].trial; });
+    });
+  }
   // 同じ日の回で、時間の重なる枠を選んでいないか（例：同じ日に 渡辺コーチの1日と 田中コーチの午前）
   function hasOverlap(slots){
     var used = {};
-    var lessonById = {};
-    C.lessons.forEach(function(l){ lessonById[l.id] = l; });
     return Object.keys(slots).some(function(id){
       var l = lessonById[id], s = slotDef(slots[id]);
       if (!l || !s) return false;
@@ -561,11 +601,14 @@
   }
   function updateTotal(){
     var sum = 0;
-    people.querySelectorAll('.person').forEach(function(p){
-      var s = slotsOf(p);
-      Object.keys(s).forEach(function(k){ sum += feeOf(s[k]); });
-    });
+    people.querySelectorAll('.person').forEach(function(p){ sum += personFee(slotsOf(p)); });
     $('total').textContent = yen(sum);
+    // 体験会の回を選んだときだけ、体験会の条件の確認を出す
+    var t = anyTrial();
+    $('c_trial_row').hidden = !t;
+    $('trialFeeNote').hidden = !t;
+    if (!t) $('c_trial').checked = false;
+    $('checksErr').textContent = t ? '3つとも確認してください。' : '2つとも確認してください。';
   }
 
   // ---- 入力チェック ----
@@ -594,7 +637,7 @@
       chk(p.querySelector('[data-f=p_mogul]'), groupValue(p, 'mogul') !== '');
     });
 
-    chk(document.querySelector('[data-f=checks]'), $('c_level').checked && $('c_lift').checked);
+    chk(document.querySelector('[data-f=checks]'), $('c_level').checked && $('c_lift').checked && (!anyTrial() || $('c_trial').checked));
     chk(document.querySelector('[data-f=consents]'), $('g_rules').checked && $('g_privacy').checked && $('g_guardian').checked);
     return {ok: ok, first: first};
   }
@@ -658,7 +701,7 @@
           video: v ? {name: v.name, size: v.size, type: v.type || ''} : null
         };
       }),
-      checks: {level: $('c_level').checked, lift: $('c_lift').checked},
+      checks: {level: $('c_level').checked, lift: $('c_lift').checked, trial: anyTrial() && $('c_trial').checked},
       consents: {rules: $('g_rules').checked, privacy: $('g_privacy').checked, guardian: $('g_guardian').checked},
       from_lesson: fromLesson,
       // utm がひとつも無いときは空にする（"//" を入れない）
@@ -800,6 +843,7 @@
     showAllCoaches = true;
     people.querySelectorAll('.days [hidden]').forEach(function(el){ el.hidden = false; });
     people.querySelectorAll('.more-coaches').forEach(function(b){ b.remove(); });
+    renderHead();
     renderSummary();
     track('apply_all_coaches', fromLesson);
   }
@@ -808,23 +852,58 @@
   $('sumPlace').textContent = C.place;
   // 概要のコーチと料金は、受付中の回から作る（全部締め切ったあとは全部の回から）。
   // カードから来て絞っているときは、そのコーチの回から作る
+  var SUM_TIME = $('sumTime').textContent;
   var SUM_TIME_NOTE = $('sumTimeNote').textContent;
   var SUM_FEE_NOTE = $('sumFeeNote').textContent;
   var SUM_CAP = $('sumCap').textContent;
+  // 体験会のカードから来たときは、見出しと戻り先も体験会のものにする。
+  // 「コーチの一般レッスンも申し込む」を押したら、一般レッスンの書き方に戻す
+  var focusInfo = focusCoach ? groupInfo(focusCoach) : null;
+  var DEF_HEAD = { title: $('title').textContent, doc: document.title, href: $('backTop').getAttribute('href'), label: $('backTop').textContent };
+  function renderHead(){
+    var gi = (!showAllCoaches && focusInfo) ? focusInfo : null;
+    $('title').textContent = gi ? gi.title : DEF_HEAD.title;
+    document.title = gi ? gi.title + '｜MIC' : DEF_HEAD.doc;
+    [$('backTop'), $('backDone')].forEach(function(a){
+      a.href = gi ? gi.back.href : DEF_HEAD.href;
+      a.textContent = gi ? gi.back.label : DEF_HEAD.label;
+    });
+  }
   function renderSummary(){
     var base = openLessons.length ? openLessons : C.lessons;
-    var src = showAllCoaches ? base : base.filter(function(l){ return l.coach === focusCoach; });
+    var src = showAllCoaches ? base : base.filter(function(l){ return groupOf(l) === focusCoach; });
+    // 体験会だけを出しているとき：概要は group の書き方をそのまま使う
+    var gi = (!showAllCoaches && focusInfo) ? focusInfo : null;
+    if (gi) {
+      $('sumCoach').textContent = gi.coach;
+      $('sumTime').textContent = gi.time;
+      $('sumTimeNote').textContent = '';
+      $('sumTimeNote').hidden = true;
+      $('sumFee').textContent = gi.fee;
+      $('sumFeeNote').textContent = gi.feeNote;
+    }
+    // コーチのいる回（一般レッスン）の書き方。体験会など group の書き方がある回は、料金・時間の計算に入れない
+    var gen = src.filter(function(l){ return !groupInfo(groupOf(l)); });
+    var others = src.filter(function(l){ return groupInfo(groupOf(l)); });
     var coaches = [], half = false;
-    src.forEach(function(l){
+    gen.forEach(function(l){
       if (coaches.indexOf(l.coach) < 0) coaches.push(l.coach);
       if (l.slots.indexOf('am') >= 0 || l.slots.indexOf('pm') >= 0) half = true;
     });
-    $('sumCoach').textContent = coaches.join('／');
-    $('sumFee').textContent = (half ? '半日（2時間）' + yen(feeOf('am')) + '／' : '') + '1日（4時間）' + yen(feeOf('day')) + '（税込）';
-    $('sumTimeNote').textContent = half ? SUM_TIME_NOTE : '午前と午後の両方を通して受けます。';
-    $('sumFeeNote').textContent = (half && src.some(function(l){ return l.slots.indexOf('am') < 0; }))
-      ? '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。'
-      : SUM_FEE_NOTE;
+    if (!gi) {
+      var extra = [];
+      others.forEach(function(l){ var h = groupInfo(groupOf(l)).heading; if (extra.indexOf(h) < 0) extra.push(h); });
+      $('sumCoach').textContent = coaches.concat(extra.map(function(h){ return h.replace(/（.*）$/, '') + '（コーチなし）'; })).join('／');
+      $('sumTime').textContent = SUM_TIME;
+      $('sumTimeNote').hidden = false;
+      $('sumFee').textContent = (half ? '半日（2時間）' + yen(feeOf('am')) + '／' : '') + '1日（4時間）' + yen(feeOf('day')) + '（税込）'
+        + (extra.length ? '。体験会は別の料金です（下の回に書いています）' : '');
+      $('sumTimeNote').textContent = (half ? SUM_TIME_NOTE : '午前と午後の両方を通して受けます。')
+        + (extra.length ? '体験会の時間は、お申し込みのあとにご案内します。' : '');
+      $('sumFeeNote').textContent = (half && gen.some(function(l){ return l.slots.indexOf('am') < 0; }))
+        ? '半日は、半日を受け付けている回だけです。別にリフト券が必要です。交通・宿・昼食は各自でご用意ください。'
+        : SUM_FEE_NOTE;
+    }
     // 定員：コーチで絞っていて、どの回も同じ定員なら、その数を直接書く（例：各日6名（2名以上で開催））
     var caps = [];
     src.forEach(function(l){
@@ -835,6 +914,7 @@
       ? (src.length > 1 && /^[0-9０-９]/.test(caps[0]) ? '各日' : '') + caps[0]
       : SUM_CAP;
   }
+  renderHead();
   renderSummary();
   $('addPerson').addEventListener('click', function(){ addPerson(); });
   addPerson();

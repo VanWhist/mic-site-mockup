@@ -1912,6 +1912,34 @@
       <p class="ev-note">リフト券は別途必要です。</p>
     </div>
   </div>
+  <!-- 2026-12 冬休み モーグル体験会（12/28〜30）。2026-11-26 城さん決定（LP案のB案）。
+       小中高生・公認登録者は不可・担当コーチなし（選手育成コースの練習に混ざる）。時間は申込後に知らせる。
+       ボタンは選手育成ページの体験会のブロック（#trial）へ。写真は選手育成ページの見出しの写真。
+       掲載は最後の締切（12/27）まで。開催日まで出すと、申し込めない案内が3日残るため。 -->
+  <div class="ev-inner ev-inner--portrait" data-until="2026-12-27" data-label="冬休み｜体験会">
+    <div class="ev-media is-portrait">
+      <img src="assets/programs/athlete_hero_sp.jpg" alt="空中でスキーを開くMICの選手" loading="lazy" decoding="async" style="object-position:50% 50%">
+      <span class="ev-flag">冬休み開催</span>
+    </div>
+    <div class="ev-body">
+      <div class="ev-eyebrow"><span class="ev-dot"></span>期間限定のご案内</div>
+      <h2 class="ev-title"><span class="ev-kind">小中高生</span>冬休み <span style="white-space:nowrap">モーグル体験会</span></h2>
+      <p class="ev-sub">選手への最初の一歩は、この冬休みに。<br>MIC選手育成コースの練習に入って滑ります。</p>
+      <div class="ev-meta">
+        <span class="ev-chip">12/28（月）・29（火）・30（水）</span>
+        <span class="ev-chip">雪上 白馬八方尾根／長野県白馬村</span>
+        <span class="ev-chip">小学生〜高校生・中級斜面以上</span>
+        <span class="ev-chip">半日 ¥3,300（税込）</span>
+      </div>
+      <div class="ev-actions">
+        <a class="ev-cta" href="program-athlete.html#trial">詳細・お申し込み
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+        <span class="ev-deadline">申込締切 <b>各日の3日前</b></span>
+      </div>
+      <p class="ev-note">公認登録（SAJの競技者登録）をしている方は参加できません。リフト券は別途必要です。</p>
+    </div>
+  </div>
   <!-- 2027-01 雪上レッスン（渡辺大晴コーチ）。対象は12月の回と同じ（渡辺コーチ確認済み 2026-11-15）。
        ボタンは一般レッスンのページの渡辺コーチのカード（#lesson-group-watanabe）へ。開いた状態で表示される。 -->
   <div class="ev-inner ev-inner--portrait" data-until="2027-01-11" data-label="1月｜渡辺コーチ">
@@ -3806,7 +3834,11 @@
     { match: 'MIC一般レッスン', date: '2027-01-10', url: 'program-general.html#lesson-20270110-watanabe' },
     { match: 'MIC一般レッスン', date: '2027-01-11', url: 'program-general.html#lesson-20270111-watanabe' },
     { match: 'MIC一般レッスン', date: '2027-01-16', url: 'program-general.html#lesson-20270116-tanaka' },
-    { match: 'MIC一般レッスン', date: '2027-01-17', url: 'program-general.html#lesson-20270117-tanaka' }
+    { match: 'MIC一般レッスン', date: '2027-01-17', url: 'program-general.html#lesson-20270117-tanaka' },
+    // 冬休み モーグル体験会（2026-11-26 決定）。予定のタイトルに「体験会」を入れる。時間が決まったらカレンダーに登録する
+    { match: '体験会', date: '2026-12-28', url: 'program-athlete.html#trial' },
+    { match: '体験会', date: '2026-12-29', url: 'program-athlete.html#trial' },
+    { match: '体験会', date: '2026-12-30', url: 'program-athlete.html#trial' }
     // ★ 同じ日に2人のコーチの回を開くときは、日付だけでは行き先を分けられない。match にコーチ名など、予定のタイトルで見分けられる文を入れる
   ];
   function applyPageFor(ev){
