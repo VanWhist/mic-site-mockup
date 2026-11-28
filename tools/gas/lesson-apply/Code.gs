@@ -314,6 +314,8 @@ function mailApplicant_(appId, app, people) {
     lines.push('冬休み モーグル体験会の集合場所と時間は、あらためてご連絡します。当日はヘルメットをお持ちください。',
       '参加費は、当日、集合場所で現金でお支払いください。', '');
   }
+  lines.push('【キャンセルするとき】',
+    '前日までに公式LINEへ、受付番号とキャンセルする日をお送りください。キャンセル料はかかりません。', '');
   lines.push('当日の中止・時間変更は、ご入力の電話番号またはこのメールアドレスへご連絡します。');
   lines.push('ご不明な点は、公式LINEからご連絡ください：' + prop_('LINE_URL', 'https://lin.ee/Q6XCwYg'), '');
   lines.push('MIC — Mogul Improvement Community', 'https://mogul-mic.com/');
